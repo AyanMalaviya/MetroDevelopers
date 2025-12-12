@@ -12,7 +12,8 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-brand-dark">
         <Navbar />
-        <main>
+        {/* Add padding-top to account for fixed navbar */}
+        <main className="pt-16 sm:pt-[68px]">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
