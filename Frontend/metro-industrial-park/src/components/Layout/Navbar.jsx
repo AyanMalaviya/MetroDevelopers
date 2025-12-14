@@ -52,7 +52,7 @@ const Navbar = () => {
         {/* Logo Section */}
         <div className="flex items-center gap-2 sm:gap-3">
           <img 
-            src="/Logo.jpeg" 
+            src="/MDLogo.png" 
             alt="Metro Industrial Park Logo" 
             className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded"
           />

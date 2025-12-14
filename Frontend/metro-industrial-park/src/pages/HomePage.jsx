@@ -93,13 +93,15 @@ const HomePage = () => {
               <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </button>
             
-            <button 
-              onClick={() => navigate('/contact')}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 border-2 border-brand-red text-white text-sm sm:text-base lg:text-lg font-semibold rounded-xl hover:bg-brand-red/10 transition-all duration-300 hover:scale-105 active:scale-95"
-            >
-              <Phone size={18} />
-              Contact Us
-            </button>
+          <button 
+            // Update the onClick to redirect to the WhatsApp URL
+            onClick={() => window.location.href = "https://wa.me/9824235642"}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 border-2 border-brand-red text-white text-sm sm:text-base lg:text-lg font-semibold rounded-xl hover:bg-brand-red/10 transition-all duration-300 hover:scale-105 active:scale-95"
+          >
+            {/* You'll need an icon component for WhatsApp, like from Lucide React */}
+            {/* <WhatsAppIcon size={18} /> */}
+            Chat on WhatsApp
+          </button>
           </div>
 
           {/* Stats */}
@@ -212,14 +214,14 @@ const HomePage = () => {
       <section 
         ref={addToRefs}
         data-section="cta"
-        className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-r from-brand-red via-red-700 to-red-800 overflow-hidden"
+        className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-r from-red-900 via-gray-1000 to-gray-950 overflow-hidden"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div 
             className="absolute inset-0" 
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23001f3f' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
             }}
           ></div>
         </div>
