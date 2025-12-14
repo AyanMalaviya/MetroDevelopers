@@ -1,7 +1,7 @@
 // src/pages/ContactPage.jsx
 import React from 'react';
 import { Mail, Phone, User } from 'lucide-react';
-import { contactPersons } from '../config/contactConfig';
+import { contactPersons } from '../config/contactconfig';
 
 const ContactPage = () => {
   return (
