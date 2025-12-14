@@ -1,7 +1,8 @@
 // src/pages/HomePage.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Building2, MapPin, ShieldCheck, Phone, Clock, Zap } from 'lucide-react';
+import { ArrowRight, Building2, MapPin, ShieldCheck, Phone, Clock, Zap, MessageCircle } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -95,11 +96,10 @@ const HomePage = () => {
             
           <button 
             // Update the onClick to redirect to the WhatsApp URL
-            onClick={() => window.location.href = "https://wa.me/9824235642"}
+            onClick={() => window.location.href = "https://wa.me/8866235642"}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 border-2 border-brand-red text-white text-sm sm:text-base lg:text-lg font-semibold rounded-xl hover:bg-brand-red/10 transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            {/* You'll need an icon component for WhatsApp, like from Lucide React */}
-            {/* <WhatsAppIcon size={18} /> */}
+            <FaWhatsapp style={{ color: 'red', fontSize: '2rem' }} />
             Chat on WhatsApp
           </button>
           </div>
