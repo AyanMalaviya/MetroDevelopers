@@ -1,4 +1,3 @@
-// src/components/SEO/SEO.jsx
 import React from 'react';
 
 const SEO = ({ 
@@ -8,9 +7,9 @@ const SEO = ({
   ogImage = '/og-image.jpg',
   url 
 }) => {
-  const siteName = 'Metro Industrial Park';
+  const siteName = 'Metro Enterprise - Metro Industrial Park';
   const fullTitle = title ? `${title} | ${siteName}` : siteName;
-  const siteUrl = 'https://metroindustrialpark.com'; // Replace with your actual domain
+  const siteUrl = 'https://metrodevelopers.co.in';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   return (
@@ -31,6 +30,7 @@ const SEO = ({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={`${siteUrl}${ogImage}`} />
       <meta property="og:site_name" content={siteName} />
+      <meta property="og:locale" content="en_IN" />
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -42,7 +42,11 @@ const SEO = ({
       {/* Additional Meta Tags */}
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
-      <meta name="author" content="Metro Industrial Park" />
+      <meta name="author" content="Metro Enterprise" />
+      <meta name="geo.region" content="IN-GJ" />
+      <meta name="geo.placename" content="Changodar, Ahmedabad, Gujarat" />
+      <meta name="geo.position" content="22.9870;72.5530" /> {/* Approximate Changodar coordinates */}
+      <meta name="ICBM" content="22.9870, 72.5530" />
     </>
   );
 };
