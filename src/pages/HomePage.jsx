@@ -50,12 +50,12 @@ const HomePage = () => {
   return (
     <>
     <SEO 
-        title="Premium Industrial Sheds for Lease & Sale"
-        description="State-of-the-art industrial sheds at Metro Industrial Park. Prime location, modern infrastructure, flexible lease and purchase options. Contact us for site visit."
-        keywords="industrial sheds, industrial park, warehouse for lease, industrial space for sale, manufacturing facility, storage space, business park"
+        title="Industrial Sheds in Changodar, Ahmedabad - Lease & Sale"
+        description="Premium industrial sheds by Metro Enterprise at Metro Industrial Park in Changodar, Ahmedabad. Projects in Shiv Industrial Estate, Moraiya & Chavda Estate. Flexible lease & purchase options. Contact for site visit."
+        keywords="industrial sheds Changodar, warehouse for lease Ahmedabad, industrial space Moraiya, manufacturing facility Changodar, Shiv Industrial Estate, Chavda Estate industrial shed, Metro Enterprise Ahmedabad, industrial park Gujarat, warehouse for sale Changodar, factory shed Ahmedabad"
         url="/"
       />
-      <StructuredData />
+    <StructuredData />
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative flex items-center justify-center min-h-[85vh] sm:min-h-[100vh] bg-gradient-to-br from-brand-dark via-gray-1000 to-brand-grey overflow-hidden">
