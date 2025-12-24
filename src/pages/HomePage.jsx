@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Building2, MapPin, ShieldCheck, Phone, Clock, Zap, MessageCircle } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
+import SEO from '../components/SEO/SEO.jsx';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -46,6 +47,13 @@ const HomePage = () => {
   };
 
   return (
+    <>
+    <SEO 
+        title="Premium Industrial Sheds for Lease & Sale"
+        description="State-of-the-art industrial sheds at Metro Industrial Park. Prime location, modern infrastructure, flexible lease and purchase options. Contact us for site visit."
+        keywords="industrial sheds, industrial park, warehouse for lease, industrial space for sale, manufacturing facility, storage space, business park"
+        url="/"
+      />
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative flex items-center justify-center min-h-[85vh] sm:min-h-[100vh] bg-gradient-to-br from-brand-dark via-gray-1000 to-brand-grey overflow-hidden">
@@ -253,6 +261,7 @@ const HomePage = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
