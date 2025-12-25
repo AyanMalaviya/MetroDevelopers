@@ -2,15 +2,25 @@
 
 export const pastProjects = [
   {
-    name: 'Metro Warehousing Complex',
-    image: '/src/assets/images/past/metro-warehousing-complex.jpg',
+    name: 'Real Arcade',
+    image: '/src/assets/images/past/real-arcade.png',
     description:
-      '1,00,000 sq.ft of fully leased warehousing space with modular units for 10+ clients.',
+      'Entire complex for small scale bussinesses including warehousing, offices, and retail spaces.',
+    location: {
+      lat: 22.929742409272553,
+      lng: 72.45013955305353,
+      address: 'Real Arcade, Changodar, Gujarat, India',
+    }
   },
   {
-    name: 'Cold Storage & FMCG Park',
+    name: 'Sheds in chavda estate',
     image: '/src/assets/images/past/cold-storage-fmcg-park.jpg',
     description:
-      'Temperature-controlled storage and distribution hub serving multiple FMCG brands.',
+      'Built 10+ sheds in chavda estate, changodar.',
+      location: {
+      lat: 28.7060,
+      lng: 77.1035,
+      address: 'Peripheral Ring Road, Haryana'
+    }
   },
 ];
