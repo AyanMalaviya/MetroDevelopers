@@ -1,50 +1,73 @@
-// src/pages/ProjectsPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Building2, Store } from 'lucide-react';
 import MetroIndustrialPark from '../components/Projects/MetroIndustrialPark';
 import MetroArcade from '../components/Projects/MetroArcade';
-import PastProjects from '../components/Projects/PastProjects';
 
 const ProjectsPage = () => {
-  const [activeTab, setActiveTab] = useState('current');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeProject, setActiveProject] = useState('industrial');
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const projects = [
+    {
+      id: 'industrial',
+      name: 'Metro Industrial Park',
+      icon: <Building2 size={20} />,
+      shortName: 'Industrial'
+    },
+    {
+      id: 'arcade',
+      name: 'Metro Arcade',
+      icon: <Store size={20} />,
+      shortName: 'Arcade'
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-black">
-
-      {/*Tabs */}
-      <section className="top-12 sm:top-[68px] z-40 bg-black/95 backdrop-blur-md border-b border-gray-800">
+      {/* Mobile-Optimized Project Navbar */}
+      <nav className="top-16 z-40 bg-black border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-center items-center gap-2 sm:gap-3 py-3 overflow-x-auto">
-            <button onClick={() => setActiveTab('current')} className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 font-bold rounded-lg transition-all whitespace-nowrap text-xs sm:text-base ${activeTab === 'current' ? 'bg-brand-red text-white' : 'bg-gray-900 text-gray-400 hover:text-white'}`}>
-              <Building2 size={16} />
-              <span>Metro Industrial Park</span>
-            </button>
-            <button onClick={() => setActiveTab('arcade')} className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 font-bold rounded-lg transition-all whitespace-nowrap text-xs sm:text-base ${activeTab === 'arcade' ? 'bg-brand-red text-white' : 'bg-gray-900 text-gray-400 hover:text-white'}`}>
-              <Store size={16} />
-              <span>Metro Arcade</span>
-            </button>
-            <button onClick={() => setActiveTab('past')} className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 font-bold rounded-lg transition-all whitespace-nowrap text-xs sm:text-base ${activeTab === 'past' ? 'bg-brand-red text-white' : 'bg-gray-900 text-gray-400 hover:text-white'}`}>
-              <Building2 size={16} />
-              <span>Past Projects</span>
-            </button>
+          {/* Mobile: Full Width Grid (2 Columns) */}
+          <div className="grid grid-cols-2 gap-2 py-3 sm:hidden">
+            {projects.map((project) => (
+              <button
+                key={project.id}
+                onClick={() => setActiveProject(project.id)}
+                className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm transition-all ${
+                  activeProject === project.id
+                    ? 'bg-brand-red text-white'
+                    : 'bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                {project.icon}
+                <span>{project.shortName}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Desktop: Center Aligned */}
+          <div className="hidden sm:flex gap-3 py-4 justify-center">
+            {projects.map((project) => (
+              <button
+                key={project.id}
+                onClick={() => setActiveProject(project.id)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeProject === project.id
+                    ? 'bg-brand-red text-white'
+                    : 'bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                {project.icon}
+                <span>{project.name}</span>
+              </button>
+            ))}
           </div>
         </div>
-      </section>
+      </nav>
 
-      {/* Content */}
-      <div className="relative">
-        {activeTab === 'current' && <MetroIndustrialPark />}
-        {activeTab === 'arcade' && <MetroArcade />}
-        {activeTab === 'past' && <PastProjects />}
+      {/* Project Content */}
+      <div>
+        {activeProject === 'industrial' && <MetroIndustrialPark />}
+        {activeProject === 'arcade' && <MetroArcade />}
       </div>
     </div>
   );
