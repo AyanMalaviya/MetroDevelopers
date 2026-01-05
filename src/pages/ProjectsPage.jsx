@@ -35,8 +35,8 @@ const ProjectsPage = () => {
         </div>
       </section>
 
-      {/* Sticky Tabs */}
-      <section className="sticky top-16 sm:top-[68px] z-40 bg-black/95 backdrop-blur-md border-b border-gray-800">
+      {/*Tabs */}
+      <section className="top-16 sm:top-[68px] z-40 bg-black/95 backdrop-blur-md border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-center items-center gap-2 sm:gap-3 py-3 overflow-x-auto">
             <button onClick={() => setActiveTab('current')} className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 font-bold rounded-lg transition-all whitespace-nowrap text-xs sm:text-base ${activeTab === 'current' ? 'bg-brand-red text-white' : 'bg-gray-900 text-gray-400 hover:text-white'}`}>
