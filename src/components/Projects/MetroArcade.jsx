@@ -5,15 +5,10 @@ import { FaWhatsapp } from 'react-icons/fa';
 const MetroArcade = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
 
   const images = [
-    { url: '/images/arcade-exterior.jpg', alt: 'Metro Arcade Exterior', title: 'Premium Commercial Hub', description: 'Modern complex with prime visibility' },
-    { url: '/images/arcade-shops.jpg', alt: 'Retail Spaces', title: 'Premium Retail Spaces', description: 'Perfect for shops and showrooms' },
-    { url: '/images/arcade-food.jpg', alt: 'Food Court', title: 'Food Court & Dining', description: 'Spacious food court area' },
-    { url: '/images/arcade-parking.jpg', alt: 'Parking', title: 'Ample Parking', description: 'Multi-level parking for 200+ vehicles' },
-    { url: '/images/arcade-interior.jpg', alt: 'Interior', title: 'Modern Interiors', description: 'Contemporary design with excellent lighting' }
+    { url: '/images/arcade-top.jpeg', alt: 'Metro Arcade Top view', title: 'Premium Commercial Hub', description: 'Modern complex with prime visibility' },
+    { url: '/images/arcade-shops.jpeg', alt: 'Retail Spaces', title: 'Premium Retail Spaces', description: 'Perfect for shops and showrooms' }
   ];
 
   const features = [
@@ -59,21 +54,33 @@ const MetroArcade = () => {
     document.body.style.overflow = 'auto';
   };
 
-  const handleTouchStart = (e) => setTouchStart(e.targetTouches[0].clientX);
-  const handleTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
-  const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 75) nextSlide();
-    if (touchStart - touchEnd < -75) prevSlide();
+  // Touch handlers
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  const handleTouchStart = (e) => {
+    touchStartX = e.targetTouches[0].clientX;
   };
 
+  const handleTouchMove = (e) => {
+    touchEndX = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX - touchEndX > 75) nextSlide();
+    if (touchStartX - touchEndX < -75) prevSlide();
+  };
+
+  // Keyboard navigation
   useEffect(() => {
+    if (!isGalleryOpen) return;
+
     const handleKeyPress = (e) => {
-      if (isGalleryOpen) {
-        if (e.key === 'Escape') closeGallery();
-        else if (e.key === 'ArrowLeft') prevSlide();
-        else if (e.key === 'ArrowRight') nextSlide();
-      }
+      if (e.key === 'Escape') closeGallery();
+      else if (e.key === 'ArrowLeft') prevSlide();
+      else if (e.key === 'ArrowRight') nextSlide();
     };
+    
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isGalleryOpen]);
@@ -82,29 +89,85 @@ const MetroArcade = () => {
     <>
       {/* Gallery Modal */}
       {isGalleryOpen && (
-        <div className="fixed inset-0 z-[100] bg-black">
-          <button onClick={closeGallery} className="absolute top-2 right-2 z-[110] p-2 sm:p-3 bg-black/80 text-white rounded-full">
+        <div className="fixed inset-0 z-[9999] bg-black" onClick={(e) => e.stopPropagation()}>
+          {/* Close Button */}
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              closeGallery();
+            }}
+            className="absolute top-4 right-4 z-[10000] p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
             <X size={20} />
           </button>
-          <div className="absolute top-2 left-2 z-[110] px-3 py-1 bg-black/80 text-white rounded-full text-xs sm:text-sm font-semibold">
+
+          {/* Counter */}
+          <div className="absolute top-4 left-4 z-[10000] px-4 py-2 bg-white/10 text-white rounded-full text-sm font-semibold pointer-events-none">
             {currentSlide + 1} / {images.length}
           </div>
-          <div className="relative w-full h-full flex items-center justify-center" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+
+          {/* Image Container */}
+          <div 
+            className="relative w-full h-full flex items-center justify-center"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ pointerEvents: 'none' }}
+          >
             {images.map((image, index) => (
-              <div key={index} className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
-                <img src={image.url} alt={image.alt} className="max-w-full max-h-full object-contain" />
+              <div 
+                key={index} 
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 p-4 ${
+                  index === currentSlide ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <img 
+                  src={image.url} 
+                  alt={image.alt} 
+                  className="max-w-full max-h-full object-contain" 
+                  style={{ maxHeight: 'calc(100vh - 150px)' }}
+                />
               </div>
             ))}
           </div>
-          <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-black/80 text-white rounded-full">
-            <ChevronLeft size={24} />
+
+          {/* Desktop Navigation Arrows */}
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              prevSlide();
+            }}
+            className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 z-[10000] p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <ChevronLeft size={28} />
           </button>
-          <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-black/80 text-white rounded-full">
-            <ChevronRight size={24} />
+          
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              nextSlide();
+            }}
+            className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 z-[10000] p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <ChevronRight size={28} />
           </button>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-[110] flex gap-2 overflow-x-auto max-w-full px-4">
+
+          {/* Thumbnails */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000] flex gap-2 px-4" style={{ pointerEvents: 'auto' }}>
             {images.map((image, index) => (
-              <button key={index} onClick={() => goToSlide(index)} className={`flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 ${index === currentSlide ? 'border-brand-red' : 'border-white/30'}`}>
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToSlide(index);
+                }}
+                className={`flex-shrink-0 w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                  index === currentSlide ? 'border-brand-red scale-110' : 'border-white/40 hover:border-white/70'
+                }`}
+              >
                 <img src={image.url} alt={image.alt} className="w-full h-full object-cover" />
               </button>
             ))}
@@ -115,7 +178,12 @@ const MetroArcade = () => {
       <div className="min-h-screen bg-black">
         {/* Hero */}
         <section className="relative h-[50vh] sm:h-[60vh] md:h-[75vh] overflow-hidden">
-          <div className="absolute inset-0" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+          <div 
+            className="absolute inset-0"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             {images.map((image, index) => (
               <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${image.url})` }}>
@@ -124,22 +192,30 @@ const MetroArcade = () => {
               </div>
             ))}
           </div>
-          <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 text-white rounded-full">
+
+          {/* Desktop Controls */}
+          <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all">
             <ChevronLeft size={24} />
           </button>
-          <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 text-white rounded-full">
+          <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all">
             <ChevronRight size={24} />
           </button>
-          <button onClick={openGallery} className="absolute top-4 right-4 z-10 px-3 py-2 bg-black/60 text-white rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2">
+
+          {/* Gallery Button */}
+          <button onClick={openGallery} className="absolute top-4 right-4 z-10 px-3 py-2 bg-black/60 hover:bg-black/80 text-white rounded-full text-xs sm:text-sm font-semibold backdrop-blur-sm flex items-center gap-2 transition-all">
             <Maximize2 size={14} />
             <span className="hidden sm:inline">Gallery</span>
           </button>
+
+          {/* Indicators */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             {images.map((_, index) => (
               <button key={index} onClick={() => goToSlide(index)} className={`h-1.5 rounded-full transition-all ${index === currentSlide ? 'w-8 bg-white' : 'w-1.5 bg-white/50'}`} />
             ))}
           </div>
-          <div className="absolute inset-0 z-10 flex items-end sm:items-center justify-center pb-12 sm:pb-0">
+
+          {/* Content */}
+          <div className="absolute inset-0 z-10 flex items-end sm:items-center justify-center pb-12 sm:pb-0 pointer-events-none">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-2xl">
                 {images[currentSlide].title}
@@ -162,17 +238,19 @@ const MetroArcade = () => {
                 Premium commercial complex for retail success
               </p>
             </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 mb-10">
               {specifications.map((spec, index) => (
-                <div key={index} className="bg-gray-900 p-4 rounded-xl border border-gray-800">
+                <div key={index} className="bg-gray-900 p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-all">
                   <div className="text-xs text-gray-500 mb-1 uppercase">{spec.label}</div>
                   <div className="text-sm sm:text-lg font-bold text-white">{spec.value}</div>
                 </div>
               ))}
             </div>
+
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {features.map((feature, index) => (
-                <div key={index} className="group bg-gray-900 p-5 sm:p-6 rounded-xl border border-gray-800">
+                <div key={index} className="group bg-gray-900 p-5 sm:p-6 rounded-xl border border-gray-800 hover:border-gray-700 transition-all">
                   <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-3 text-white group-hover:text-brand-red transition-colors">
                     {feature.icon}
                   </div>
@@ -194,7 +272,7 @@ const MetroArcade = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
               {idealFor.map((item, index) => (
-                <div key={index} className="bg-gray-900 p-4 rounded-xl border border-gray-800 text-center">
+                <div key={index} className="bg-gray-900 p-4 rounded-xl border border-gray-800 text-center hover:border-gray-700 transition-all">
                   <div className="w-10 h-10 mx-auto bg-gray-800 rounded-lg flex items-center justify-center mb-2 text-white">
                     {item.icon}
                   </div>
@@ -215,11 +293,11 @@ const MetroArcade = () => {
               Limited units available!
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="https://wa.me/919824235642" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg">
+              <a href="https://wa.me/919824235642" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all">
                 <FaWhatsapp size={20} />
                 <span>WhatsApp Us</span>
               </a>
-              <a href="tel:+919824235642" className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-gray-700 text-white font-bold rounded-lg">
+              <a href="tel:+919824235642" className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-gray-700 hover:border-gray-600 text-white font-bold rounded-lg transition-all">
                 <Phone size={20} />
                 <span>Call Now</span>
               </a>

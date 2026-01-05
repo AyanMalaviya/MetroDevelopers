@@ -19,21 +19,6 @@ const ProjectsPage = () => {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Hero */}
-      <section className={`relative bg-gradient-to-b from-gray-950 via-black to-black overflow-hidden transition-all duration-500 ${isScrolled ? 'py-8 sm:py-12' : 'py-12 sm:py-20'}`}>
-        <div className={`relative z-10 max-w-7xl mx-auto px-4 text-center transition-all duration-500 ${isScrolled ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100'}`}>
-          <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-3 py-1 bg-gray-900 border border-gray-800 rounded-full text-xs sm:text-sm text-gray-400">
-            <Building2 size={16} />
-            <span>Our Portfolio</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-3 sm:mb-4">
-            Explore Our <span className="text-brand-red">Projects</span>
-          </h1>
-          <p className="text-sm sm:text-lg text-gray-400 max-w-3xl mx-auto">
-            World-class infrastructure designed for modern businesses
-          </p>
-        </div>
-      </section>
 
       {/*Tabs */}
       <section className="top-16 sm:top-[68px] z-40 bg-black/95 backdrop-blur-md border-b border-gray-800">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, X, Ruler, Zap, Shield, Truck, Wifi, Phone, CheckCircle, Maximize2, Building2, Factory } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
@@ -6,8 +6,6 @@ const MetroIndustrialPark = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
 
   const images = [
     { url: '/images/2shed.jpg', alt: 'Modern Industrial Shed', title: 'Modern Industrial Shed', description: 'State-of-the-art industrial sheds with high ceilings' },
@@ -44,9 +42,21 @@ const MetroIndustrialPark = () => {
     'Pollution Control', 'GIDC Approved'
   ];
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % images.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-  const goToSlide = (index) => setCurrentSlide(index);
+  // Simple handler functions
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % images.length);
+    setIsAutoPlaying(false);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+    setIsAutoPlaying(false);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    setIsAutoPlaying(false);
+  };
 
   const openGallery = () => {
     setIsGalleryOpen(true);
@@ -60,12 +70,21 @@ const MetroIndustrialPark = () => {
     document.body.style.overflow = 'auto';
   };
 
-  // Touch handlers for swipe
-  const handleTouchStart = (e) => setTouchStart(e.targetTouches[0].clientX);
-  const handleTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+  // Touch handlers
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  const handleTouchStart = (e) => {
+    touchStartX = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX = e.targetTouches[0].clientX;
+  };
+
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 75) nextSlide();
-    if (touchStart - touchEnd < -75) prevSlide();
+    if (touchStartX - touchEndX > 75) nextSlide();
+    if (touchStartX - touchEndX < -75) prevSlide();
   };
 
   // Auto-play
@@ -78,13 +97,14 @@ const MetroIndustrialPark = () => {
 
   // Keyboard navigation
   useEffect(() => {
+    if (!isGalleryOpen) return;
+
     const handleKeyPress = (e) => {
-      if (isGalleryOpen) {
-        if (e.key === 'Escape') closeGallery();
-        else if (e.key === 'ArrowLeft') prevSlide();
-        else if (e.key === 'ArrowRight') nextSlide();
-      }
+      if (e.key === 'Escape') closeGallery();
+      else if (e.key === 'ArrowLeft') prevSlide();
+      else if (e.key === 'ArrowRight') nextSlide();
     };
+    
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isGalleryOpen]);
@@ -93,40 +113,85 @@ const MetroIndustrialPark = () => {
     <>
       {/* Gallery Modal */}
       {isGalleryOpen && (
-        <div className="fixed inset-0 z-[100] bg-black">
-          <button onClick={closeGallery} className="absolute top-2 right-2 z-[110] p-2 sm:p-3 bg-black/80 hover:bg-black text-white rounded-full">
+        <div className="fixed inset-0 z-[9999] bg-black" onClick={(e) => e.stopPropagation()}>
+          {/* Close Button */}
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              closeGallery();
+            }}
+            className="absolute top-4 right-4 z-[10000] p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
             <X size={20} />
           </button>
 
-          <div className="absolute top-2 left-2 z-[110] px-3 py-1 bg-black/80 text-white rounded-full text-xs sm:text-sm font-semibold">
+          {/* Counter */}
+          <div className="absolute top-4 left-4 z-[10000] px-4 py-2 bg-white/10 text-white rounded-full text-sm font-semibold pointer-events-none">
             {currentSlide + 1} / {images.length}
           </div>
 
+          {/* Image Container */}
           <div 
             className="relative w-full h-full flex items-center justify-center"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            style={{ pointerEvents: 'none' }}
           >
             {images.map((image, index) => (
-              <div key={index} className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
-                <img src={image.url} alt={image.alt} className="max-w-full max-h-full object-contain" />
+              <div 
+                key={index} 
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 p-4 ${
+                  index === currentSlide ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <img 
+                  src={image.url} 
+                  alt={image.alt} 
+                  className="max-w-full max-h-full object-contain" 
+                  style={{ maxHeight: 'calc(100vh - 150px)' }}
+                />
               </div>
             ))}
           </div>
 
-          {/* Desktop arrows only */}
-          <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-black/80 hover:bg-black text-white rounded-full">
-            <ChevronLeft size={24} />
+          {/* Desktop Navigation Arrows */}
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              prevSlide();
+            }}
+            className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 z-[10000] p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <ChevronLeft size={28} />
           </button>
-          <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-black/80 hover:bg-black text-white rounded-full">
-            <ChevronRight size={24} />
+          
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              nextSlide();
+            }}
+            className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 z-[10000] p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <ChevronRight size={28} />
           </button>
 
           {/* Thumbnails */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-[110] flex gap-2 overflow-x-auto max-w-full px-4">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000] flex gap-2 px-4" style={{ pointerEvents: 'auto' }}>
             {images.map((image, index) => (
-              <button key={index} onClick={() => goToSlide(index)} className={`flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all ${index === currentSlide ? 'border-brand-red' : 'border-white/30'}`}>
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToSlide(index);
+                }}
+                className={`flex-shrink-0 w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                  index === currentSlide ? 'border-brand-red scale-110' : 'border-white/40 hover:border-white/70'
+                }`}
+              >
                 <img src={image.url} alt={image.alt} className="w-full h-full object-cover" />
               </button>
             ))}
@@ -146,7 +211,6 @@ const MetroIndustrialPark = () => {
             {images.map((image, index) => (
               <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${image.url})` }}>
-                  {/* Lighter overlay for mobile */}
                   <div className="absolute inset-0 bg-black/40 sm:bg-black/60"></div>
                 </div>
               </div>
@@ -154,15 +218,15 @@ const MetroIndustrialPark = () => {
           </div>
 
           {/* Desktop Controls */}
-          <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 hover:bg-black/80 text-white rounded-full">
+          <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all">
             <ChevronLeft size={24} />
           </button>
-          <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 hover:bg-black/80 text-white rounded-full">
+          <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all">
             <ChevronRight size={24} />
           </button>
 
-          {/* Gallery Button - Top Right */}
-          <button onClick={openGallery} className="absolute top-4 right-4 z-10 px-3 py-2 bg-black/60 hover:bg-black/80 text-white rounded-full text-xs sm:text-sm font-semibold backdrop-blur-sm flex items-center gap-2">
+          {/* Gallery Button */}
+          <button onClick={openGallery} className="absolute top-4 right-4 z-10 px-3 py-2 bg-black/60 hover:bg-black/80 text-white rounded-full text-xs sm:text-sm font-semibold backdrop-blur-sm flex items-center gap-2 transition-all">
             <Maximize2 size={14} />
             <span className="hidden sm:inline">Gallery</span>
           </button>
@@ -175,7 +239,7 @@ const MetroIndustrialPark = () => {
           </div>
 
           {/* Content */}
-          <div className="absolute inset-0 z-10 flex items-end sm:items-center justify-center pb-12 sm:pb-0">
+          <div className="absolute inset-0 z-10 flex items-end sm:items-center justify-center pb-12 sm:pb-0 pointer-events-none">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-2 sm:mb-3 drop-shadow-2xl">
                 {images[currentSlide].title}
@@ -199,7 +263,6 @@ const MetroIndustrialPark = () => {
               </p>
             </div>
 
-            {/* Specifications */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 mb-10">
               {specifications.map((spec, index) => (
                 <div key={index} className="bg-gray-900 p-4 rounded-xl border border-gray-800 hover:border-gray-700 transition-all">
@@ -209,7 +272,6 @@ const MetroIndustrialPark = () => {
               ))}
             </div>
 
-            {/* Features */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {features.map((feature, index) => (
                 <div key={index} className="group bg-gray-900 p-5 sm:p-6 rounded-xl border border-gray-800 hover:border-gray-700 transition-all">
