@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       colors: {
         // Custom Brand Colors (NO BLUE TINT)
-        'brand-dark': '#161616ff',      // Pure black
+        'brand-dark': '#000000ff',      // Pure black
         'brand-red': '#DC2626',       // Red-600
         'brand-grey': '#393a3cff',      // Gray-800 (dark gray)
       },

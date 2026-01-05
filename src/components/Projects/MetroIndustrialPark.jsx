@@ -165,11 +165,11 @@ const MetroIndustrialPark = () => {
             <X size={24} />
           </button>
 
-          <div className="absolute top-4 left-4 z-[110] px-4 py-2 bg-brand-grey/90 backdrop-blur-md text-white rounded-full text-sm font-semibold">
+          <div className="absolute top-4 left-4 z-[110] px-4 py-2 bg-gray-900/90 backdrop-blur-md text-white rounded-full text-sm font-semibold">
             {currentSlide + 1} / {images.length}
           </div>
 
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 bg-brand-grey/90 backdrop-blur-md text-white rounded-full text-sm md:text-base font-semibold max-w-md text-center">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 bg-gray-900/90 backdrop-blur-md text-white rounded-full text-sm md:text-base font-semibold max-w-md text-center">
             {images[currentSlide].title}
           </div>
 
@@ -215,7 +215,7 @@ const MetroIndustrialPark = () => {
         </div>
       )}
 
-      <div className="min-h-screen bg-brand-dark">
+      <div className="min-h-screen bg-black">
         {/* Hero Slider Section */}
         <section className="relative h-[60vh] sm:h-[70vh] md:h-[80vh] overflow-hidden">
           {/* Image Slider */}
@@ -231,8 +231,8 @@ const MetroIndustrialPark = () => {
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${image.url})` }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/85 via-brand-dark/70 to-gray-900/75"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-brand-dark/50"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/85 to-black/80"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/70"></div>
                 </div>
               </div>
             ))}
@@ -285,8 +285,9 @@ const MetroIndustrialPark = () => {
         </section>
 
         {/* Project Overview */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gray-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <section className="py-12 sm:py-16 md:py-20 bg-black relative">
+          <div className="absolute inset-0 bg-pattern-grid"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <div className="text-center mb-10 sm:mb-12 md:mb-16">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
                 Metro Industrial Park <span className="text-brand-red">Overview</span>
@@ -301,7 +302,7 @@ const MetroIndustrialPark = () => {
               {specifications.map((spec, index) => (
                 <div 
                   key={index}
-                  className="bg-gradient-to-br from-brand-grey via-gray-800 to-brand-grey p-5 sm:p-6 rounded-xl border border-gray-700 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20"
+                  className="bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 rounded-xl border border-gray-800 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20"
                 >
                   <div className="text-sm text-gray-400 mb-2 uppercase tracking-wider">{spec.label}</div>
                   <div className="text-lg sm:text-xl font-bold text-white">{spec.value}</div>
@@ -314,12 +315,12 @@ const MetroIndustrialPark = () => {
               {features.map((feature, index) => (
                 <div 
                   key={index}
-                  className="group bg-gradient-to-br from-brand-grey via-gray-800 to-brand-grey p-6 sm:p-8 rounded-2xl border-2 border-gray-700 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/20"
+                  className="group bg-[radial-gradient(circle_at_center,#1f2937_0%,#111827_100%)] p-6 sm:p-8 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/20"
                 >
                   <div className="w-14 h-14 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{feature.title}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 group-hover:text-brand-red transition-colors duration-300">{feature.title}</h3>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{feature.description}</p>
                 </div>
               ))}
@@ -328,7 +329,7 @@ const MetroIndustrialPark = () => {
         </section>
 
         {/* Amenities Section */}
-        <section className="py-12 sm:py-16 md:py-20 bg-brand-dark">
+        <section className="py-12 sm:py-16 md:py-20 bg-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-10 sm:mb-12">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
@@ -343,7 +344,7 @@ const MetroIndustrialPark = () => {
               {amenities.map((amenity, index) => (
                 <div 
                   key={index}
-                  className="flex items-center gap-3 bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105"
+                  className="flex items-center gap-3 bg-gradient-to-br from-gray-900 via-gray-900 to-black p-4 rounded-lg border border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105"
                 >
                   <CheckCircle className="text-brand-red flex-shrink-0" size={20} />
                   <span className="text-gray-300 text-sm font-medium">{amenity}</span>
@@ -354,12 +355,13 @@ const MetroIndustrialPark = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-brand-red via-red-600 to-brand-red">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-brand-red via-red-600 to-brand-red relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern-diagonal opacity-30"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center relative z-10">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
               Ready to Transform Your Business?
             </h2>
-            <p className="text-white/90 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-white/90 text-base sm:text-lg mb-8 max-w-2xl mx-auto drop-shadow">
               Schedule a site visit today and discover why leading enterprises choose Metro Industrial Park
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -372,7 +374,7 @@ const MetroIndustrialPark = () => {
               </a>
               <a
                 href="tel:+919824235642"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
               >
                 <Phone size={20} />
                 <span>Call Now</span>
