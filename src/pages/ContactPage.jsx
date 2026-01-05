@@ -1,3 +1,4 @@
+// src/pages/ContactPage.jsx
 import React from 'react';
 import { Mail, Phone, MapPin, User, MessageSquare, Building2, Clock, ExternalLink } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -28,7 +29,7 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-brand-dark">
       {/* Hero Section with Email in Top Right */}
-      <section className="relative bg-gradient-to-br from-brand-dark via-gray-900 to-brand-grey py-16 sm:py-20 md:py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-brand-dark via-gray-900 to-black py-16 sm:py-20 md:py-24 overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 opacity-5">
           <div 
@@ -43,7 +44,7 @@ const ContactPage = () => {
         <div className="absolute top-4 right-4 sm:right-6 md:right-8 z-20">
           <a 
             href="mailto:metrodevelopers26@gmail.com"
-            className="group flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-brand-red/90 hover:bg-brand-red backdrop-blur-md rounded-full transition-all duration-300 hover:scale-105 shadow-lg border border-red-500/50"
+            className="group flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-brand-red hover:bg-red-700 backdrop-blur-md rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
           >
             <Mail size={16} className="text-white" />
             <span className="text-xs sm:text-sm font-semibold text-white hidden sm:inline">
@@ -72,7 +73,7 @@ const ContactPage = () => {
       </section>
 
       {/* Partners Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-900">
+      <section className="py-12 sm:py-16 md:py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10 sm:mb-12 md:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
@@ -87,7 +88,7 @@ const ContactPage = () => {
             {partners.map((partner, index) => (
               <div 
                 key={index}
-                className="group relative bg-gradient-to-br from-brand-grey via-gray-800 to-brand-grey p-6 sm:p-8 rounded-2xl border-2 border-gray-700 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/20"
+                className="group relative bg-gray-900 p-6 sm:p-8 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30"
               >
                 {/* Decorative Corner */}
                 <div className="absolute top-0 right-0 w-20 h-20 bg-brand-red/10 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -151,7 +152,7 @@ const ContactPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="space-y-6 sm:space-y-8">
             {/* Address Card with Embedded Map */}
-            <div className="bg-gradient-to-br from-brand-grey via-gray-800 to-brand-grey rounded-2xl border-2 border-gray-700 hover:border-brand-red transition-all duration-500 shadow-2xl overflow-hidden">
+            <div className="bg-gray-900 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 shadow-2xl overflow-hidden">
               {/* Address Info */}
               <div className="p-6 sm:p-8">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
@@ -172,7 +173,7 @@ const ContactPage = () => {
               {/* Embedded Google Map */}
               <div className="w-full h-64 sm:h-80 lg:h-96 relative">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e0!3m2!1sen!2sin!4v1767632260527!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3673.1234567890!2d72.5530!3d22.9870!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDU5JzEzLjIiTiA3MsKwMzMnMTAuOCJF!5e0!3m2!1sen!2sin!4v1234567890"
                   className="w-full h-full border-0"
                   allowFullScreen=""
                   loading="lazy"
@@ -182,7 +183,7 @@ const ContactPage = () => {
               </div>
 
               {/* Get Directions Button - Centered */}
-              <div className="p-4 sm:p-6 flex justify-center">
+              <div className="p-4 sm:p-6 flex justify-center bg-gray-900">
                 <a
                   href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
                   target="_blank"
@@ -199,7 +200,7 @@ const ContactPage = () => {
             {/* Office Hours & Quick Contact - Side by Side on Desktop */}
             <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
               {/* Office Hours */}
-              <div className="bg-gradient-to-br from-brand-grey via-gray-800 to-brand-grey p-6 sm:p-8 rounded-2xl border-2 border-gray-700 hover:border-brand-red transition-all duration-500 shadow-2xl">
+              <div className="bg-gray-900 p-6 sm:p-8 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 shadow-2xl">
                 <div className="flex flex-col sm:flex-row items-start gap-4">
                   <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Clock className="text-brand-red" size={24} />
@@ -221,7 +222,7 @@ const ContactPage = () => {
               </div>
 
               {/* Quick Contact */}
-              <div className="bg-gradient-to-br from-brand-red via-red-600 to-brand-red p-6 sm:p-8 rounded-2xl shadow-2xl">
+              <div className="bg-gradient-to-br from-brand-red to-red-700 p-6 sm:p-8 rounded-2xl shadow-2xl">
                 <h4 className="text-xl font-bold text-white mb-3">Need Immediate Assistance?</h4>
                 <p className="text-white/90 mb-4 text-sm sm:text-base">
                   Contact our director directly for urgent inquiries

@@ -378,19 +378,33 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - REDESIGNED */}
       <section 
         ref={addToRefs}
         data-section="features"
-        className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-gray-900 relative"
+        className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-black relative"
       >
-        <div className="max-w-6xl mx-auto">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 opacity-5">
+          <div 
+            className="absolute inset-0" 
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          ></div>
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
           <div className={`text-center mb-8 sm:mb-12 md:mb-16 transition-all duration-700 ${
             isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-brand-red/20 border border-brand-red/50 rounded-full backdrop-blur-sm">
+              <Building2 className="text-brand-red" size={18} />
+              <span className="text-sm text-brand-red font-semibold">Key Features</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
-              Why Choose Metro Industrial Park?
+              Why Choose <span className="text-brand-red">Metro Industrial Park?</span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
               Strategic location, modern infrastructure, and unmatched facilities for your industrial needs
@@ -400,39 +414,39 @@ const HomePage = () => {
           {/* Features Grid */}
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {/* Feature 1 */}
-            <div className={`group bg-brand-grey/50 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-gray-700 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20 ${
+            <div className={`group bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30 ${
               isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`} style={{ transitionDelay: '100ms' }}>
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-brand-red/20 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110">
-                <MapPin className="text-brand-red" size={24} />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <MapPin className="text-brand-red" size={28} />
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4">Prime Location</h3>
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-brand-red transition-colors duration-300">Prime Location</h3>
               <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
                 Strategically located with excellent connectivity to highways, ports, and major transport hubs for seamless logistics.
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className={`group bg-brand-grey/50 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-gray-700 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20 ${
+            <div className={`group bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30 ${
               isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`} style={{ transitionDelay: '200ms' }}>
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-brand-red/20 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110">
-                <Building2 className="text-brand-red" size={24} />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <Building2 className="text-brand-red" size={28} />
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4">Modern Infrastructure</h3>
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-brand-red transition-colors duration-300">Modern Infrastructure</h3>
               <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
                 State-of-the-art facilities with power backup, water supply, fire safety systems, and advanced security infrastructure.
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className={`group bg-brand-grey/50 backdrop-blur-sm p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-gray-700 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20 ${
+            <div className={`group bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30 ${
               isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`} style={{ transitionDelay: '300ms' }}>
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-brand-red/20 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110">
-                <ShieldCheck className="text-brand-red" size={24} />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <ShieldCheck className="text-brand-red" size={28} />
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4">Flexible Terms</h3>
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-brand-red transition-colors duration-300">Flexible Terms</h3>
               <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
                 Choose between lease or purchase options with customizable terms, transparent pricing, and no hidden costs.
               </p>
@@ -447,61 +461,74 @@ const HomePage = () => {
               isVisible.additional ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <div className="flex items-start gap-3 sm:gap-4 bg-brand-dark/50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl border border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105">
-              <Clock className="text-brand-red flex-shrink-0 mt-1 transition-transform duration-300 hover:rotate-12" size={20} />
+            <div className="group flex items-start gap-3 sm:gap-4 bg-[radial-gradient(circle_at_center,#1f2937_0%,#111827_100%)] p-4 sm:p-5 md:p-6 rounded-xl border-2 border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20">
+              <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:rotate-12">
+                <Clock className="text-brand-red" size={20} />
+              </div>
               <div>
-                <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-1 sm:mb-2">Quick Move-In</h4>
-                <p className="text-gray-400 text-xs sm:text-sm md:text-base">Ready-to-occupy sheds with minimal setup time. Start operations within days.</p>
+                <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-1 sm:mb-2 group-hover:text-brand-red transition-colors duration-300">Quick Move-In</h4>
+                <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">Ready-to-occupy sheds with minimal setup time. Start operations within days.</p>
               </div>
             </div>
             
-            <div className="flex items-start gap-3 sm:gap-4 bg-brand-dark/50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl border border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105">
-              <Zap className="text-brand-red flex-shrink-0 mt-1 transition-transform duration-300 hover:scale-110" size={20} />
+            <div className="group flex items-start gap-3 sm:gap-4 bg-[radial-gradient(circle_at_center,#1f2937_0%,#111827_100%)] p-4 sm:p-5 md:p-6 rounded-xl border-2 border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20">
+              <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110">
+                <Zap className="text-brand-red" size={20} />
+              </div>
               <div>
-                <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-1 sm:mb-2">Uninterrupted Power</h4>
-                <p className="text-gray-400 text-xs sm:text-sm md:text-base">High-capacity power supply with backup generators ensuring 24/7 operations.</p>
+                <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-1 sm:mb-2 group-hover:text-brand-red transition-colors duration-300">Uninterrupted Power</h4>
+                <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">High-capacity power supply with backup generators ensuring 24/7 operations.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - REDESIGNED */}
       <section 
         ref={addToRefs}
         data-section="cta"
-        className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-r from-red-900 via-gray-1000 to-gray-950 overflow-hidden"
+        className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-gradient-to-r from-brand-red via-red-600 to-brand-red overflow-hidden"
       >
-        {/* Background Pattern */}
+        {/* Animated Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div 
             className="absolute inset-0" 
             style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23001f3f' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
           ></div>
         </div>
 
+        {/* Decorative Circles */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl"></div>
+
         <div className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-700 ${
           isVisible.cta ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
+            <Building2 className="text-white" size={18} />
+            <span className="text-sm text-white font-semibold">Get Started Today</span>
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 drop-shadow-lg">
             Ready to Expand Your Business?
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 md:mb-10 leading-relaxed px-2">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-6 sm:mb-8 md:mb-10 leading-relaxed px-2 max-w-2xl mx-auto drop-shadow">
             Get in touch with our team to schedule a site visit and discuss your industrial space requirements. 
             We're here to help you find the perfect solution.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <button 
               onClick={() => navigate('/contact')}
-              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-white text-brand-red text-sm sm:text-base lg:text-lg font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl"
+              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-white text-brand-red text-sm sm:text-base lg:text-lg font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl hover:shadow-white/20"
             >
               Schedule Site Visit
             </button>
             <button 
               onClick={() => navigate('/projects')}
-              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 border-2 border-white text-white text-sm sm:text-base lg:text-lg font-bold rounded-xl hover:bg-white/10 transition-all duration-300 hover:scale-105 active:scale-95"
+              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 border-2 border-white text-white text-sm sm:text-base lg:text-lg font-bold rounded-xl hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95"
             >
               View All Projects
             </button>
