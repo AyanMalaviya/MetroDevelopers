@@ -1,4 +1,3 @@
-// src/pages/ContactPage.jsx
 import React from 'react';
 import { Mail, Phone, MapPin, User, MessageSquare, Building2, Clock, ExternalLink } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -27,47 +26,40 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-brand-dark">
+    <div className="min-h-screen bg-black">
       {/* Hero Section with Email in Top Right */}
-      <section className="relative bg-gradient-to-br from-brand-dark via-gray-900 to-black py-16 sm:py-20 md:py-24 overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 opacity-5">
-          <div 
-            className="absolute inset-0" 
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          ></div>
-        </div>
+      <section className="relative bg-gradient-to-b from-gray-950 via-black to-black py-12 sm:py-16 md:py-20 overflow-hidden">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 bg-pattern-dots opacity-30"></div>
 
         {/* Email Badge - Top Right */}
-        <div className="absolute top-4 right-4 sm:right-6 md:right-8 z-20">
+        <div className="absolute top-4 right-4 sm:right-6 z-20">
           <a 
             href="mailto:metrodevelopers26@gmail.com"
-            className="group flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-brand-red hover:bg-red-700 backdrop-blur-md rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-900 hover:bg-gray-800 backdrop-blur-md rounded-full transition-all text-xs sm:text-sm border border-gray-800"
           >
-            <Mail size={16} className="text-white" />
-            <span className="text-xs sm:text-sm font-semibold text-white hidden sm:inline">
+            <Mail size={14} className="text-brand-red" />
+            <span className="font-semibold text-white hidden sm:inline">
               metrodevelopers26@gmail.com
             </span>
-            <span className="text-xs font-semibold text-white sm:hidden">
-              Email Us
+            <span className="font-semibold text-white sm:hidden">
+              Email
             </span>
           </a>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-4 py-2 bg-brand-red/20 border border-brand-red/50 rounded-full backdrop-blur-sm">
-            <MessageSquare className="text-brand-red" size={18} />
-            <span className="text-sm text-brand-red font-semibold">Get In Touch</span>
+          <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-3 py-1 bg-gray-900 border border-gray-800 rounded-full">
+            <MessageSquare className="text-brand-red" size={16} />
+            <span className="text-xs sm:text-sm text-gray-400 font-semibold">Get In Touch</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 sm:mb-6">
-            Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-red-500 to-orange-500">Our Team</span>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4">
+            Contact <span className="text-brand-red">Our Team</span>
           </h1>
           
-          <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Ready to find your perfect industrial space? Our experienced team is here to guide you through every step.
+          <p className="text-sm sm:text-lg text-gray-400 max-w-3xl mx-auto">
+            Ready to find your perfect industrial space? Our experienced team is here to guide you.
           </p>
         </div>
       </section>
@@ -75,57 +67,54 @@ const ContactPage = () => {
       {/* Partners Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10 sm:mb-12 md:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
               Meet Our <span className="text-brand-red">Partners</span>
             </h2>
-            <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm sm:text-lg max-w-2xl mx-auto">
               Connect directly with our leadership team for personalized assistance
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
             {partners.map((partner, index) => (
               <div 
                 key={index}
-                className="group relative bg-gray-900 p-6 sm:p-8 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30"
+                className="group bg-gray-900 p-5 sm:p-6 rounded-xl border border-gray-800 hover:border-gray-700 transition-all"
               >
-                {/* Decorative Corner */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-brand-red/10 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
                 {/* Partner Icon */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-brand-red/20 rounded-full flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 mx-auto">
-                  <User className="text-brand-red" size={32} />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-800 rounded-full flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-gray-700 transition-colors">
+                  <User className="text-white" size={28} />
                 </div>
 
                 {/* Partner Details */}
                 <div className="text-center">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 group-hover:text-brand-red transition-colors duration-300">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-1 group-hover:text-brand-red transition-colors">
                     {partner.name}
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-400 font-semibold mb-4 sm:mb-6 uppercase tracking-wider">
+                  <p className="text-xs sm:text-sm text-gray-500 font-semibold mb-4 uppercase">
                     {partner.role}
                   </p>
 
                   {/* Contact Info */}
-                  <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+                  <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5">
                     {/* Phone */}
                     <a 
                       href={`tel:${partner.phone}`}
-                      className="flex items-center justify-center gap-2 text-gray-300 hover:text-white transition-colors duration-300 group/phone"
+                      className="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
                     >
-                      <Phone size={16} className="text-brand-red group-hover/phone:scale-110 transition-transform" />
-                      <span className="text-sm sm:text-base font-medium">{partner.phone}</span>
+                      <Phone size={14} className="text-brand-red" />
+                      <span className="font-medium">{partner.phone}</span>
                     </a>
 
                     {/* Email (only for Amir) */}
                     {partner.email && (
                       <a 
                         href={`mailto:${partner.email}`}
-                        className="flex items-center justify-center gap-2 text-gray-300 hover:text-white transition-colors duration-300 group/email"
+                        className="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors text-xs px-2"
                       >
-                        <Mail size={16} className="text-brand-red group-hover/email:scale-110 transition-transform" />
-                        <span className="text-xs sm:text-sm font-medium break-all">{partner.email}</span>
+                        <Mail size={14} className="text-brand-red flex-shrink-0" />
+                        <span className="font-medium break-all">{partner.email}</span>
                       </a>
                     )}
                   </div>
@@ -135,10 +124,10 @@ const ContactPage = () => {
                     href={`https://wa.me/${partner.whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl hover:shadow-brand-red/50"
+                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-all text-sm"
                   >
-                    <FaWhatsapp size={20} />
-                    <span className="text-sm sm:text-base">WhatsApp</span>
+                    <FaWhatsapp size={18} />
+                    <span>WhatsApp</span>
                   </a>
                 </div>
               </div>
@@ -147,33 +136,32 @@ const ContactPage = () => {
         </div>
       </section>
 
-      {/* Location Section - Centered */}
-      <section className="py-12 sm:py-16 md:py-20 bg-brand-dark">
+      {/* Location Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-black via-gray-950 to-black">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="space-y-6 sm:space-y-8">
+          <div className="space-y-6">
             {/* Address Card with Embedded Map */}
-            <div className="bg-gray-900 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 shadow-2xl overflow-hidden">
+            <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
               {/* Address Info */}
-              <div className="p-6 sm:p-8">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
-                  <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Building2 className="text-brand-red" size={24} />
+              <div className="p-5 sm:p-6">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Building2 className="text-brand-red" size={22} />
                   </div>
-                  <div className="text-center sm:text-left flex-1">
-                    <h4 className="text-xl sm:text-2xl font-bold text-white mb-2">METRO INDUSTRIAL PARK</h4>
-                    <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                  <div className="flex-1">
+                    <h4 className="text-lg sm:text-xl font-bold text-white mb-2">METRO INDUSTRIAL PARK</h4>
+                    <p className="text-gray-400 text-sm sm:text-base">
                       Opp. Suvas Ind Estate, b/h Siya Logistics Park,<br />
-                      Moraiya, Ahmedabad,<br />
-                      Gujarat - 382213
+                      Moraiya, Ahmedabad, Gujarat - 382213
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Embedded Google Map */}
-              <div className="w-full h-64 sm:h-80 lg:h-96 relative">
+              <div className="w-full h-64 sm:h-80 lg:h-96">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3673.1234567890!2d72.5530!3d22.9870!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDU5JzEzLjIiTiA3MsKwMzMnMTAuOCJF!5e0!3m2!1sen!2sin!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e0!3m2!1sen!2sin!4v1767639082192!5m2!1sen!2sin"
                   className="w-full h-full border-0"
                   allowFullScreen=""
                   loading="lazy"
@@ -182,38 +170,38 @@ const ContactPage = () => {
                 ></iframe>
               </div>
 
-              {/* Get Directions Button - Centered */}
-              <div className="p-4 sm:p-6 flex justify-center bg-gray-900">
+              {/* Get Directions Button */}
+              <div className="p-4 sm:p-5 flex justify-center bg-gray-900">
                 <a
                   href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-brand-red/50"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-all text-sm"
                 >
-                  <MapPin size={18} />
+                  <MapPin size={16} />
                   <span>Get Directions</span>
-                  <ExternalLink size={16} />
+                  <ExternalLink size={14} />
                 </a>
               </div>
             </div>
 
-            {/* Office Hours & Quick Contact - Side by Side on Desktop */}
-            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
+            {/* Office Hours & Quick Contact */}
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               {/* Office Hours */}
-              <div className="bg-gray-900 p-6 sm:p-8 rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 shadow-2xl">
-                <div className="flex flex-col sm:flex-row items-start gap-4">
-                  <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="text-brand-red" size={24} />
+              <div className="bg-gray-900 p-5 sm:p-6 rounded-xl border border-gray-800">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Clock className="text-brand-red" size={22} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-xl font-bold text-white mb-3">Office Hours</h4>
-                    <div className="space-y-2 text-gray-300">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium">Monday - Saturday:</span>
-                        <span className="text-white">9:00 AM - 6:00 PM</span>
+                    <h4 className="text-lg font-bold text-white mb-3">Office Hours</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between text-gray-400">
+                        <span>Monday - Saturday:</span>
+                        <span className="text-white font-semibold">9:00 AM - 6:00 PM</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium">Sunday:</span>
+                      <div className="flex justify-between text-gray-400">
+                        <span>Sunday:</span>
                         <span className="text-brand-red font-semibold">Closed</span>
                       </div>
                     </div>
@@ -222,17 +210,17 @@ const ContactPage = () => {
               </div>
 
               {/* Quick Contact */}
-              <div className="bg-gradient-to-br from-brand-red to-red-700 p-6 sm:p-8 rounded-2xl shadow-2xl">
-                <h4 className="text-xl font-bold text-white mb-3">Need Immediate Assistance?</h4>
-                <p className="text-white/90 mb-4 text-sm sm:text-base">
+              <div className="bg-gradient-to-br from-gray-900 to-black p-5 sm:p-6 rounded-xl border border-gray-800">
+                <h4 className="text-lg font-bold text-white mb-2">Need Immediate Help?</h4>
+                <p className="text-gray-400 mb-4 text-sm">
                   Contact our director directly for urgent inquiries
                 </p>
                 <a
                   href="tel:+919824235642"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-brand-red font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
                 >
-                  <Phone size={20} />
-                  <span className="text-sm sm:text-base">Call: +91 98242 35642</span>
+                  <Phone size={18} />
+                  <span>Call: +91 98242 35642</span>
                 </a>
               </div>
             </div>
