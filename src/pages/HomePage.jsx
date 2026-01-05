@@ -1,526 +1,283 @@
-//"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e0!3m2!1sen!2sin!4v1767639082192!5m2!1sen!2sin"
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Building2, MapPin, ShieldCheck, Phone, Clock, Zap, MessageCircle, ChevronLeft, ChevronRight, X, Maximize2 } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Building2, MapPin, Phone, TrendingUp, Shield, Users, Zap, ArrowRight, CheckCircle, ChevronDown } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
-import SEO from '../components/SEO/SEO.jsx';
-import StructuredData from '../components/SEO/StructuredData.jsx';
 
 const HomePage = () => {
-  const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState({});
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const observerRefs = useRef([]);
-  const autoPlayRef = useRef(null);
-
-  // Hero images array - add more images as needed
-  const heroImages = [
+  const projects = [
     {
-      url: '/images/2shed.jpg',
-      alt: 'Modern Industrial Shed - Metro Industrial Park'
+      id: 1,
+      name: 'Metro Industrial Park',
+      location: 'Moraiya, Changodar',
+      area: '50,000+ sq.ft',
+      units: '15+ Industrial Sheds',
+      image: '/images/2shed.jpg',
+      status: 'Available',
+      link: '/projects'
     },
     {
-      url: '/images/4shed.jpg',
-      alt: 'Warehouse Facility - Metro Industrial Park'
-    },
-    {
-      url: '/images/entrance.jpg',
-      alt: 'Industrial Space - Metro Industrial Park'
-    },
-    {
-      url: '/images/mainroad.jpg',
-      alt: 'Big roads for convenience - Metro Industrial Park'
-    },
-    {
-      url: '/images/map.jpg',
-      alt: 'Metro Industrial Park 3D Map view'
-    },
-    {
-      url: '/images/office.jpg',
-      alt: 'Office Space - Metro Industrial Park'
+      id: 2,
+      name: 'Metro Arcade',
+      location: 'Main Road, Moraiya',
+      area: '80,000 sq.ft',
+      units: '60+ Commercial Shops',
+      image: '/images/arcade-top.jpeg',
+      status: 'Leasing',
+      link: '/projects'
     }
   ];
 
-  // Auto-slide functionality (disabled in gallery mode)
-  useEffect(() => {
-    if (isAutoPlaying && !isGalleryOpen) {
-      autoPlayRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-      }, 10000); // 10 seconds
+  const features = [
+    {
+      icon: <Building2 size={32} />,
+      title: 'Prime Locations',
+      description: 'Strategic positioning in Ahmedabad\'s industrial corridors'
+    },
+    {
+      icon: <Shield size={32} />,
+      title: 'Quality Construction',
+      description: 'High-grade materials and modern building standards'
+    },
+    {
+      icon: <Zap size={32} />,
+      title: 'Modern Amenities',
+      description: '24/7 power backup, security, and essential facilities'
+    },
+    {
+      icon: <Users size={32} />,
+      title: 'Client-Focused',
+      description: 'Personalized service and flexible lease terms'
     }
+  ];
 
-    return () => {
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
-    };
-  }, [isAutoPlaying, isGalleryOpen, heroImages.length]);
-
-  // Pause auto-play when user interacts
-  const handleSlideChange = (newSlide) => {
-    setCurrentSlide(newSlide);
-    setIsAutoPlaying(false);
-    // Resume auto-play after 30 seconds of no interaction
-    setTimeout(() => setIsAutoPlaying(true), 30000);
-  };
-
-  const nextSlide = () => {
-    handleSlideChange((currentSlide + 1) % heroImages.length);
-  };
-
-  const prevSlide = () => {
-    handleSlideChange((currentSlide - 1 + heroImages.length) % heroImages.length);
-  };
-
-  const goToSlide = (index) => {
-    handleSlideChange(index);
-  };
-
-  const openGallery = () => {
-    setIsGalleryOpen(true);
-    setIsAutoPlaying(false);
-    // Prevent body scroll when gallery is open
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeGallery = () => {
-    setIsGalleryOpen(false);
-    setIsAutoPlaying(true);
-    // Restore body scroll
-    document.body.style.overflow = 'auto';
-  };
-
-  // Keyboard navigation for gallery
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (isGalleryOpen) {
-        if (e.key === 'Escape') closeGallery();
-        if (e.key === 'ArrowLeft') prevSlide();
-        if (e.key === 'ArrowRight') nextSlide();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isGalleryOpen, currentSlide]);
-
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setIsVisible(prev => ({
-            ...prev,
-            [entry.target.dataset.section]: true
-          }));
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    observerRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      observerRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
-
-  const addToRefs = (el) => {
-    if (el && !observerRefs.current.includes(el)) {
-      observerRefs.current.push(el);
-    }
-  };
+  const stats = [
+    { value: '50,000+', label: 'Sq.ft Developed' },
+    { value: '15+', label: 'Industrial Units' },
+    { value: '100%', label: 'Client Satisfaction' },
+    { value: '10+', label: 'Years Experience' }
+  ];
 
   return (
-    <>
-    <SEO 
-        title="Industrial Sheds in Changodar, Ahmedabad - Lease & Sale"
-        description="Premium industrial sheds by Metro Enterprise at Metro Industrial Park in Changodar, Ahmedabad. Projects in Shiv Industrial Estate, Moraiya & Chavda Estate. Flexible lease & purchase options. Contact for site visit."
-        keywords="industrial sheds Changodar, warehouse for lease Ahmedabad, industrial space Moraiya, manufacturing facility Changodar, Shiv Industrial Estate, Chavda Estate industrial shed, Metro Enterprise Ahmedabad, industrial park Gujarat, warehouse for sale Changodar, factory shed Ahmedabad"
-        url="/"
-      />
-    <StructuredData />
-    <div className="min-h-screen">
-      {/* Full-Screen Gallery Modal */}
-      {isGalleryOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/98 flex items-center justify-center">
-          {/* Close Button */}
-          <button
-            onClick={closeGallery}
-            className="absolute top-4 right-4 z-[110] p-3 bg-brand-red/90 hover:bg-brand-red text-white rounded-full transition-all duration-300 hover:scale-110 shadow-2xl"
-            aria-label="Close gallery"
-          >
-            <X size={24} />
-          </button>
-
-          {/* Image Counter */}
-          <div className="absolute top-4 left-4 z-[110] px-4 py-2 bg-brand-grey/90 backdrop-blur-md text-white rounded-full text-sm font-semibold shadow-lg">
-            {currentSlide + 1} / {heroImages.length}
-          </div>
-
-          {/* Image Title */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 bg-brand-grey/90 backdrop-blur-md text-white rounded-full text-sm md:text-base font-semibold shadow-lg max-w-md text-center">
-            {heroImages[currentSlide].title}
-          </div>
-
-          {/* Main Image Container */}
-          <div className="relative w-full h-full flex items-center justify-center p-4 md:p-8 lg:p-12">
-            {heroImages.map((image, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
-                  index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                }`}
-              >
-                <img
-                  src={image.url}
-                  alt={image.alt}
-                  className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg shadow-2xl"
-                  style={{ maxHeight: 'calc(100vh - 120px)' }}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Navigation Buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-[110] p-4 bg-brand-red/90 hover:bg-brand-red text-white rounded-full transition-all duration-300 hover:scale-110 shadow-2xl"
-            aria-label="Previous image"
-          >
-            <ChevronLeft size={32} />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-[110] p-4 bg-brand-red/90 hover:bg-brand-red text-white rounded-full transition-all duration-300 hover:scale-110 shadow-2xl"
-            aria-label="Next image"
-          >
-            <ChevronRight size={32} />
-          </button>
-
-          {/* Thumbnail Strip (Bottom) */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[110] flex gap-2 md:gap-3 overflow-x-auto max-w-full px-4 pb-2">
-            {heroImages.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                  index === currentSlide
-                    ? 'border-brand-red scale-110 shadow-lg shadow-brand-red/50'
-                    : 'border-white/30 hover:border-white/70 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img
-                  src={image.url}
-                  alt={image.alt}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Hero Section with Background Image */}
-      <section className="relative flex items-center justify-center min-h-[85vh] sm:min-h-[100vh] overflow-hidden">
-        {/* Image Slider */}
-        <div className="absolute inset-0">
-          {heroImages.map((image, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? 'opacity-100 z-0' : 'opacity-0 z-0'
-              }`}
-            >
-              {/* Background Image */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{
-                  backgroundImage: `url(${image.url})`,
-                  backgroundPosition: 'center center',
-                }}
-              >
-                {/* Overlay gradients - darker for better mobile visibility */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/90 via-brand-dark/80 to-gray-900/85 sm:from-brand-dark/85 sm:via-brand-dark/75 sm:to-gray-900/80"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-brand-dark/70"></div>
-              </div>
-            </div>
-          ))}
-
-          {/* Subtle pattern overlay */}
-          <div className="absolute inset-0 opacity-5 z-[1] pointer-events-none">
-            <div 
-              className="absolute inset-0 bg-pattern-noise opacity-60" 
-            ></div>
-          </div>
+    <div className="min-h-screen bg-black">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image - ZOOMED AND CROPPED */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: "url('/images/hero-bg.jpg')",
+            backgroundSize: '140%',
+            backgroundPosition: 'center center'
+          }}
+        >
+          {/* Lighter Overlay */}
+          <div className="absolute inset-0 bg-black/30 sm:bg-black/40"></div>
         </div>
 
-        {/* Slider Controls */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          {/* Previous Button */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-brand-red/80 hover:bg-brand-red text-white rounded-full transition-all duration-300 hover:scale-110 pointer-events-auto backdrop-blur-sm shadow-lg"
-            aria-label="Previous image"
-          >
-            <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
-          </button>
-
-          {/* Next Button */}
-          <button
-            onClick={nextSlide}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-brand-red/80 hover:bg-brand-red text-white rounded-full transition-all duration-300 hover:scale-110 pointer-events-auto backdrop-blur-sm shadow-lg"
-            aria-label="Next image"
-          >
-            <ChevronRight size={20} className="sm:w-6 sm:h-6" />
-          </button>
-
-          {/* View Gallery Button - Top Right */}
-          <button
-            onClick={openGallery}
-            className="absolute top-20 sm:top-24 right-2 sm:right-4 flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-brand-red/90 hover:bg-brand-red text-white rounded-full transition-all duration-300 hover:scale-110 pointer-events-auto backdrop-blur-sm shadow-lg z-20 text-xs sm:text-sm font-semibold"
-            aria-label="View full gallery"
-          >
-            <Maximize2 size={16} className="sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">Gallery</span>
-          </button>
-
-          {/* Slide Indicators */}
-          <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3 pointer-events-auto">
-            {heroImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                  index === currentSlide 
-                    ? 'w-8 sm:w-12 bg-brand-red' 
-                    : 'w-1.5 sm:w-2 bg-white/50 hover:bg-white/80'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Additional bottom gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-gray-900 to-transparent z-[2]"></div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 md:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-red/30 border border-brand-red/60 rounded-full backdrop-blur-md animate-slide-down shadow-lg">
-            <Zap className="text-brand-red" size={14} />
-            <span className="text-xs sm:text-sm text-brand-red font-semibold">Premium Industrial Solutions</span>
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-4 py-2 bg-black/40 backdrop-blur-sm border border-white/20 rounded-full">
+            <Building2 className="text-brand-red" size={18} />
+            <span className="text-sm text-white font-semibold">Industrial & Commercial Spaces</span>
           </div>
           
-          {/* Main Heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white mb-3 sm:mb-4 md:mb-6 leading-tight animate-slide-up drop-shadow-2xl">
-            Build Your Business at
-            <span className="block mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-red-500 to-orange-500 animate-gradient">
-              Metro Industrial Park
-            </span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 sm:mb-6 drop-shadow-2xl">
+            Premium Infrastructure for <br />
+            <span className="text-brand-red">Growing Businesses</span>
           </h1>
           
-          {/* Subheading */}
-          <p className="text-xs sm:text-sm md:text-base lg:text-xl text-gray-100 mb-4 sm:mb-6 md:mb-10 max-w-3xl mx-auto leading-relaxed px-2 animate-fade-in animation-delay-200 drop-shadow-lg">
-            State-of-the-art industrial sheds designed for modern enterprises. 
-            Ready-to-move spaces available for <span className="text-brand-red font-semibold">lease</span> or <span className="text-brand-red font-semibold">purchase</span> with flexible terms.
+          <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 drop-shadow-lg">
+            Modern industrial parks and commercial spaces strategically located in Ahmedabad. 
+            Built for efficiency, designed for success.
           </p>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center mb-6 sm:mb-10 md:mb-16 px-4 animate-fade-in animation-delay-400">
-            <button 
-              onClick={() => navigate('/projects')}
-              className="group w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-brand-red text-white text-xs sm:text-sm md:text-base lg:text-lg font-semibold rounded-lg md:rounded-xl hover:bg-red-700 transition-all duration-300 hover:shadow-2xl hover:shadow-brand-red/50 hover:scale-105 active:scale-95"
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              to="/projects"
+              className="group inline-flex items-center gap-2 px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 shadow-2xl"
             >
-              Explore Projects
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
-            </button>
+              <span>Explore Projects</span>
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
             
-            <button 
-              onClick={() => window.location.href = "https://wa.me/8866235642"}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 border-2 border-white/90 text-white text-xs sm:text-sm md:text-base lg:text-lg font-semibold rounded-lg md:rounded-xl hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95"
+            <a 
+              href="https://wa.me/919824235642"
+              className="group inline-flex items-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border-2 border-white/30 hover:border-white/50 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105"
             >
-              <FaWhatsapp style={{ fontSize: '1.2rem' }} className="sm:text-xl" />
-              Chat on WhatsApp
-            </button>
+              <FaWhatsapp size={20} />
+              <span>Contact Us</span>
+            </a>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8 max-w-3xl mx-auto px-2 animate-fade-in animation-delay-600">
-            <div className="bg-brand-grey/50 backdrop-blur-md p-2 sm:p-3 md:p-4 lg:p-6 rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-700/60 hover:border-brand-red transition-all duration-500 hover:scale-105">
-              <div className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-brand-red mb-0.5 sm:mb-1 md:mb-2 drop-shadow-lg">50+</div>
-              <div className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-gray-200 uppercase tracking-wider">Industrial Sheds</div>
+          {/* Trust Indicators */}
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-3xl mx-auto mt-12 sm:mt-16">
+            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20">
+              <div className="text-2xl sm:text-4xl font-bold text-white mb-1">50,000+</div>
+              <div className="text-xs sm:text-sm text-white/80">Sq.ft Available</div>
             </div>
-            <div className="bg-brand-grey/50 backdrop-blur-md p-2 sm:p-3 md:p-4 lg:p-6 rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-700/60 hover:border-brand-red transition-all duration-500 hover:scale-105 animation-delay-100">
-              <div className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-brand-red mb-0.5 sm:mb-1 md:mb-2 drop-shadow-lg">100%</div>
-              <div className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-gray-200 uppercase tracking-wider">Legal Compliance</div>
+            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20">
+              <div className="text-2xl sm:text-4xl font-bold text-white mb-1">15+</div>
+              <div className="text-xs sm:text-sm text-white/80">Industrial Units</div>
             </div>
-            <div className="bg-brand-grey/50 backdrop-blur-md p-2 sm:p-3 md:p-4 lg:p-6 rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-700/60 hover:border-brand-red transition-all duration-500 hover:scale-105 animation-delay-200">
-              <div className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-brand-red mb-0.5 sm:mb-1 md:mb-2 drop-shadow-lg">24/7</div>
-              <div className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-gray-200 uppercase tracking-wider">Security & Support</div>
+            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20">
+              <div className="text-2xl sm:text-4xl font-bold text-white mb-1">100%</div>
+              <div className="text-xs sm:text-sm text-white/80">Client Satisfaction</div>
             </div>
           </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <ChevronDown className="text-white/60" size={32} />
         </div>
       </section>
 
-      {/* Features Section - REDESIGNED */}
-      <section 
-        ref={addToRefs}
-        data-section="features"
-        className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-black relative"
-      >
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 bg-pattern-grid">
-        </div>
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          {/* Section Header */}
-          <div className={`text-center mb-8 sm:mb-12 md:mb-16 transition-all duration-700 ${
-            isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-brand-red/20 border border-brand-red/50 rounded-full backdrop-blur-sm">
-              <Building2 className="text-brand-red" size={18} />
-              <span className="text-sm text-brand-red font-semibold">Key Features</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
-              Why Choose <span className="text-brand-red">Metro Industrial Park?</span>
+      {/* Features Section */}
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-black via-gray-950 to-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+              Why Choose <span className="text-brand-red">Metro Enterprise</span>
             </h2>
-            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
-              Strategic location, modern infrastructure, and unmatched facilities for your industrial needs
+            <p className="text-gray-400 text-base sm:text-lg max-w-3xl mx-auto">
+              We deliver world-class industrial and commercial infrastructure with unmatched quality and service
             </p>
           </div>
 
-          {/* Features Grid */}
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {/* Feature 1 */}
-            <div className={`group bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30 ${
-              isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`} style={{ transitionDelay: '100ms' }}>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                <MapPin className="text-brand-red" size={28} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className="group bg-gray-900 p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-gray-700 transition-all text-center"
+              >
+                <div className="w-16 h-16 mx-auto bg-gray-800 rounded-xl flex items-center justify-center mb-4 text-white group-hover:text-brand-red transition-colors">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-3">{feature.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-brand-red transition-colors duration-300">Prime Location</h3>
-              <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
-                Strategically located with excellent connectivity to highways, ports, and major transport hubs for seamless logistics.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className={`group bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30 ${
-              isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`} style={{ transitionDelay: '200ms' }}>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                <Building2 className="text-brand-red" size={28} />
-              </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-brand-red transition-colors duration-300">Modern Infrastructure</h3>
-              <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
-                State-of-the-art facilities with power backup, water supply, fire safety systems, and advanced security infrastructure.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className={`group bg-gradient-to-br from-gray-900 via-gray-900 to-black p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-gray-800 hover:border-brand-red transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-brand-red/30 ${
-              isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`} style={{ transitionDelay: '300ms' }}>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 bg-brand-red/20 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                <ShieldCheck className="text-brand-red" size={28} />
-              </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-brand-red transition-colors duration-300">Flexible Terms</h3>
-              <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
-                Choose between lease or purchase options with customizable terms, transparent pricing, and no hidden costs.
-              </p>
-            </div>
-          </div>
-
-          {/* Additional Features */}
-          <div 
-            ref={addToRefs}
-            data-section="additional"
-            className={`grid sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-10 md:mt-12 transition-all duration-700 ${
-              isVisible.additional ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="group flex items-start gap-3 sm:gap-4 bg-[radial-gradient(circle_at_center,#1f2937_0%,#111827_100%)] p-4 sm:p-5 md:p-6 rounded-xl border-2 border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20">
-              <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:rotate-12">
-                <Clock className="text-brand-red" size={20} />
-              </div>
-              <div>
-                <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-1 sm:mb-2 group-hover:text-brand-red transition-colors duration-300">Quick Move-In</h4>
-                <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">Ready-to-occupy sheds with minimal setup time. Start operations within days.</p>
-              </div>
-            </div>
-            
-            <div className="group flex items-start gap-3 sm:gap-4 bg-[radial-gradient(circle_at_center,#1f2937_0%,#111827_100%)] p-4 sm:p-5 md:p-6 rounded-xl border-2 border-gray-800 hover:border-brand-red transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/20">
-              <div className="w-12 h-12 bg-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-red/30 transition-all duration-300 group-hover:scale-110">
-                <Zap className="text-brand-red" size={20} />
-              </div>
-              <div>
-                <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-1 sm:mb-2 group-hover:text-brand-red transition-colors duration-300">Uninterrupted Power</h4>
-                <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">High-capacity power supply with backup generators ensuring 24/7 operations.</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section*/}
-      <section 
-        ref={addToRefs}
-        data-section="cta"
-        className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 bg-pattern-diagonal opacity-100 overflow-hidden"
-      >
-
-
-        {/* Decorative Circles */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl"></div>
-
-        <div className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-700 ${
-          isVisible.cta ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-        }`}>
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
-            <Building2 className="text-white" size={18} />
-            <span className="text-sm text-white font-semibold">Get Started Today</span>
+      {/* Projects Section */}
+      <section className="py-16 sm:py-24 bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+              Featured <span className="text-brand-red">Projects</span>
+            </h2>
+            <p className="text-gray-400 text-base sm:text-lg max-w-3xl mx-auto">
+              Explore our premium industrial and commercial developments
+            </p>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 drop-shadow-lg">
-            Ready to Expand Your Business?
+          <div className="grid sm:grid-cols-2 gap-8">
+            {projects.map((project) => (
+              <Link 
+                key={project.id}
+                to={project.link}
+                className="group relative bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all"
+              >
+                <div className="relative h-64 sm:h-80 overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                  
+                  <div className="absolute top-4 right-4 px-3 py-1 bg-brand-red rounded-full text-white text-xs font-semibold">
+                    {project.status}
+                  </div>
+                </div>
+
+                <div className="p-6 sm:p-8">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-brand-red transition-colors">
+                    {project.name}
+                  </h3>
+                  
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-center gap-2 text-gray-400 text-sm">
+                      <MapPin size={16} className="text-brand-red" />
+                      <span>{project.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-400 text-sm">
+                      <Building2 size={16} className="text-brand-red" />
+                      <span>{project.area}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-400 text-sm">
+                      <CheckCircle size={16} className="text-brand-red" />
+                      <span>{project.units}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-brand-red font-semibold">
+                    <span>View Details</span>
+                    <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link 
+              to="/projects"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-white font-bold rounded-lg transition-all"
+            >
+              <span>View All Projects</span>
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-black via-gray-950 to-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center bg-gray-900 p-6 sm:p-8 rounded-xl border border-gray-800">
+                <div className="text-4xl sm:text-5xl font-bold text-brand-red mb-2">{stat.value}</div>
+                <div className="text-gray-400 text-sm sm:text-base">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 sm:py-24 bg-black">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+            Ready to Find Your <span className="text-brand-red">Perfect Space?</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-6 sm:mb-8 md:mb-10 leading-relaxed px-2 max-w-2xl mx-auto drop-shadow">
-            Get in touch with our team to schedule a site visit and discuss your industrial space requirements. 
-            We're here to help you find the perfect solution.
+          <p className="text-gray-400 text-base sm:text-lg mb-8 sm:mb-10">
+            Contact us today to discuss your requirements and schedule a site visit
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <button 
-              onClick={() => navigate('/contact')}
-              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-white text-brand-red text-sm sm:text-base lg:text-lg font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl hover:shadow-white/20"
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="https://wa.me/919824235642"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all"
             >
-              Schedule Site Visit
-            </button>
-            <button 
-              onClick={() => navigate('/projects')}
-              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 border-2 border-white text-white text-sm sm:text-base lg:text-lg font-bold rounded-xl hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95"
+              <FaWhatsapp size={20} />
+              <span>WhatsApp Us</span>
+            </a>
+            
+            <a 
+              href="tel:+919824235642"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-gray-700 hover:border-gray-600 text-white font-bold rounded-lg transition-all"
             >
-              View All Projects
-            </button>
+              <Phone size={20} />
+              <span>Call: +91 98242 35642</span>
+            </a>
           </div>
         </div>
       </section>
     </div>
-    </>
   );
 };
 
