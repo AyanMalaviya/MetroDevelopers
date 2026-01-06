@@ -13,13 +13,13 @@ const ContactPage = () => {
     },
     {
       name: 'Nazim Kazani',
-      role: 'Partner',
+      role: 'Director',
       phone: '+91 96249 65017',
       whatsapp: '919624965017'
     },
     {
       name: 'Kaushar Kalyani',
-      role: 'Partner',
+      role: 'Director',
       phone: '+91 99796 32986',
       whatsapp: '919979632986'
     }
@@ -28,7 +28,7 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Section with Email in Top Right */}
-      <section className="relative bg-gradient-to-b from-gray-950 via-black to-black py-12 sm:py-16 md:py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-b from-gray-950 via-black to-black py-6 sm:py-16 md:py-20 overflow-hidden">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 bg-pattern-dots opacity-30"></div>
 
@@ -47,25 +47,10 @@ const ContactPage = () => {
             </span>
           </a>
         </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-3 py-1 bg-gray-900 border border-gray-800 rounded-full">
-            <MessageSquare className="text-brand-red" size={16} />
-            <span className="text-xs sm:text-sm text-gray-400 font-semibold">Get In Touch</span>
-          </div>
-          
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4">
-            Contact <span className="text-brand-red">Our Team</span>
-          </h1>
-          
-          <p className="text-sm sm:text-lg text-gray-400 max-w-3xl mx-auto">
-            Ready to find your perfect industrial space? Our experienced team is here to guide you.
-          </p>
-        </div>
       </section>
 
       {/* Partners Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-black">
+      <section className="py-8 sm:py-16 md:py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
@@ -139,7 +124,15 @@ const ContactPage = () => {
       {/* Location Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-black via-gray-950 to-black">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="space-y-6">
+          <div className="text-lg sm:text-xl font-bold  space-y-6">
+            <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+              Visit us <span className="text-brand-red">Now</span>
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-lg max-w-2xl mx-auto">
+              Just click on the map below to find our location or get directions
+            </p>
+          </div>
             {/* Address Card with Embedded Map */}
             <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
               {/* Address Info */}
@@ -197,12 +190,8 @@ const ContactPage = () => {
                     <h4 className="text-lg font-bold text-white mb-3">Office Hours</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between text-gray-400">
-                        <span>Monday - Saturday:</span>
-                        <span className="text-white font-semibold">9:00 AM - 6:00 PM</span>
-                      </div>
-                      <div className="flex justify-between text-gray-400">
-                        <span>Sunday:</span>
-                        <span className="text-brand-red font-semibold">Closed</span>
+                        <span>Monday - Sunday:</span>
+                        <span className="text-white font-semibold">11:00 AM - 7:00 PM</span>
                       </div>
                     </div>
                   </div>
@@ -221,6 +210,14 @@ const ContactPage = () => {
                 >
                   <Phone size={18} />
                   <span>Call: +91 98242 35642</span>
+                </a>
+                <div className="my-3 border-gray-800">or</div>
+                <a
+                  href="tel:+9196249 65017"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
+                >
+                  <Phone size={18} />
+                  <span>Call: +91 96249 65017</span>
                 </a>
               </div>
             </div>

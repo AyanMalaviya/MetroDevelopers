@@ -114,24 +114,25 @@ const MetroIndustrialPark = () => {
       {/* Gallery Modal */}
       {isGalleryOpen && (
         <div className="fixed inset-0 z-[9999] bg-black" onClick={(e) => e.stopPropagation()}>
-          {/* Close Button */}
+          {/* Close Button - SMALLER */}
           <button 
             onClick={(e) => {
               e.stopPropagation();
               closeGallery();
             }}
-            className="absolute top-4 right-4 z-[10000] p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            className="absolute top-2 right-2 z-[10000] p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
             style={{ pointerEvents: 'auto' }}
+            aria-label="Close gallery"
           >
-            <X size={20} />
+            <X size={16} />  {/* ✅ REDUCED from 20 to 16 */}
           </button>
 
-          {/* Counter */}
-          <div className="absolute top-4 left-4 z-[10000] px-4 py-2 bg-white/10 text-white rounded-full text-sm font-semibold pointer-events-none">
+          {/* Counter - SMALLER */}
+          <div className="absolute top-2 left-2 z-[10000] px-3 py-1 bg-white/10 text-white rounded-full text-xs font-semibold pointer-events-none">
             {currentSlide + 1} / {images.length}
           </div>
 
-          {/* Image Container */}
+          {/* Image Container - FULL SCREEN */}
           <div 
             className="relative w-full h-full flex items-center justify-center"
             onTouchStart={handleTouchStart}
@@ -142,30 +143,31 @@ const MetroIndustrialPark = () => {
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 p-4 ${
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
                   index === currentSlide ? 'opacity-100' : 'opacity-0'
                 }`}
               >
                 <img 
                   src={image.url} 
                   alt={image.alt} 
-                  className="max-w-full max-h-full object-contain" 
-                  style={{ maxHeight: 'calc(100vh - 150px)' }}
+                  className="w-full h-full object-contain"
+                  style={{ maxHeight: '100vh', maxWidth: '100vw' }}
                 />
               </div>
             ))}
           </div>
 
-          {/* Desktop Navigation Arrows */}
+          {/* Desktop Navigation Arrows - SMALLER */}
           <button 
             onClick={(e) => {
               e.stopPropagation();
               prevSlide();
             }}
-            className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 z-[10000] p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[10000] p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
             style={{ pointerEvents: 'auto' }}
+            aria-label="Previous image"
           >
-            <ChevronLeft size={28} />
+            <ChevronLeft size={20} />  {/* ✅ REDUCED from 28 to 20 */}
           </button>
           
           <button 
@@ -173,14 +175,15 @@ const MetroIndustrialPark = () => {
               e.stopPropagation();
               nextSlide();
             }}
-            className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 z-[10000] p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+            className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[10000] p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
             style={{ pointerEvents: 'auto' }}
+            aria-label="Next image"
           >
-            <ChevronRight size={28} />
+            <ChevronRight size={20} />  {/* ✅ REDUCED from 28 to 20 */}
           </button>
 
-          {/* Thumbnails */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000] flex gap-2 px-4" style={{ pointerEvents: 'auto' }}>
+          {/* Thumbnails - SMALLER */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-[10000] flex gap-2 px-4" style={{ pointerEvents: 'auto' }}>
             {images.map((image, index) => (
               <button
                 key={index}
@@ -188,7 +191,7 @@ const MetroIndustrialPark = () => {
                   e.stopPropagation();
                   goToSlide(index);
                 }}
-                className={`flex-shrink-0 w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                className={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                   index === currentSlide ? 'border-brand-red scale-110' : 'border-white/40 hover:border-white/70'
                 }`}
               >
