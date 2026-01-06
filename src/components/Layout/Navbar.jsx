@@ -167,7 +167,7 @@ const Navbar = () => {
             Projects
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             to="/about"
             onClick={closeMenu}
             className={({ isActive }) =>
@@ -179,7 +179,7 @@ const Navbar = () => {
             }
           >
             About
-          </NavLink>
+          </NavLink> */}
 
           <NavLink
             to="/contact"
