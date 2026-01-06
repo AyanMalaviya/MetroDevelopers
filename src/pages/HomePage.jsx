@@ -63,72 +63,72 @@ const HomePage = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image - ZOOMED AND CROPPED */}
         <div 
-          className="absolute inset-0 bg-cover bg-center"
+          className="opacity-80 absolute inset-0 bg-cover bg-center"
           style={{ 
-            backgroundImage: "url('/images/hero-bg.jpg')",
+            backgroundImage: "url('/images/office.jpg')",
+            backgroundRepeat: 'no-repeat',
             backgroundSize: '140%',
-            backgroundPosition: 'center center'
+            backgroundPosition: 'top'
           }}
         >
           {/* Lighter Overlay */}
-          <div className="absolute inset-0 bg-black/30 sm:bg-black/40"></div>
+          <div className="absolute inset-0 bg-black/10 sm:bg-black/20"></div>
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-4 py-2 bg-black/40 backdrop-blur-sm border border-white/20 rounded-full">
-            <Building2 className="text-brand-red" size={18} />
-            <span className="text-sm text-white font-semibold">Industrial & Commercial Spaces</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center pt-60 sm:pt-30">
+          <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-3 py-1.5 bg-black/40 backdrop-blur-sm border border-white/30 rounded-full">
+            <Building2 className="text-brand-red" size={16} />
+            <span className="text-xs sm:text-sm text-white font-semibold">Industrial & Commercial Spaces</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 sm:mb-6 drop-shadow-2xl">
-            Premium Infrastructure for <br />
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-3 sm:mb-6 drop-shadow-2xl leading-tight">
+            Premium Infrastructure for <br className="hidden sm:block" />
             <span className="text-brand-red">Growing Businesses</span>
           </h1>
           
-          <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 drop-shadow-lg">
+          <p className="text-sm sm:text-lg md:text-xl text-white/95 max-w-3xl mx-auto leading-relaxed mb-4 sm:mb-8 drop-shadow-lg px-2">
             Modern industrial parks and commercial spaces strategically located in Ahmedabad. 
             Built for efficiency, designed for success.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
             <Link 
               to="/projects"
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 shadow-2xl"
+              className="group inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 shadow-2xl text-sm sm:text-base"
             >
               <span>Explore Projects</span>
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             
             <a 
               href="https://wa.me/919824235642"
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border-2 border-white/30 hover:border-white/50 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105"
+              className="group inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border-2 border-white/30 hover:border-white/50 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
             >
-              <FaWhatsapp size={20} />
+              <FaWhatsapp size={18} />
               <span>Contact Us</span>
             </a>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-3xl mx-auto mt-12 sm:mt-16">
-            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20">
-              <div className="text-2xl sm:text-4xl font-bold text-white mb-1">50,000+</div>
-              <div className="text-xs sm:text-sm text-white/80">Sq.ft Available</div>
+          {/* Trust Indicators - COMPACT MOBILE */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-8 max-w-3xl mx-auto mt-6 sm:mt-16">
+            <div className="bg-black/40 backdrop-blur-sm p-3 sm:p-6 rounded-lg sm:rounded-xl border border-white/20">
+              <div className="text-xl sm:text-4xl font-bold text-white mb-0.5 sm:mb-1">50K+</div>
+              <div className="text-[10px] sm:text-sm text-white/80 leading-tight">Sq.ft Available</div>
             </div>
-            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20">
-              <div className="text-2xl sm:text-4xl font-bold text-white mb-1">15+</div>
-              <div className="text-xs sm:text-sm text-white/80">Industrial Units</div>
+            <div className="bg-black/40 backdrop-blur-sm p-3 sm:p-6 rounded-lg sm:rounded-xl border border-white/20">
+              <div className="text-xl sm:text-4xl font-bold text-white mb-0.5 sm:mb-1">15+</div>
+              <div className="text-[10px] sm:text-sm text-white/80 leading-tight">Industrial Units</div>
             </div>
-            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20">
-              <div className="text-2xl sm:text-4xl font-bold text-white mb-1">100%</div>
-              <div className="text-xs sm:text-sm text-white/80">Client Satisfaction</div>
+            <div className="bg-black/40 backdrop-blur-sm p-3 sm:p-6 rounded-lg sm:rounded-xl border border-white/20">
+              <div className="text-xl sm:text-4xl font-bold text-white mb-0.5 sm:mb-1">100%</div>
+              <div className="text-[10px] sm:text-sm text-white/80 leading-tight">Client Satisfaction</div>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <ChevronDown className="text-white/60" size={32} />
+        {/* Scroll Indicator - CENTERED & VISIBLE */}
+        <div className="absolute bottom-16 sm:bottom-20 left-2/5 -translate-x-1/2 animate-bounce z-20">
+          <ChevronDown className="text-white/80 drop-shadow-lg" size={28} />
         </div>
       </section>
 
