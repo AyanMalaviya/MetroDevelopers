@@ -95,7 +95,7 @@ const Navbar = () => {
             Projects
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             to="/about"
             className={({ isActive }) =>
               `px-3 lg:px-4 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-lg ${
@@ -106,7 +106,7 @@ const Navbar = () => {
             }
           >
             About
-          </NavLink>
+          </NavLink> */}
 
           <NavLink
             to="/contact"
