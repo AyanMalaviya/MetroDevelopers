@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, X, Phone, CheckCircle, Maximize2, Building2, Home, MapPin, TrendingUp, Users, Package, Car } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
@@ -160,7 +160,7 @@ const MetroArcade = () => {
 
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://wa.me/919824235642"
+                  href="https://wa.me/9624965017"
                   className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm sm:text-base"
                 >
                   <FaWhatsapp size={18} />
