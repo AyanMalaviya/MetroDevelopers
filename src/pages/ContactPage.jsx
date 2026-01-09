@@ -1,8 +1,11 @@
-import React from 'react';
-import { Mail, Phone, MapPin, User, MessageSquare, Building2, Clock, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, User, Building2, Clock, ExternalLink, Star, X } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
 const ContactPage = () => {
+  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
+  const [promptDismissed, setPromptDismissed] = useState(false);
+
   const partners = [
     {
       name: 'Amir Malaviya',
@@ -20,10 +23,34 @@ const ContactPage = () => {
     {
       name: 'Kaushar Kalyani',
       role: 'Director',
-      phone: '+91 99796 32986',
-      whatsapp: '919979632986'
     }
   ];
+
+  // Scroll detection for review prompt
+  useEffect(() => {
+    const handleScroll = () => {
+      if (promptDismissed) return;
+
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      
+      // Show prompt when user scrolls to 75% of the page
+      const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+      
+      if (scrollPercentage > 75) {
+        setShowReviewPrompt(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [promptDismissed]);
+
+  const dismissPrompt = () => {
+    setShowReviewPrompt(false);
+    setPromptDismissed(true);
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -84,13 +111,15 @@ const ContactPage = () => {
                   {/* Contact Info */}
                   <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5">
                     {/* Phone */}
-                    <a 
-                      href={`tel:${partner.phone}`}
-                      className="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
-                    >
-                      <Phone size={14} className="text-brand-red" />
-                      <span className="font-medium">{partner.phone}</span>
-                    </a>
+                    {partner.phone && (
+                      <a 
+                        href={`tel:${partner.phone}`}
+                        className="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
+                      >
+                        <Phone size={14} className="text-brand-red" />
+                        <span className="font-medium">{partner.phone}</span>
+                      </a>
+                    )}
 
                     {/* Email (only for Amir) */}
                     {partner.email && (
@@ -105,15 +134,17 @@ const ContactPage = () => {
                   </div>
 
                   {/* WhatsApp Button */}
-                  <a
-                    href={`https://wa.me/${partner.whatsapp}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-all text-sm"
-                  >
-                    <FaWhatsapp size={18} />
-                    <span>WhatsApp</span>
-                  </a>
+                  {partner.whatsapp && (
+                    <a
+                      href={`https://wa.me/${partner.whatsapp}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-all text-sm"
+                    >
+                      <FaWhatsapp size={18} />
+                      <span>WhatsApp</span>
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
@@ -124,15 +155,16 @@ const ContactPage = () => {
       {/* Location Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-black via-gray-950 to-black">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="text-lg sm:text-xl font-bold  space-y-6">
+          <div className="text-lg sm:text-xl font-bold space-y-6">
             <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
-              Visit us <span className="text-brand-red">Now</span>
-            </h2>
-            <p className="text-gray-400 text-sm sm:text-lg max-w-2xl mx-auto">
-              Just click on the map below to find our location or get directions
-            </p>
-          </div>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+                Visit us <span className="text-brand-red">Now</span>
+              </h2>
+              <p className="text-gray-400 text-sm sm:text-lg max-w-2xl mx-auto">
+                Just click on the map below to find our location or get directions
+              </p>
+            </div>
+
             {/* Address Card with Embedded Map */}
             <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
               {/* Address Info */}
@@ -213,7 +245,7 @@ const ContactPage = () => {
                 </a>
                 <div className="my-3 border-gray-800">or</div>
                 <a
-                  href="tel:+9196249 65017"
+                  href="tel:+919624965017"
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
                 >
                   <Phone size={18} />
@@ -224,6 +256,81 @@ const ContactPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Google Reviews Section */}
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-black to-gray-950">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          {/* Star Icon */}
+          <div className="mb-6 sm:mb-8 flex justify-center">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-brand-red/20 rounded-full flex items-center justify-center">
+              <Star size={40} className="text-brand-red fill-brand-red sm:w-12 sm:h-12" />
+            </div>
+          </div>
+          
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
+            Share Your <span className="text-brand-red">Experience</span>
+          </h3>
+          <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8 max-w-2xl mx-auto">
+            Your feedback helps us improve and helps others find the perfect space for their business!
+          </p>
+          
+          <a 
+            href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 hover:scale-105 shadow-xl text-sm sm:text-base"
+          >
+            <Star size={20} className="fill-white" />
+            <span>Leave a Google Review</span>
+          </a>
+
+          {/* Social Proof */}
+          <div className="mt-8 sm:mt-10 flex items-center justify-center gap-2 text-gray-500 text-xs sm:text-sm">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={16} className="text-yellow-500 fill-yellow-500" />
+              ))}
+            </div>
+            <span>•</span>
+            <span>Trusted by businesses in Ahmedabad</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Floating Review Prompt - Appears on Scroll */}
+      {showReviewPrompt && (
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 animate-slide-up max-w-xs sm:max-w-sm">
+          <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 relative border-2 border-brand-red/20">
+            <button
+              onClick={dismissPrompt}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+            
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-red rounded-full flex items-center justify-center flex-shrink-0">
+                <Star size={20} className="text-white fill-white sm:w-6 sm:h-6" />
+              </div>
+              <div className="text-left">
+                <h4 className="font-bold text-gray-900 text-sm sm:text-base">Enjoying our service?</h4>
+                <p className="text-xs sm:text-sm text-gray-600">Leave us a review!</p>
+              </div>
+            </div>
+            
+            <a
+              href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center px-4 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 text-sm"
+              onClick={dismissPrompt}
+            >
+              Write a Review
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
