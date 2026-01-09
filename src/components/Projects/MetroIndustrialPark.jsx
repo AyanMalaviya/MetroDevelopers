@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, X, Ruler, Shield, Truck, Phone, CheckCircle, Maximize2, Building2, Factory, Camera, Droplets, Scale, TrendingUp, Clock, MapPin, ExternalLink } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
+import SEO from '../SEO/SEO';
 
 const MetroIndustrialPark = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -438,17 +439,6 @@ const MetroIndustrialPark = () => {
                             <Maximize2 size={16} />
                             <span>View Full Size</span>
                           </button>
-                          {layoutImages.siteMapPDF && (
-                            <a
-                              href={layoutImages.siteMapPDF}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-all text-sm"
-                            >
-                              <ExternalLink size={16} />
-                              <span>Open PDF</span>
-                            </a>
-                          )}
                         </div>
                         <p className="text-gray-500 text-xs mt-3">Click on image or button to view in full screen</p>
                       </div>
