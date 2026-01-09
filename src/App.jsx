@@ -1,31 +1,28 @@
-// src/App.jsx
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Layout/Navbar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import InstallPWA from './components/InstallPWA'; // ✅ Import
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
-// import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-import Footer from './components/Layout/Footer';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-brand-dark">
+    <Router>
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        {/* Add padding-top to account for fixed navbar */}
-        <main className="pt-16 sm:pt-[68px]">
+        <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
-            {/* <Route path="/about" element={<AboutPage />} /> */}
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </main>
         <Footer />
+        <InstallPWA />
       </div>
-
-    </BrowserRouter>
+    </Router>
   );
 }
 
