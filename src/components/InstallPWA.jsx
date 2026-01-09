@@ -68,6 +68,13 @@ const InstallPWA = () => {
   if (isInstalled || !showInstallButton) {
     return null;
   }
+  // Add this to your component temporarily
+  useEffect(() => {
+    console.log('InstallPWA component mounted');
+    console.log('Display mode:', window.matchMedia('(display-mode: standalone)').matches);
+    console.log('Service Worker support:', 'serviceWorker' in navigator);
+  }, []);
+
 
   return (
     <>
@@ -102,35 +109,6 @@ const InstallPWA = () => {
           </button>
         </div>
       </div>
-
-      {/* Alternative: Top Banner Style (Optional - remove if you prefer floating button) */}
-      {/* <div className="fixed top-16 left-0 right-0 z-40 bg-brand-red shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Download size={20} className="text-white flex-shrink-0" />
-              <p className="text-white text-sm font-semibold">
-                Install our app for quick access!
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleInstallClick}
-                className="bg-white hover:bg-gray-100 text-brand-red font-bold py-2 px-4 rounded-lg transition-all text-sm"
-              >
-                Install
-              </button>
-              <button
-                onClick={handleDismiss}
-                className="text-white hover:text-gray-200 p-2"
-                aria-label="Dismiss"
-              >
-                <X size={20} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 };

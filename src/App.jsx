@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import InstallPWA from './components/InstallPWA'; // ✅ Import
+import Navbar from './components/Layout/Navbar';
+import Footer from './components/Layout/Footer';
+import InstallPWA from './components/InstallPWA';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import ContactPage from './pages/ContactPage';
