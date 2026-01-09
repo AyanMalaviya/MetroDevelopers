@@ -2,9 +2,35 @@ import React, { useState } from 'react';
 import { Building2, Store } from 'lucide-react';
 import MetroIndustrialPark from '../components/Projects/MetroIndustrialPark';
 import MetroArcade from '../components/Projects/MetroArcade';
+import SEO from '../components/SEO/SEO';
 
 const ProjectsPage = () => {
   const [activeProject, setActiveProject] = useState('industrial');
+
+ const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Our Projects - Metro Enterprise",
+    "description": "Browse Metro Industrial Park and Metro Arcade projects",
+    "url": "https://www.metrodevelopers.co.in/projects",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.metrodevelopers.co.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Projects",
+          "item": "https://www.metrodevelopers.co.in/projects"
+        }
+      ]
+    }
+  };
 
   const projects = [
     {
@@ -22,6 +48,15 @@ const ProjectsPage = () => {
   ];
 
   return (
+    <>      
+      <SEO 
+        title="Projects - Metro Industrial Park & Metro Arcade | Ahmedabad"
+        description="Explore Metro Industrial Park (54,000 sq.yard, 63 sheds, 4K-50K sq.ft, 30-35ft height, 60ft roads, weigh bridge, 6-8% ROI, 90 days possession) and Metro Arcade (80,000 sq.ft, 60+ shops) in Moraiya, Ahmedabad."
+        keywords="Metro Industrial Park, Metro Arcade, 54000 sq yard industrial park, 63 industrial sheds, 4000 sqft shed, 50000 sqft warehouse, weigh bridge, 60ft roads, 6% ROI, 8% ROI, possession 90 days"
+        canonical="/projects"
+        ogImage="/images/2shed.jpg"
+        structuredData={structuredData}
+      />
     <div className="min-h-screen bg-black">
       {/* Mobile-Optimized Project Navbar */}
       <nav className="top-16 z-40 bg-black border-b border-gray-800">
@@ -70,6 +105,7 @@ const ProjectsPage = () => {
         {activeProject === 'arcade' && <MetroArcade />}
       </div>
     </div>
+  </>
   );
 };
 

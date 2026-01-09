@@ -2,10 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
+import SEO from '../components/SEO/SEO.jsx';
 
 const HomePage = () => {
   const [isVisible, setIsVisible] = useState(false);
-
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Metro Enterprise - Industrial & Commercial Spaces",
+    "description": "Premium industrial sheds and commercial spaces in Moraiya, Ahmedabad",
+    "url": "https://www.metrodevelopers.co.in/",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.metrodevelopers.co.in/"
+      }]
+    }
+  };
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -52,6 +68,15 @@ const HomePage = () => {
   ];
 
   return (
+<>
+      <SEO 
+        title="Metro Enterprise - Industrial Sheds & Warehouses in Ahmedabad | Moraiya"
+        description="Premium industrial park in Moraiya, Changodar, Ahmedabad. 54,000 sq.yard (4.86 lakh sq.ft) with 63 industrial sheds. Units: 4K-50K sq.ft ✓ 30-35ft Height ✓ 60ft Roads ✓ Weigh Bridge ✓ 24x7 Water ✓ CCTV Security ✓ 90 Days Possession ✓ 6-8% ROI. Perfect for manufacturing, warehousing, logistics."
+        keywords="industrial shed Ahmedabad, warehouse Moraiya, factory space Changodar, industrial park 4000 sqft, shed 10000 sqft, warehouse 50000 sqft, 54000 sq yard industrial park, 63 industrial units, weigh bridge facility, 60ft road width, 6% ROI, 8% ROI, GIDC approved, possession in 90 days"
+        canonical="/"
+        ogImage="/images/2shed.jpg"
+        structuredData={structuredData}
+      />
     <div className="min-h-screen bg-black">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -256,6 +281,7 @@ const HomePage = () => {
         </div>
       </section>
     </div>
+  </>  
   );
 };
 

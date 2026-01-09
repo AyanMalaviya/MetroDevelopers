@@ -9,6 +9,41 @@ const MetroIndustrialPark = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [activeTab, setActiveTab] = useState('areaTables');
 
+  const propertySchema = {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    "name": "Metro Industrial Park",
+    "description": "54,000 sq.yard industrial park with 63 RCC sheds (4K-50K sq.ft), 30-35ft height, 60ft roads, weigh bridge, 6-8% ROI",
+    "url": "https://www.metrodevelopers.co.in/projects/metro-industrial-park",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Moraiya, Changodar",
+      "addressLocality": "Moraiya",
+      "addressRegion": "Gujarat",
+      "postalCode": "382213",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "22.914141879249897",
+      "longitude": "72.41748307531053"
+    },
+    "amenityFeature": [
+      { "@type": "LocationFeatureSpecification", "name": "Total Area", "value": "54,000 sq.yard" },
+      { "@type": "LocationFeatureSpecification", "name": "Total Units", "value": "63 Sheds" },
+      { "@type": "LocationFeatureSpecification", "name": "Unit Sizes", "value": "4,000-50,000 sq.ft" },
+      { "@type": "LocationFeatureSpecification", "name": "RCC Construction", "value": true },
+      { "@type": "LocationFeatureSpecification", "name": "Height", "value": "30-35 feet" },
+      { "@type": "LocationFeatureSpecification", "name": "Road Width", "value": "60 feet" },
+      { "@type": "LocationFeatureSpecification", "name": "Possession", "value": "90 days" },
+      { "@type": "LocationFeatureSpecification", "name": "Security", "value": "CCTV & Guards" },
+      { "@type": "LocationFeatureSpecification", "name": "Water Supply", "value": "24x7" },
+      { "@type": "LocationFeatureSpecification", "name": "Weigh Bridge", "value": "Separate" },
+      { "@type": "LocationFeatureSpecification", "name": "Waste Management", "value": true },
+      { "@type": "LocationFeatureSpecification", "name": "ROI", "value": "6-8%" }
+    ]
+  };
+
   const images = [
     { url: '/images/2shed.jpg', alt: 'Modern Industrial Shed', title: 'Modern Industrial Shed', description: 'State-of-the-art industrial sheds with high ceilings' },
     { url: '/images/4shed.jpg', alt: 'Warehouse Facility', title: 'Warehouse Facility', description: 'Spacious warehouse units with optimal storage' },
@@ -103,6 +138,15 @@ const MetroIndustrialPark = () => {
   };
 
   return (
+    <>
+      <SEO 
+        title="Metro Industrial Park - 54,000 sq.yard Industrial Sheds | Moraiya, Ahmedabad"
+        description="Premium industrial park with 63 RCC sheds (4,000-50,000 sq.ft) in Moraiya, Ahmedabad. ✓ 54,000 sq.yard (4.86 lakh sq.ft) ✓ 30-35ft Height ✓ 60ft Roads ✓ CCTV & Guards ✓ 24x7 Water ✓ Separate Weigh Bridge ✓ Waste Management ✓ 90 Days Possession ✓ 6-8% ROI. Perfect for manufacturing, warehousing, logistics."
+        keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, industrial shed 4000 sqft, warehouse 10000 sqft, factory space 50000 sqft, 60 feet road width, weigh bridge facility, 6 percent ROI, 8 percent ROI, possession 90 days, RCC shed Moraiya, GIDC approved Changodar"
+        canonical="/projects/metro-industrial-park"
+        ogImage="/images/2shed.jpg"
+        structuredData={propertySchema}
+      />
     <div className="min-h-screen bg-black">
       {/* Hero Section with Slideshow */}
       <section className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden">
@@ -554,8 +598,8 @@ const MetroIndustrialPark = () => {
         <ExternalLink size={16} />
         <span>View PDF</span>
       </a>
-
     </div>
+    </>
   );
 };
 

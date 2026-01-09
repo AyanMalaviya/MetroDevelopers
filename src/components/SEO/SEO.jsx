@@ -4,49 +4,37 @@ const SEO = ({
   title, 
   description, 
   keywords,
+  canonical,
   ogImage = '/og-image.jpg',
-  url 
+  structuredData
 }) => {
-  const siteName = 'Metro Enterprise - Metro Industrial Park';
-  const fullTitle = title ? `${title} | ${siteName}` : siteName;
-  const siteUrl = 'https://metrodevelopers.co.in';
-  const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
+  const siteUrl = 'https://www.metrodevelopers.co.in'; // ✅ UPDATED
+  const fullCanonical = canonical ? `${siteUrl}${canonical}` : siteUrl;
+  const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 
   return (
     <>
-      {/* Primary Meta Tags */}
-      <title>{fullTitle}</title>
-      <meta name="title" content={fullTitle} />
+      <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
+      <link rel="canonical" href={fullCanonical} />
       
-      {/* Canonical URL */}
-      <link rel="canonical" href={fullUrl} />
-      
-      {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={fullUrl} />
-      <meta property="og:title" content={fullTitle} />
+      <meta property="og:url" content={fullCanonical} />
+      <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={`${siteUrl}${ogImage}`} />
-      <meta property="og:site_name" content={siteName} />
-      <meta property="og:locale" content="en_IN" />
+      <meta property="og:image" content={fullOgImage} />
       
-      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={fullUrl} />
-      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
+      <meta name="twitter:image" content={fullOgImage} />
       
-      {/* Additional Meta Tags */}
-      <meta name="robots" content="index, follow" />
-      <meta name="language" content="English" />
-      <meta name="author" content="Metro Enterprise" />
-      <meta name="geo.region" content="IN-GJ" />
-      <meta name="geo.placename" content="Changodar, Ahmedabad, Gujarat" />
-      <meta name="geo.position" content="22.9870;72.5530" /> {/* Approximate Changodar coordinates */}
-      <meta name="ICBM" content="22.9870, 72.5530" />
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
     </>
   );
 };

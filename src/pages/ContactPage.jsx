@@ -5,7 +5,30 @@ import { FaWhatsapp } from 'react-icons/fa';
 const ContactPage = () => {
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
-
+const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Metro Enterprise",
+    "description": "Get in touch for industrial sheds and commercial spaces",
+    "url": "https://www.metrodevelopers.co.in/contact",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.metrodevelopers.co.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Contact",
+          "item": "https://www.metrodevelopers.co.in/contact"
+        }
+      ]
+    }
+  };
   const partners = [
     {
       name: 'Amir Malaviya',
@@ -53,6 +76,14 @@ const ContactPage = () => {
   };
 
   return (
+    <>
+    <SEO 
+        title="Contact Us - Metro Enterprise | Industrial Sheds Ahmedabad"
+        description="Contact Metro Enterprise for industrial sheds, warehouses in Moraiya, Ahmedabad. Call +91 98242 35642, +91 96249 65017. Email: metrodevelopers26@gmail.com. Visit: Opp. Suvas Ind Estate, Moraiya - 382213."
+        keywords="contact Metro Enterprise, industrial shed inquiry Ahmedabad, warehouse contact Moraiya, real estate Ahmedabad contact, Amir Malaviya, Nazim Kazani"
+        canonical="/contact"
+        structuredData={structuredData}
+      />
     <div className="min-h-screen bg-black">
       {/* Hero Section with Email in Top Right */}
       <section className="relative bg-gradient-to-b from-gray-950 via-black to-black py-6 sm:py-16 md:py-20 overflow-hidden">
@@ -332,6 +363,7 @@ const ContactPage = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
