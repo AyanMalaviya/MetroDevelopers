@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'images/**/*'],
       manifest: {
-        name: 'Metro Enterprise - Industrial & Commercial Spaces',
+        name: 'Metro Enterprise - Industrial & warehouse Spaces',
         short_name: 'Metro Enterprise',
-        description: 'Premium industrial parks and commercial spaces in Ahmedabad',
+        description: 'Premium industrial parks and warehouse spaces in Ahmedabad',
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',

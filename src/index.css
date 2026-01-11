@@ -2,17 +2,149 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== THEME VARIABLES ===== */
+:root {
+  /* Light Theme (White/Default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-hover: #f9fafb;
+  
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  
+  --border-color: #e5e7eb;
+  --border-hover: #d1d5db;
+  
+  --shadow-sm: rgba(0, 0, 0, 0.05);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+  
+  --overlay-light: rgba(255, 255, 255, 0.9);
+  --overlay-dark: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #111827;
+  --bg-card: #1f2937;
+  --bg-hover: #374151;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  
+  --border-color: #374151;
+  --border-hover: #4b5563;
+  
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.5);
+  --shadow-lg: rgba(0, 0, 0, 0.7);
+  
+  --overlay-light: rgba(0, 0, 0, 0.9);
+  --overlay-dark: rgba(0, 0, 0, 0.7);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   
   body {
-    @apply bg-black text-white antialiased;
+    @apply antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Smooth transitions for all theme-aware elements */
+  * {
+    transition-property: background-color, color, border-color, box-shadow;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+  }
+
+  /* Preserve animation transitions */
+  [class*="animate-"] {
+    transition: none !important;
+  }
+}
+
+@layer components {
+  /* ===== THEME UTILITY CLASSES ===== */
+  
+  /* Backgrounds */
+  .theme-bg-primary {
+    background-color: var(--bg-primary);
+  }
+  
+  .theme-bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+  
+  .theme-bg-tertiary {
+    background-color: var(--bg-tertiary);
+  }
+  
+  .theme-bg-card {
+    background-color: var(--bg-card);
+  }
+  
+  .theme-bg-hover:hover {
+    background-color: var(--bg-hover);
+  }
+  
+  /* Text Colors */
+  .theme-text-primary {
+    color: var(--text-primary);
+  }
+  
+  .theme-text-secondary {
+    color: var(--text-secondary);
+  }
+  
+  .theme-text-tertiary {
+    color: var(--text-tertiary);
+  }
+  
+  /* Borders */
+  .theme-border {
+    border-color: var(--border-color);
+  }
+  
+  .theme-border-hover:hover {
+    border-color: var(--border-hover);
+  }
+  
+  /* Shadows */
+  .theme-shadow-sm {
+    box-shadow: 0 1px 2px 0 var(--shadow-sm);
+  }
+  
+  .theme-shadow-md {
+    box-shadow: 0 4px 6px -1px var(--shadow-md);
+  }
+  
+  .theme-shadow-lg {
+    box-shadow: 0 10px 15px -3px var(--shadow-lg);
+  }
+  
+  /* Overlays */
+  .theme-overlay-light {
+    background-color: var(--overlay-light);
+  }
+  
+  .theme-overlay-dark {
+    background-color: var(--overlay-dark);
   }
 }
 
 @layer utilities {
+  /* Animation Delays */
   .animate-delay-100 {
     animation-delay: 0.1s;
   }
@@ -32,6 +164,7 @@
     animation-delay: 0.6s;
   }
   
+  /* Animated Gradients */
   .bg-animated-gradient {
     background: linear-gradient(270deg, #dc2626, #991b1b, #7f1d1d);
     background-size: 200% 200%;
@@ -46,4 +179,41 @@
     -webkit-text-fill-color: transparent;
     animation: gradient 3s linear infinite;
   }
+
+  /* Theme-aware gradient overlays */
+  .theme-gradient-overlay {
+    background: linear-gradient(to bottom, 
+      var(--overlay-dark) 0%, 
+      transparent 100%
+    );
+  }
+}
+
+/* ===== SCROLLBAR STYLING (THEME-AWARE) ===== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}
+
+/* ===== SELECTION STYLING ===== */
+::selection {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #dc2626;
+  color: #ffffff;
 }

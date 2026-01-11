@@ -2,12 +2,16 @@ import React from 'react';
 import { Building2, MapPin, Phone, Mail } from 'lucide-react';
 import { FaWhatsapp, FaInstagram, FaFacebook, FaLinkedin } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
+
 
 const Footer = () => {
+  const { theme } = useTheme();
   const currentYear = new Date().getFullYear();
 
+
   return (
-    <footer className="bg-gradient-to-b from-black to-gray-950 border-t border-gray-800">
+    <footer className={`${theme === 'dark' ? 'bg-gradient-to-b from-black to-gray-950 border-gray-800' : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200'} border-t`}>
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
@@ -15,17 +19,17 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <Building2 className="text-brand-red" size={28} />
-              <span className="text-xl font-bold text-white">Metro Enterprise</span>
+              <span className="text-xl font-bold theme-text-primary">Metro Enterprise</span>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+            <p className="theme-text-secondary text-sm leading-relaxed mb-4">
               Premium industrial and commercial infrastructure in Ahmedabad. Building spaces for growing businesses.
             </p>
             <div className="flex gap-3">
               <a
-                href="https://wa.me/919824235642"
+                href="https://wa.me/919635676767"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-800 hover:bg-brand-red rounded-full flex items-center justify-center text-white transition-all"
+                className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
                 aria-label="WhatsApp"
               >
                 <FaWhatsapp size={20} />
@@ -34,7 +38,7 @@ const Footer = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-800 hover:bg-brand-red rounded-full flex items-center justify-center text-white transition-all"
+                className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
                 aria-label="Instagram"
               >
                 <FaInstagram size={20} />
@@ -43,7 +47,7 @@ const Footer = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-800 hover:bg-brand-red rounded-full flex items-center justify-center text-white transition-all"
+                className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
                 aria-label="Facebook"
               >
                 <FaFacebook size={20} />
@@ -52,7 +56,7 @@ const Footer = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-800 hover:bg-brand-red rounded-full flex items-center justify-center text-white transition-all"
+                className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
                 aria-label="LinkedIn"
               >
                 <FaLinkedin size={20} />
@@ -60,22 +64,23 @@ const Footer = () => {
             </div>
           </div>
 
+
           {/* Quick Links */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Quick Links</h3>
+            <h3 className="theme-text-primary font-bold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/" className="text-gray-400 hover:text-brand-red transition-colors text-sm">
+                <Link to="/" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/projects" className="text-gray-400 hover:text-brand-red transition-colors text-sm">
+                <Link to="/projects" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
                   Projects
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-400 hover:text-brand-red transition-colors text-sm">
+                <Link to="/contact" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
                   Contact Us
                 </Link>
               </li>
@@ -84,7 +89,7 @@ const Footer = () => {
                   href="https://g.page/r/CfbFhZSjMaH1EBI/review"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-brand-red transition-colors text-sm"
+                  className="theme-text-secondary hover:text-brand-red transition-colors text-sm"
                 >
                   Write a Review
                 </a>
@@ -92,42 +97,44 @@ const Footer = () => {
             </ul>
           </div>
 
+
           {/* Projects */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Our Projects</h3>
+            <h3 className="theme-text-primary font-bold text-lg mb-4">Our Projects</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/projects" className="text-gray-400 hover:text-brand-red transition-colors text-sm">
+                <Link to="/projects" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
                   Metro Industrial Park
                 </Link>
               </li>
               <li>
-                <Link to="/projects" className="text-gray-400 hover:text-brand-red transition-colors text-sm">
+                <Link to="/projects" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
                   Metro Arcade
                 </Link>
               </li>
             </ul>
           </div>
 
+
           {/* Contact Info */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Contact Us</h3>
+            <h3 className="theme-text-primary font-bold text-lg mb-4">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="text-brand-red flex-shrink-0 mt-1" size={18} />
-                <span className="text-gray-400 text-sm leading-relaxed">
+                <span className="theme-text-secondary text-sm leading-relaxed">
                   Opp. Suvas Ind Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad - 382213
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="text-brand-red flex-shrink-0" size={18} />
-                <a href="tel:+919824235642" className="text-gray-400 hover:text-brand-red transition-colors text-sm">
-                  +91 98242 35642
+                <a href="tel:+919824235642" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
+                  +91 96356 76767
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="text-brand-red flex-shrink-0" size={18} />
-                <a href="mailto:metrodevelopers26@gmail.com" className="text-gray-400 hover:text-brand-red transition-colors text-sm break-all">
+                <a href="mailto:metrodevelopers26@gmail.com" className="theme-text-secondary hover:text-brand-red transition-colors text-sm break-all">
                   metrodevelopers26@gmail.com
                 </a>
               </li>
@@ -136,14 +143,15 @@ const Footer = () => {
         </div>
       </div>
 
+
       {/* Bottom Bar */}
-      <div className="border-t border-gray-800">
+      <div className={`border-t ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-sm text-center sm:text-left">
+            <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-sm text-center sm:text-left`}>
               © {currentYear} Metro Developers. All rights reserved.
             </p>
-            <p className="text-gray-500 text-sm text-center sm:text-right">
+            <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-sm text-center sm:text-right`}>
               Developed by{' '}
               <span className="text-brand-red font-semibold">Ayan Malaviya</span>
             </p>
@@ -153,5 +161,6 @@ const Footer = () => {
     </footer>
   );
 };
+
 
 export default Footer;
