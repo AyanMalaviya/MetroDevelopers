@@ -217,7 +217,7 @@ const HomePage = () => {
             </Link>
             
             <a 
-              href={`https://wa.me/919635676767?text=${whatsappMessage}`}
+              href={`https://wa.me/916356766767?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
               className={`group inline-flex items-center gap-2 px-8 sm:px-10 py-4 sm:py-5 backdrop-blur-xl border-2 font-bold rounded-xl transition-all duration-300 hover:scale-105 text-sm sm:text-base shadow-xl ${
@@ -259,16 +259,6 @@ const HomePage = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Animated Scroll Indicator */}
-        <div 
-          className={`absolute bottom-8 sm:bottom-12 left-2/5 -translate-x-1/2 z-20 animate-bounce transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-        >
-          <div className="flex flex-col items-center gap-2">
-            <ChevronDown className={`drop-shadow-lg ${theme === 'dark' ? 'text-white/60' : 'text-gray-700/70'}`} size={32} />
-            <div className={`w-0.5 h-12 rounded-full ${theme === 'dark' ? 'bg-gradient-to-b from-white/30 to-transparent' : 'bg-gradient-to-b from-gray-700/30 to-transparent'}`}></div>
           </div>
         </div>
       </section>

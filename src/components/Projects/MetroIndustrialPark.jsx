@@ -264,7 +264,7 @@ const MetroIndustrialPark = () => {
         {/* CTA Buttons */}
         <div className="flex flex-wrap gap-3">
           <a
-            href={`https://wa.me/919635676767?text=${whatsappMessage}`}
+            href={`https://wa.me/916356766767?text=${whatsappMessage}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm sm:text-base shadow-xl hover:shadow-2xl hover:scale-105"
@@ -579,11 +579,11 @@ const MetroIndustrialPark = () => {
                   <div className={`theme-bg-card rounded-xl p-6 border theme-border`}>
                     <h3 className="text-xl font-bold theme-text-primary mb-4">Interested?</h3>
                     <p className="theme-text-tertiary text-sm mb-6">
-                      Contact for RCC options, detailed information, site visits, and booking.
+                      Contact for Personalized options, detailed information, site visits, and booking.
                     </p>
                     <div className="space-y-3">
                       <a
-                        href={`https://wa.me/919635676767?text=${whatsappMessage}`}
+                        href={`https://wa.me/916356766767?text=${whatsappMessage}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all"

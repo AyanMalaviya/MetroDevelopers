@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
 const Navbar = () => {
@@ -11,11 +12,17 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [scrolled, setScrolled] = useState(false);
 
+  // Scroll progress indicator
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   useEffect(() => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
-
-      // Check if scrolled past threshold
       setScrolled(currentScrollY > 50);
 
       if (currentScrollY < 10) {
@@ -31,7 +38,6 @@ const Navbar = () => {
     };
 
     window.addEventListener('scroll', controlNavbar);
-
     return () => {
       window.removeEventListener('scroll', controlNavbar);
     };
@@ -52,9 +58,11 @@ const Navbar = () => {
       } ${
         scrolled 
           ? theme === 'dark'
-            ? 'bg-black/95 backdrop-blur-md border-b border-gray-800 shadow-lg'
-            : 'bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg'
-          : 'bg-transparent'
+            ? 'bg-black/80 backdrop-blur-xl shadow-lg'
+            : 'bg-white/80 backdrop-blur-xl shadow-lg'
+          : theme === 'dark'
+            ? 'bg-black/20 backdrop-blur-md'
+            : 'bg-white/20 backdrop-blur-md'
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3">
@@ -142,16 +150,32 @@ const Navbar = () => {
         </button>
       </nav>
 
-      {/* Mobile Menu */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+      {/* Animated Decorative Line - Theme-Aware with Scroll Progress */}
+      <motion.div
+        className={`h-1 transition-all duration-300 origin-left ${
+          scrolled
+            ? 'bg-gradient-to-r from-brand-red via-red-500 to-brand-red'
+            : theme === 'dark'
+              ? 'bg-gradient-to-r from-transparent via-white to-transparent opacity-60'
+              : 'bg-gradient-to-r from-transparent via-black to-transparent opacity-40'
         }`}
+        style={{ scaleX }}
+      />
+
+      {/* Mobile Menu */}
+      <motion.div
+        initial={false}
+        animate={{ 
+          height: isMenuOpen ? 'auto' : 0,
+          opacity: isMenuOpen ? 1 : 0
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className="md:hidden overflow-hidden"
       >
-        <div className={`px-4 py-4 backdrop-blur-lg border-t space-y-2 ${
+        <div className={`px-4 py-4 backdrop-blur-xl space-y-2 ${
           theme === 'dark'
-            ? 'bg-gray-900/95 border-gray-800'
-            : 'bg-white/95 border-gray-200'
+            ? 'bg-gray-900/90 border-t border-gray-800'
+            : 'bg-white/90 border-t border-gray-200'
         }`}>
           <NavLink
             to="/"
@@ -201,7 +225,7 @@ const Navbar = () => {
             Contact
           </NavLink>
         </div>
-      </div>
+      </motion.div>
     </header>
   );
 };

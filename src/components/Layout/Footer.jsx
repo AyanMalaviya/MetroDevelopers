@@ -26,7 +26,7 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               <a
-                href="https://wa.me/919635676767"
+                href="https://wa.me/916356766767"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
@@ -35,7 +35,7 @@ const Footer = () => {
                 <FaWhatsapp size={20} />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/metro.industrialpark/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
@@ -44,22 +44,13 @@ const Footer = () => {
                 <FaInstagram size={20} />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/metro.industrialpark"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
                 aria-label="Facebook"
               >
                 <FaFacebook size={20} />
-              </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-10 h-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} hover:bg-brand-red rounded-full flex items-center justify-center theme-text-primary transition-all`}
-                aria-label="LinkedIn"
-              >
-                <FaLinkedin size={20} />
               </a>
             </div>
           </div>
