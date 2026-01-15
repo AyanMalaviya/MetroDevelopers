@@ -1,6 +1,6 @@
 // src/components/Layout/Navbar.jsx
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
@@ -68,11 +68,13 @@ const Navbar = () => {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3">
         {/* Logo Section */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <Link to="/" onClick={closeMenu}>
           <img 
             src="/MDLogo.png" 
             alt="Metro Industrial Park Logo" 
             className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded"
           />
+          </Link>
           
           <div className="flex flex-col leading-tight">
             <span className={`text-sm sm:text-base md:text-lg font-bold transition-colors ${

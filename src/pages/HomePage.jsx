@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users } from 'lucide-react';
+import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users, X } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import SEO from '../components/SEO/SEO.jsx';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.jsx';
@@ -12,6 +12,9 @@ const HomePage = () => {
   const { theme } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
+  const [promptDismissed, setPromptDismissed] = useState(false);
+
   const featuresRef = useRef(null);
   const statsRef = useRef(null);
   const ctaRef = useRef(null);
@@ -21,11 +24,22 @@ const HomePage = () => {
 
   const whatsappMessage = encodeURIComponent("Hello, I would like to inquire about the industrial sheds.");
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     setIsVisible(true);
 
     const handleScroll = () => {
       setScrollY(window.scrollY);
+
+      // Check scroll depth for review prompt (50% of page)
+      const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      if (scrollPercentage > 50 && !showReviewPrompt && !promptDismissed) {
+        setShowReviewPrompt(true);
+      }
 
       if (featuresRef.current && !featuresInView) {
         const rect = featuresRef.current.getBoundingClientRect();
@@ -52,8 +66,18 @@ const HomePage = () => {
     window.addEventListener('scroll', handleScroll);
     handleScroll();
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [featuresInView, statsInView, ctaInView]);
+    // Timer-based trigger: Show after 15 seconds if not dismissed
+    const timer = setTimeout(() => {
+      if (!promptDismissed) {
+        setShowReviewPrompt(true);
+      }
+    }, 15000); // 15 seconds
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    };
+  }, [featuresInView, statsInView, ctaInView, showReviewPrompt, promptDismissed]);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -106,11 +130,26 @@ const HomePage = () => {
   ];
 
   const stats = [
-    { value: '54k+', label: 'Sq.yards', icon: <Building2 size={24} /> },
-    { value: '63', label: 'Industrial Units', icon: <Award size={24} /> },
+    { value: '30k+', label: 'Sq.yards of area', icon: <Building2 size={24} /> },
+    { value: '43+', label: 'Industrial Units Made', icon: <Award size={24} /> },
     { value: '100%', label: 'Client Satisfaction', icon: <Star size={24} /> },
     { value: '6+', label: 'Years Experience', icon: <Clock size={24} /> }
   ];
+
+  const dismissPrompt = () => {
+    setShowReviewPrompt(false);
+    setPromptDismissed(true);
+    // Save to localStorage to not show again
+    localStorage.setItem('reviewPromptDismissed', 'true');
+  };
+
+  // Check localStorage on mount
+  useEffect(() => {
+    const dismissed = localStorage.getItem('reviewPromptDismissed');
+    if (dismissed === 'true') {
+      setPromptDismissed(true);
+    }
+  }, []);
 
   return (
     <>
@@ -127,280 +166,335 @@ const HomePage = () => {
       <ThemeToggle />
 
       <div className="min-h-screen theme-bg-primary overflow-hidden">
-       {/* ===== REDESIGNED HERO SECTION - CENTERED ===== */}
-{/* ===== REDESIGNED HERO SECTION - CENTERED WITH NEW FONTS ===== */}
-<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-  {/* Animated Background */}
-  <div className="absolute inset-0 overflow-hidden">
-    <motion.div 
-      className="absolute inset-0 bg-cover bg-center"
-      style={{ 
-        backgroundImage: "url('/images/map.jpg')",
-        scale: 1.1,
-      }}
-      animate={{
-        scale: [1.1, 1.15, 1.1],
-      }}
-      transition={{
-        duration: 20,
-        repeat: Infinity,
-        ease: "linear"
-      }}
-    />
-    
-    <div className={`absolute inset-0 ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-br from-black/80 via-black/70 to-brand-red/30' 
-        : 'bg-gradient-to-br from-white/70 via-white/50 to-brand-red/20'
-    }`}></div>
-
-    <motion.div
-      className="absolute top-20 left-20 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl"
-      animate={{
-        x: [0, 100, 0],
-        y: [0, 50, 0],
-      }}
-      transition={{
-        duration: 15,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    />
-    <motion.div
-      className="absolute bottom-20 right-20 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl"
-      animate={{
-        x: [0, -100, 0],
-        y: [0, -50, 0],
-      }}
-      transition={{
-        duration: 18,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    />
-
-    <div className="absolute inset-0 bg-[linear-gradient(rgba(220,38,38,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-  </div>
-
-  {/* Content - Centered */}
-  <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-20 text-center">
-    
-    {/* Badge */}
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-brand-red/50 bg-brand-red/10 backdrop-blur-xl mb-8"
-    >
-      <Sparkles className="text-brand-red w-4 h-4 animate-pulse" />
-      <span 
-        className={`text-xs font-bold tracking-wide ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
-        style={{ fontFamily: '"Montserrat", "Inter", sans-serif', letterSpacing: '0.01em' }}
-      >
-        #1 INDUSTRIAL PARK IN AHMEDABAD
-      </span>
-    </motion.div>
-
-    {/* Main Heading */}
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
-    >
-      <h1
-        className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-3 ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}
-        style={{ 
-          fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
-          letterSpacing: '0.01em',
-          fontWeight: '900'
-        }}
-      >
-        METRO
-      </h1>
-      
-      <h1
-        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-8 text-brand-red"
-        style={{ 
-          fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
-          letterSpacing: '0.01em',
-          fontWeight: '900'
-        }}
-      >
-        INDUSTRIAL PARK
-      </h1>
-    </motion.div>
-
-    {/* Description */}
-    <motion.p
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-      className={`text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-3xl mx-auto ${
-        theme === 'dark' ? 'text-gray-300' : 'text-gray-900'
-      }`}
-      style={{ 
-        fontFamily: '"Inter", "Roboto", sans-serif',
-        fontWeight: '500'
-      }}
-    >
-      Your Gateway to World-Class Manufacturing & Warehousing Solutions in Ahmedabad
-    </motion.p>
-
-    {/* CTA Buttons */}
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.7 }}
-      className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-    >
-      <Link to="/projects">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="group relative px-8 py-4 bg-brand-red text-white font-bold rounded-2xl overflow-hidden shadow-2xl shadow-brand-red/50 w-full sm:w-auto"
-          style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-red-600 to-brand-red"
-            initial={{ x: '-100%' }}
-            whileHover={{ x: 0 }}
-            transition={{ duration: 0.3 }}
-          />
-          <span className="relative z-10 flex items-center justify-center gap-2 text-base">
-            <Building2 size={20} />
-            Explore Projects
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </span>
-        </motion.button>
-      </Link>
-
-      <a href={`https://wa.me/916356766767?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className={`group px-8 py-4 font-bold rounded-2xl border-2 backdrop-blur-xl w-full sm:w-auto ${
-            theme === 'dark'
-              ? 'border-white/30 text-white hover:border-white hover:bg-white/10'
-              : 'border-gray-900/30 text-gray-900 hover:border-gray-900 hover:bg-gray-900/10'
-          }`}
-          style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
-        >
-          <span className="flex items-center justify-center gap-2 text-base">
-            <FaWhatsapp size={20} className="text-green-500" />
-            Quick Contact
-          </span>
-        </motion.button>
-      </a>
-    </motion.div>
-
-    {/* Floating Info Cards - Below Buttons - ALL IN ONE ROW */}
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.9 }}
-      className="grid grid-cols-3 gap-3 sm:gap-4 mt-12 max-w-3xl mx-auto"
-    >
-      {/* Card 1 - ROI (GREEN THEME) */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -5 }}
-        className={`p-4 sm:p-5 rounded-xl backdrop-blur-2xl border-2 shadow-lg ${
-          theme === 'dark'
-            ? 'bg-green-900/30 border-green-600/50 hover:border-green-500'
-            : 'bg-green-50/80 border-green-400 hover:border-green-500'
-        }`}
-      >
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
-            <TrendingUp className="text-green-500" size={18} />
-          </div>
-          <div className="text-center">
-            <div 
-              className="text-xl sm:text-2xl font-black text-green-500"
-              style={{ fontFamily: '"Bebas Neue", "Oswald", sans-serif' }}
-            >
-              6-8%
+        {/* ===== Floating Review Prompt ===== */}
+        {showReviewPrompt && !promptDismissed && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 max-w-xs sm:max-w-sm"
+          >
+            <div className={`rounded-xl shadow-2xl p-4 sm:p-6 relative border-2 ${
+              theme === 'dark' 
+                ? 'bg-gray-900 border-brand-red/30' 
+                : 'bg-white border-brand-red/20'
+            }`}>
+              <button
+                onClick={dismissPrompt}
+                className={`absolute top-2 right-2 transition-colors ${
+                  theme === 'dark'
+                    ? 'text-gray-400 hover:text-gray-200'
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+              
+              <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-red rounded-full flex items-center justify-center flex-shrink-0">
+                  <Star size={20} className="text-white fill-white sm:w-6 sm:h-6" />
+                </div>
+                <div className="text-left">
+                  <h4 className={`font-bold text-sm sm:text-base ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Enjoying our service?
+                  </h4>
+                  <p className={`text-xs sm:text-sm ${
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    Leave us a review!
+                  </p>
+                </div>
+              </div>
+              
+              <a
+                href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center px-4 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 text-sm"
+                onClick={dismissPrompt}
+              >
+                Write a Review
+              </a>
             </div>
-            <div 
-              className={`text-[10px] sm:text-xs font-semibold ${
-                theme === 'dark' ? 'text-green-400' : 'text-green-600'
+          </motion.div>
+        )}
+
+        {/* ===== HERO SECTION ===== */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+          {/* Animated Background */}
+          <div className="absolute inset-0 overflow-hidden">
+            <motion.div 
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ 
+                backgroundImage: "url('/images/map.jpg')",
+                scale: 1.1,
+              }}
+              animate={{
+                scale: [1.1, 1.15, 1.1],
+              }}
+              transition={{
+                duration: 20,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            />
+            
+            <div className={`absolute inset-0 ${
+              theme === 'dark' 
+                ? 'bg-gradient-to-br from-black/80 via-black/70 to-brand-red/30' 
+                : 'bg-gradient-to-br from-white/70 via-white/50 to-brand-red/20'
+            }`}></div>
+
+            <motion.div
+              className="absolute top-20 left-20 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl"
+              animate={{
+                x: [0, 100, 0],
+                y: [0, 50, 0],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            <motion.div
+              className="absolute bottom-20 right-20 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl"
+              animate={{
+                x: [0, -100, 0],
+                y: [0, -50, 0],
+              }}
+              transition={{
+                duration: 18,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(220,38,38,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+          </div>
+
+          {/* Content - Centered */}
+          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-20 text-center">
+            
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-brand-red/50 bg-brand-red/10 backdrop-blur-xl mb-8"
+            >
+              <Sparkles className="text-brand-red w-4 h-4 animate-pulse" />
+              <span 
+                className={`text-xs font-bold tracking-wide ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+                style={{ fontFamily: '"Montserrat", "Inter", sans-serif', letterSpacing: '0.01em' }}
+              >
+                #1 INDUSTRIAL PARK IN AHMEDABAD
+              </span>
+            </motion.div>
+
+            {/* Main Heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <h1
+                className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-3 ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}
+                style={{ 
+                  fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
+                  letterSpacing: '0.01em',
+                  fontWeight: '900'
+                }}
+              >
+                METRO
+              </h1>
+              
+              <h1
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-8 text-brand-red"
+                style={{ 
+                  fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
+                  letterSpacing: '0.01em',
+                  fontWeight: '900'
+                }}
+              >
+                INDUSTRIAL PARK
+              </h1>
+            </motion.div>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className={`text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-3xl mx-auto ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-900'
               }`}
-              style={{ fontFamily: '"Montserrat", sans-serif' }}
+              style={{ 
+                fontFamily: '"Inter", "Roboto", sans-serif',
+                fontWeight: '500'
+              }}
             >
-              Annual ROI
-            </div>
-          </div>
-        </div>
-      </motion.div>
+              Your Gateway to World-Class Manufacturing & Warehousing Solutions in Ahmedabad
+            </motion.p>
 
-      {/* Card 2 - Industrial Units */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -5 }}
-        className={`p-4 sm:p-5 rounded-xl backdrop-blur-2xl border-2 shadow-lg ${
-          theme === 'dark'
-            ? 'bg-gray-900/80 border-gray-700 hover:border-brand-red'
-            : 'bg-white/80 border-gray-300 hover:border-brand-red'
-        }`}
-      >
-        <div className="flex flex-col items-center gap-2">
-          <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${
-            theme === 'dark' ? 'bg-brand-red/20' : 'bg-brand-red/10'
-          }`}>
-            <Building2 className="text-brand-red" size={18} />
-          </div>
-          <div className="text-center">
-            <div 
-              className={`text-xl sm:text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
-              style={{ fontFamily: '"Bebas Neue", "Oswald", sans-serif' }}
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              63
-            </div>
-            <div 
-              className={`text-[10px] sm:text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
-              style={{ fontFamily: '"Montserrat", sans-serif' }}
-            >
-              Industrial Units
-            </div>
-          </div>
-        </div>
-      </motion.div>
+              <Link to="/projects">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative px-8 py-4 bg-brand-red text-white font-bold rounded-2xl overflow-hidden shadow-2xl shadow-brand-red/50 w-full sm:w-auto"
+                  style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-brand-red"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-base">
+                    <Building2 size={20} />
+                    Explore Projects
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+              </Link>
 
-      {/* Card 3 - Total Area */}
-      <motion.div
-        whileHover={{ scale: 1.05, y: -5 }}
-        className={`p-4 sm:p-5 rounded-xl backdrop-blur-2xl border-2 shadow-lg ${
-          theme === 'dark'
-            ? 'bg-gray-900/80 border-gray-700 hover:border-brand-red'
-            : 'bg-white/80 border-gray-300 hover:border-brand-red'
-        }`}
-      >
-        <div className="flex flex-col items-center gap-2">
-          <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${
-            theme === 'dark' ? 'bg-brand-red/20' : 'bg-brand-red/10'
-          }`}>
-            <Award className="text-brand-red" size={18} />
-          </div>
-          <div className="text-center">
-            <div 
-              className={`text-xl sm:text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
-              style={{ fontFamily: '"Bebas Neue", "Oswald", sans-serif' }}
-            >
-              54K+
-            </div>
-            <div 
-              className={`text-[10px] sm:text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
-              style={{ fontFamily: '"Montserrat", sans-serif' }}
-            >
-              Sq.yards Area
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
+              <a href={`https://wa.me/919824235642?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`group px-8 py-4 font-bold rounded-2xl border-2 backdrop-blur-xl w-full sm:w-auto ${
+                    theme === 'dark'
+                      ? 'border-white/30 text-white hover:border-white hover:bg-white/10'
+                      : 'border-gray-900/30 text-gray-900 hover:border-gray-900 hover:bg-gray-900/10'
+                  }`}
+                  style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
+                >
+                  <span className="flex items-center justify-center gap-2 text-base">
+                    <FaWhatsapp size={20} className="text-green-500" />
+                    Quick Contact
+                  </span>
+                </motion.button>
+              </a>
+            </motion.div>
 
-  </div>
-</section>
+            {/* Floating Info Cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+              className="grid grid-cols-3 gap-3 sm:gap-4 mt-12 max-w-3xl mx-auto"
+            >
+              {/* Card 1 - ROI */}
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className={`p-4 sm:p-5 rounded-xl backdrop-blur-2xl border-2 shadow-lg ${
+                  theme === 'dark'
+                    ? 'bg-green-900/30 border-green-600/50 hover:border-green-500'
+                    : 'bg-green-50/80 border-green-400 hover:border-green-500'
+                }`}
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="text-green-500" size={18} />
+                  </div>
+                  <div className="text-center">
+                    <div 
+                      className="text-xl sm:text-2xl font-black text-green-500"
+                      style={{ fontFamily: '"Bebas Neue", "Oswald", sans-serif' }}
+                    >
+                      6-8%
+                    </div>
+                    <div 
+                      className={`text-[10px] sm:text-xs font-semibold ${
+                        theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                      }`}
+                      style={{ fontFamily: '"Montserrat", sans-serif' }}
+                    >
+                      Annual ROI
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 2 - Industrial Units */}
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className={`p-4 sm:p-5 rounded-xl backdrop-blur-2xl border-2 shadow-lg ${
+                  theme === 'dark'
+                    ? 'bg-gray-900/80 border-gray-700 hover:border-brand-red'
+                    : 'bg-white/80 border-gray-300 hover:border-brand-red'
+                }`}
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${
+                    theme === 'dark' ? 'bg-brand-red/20' : 'bg-brand-red/10'
+                  }`}>
+                    <Building2 className="text-brand-red" size={18} />
+                  </div>
+                  <div className="text-center">
+                    <div 
+                      className={`text-xl sm:text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+                      style={{ fontFamily: '"Bebas Neue", "Oswald", sans-serif' }}
+                    >
+                      63
+                    </div>
+                    <div 
+                      className={`text-[10px] sm:text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
+                      style={{ fontFamily: '"Montserrat", sans-serif' }}
+                    >
+                      Industrial Units
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 3 - Total Area */}
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                className={`p-4 sm:p-5 rounded-xl backdrop-blur-2xl border-2 shadow-lg ${
+                  theme === 'dark'
+                    ? 'bg-gray-900/80 border-gray-700 hover:border-brand-red'
+                    : 'bg-white/80 border-gray-300 hover:border-brand-red'
+                }`}
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${
+                    theme === 'dark' ? 'bg-brand-red/20' : 'bg-brand-red/10'
+                  }`}>
+                    <Award className="text-brand-red" size={18} />
+                  </div>
+                  <div className="text-center">
+                    <div 
+                      className={`text-xl sm:text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+                      style={{ fontFamily: '"Bebas Neue", "Oswald", sans-serif' }}
+                    >
+                      54K+
+                    </div>
+                    <div 
+                      className={`text-[10px] sm:text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
+                      style={{ fontFamily: '"Montserrat", sans-serif' }}
+                    >
+                      Sq.yards Area
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+          </div>
+        </section>
 
         {/* ===== Stats Section ===== */}
         <section ref={statsRef} className={`py-16 sm:py-28 ${theme === 'dark' ? 'bg-black' : 'bg-gray-50'} relative overflow-hidden`}>
