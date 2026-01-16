@@ -15,7 +15,7 @@ export default defineConfig({
         description: 'Premium industrial parks and warehouse spaces in Ahmedabad',
         theme_color: '#000000',
         background_color: '#000000',
-        display: 'standalone',
+        display: 'any',
         display_override: ['fullscreen', 'standalone'],
         scope: '/',
         start_url: '/',

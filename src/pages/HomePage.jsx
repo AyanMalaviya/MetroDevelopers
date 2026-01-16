@@ -37,7 +37,7 @@ const HomePage = () => {
 
       // Check scroll depth for review prompt (50% of page)
       const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      if (scrollPercentage > 50 && !showReviewPrompt && !promptDismissed) {
+      if (scrollPercentage > 40 && !showReviewPrompt && !promptDismissed) {
         setShowReviewPrompt(true);
       }
 
@@ -492,6 +492,62 @@ const HomePage = () => {
                 </div>
               </motion.div>
             </motion.div>
+            {/* ===== Scroll Down Indicator ===== */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: scrollY < 100 ? 1 : 0 }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 cursor-pointer"
+              onClick={() => {
+                window.scrollTo({
+                  top: window.innerHeight,
+                  behavior: 'smooth'
+                });
+              }}
+            >
+              <div className="flex flex-col items-center gap-2">
+                <span 
+                  className={`text-xs font-semibold tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                  style={{ fontFamily: '"Montserrat", sans-serif' }}
+                >
+                  SCROLL DOWN
+                </span>
+                <motion.div
+                  animate={{
+                    y: [0, 10, 0],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className={`w-8 h-12 rounded-full border-2 flex items-start justify-center pt-2 ${
+                    theme === 'dark' 
+                      ? 'border-white/30 hover:border-brand-red' 
+                      : 'border-gray-900/30 hover:border-brand-red'
+                  } transition-colors duration-300`}
+                >
+                  <motion.div
+                    animate={{
+                      y: [0, 8, 0],
+                      opacity: [1, 0.3, 1]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <ChevronDown 
+                      size={16} 
+                      className={theme === 'dark' ? 'text-white' : 'text-gray-900'} 
+                    />
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+
 
           </div>
         </section>
