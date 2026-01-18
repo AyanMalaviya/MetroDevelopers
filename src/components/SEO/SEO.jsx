@@ -8,7 +8,7 @@ const SEO = ({
   ogImage = '/og-image.jpg',
   structuredData
 }) => {
-  const siteUrl = 'https://www.metrodevelopers.co.in'; // ✅ UPDATED
+  const siteUrl = 'https://www.metrodevelopers.co.in';
   const fullCanonical = canonical ? `${siteUrl}${canonical}` : siteUrl;
   const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 

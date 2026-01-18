@@ -9,5 +9,3 @@ Disallow: /private/
 # Sitemap location
 Sitemap: https://www.metrodevelopers.co.in/sitemap.xml
 
-# Crawl-delay (optional)
-Crawl-delay: 1
