@@ -5,17 +5,18 @@ import { useTheme } from '../context/ThemeContext';
 import { FileText, MapPin, ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CalculatorComponent from '../components/Calculator/CalculatorComponent';
+import SimpleCalculator from '../components/Calculator/SimpleCalculator';
 
 const Calculator = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
   const [showAreaSheet, setShowAreaSheet] = useState(false);
   const [showSiteLayout, setShowSiteLayout] = useState(false);
-  const [currentTable, setCurrentTable] = useState(0); // 0 for table1, 1 for table2
+  const [currentTable, setCurrentTable] = useState(0);
 
   const tables = [
-    { src: '/images/metro-industrial-table1.jpeg', alt: 'Area Sheet - Table 1' },
-    { src: '/images/metro-industrial-table2.jpeg', alt: 'Area Sheet - Table 2' }
+    { src: '/images/table1.jpg', alt: 'Area Sheet - Table 1' },
+    { src: '/images/table2.jpg', alt: 'Area Sheet - Table 2' }
   ];
 
   const nextTable = () => {
@@ -50,7 +51,6 @@ const Calculator = () => {
               className="relative max-w-6xl w-full"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
               <button
                 onClick={() => setShowAreaSheet(false)}
                 className="absolute -top-12 right-0 p-2 text-white hover:text-brand-red transition-colors"
@@ -58,7 +58,6 @@ const Calculator = () => {
                 <X className="w-8 h-8" />
               </button>
 
-              {/* Image Container */}
               <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   src={tables[currentTable].src}
@@ -66,7 +65,6 @@ const Calculator = () => {
                   className="w-full h-auto"
                 />
 
-                {/* Navigation Buttons */}
                 {tables.length > 1 && (
                   <>
                     <button
@@ -82,7 +80,6 @@ const Calculator = () => {
                       <ChevronRight className="w-6 h-6" />
                     </button>
 
-                    {/* Indicator Dots */}
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
                       {tables.map((_, index) => (
                         <button
@@ -100,7 +97,6 @@ const Calculator = () => {
                 )}
               </div>
 
-              {/* Table Label */}
               <div className="text-center mt-4">
                 <p className="text-white text-sm">
                   Table {currentTable + 1} of {tables.length}
@@ -129,7 +125,6 @@ const Calculator = () => {
               className="relative max-w-6xl w-full"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
               <button
                 onClick={() => setShowSiteLayout(false)}
                 className="absolute -top-12 right-0 p-2 text-white hover:text-brand-red transition-colors"
@@ -137,7 +132,6 @@ const Calculator = () => {
                 <X className="w-8 h-8" />
               </button>
 
-              {/* Image Container */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   src="/images/metro-industrial-map.jpg"
@@ -146,7 +140,6 @@ const Calculator = () => {
                 />
               </div>
 
-              {/* Label */}
               <div className="text-center mt-4">
                 <p className="text-white text-sm">Site Layout Map</p>
               </div>
@@ -163,7 +156,6 @@ const Calculator = () => {
         className="py-8 px-4"
       >
         <div className="max-w-7xl mx-auto">
-          {/* Back Button */}
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -204,7 +196,6 @@ const Calculator = () => {
               </motion.p>
             </div>
 
-            {/* Quick Access Buttons */}
             <motion.div 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -239,14 +230,24 @@ const Calculator = () => {
         </div>
       </motion.section>
 
-      {/* Calculator Component */}
+      {/* Calculator Grid */}
       <motion.section 
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
         className="px-4"
       >
-        <CalculatorComponent />
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-6">
+          {/* Main Calculator - Takes 2 columns */}
+          <div className="lg:col-span-2">
+            <CalculatorComponent />
+          </div>
+
+          {/* Simple Calculator - Takes 1 column */}
+          <div className="lg:col-span-1">
+            <SimpleCalculator />
+          </div>
+        </div>
       </motion.section>
     </div>
   );

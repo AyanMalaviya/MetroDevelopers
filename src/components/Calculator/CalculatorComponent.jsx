@@ -1,9 +1,10 @@
 // src/components/Calculator/CalculatorComponent.jsx
 import { useState, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
+import { Lock, Unlock } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
-const InputField = memo(({ label, field, value, onChange, suffix = '', highlighted = false }) => {
+const InputField = memo(({ label, field, value, onChange, suffix = '', highlighted = false, lockable = false, isLocked = false, onToggleLock }) => {
   const { theme } = useTheme();
 
   return (
@@ -12,11 +13,30 @@ const InputField = memo(({ label, field, value, onChange, suffix = '', highlight
       animate={{ opacity: 1, x: 0 }}
       className="input-group mb-4"
     >
-      <label htmlFor={field} className={`block text-sm font-semibold mb-2 ${
-        theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-      }`}>
-        {label}
-      </label>
+      <div className="flex items-center justify-between mb-2">
+        <label htmlFor={field} className={`block text-sm font-semibold ${
+          theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+        }`}>
+          {label}
+        </label>
+        {lockable && (
+          <button
+            onClick={onToggleLock}
+            className={`p-1 rounded transition-all duration-200 ${
+              isLocked
+                ? theme === 'dark'
+                  ? 'text-amber-400 bg-amber-900/30 hover:bg-amber-900/50'
+                  : 'text-amber-600 bg-amber-100 hover:bg-amber-200'
+                : theme === 'dark'
+                  ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
+                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+            }`}
+            title={isLocked ? 'Unlock (allow auto-calculation)' : 'Lock (prevent auto-calculation)'}
+          >
+            {isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+          </button>
+        )}
+      </div>
       <div className="flex items-center gap-2">
         <input
           id={field}
@@ -25,17 +45,23 @@ const InputField = memo(({ label, field, value, onChange, suffix = '', highlight
           value={value}
           onChange={onChange}
           className={`w-full px-4 py-3 rounded-lg border-2 font-medium transition-all duration-300 ${
-            highlighted
+            isLocked
               ? theme === 'dark'
-                ? 'bg-green-900/20 border-green-500/50 text-white focus:border-green-400'
-                : 'bg-green-50 border-green-400 text-gray-900 focus:border-green-500'
-              : theme === 'dark'
-                ? 'bg-gray-800/50 border-gray-700 text-white focus:border-brand-red'
-                : 'bg-white border-gray-300 text-gray-900 focus:border-brand-red'
+                ? 'bg-amber-900/10 border-amber-500/50 text-white focus:border-amber-400 ring-2 ring-amber-500/20'
+                : 'bg-amber-50 border-amber-400 text-gray-900 focus:border-amber-500 ring-2 ring-amber-400/20'
+              : highlighted
+                ? theme === 'dark'
+                  ? 'bg-green-900/20 border-green-500/50 text-white focus:border-green-400'
+                  : 'bg-green-50 border-green-400 text-gray-900 focus:border-green-500'
+                : theme === 'dark'
+                  ? 'bg-gray-800/50 border-gray-700 text-white focus:border-brand-red'
+                  : 'bg-white border-gray-300 text-gray-900 focus:border-brand-red'
           } focus:outline-none focus:ring-4 ${
-            highlighted
-              ? 'focus:ring-green-500/20'
-              : 'focus:ring-brand-red/20'
+            isLocked
+              ? 'focus:ring-amber-500/20'
+              : highlighted
+                ? 'focus:ring-green-500/20'
+                : 'focus:ring-brand-red/20'
           }`}
           placeholder="0.00"
           autoComplete="off"
@@ -68,6 +94,13 @@ export default function CalculatorComponent() {
     monthlyRent: ''
   });
 
+  const [locks, setLocks] = useState({
+    value: false,
+    roi: false,
+    yearlyRent: false,
+    monthlyRent: false
+  });
+
   const [showFormulas, setShowFormulas] = useState(false);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -75,6 +108,8 @@ export default function CalculatorComponent() {
 
   useEffect(() => {
     const savedData = localStorage.getItem('calculatorData');
+    const savedLocks = localStorage.getItem('calculatorLocks');
+
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
@@ -85,6 +120,15 @@ export default function CalculatorComponent() {
         console.error('Failed to load data');
       }
     }
+
+    if (savedLocks) {
+      try {
+        const parsedLocks = JSON.parse(savedLocks);
+        setLocks(parsedLocks);
+      } catch (e) {
+        console.error('Failed to load locks');
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -92,6 +136,17 @@ export default function CalculatorComponent() {
       localStorage.setItem('calculatorData', JSON.stringify(data));
     }
   }, [data]);
+
+  useEffect(() => {
+    localStorage.setItem('calculatorLocks', JSON.stringify(locks));
+  }, [locks]);
+
+  const toggleLock = useCallback((field) => {
+    setLocks(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  }, []);
 
   const saveToHistory = useCallback((newData) => {
     setHistory(prev => {
@@ -134,7 +189,7 @@ export default function CalculatorComponent() {
           newData.sqFt = (sqYard * 9).toFixed(2);
           newData.carpetArea = (sqYard * (1 - LOADING_FACTOR)).toFixed(2);
           newData.carpetAreaSqFt = (parseFloat(newData.carpetArea) * 9).toFixed(2);
-          if (rate > 0) {
+          if (rate > 0 && !locks.value) {
             newData.value = (sqYard * rate).toFixed(2);
           }
         }
@@ -145,7 +200,7 @@ export default function CalculatorComponent() {
           newData.sqYard = (sqFt / 9).toFixed(2);
           newData.carpetArea = (parseFloat(newData.sqYard) * (1 - LOADING_FACTOR)).toFixed(2);
           newData.carpetAreaSqFt = (parseFloat(newData.carpetArea) * 9).toFixed(2);
-          if (rate > 0) {
+          if (rate > 0 && !locks.value) {
             newData.value = (parseFloat(newData.sqYard) * rate).toFixed(2);
           }
         }
@@ -156,15 +211,24 @@ export default function CalculatorComponent() {
           newData.sqYard = (carpetArea / (1 - LOADING_FACTOR)).toFixed(2);
           newData.sqFt = (parseFloat(newData.sqYard) * 9).toFixed(2);
           newData.carpetAreaSqFt = (carpetArea * 9).toFixed(2);
-          if (rate > 0) {
+          if (rate > 0 && !locks.value) {
             newData.value = (parseFloat(newData.sqYard) * rate).toFixed(2);
           }
         }
         break;
 
       case 'rate':
-        if (rate > 0 && parseFloat(newData.sqYard) > 0) {
+        if (rate > 0 && parseFloat(newData.sqYard) > 0 && !locks.value) {
           newData.value = (parseFloat(newData.sqYard) * rate).toFixed(2);
+        }
+        // After updating value, recalculate ROI or rent based on locks
+        if (!locks.value && parseFloat(newData.value) > 0) {
+          if (yearlyRent > 0 && !locks.roi) {
+            newData.roi = ((yearlyRent / parseFloat(newData.value)) * 100).toFixed(2);
+          } else if (roi > 0 && !locks.yearlyRent && !locks.monthlyRent) {
+            newData.yearlyRent = ((roi * parseFloat(newData.value)) / 100).toFixed(2);
+            newData.monthlyRent = (parseFloat(newData.yearlyRent) / 12).toFixed(2);
+          }
         }
         break;
 
@@ -172,39 +236,70 @@ export default function CalculatorComponent() {
         if (propValue > 0 && parseFloat(newData.sqYard) > 0) {
           newData.rate = (propValue / parseFloat(newData.sqYard)).toFixed(2);
         }
-        if (propValue > 0 && yearlyRent > 0) {
-          newData.roi = ((yearlyRent / propValue) * 100).toFixed(2);
+        if (propValue > 0) {
+          if (yearlyRent > 0 && !locks.roi) {
+            newData.roi = ((yearlyRent / propValue) * 100).toFixed(2);
+          } else if (roi > 0 && !locks.yearlyRent && !locks.monthlyRent) {
+            newData.yearlyRent = ((roi * propValue) / 100).toFixed(2);
+            newData.monthlyRent = (parseFloat(newData.yearlyRent) / 12).toFixed(2);
+          }
         }
         break;
 
       case 'roi':
-        if (roi > 0 && propValue > 0) {
-          newData.yearlyRent = ((roi * propValue) / 100).toFixed(2);
-          newData.monthlyRent = (parseFloat(newData.yearlyRent) / 12).toFixed(2);
+        if (roi > 0) {
+          if (propValue > 0 && !locks.yearlyRent && !locks.monthlyRent) {
+            // Calculate rent from ROI and value
+            newData.yearlyRent = ((roi * propValue) / 100).toFixed(2);
+            newData.monthlyRent = (parseFloat(newData.yearlyRent) / 12).toFixed(2);
+          } else if (yearlyRent > 0 && !locks.value) {
+            // Calculate property value from ROI and yearly rent
+            newData.value = ((yearlyRent / roi) * 100).toFixed(2);
+            if (parseFloat(newData.sqYard) > 0) {
+              newData.rate = (parseFloat(newData.value) / parseFloat(newData.sqYard)).toFixed(2);
+            }
+          }
         }
         break;
 
       case 'yearlyRent':
-        if (yearlyRent > 0) {
+        if (yearlyRent > 0 && !locks.monthlyRent) {
           newData.monthlyRent = (yearlyRent / 12).toFixed(2);
-          if (propValue > 0) {
+        }
+        if (yearlyRent > 0) {
+          if (propValue > 0 && !locks.roi) {
             newData.roi = ((yearlyRent / propValue) * 100).toFixed(2);
+          } else if (roi > 0 && !locks.value) {
+            // Calculate property value from yearly rent and ROI
+            newData.value = ((yearlyRent / roi) * 100).toFixed(2);
+            if (parseFloat(newData.sqYard) > 0) {
+              newData.rate = (parseFloat(newData.value) / parseFloat(newData.sqYard)).toFixed(2);
+            }
           }
         }
         break;
 
       case 'monthlyRent':
-        if (monthlyRent > 0) {
+        if (monthlyRent > 0 && !locks.yearlyRent) {
           newData.yearlyRent = (monthlyRent * 12).toFixed(2);
-          if (propValue > 0) {
-            newData.roi = ((parseFloat(newData.yearlyRent) / propValue) * 100).toFixed(2);
+        }
+        if (monthlyRent > 0) {
+          const calculatedYearlyRent = parseFloat(newData.yearlyRent) || 0;
+          if (propValue > 0 && !locks.roi) {
+            newData.roi = ((calculatedYearlyRent / propValue) * 100).toFixed(2);
+          } else if (roi > 0 && !locks.value) {
+            // Calculate property value from monthly rent and ROI
+            newData.value = ((calculatedYearlyRent / roi) * 100).toFixed(2);
+            if (parseFloat(newData.sqYard) > 0) {
+              newData.rate = (parseFloat(newData.value) / parseFloat(newData.sqYard)).toFixed(2);
+            }
           }
         }
         break;
     }
 
     return newData;
-  }, [LOADING_FACTOR]);
+  }, [LOADING_FACTOR, locks]);
 
   const handleInputChange = useCallback((field) => (e) => {
     const value = e.target.value;
@@ -254,6 +349,9 @@ export default function CalculatorComponent() {
             <h2 className="text-xl md:text-2xl font-bold text-white">
               ROI & Valuation Calculator
             </h2>
+            <p className="text-white/80 text-xs mt-1">
+              🔒 Lock fields to prevent auto-calculation
+            </p>
           </div>
           <div className="flex gap-2 flex-wrap">
             <button 
@@ -306,6 +404,7 @@ export default function CalculatorComponent() {
             <p><strong>Value:</strong> Sq. Yard × Rate</p>
             <p><strong>Yearly Rent:</strong> Monthly Rent × 12</p>
             <p><strong>ROI:</strong> (Yearly Rent ÷ Value) × 100</p>
+            <p><strong>Value from ROI:</strong> (Yearly Rent ÷ ROI) × 100</p>
           </div>
         </motion.div>
       )}
@@ -391,6 +490,9 @@ export default function CalculatorComponent() {
             value={data.value}
             onChange={handleInputChange('value')}
             suffix="₹"
+            lockable={true}
+            isLocked={locks.value}
+            onToggleLock={() => toggleLock('value')}
           />
           <InputField 
             label="Monthly Rent" 
@@ -398,6 +500,9 @@ export default function CalculatorComponent() {
             value={data.monthlyRent}
             onChange={handleInputChange('monthlyRent')}
             suffix="₹"
+            lockable={true}
+            isLocked={locks.monthlyRent}
+            onToggleLock={() => toggleLock('monthlyRent')}
           />
           <InputField 
             label="Yearly Rent" 
@@ -405,6 +510,9 @@ export default function CalculatorComponent() {
             value={data.yearlyRent}
             onChange={handleInputChange('yearlyRent')}
             suffix="₹"
+            lockable={true}
+            isLocked={locks.yearlyRent}
+            onToggleLock={() => toggleLock('yearlyRent')}
           />
           <InputField 
             label="ROI (%)" 
@@ -412,6 +520,9 @@ export default function CalculatorComponent() {
             value={data.roi}
             onChange={handleInputChange('roi')}
             suffix="%"
+            lockable={true}
+            isLocked={locks.roi}
+            onToggleLock={() => toggleLock('roi')}
           />
         </motion.div>
       </div>
