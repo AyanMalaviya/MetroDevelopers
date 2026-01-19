@@ -1,9 +1,10 @@
 // src/components/Layout/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Calculator } from 'lucide-react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
+
 
 const Navbar = () => {
   const { theme } = useTheme();
@@ -11,6 +12,7 @@ const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+
 
   // Scroll progress indicator
   const { scrollYProgress } = useScroll();
@@ -20,10 +22,12 @@ const Navbar = () => {
     restDelta: 0.001
   });
 
+
   useEffect(() => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
       setScrolled(currentScrollY > 50);
+
 
       if (currentScrollY < 10) {
         setIsVisible(true);
@@ -34,8 +38,10 @@ const Navbar = () => {
         setIsVisible(true);
       }
 
+
       setLastScrollY(currentScrollY);
     };
+
 
     window.addEventListener('scroll', controlNavbar);
     return () => {
@@ -43,13 +49,16 @@ const Navbar = () => {
     };
   }, [lastScrollY]);
 
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
 
   return (
     <header 
@@ -75,7 +84,7 @@ const Navbar = () => {
             className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded"
           />
           </Link>
-          
+
           <div className="flex flex-col leading-tight">
             <span className={`text-sm sm:text-base md:text-lg font-bold transition-colors ${
               theme === 'dark' ? 'text-white drop-shadow-lg' : 'text-black'
@@ -89,6 +98,7 @@ const Navbar = () => {
             </span>
           </div>
         </div>
+
 
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-1 lg:gap-2">
@@ -107,6 +117,7 @@ const Navbar = () => {
             Home
           </NavLink>
 
+
           <NavLink
             to="/projects"
             className={({ isActive }) =>
@@ -122,6 +133,7 @@ const Navbar = () => {
             Projects
           </NavLink>
 
+
           <NavLink
             to="/contact"
             className={({ isActive }) =>
@@ -136,7 +148,25 @@ const Navbar = () => {
           >
             Contact
           </NavLink>
+
+          {/* NEW: Calculator Link with Icon */}
+          <NavLink
+            to="/calculator"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3 lg:px-4 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-lg ${
+                isActive
+                  ? 'text-white bg-brand-red shadow-lg shadow-brand-red/50'
+                  : theme === 'dark'
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                    : 'text-black hover:text-brand-red hover:bg-gray-100'
+              }`
+            }
+          >
+            <Calculator className="w-4 h-4" />
+            <span>Calculator</span>
+          </NavLink>
         </div>
+
 
         {/* Mobile Menu Button */}
         <button
@@ -152,6 +182,7 @@ const Navbar = () => {
         </button>
       </nav>
 
+
       {/* Animated Decorative Line - Theme-Aware with Scroll Progress */}
       <motion.div
         className={`h-1 transition-all duration-300 origin-left ${
@@ -163,6 +194,7 @@ const Navbar = () => {
         }`}
         style={{ scaleX }}
       />
+
 
       {/* Mobile Menu */}
       <motion.div
@@ -195,6 +227,7 @@ const Navbar = () => {
             Home
           </NavLink>
 
+
           <NavLink
             to="/projects"
             onClick={closeMenu}
@@ -211,6 +244,7 @@ const Navbar = () => {
             Projects
           </NavLink>
 
+
           <NavLink
             to="/contact"
             onClick={closeMenu}
@@ -226,10 +260,29 @@ const Navbar = () => {
           >
             Contact
           </NavLink>
+
+          {/* NEW: Calculator Link in Mobile Menu */}
+          <NavLink
+            to="/calculator"
+            onClick={closeMenu}
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-lg ${
+                isActive
+                  ? 'text-white bg-brand-red shadow-lg'
+                  : theme === 'dark'
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                    : 'text-black hover:text-brand-red hover:bg-gray-100'
+              }`
+            }
+          >
+            <Calculator className="w-4 h-4" />
+            <span>Calculator</span>
+          </NavLink>
         </div>
       </motion.div>
     </header>
   );
 };
+
 
 export default Navbar;

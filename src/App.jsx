@@ -5,9 +5,11 @@ import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import ContactPage from './pages/ContactPage';
+import Calculator from './pages/CalculatorPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
+
 
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/calculator" element={<Calculator />} />
             </Routes>
           </main>
           <Footer />
@@ -32,6 +35,7 @@ function App() {
     </ThemeProvider>
   );
 }
+
 
 
 export default App;
