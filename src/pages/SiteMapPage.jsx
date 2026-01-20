@@ -52,7 +52,7 @@ const SiteMapPage = () => {
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}
               >
-                Site <span className="text-brand-red">Map</span>
+                Site <span className="text-brand-red">Map</span> <span className="text-xs">(for admin purposes only)</span>
               </motion.h1>
 
               <motion.p 
