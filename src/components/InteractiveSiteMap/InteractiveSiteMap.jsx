@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { X, ZoomIn, ZoomOut } from 'lucide-react';
-import { plotCoordinates, getPlotCenter, sections } from '../../data/plotCoordinates';
+import { plotCoordinates, getPlotCenter, sections } from '../../data/plotcoordinates';
 
 export default function InteractiveSiteMap() {
   const { theme } = useTheme();
