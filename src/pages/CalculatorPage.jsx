@@ -1,5 +1,5 @@
 // src/pages/Calculator.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { FileText, MapPin, ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
