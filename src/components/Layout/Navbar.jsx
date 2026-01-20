@@ -1,7 +1,7 @@
 // src/components/Layout/Navbar.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Menu, X, Calculator } from 'lucide-react';
+import { Menu, X, Calculator, MapPin } from 'lucide-react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -165,6 +165,22 @@ const Navbar = () => {
             <Calculator className="w-4 h-4" />
             <span>Calculator</span>
           </NavLink>
+          
+          <NavLink
+            to="/site-map"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3 lg:px-4 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-lg ${
+                isActive
+                  ? 'text-white bg-brand-red shadow-lg shadow-brand-red/50'
+                  : theme === 'dark'
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                    : 'text-black hover:text-brand-red hover:bg-gray-100'
+              }`
+            }
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Site Map</span>
+          </NavLink>
         </div>
 
 
@@ -277,6 +293,22 @@ const Navbar = () => {
           >
             <Calculator className="w-4 h-4" />
             <span>Calculator</span>
+          </NavLink>
+
+          <NavLink
+            to="/site-map"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3 lg:px-4 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-lg ${
+                isActive
+                  ? 'text-white bg-brand-red shadow-lg shadow-brand-red/50'
+                  : theme === 'dark'
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                    : 'text-black hover:text-brand-red hover:bg-gray-100'
+              }`
+            }
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Site Map</span>
           </NavLink>
         </div>
       </motion.div>

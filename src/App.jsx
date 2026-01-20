@@ -1,3 +1,4 @@
+// Add to src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
@@ -6,11 +7,10 @@ import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import ContactPage from './pages/ContactPage';
 import Calculator from './pages/CalculatorPage';
+import SiteMapPage from './pages/SiteMapPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
-
-
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
+              <Route path="/site-map" element={<SiteMapPage />} />
             </Routes>
           </main>
           <Footer />
@@ -35,7 +36,5 @@ function App() {
     </ThemeProvider>
   );
 }
-
-
 
 export default App;
