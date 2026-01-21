@@ -1,8 +1,9 @@
 // src/components/Calculator/CalculatorComponent.jsx
 import { useState, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Unlock } from 'lucide-react';
+import { Lock, Unlock, Calculator } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { calculateMultiplePlotArea } from '../../services/dataService';
 
 const InputField = memo(({ label, field, value, onChange, suffix = '', highlighted = false, lockable = false, isLocked = false, onToggleLock }) => {
   const { theme } = useTheme();
@@ -101,6 +102,12 @@ export default function CalculatorComponent() {
     monthlyRent: false
   });
 
+  // Multi-plot state
+  const [plotInput, setPlotInput] = useState('');
+  const [plotLoading, setPlotLoading] = useState(false);
+  const [plotResult, setPlotResult] = useState(null);
+  const [plotError, setPlotError] = useState('');
+
   const [showFormulas, setShowFormulas] = useState(false);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -171,6 +178,58 @@ export default function CalculatorComponent() {
     }
   }, [historyIndex, history]);
 
+  // NEW: Multi-plot calculation
+  const handlePlotCalculation = async () => {
+    if (!plotInput.trim()) {
+      setPlotError('Please enter plot numbers');
+      return;
+    }
+
+    setPlotLoading(true);
+    setPlotError('');
+    setPlotResult(null);
+
+    try {
+      const result = await calculateMultiplePlotArea(plotInput);
+
+      if (result.plotCount === 0) {
+        setPlotError('No valid plots found. Check your input format.');
+        return;
+      }
+
+      setPlotResult(result);
+
+      // Auto-fill the square yards input
+      setData(currentData => {
+        const updatedData = { 
+          ...currentData, 
+          sqYard: result.totalSqYd.toString() 
+        };
+        // Trigger dependent calculations
+        return calculateDependentFields('sqYard', result.totalSqYd.toString(), updatedData);
+      });
+
+      // Show warning if some plots couldn't be calculated
+      if (result.invalidPlots.length > 0) {
+        const invalidIds = result.invalidPlots.map(p => p.id).join(', ');
+        setPlotError(`⚠️ Warning: Plots ${invalidIds} could not be calculated`);
+      }
+
+    } catch (err) {
+      setPlotError('Error calculating area. Make sure Google Sheets is set up correctly.');
+      console.error('Plot calculation error:', err);
+    } finally {
+      setPlotLoading(false);
+    }
+  };
+
+  // Clear multi-plot results
+  const clearPlotCalculation = () => {
+    setPlotInput('');
+    setPlotResult(null);
+    setPlotError('');
+  };
+
   const calculateDependentFields = useCallback((field, value, currentData) => {
     const newData = { ...currentData };
 
@@ -221,7 +280,6 @@ export default function CalculatorComponent() {
         if (rate > 0 && parseFloat(newData.sqYard) > 0 && !locks.value) {
           newData.value = (parseFloat(newData.sqYard) * rate).toFixed(2);
         }
-        // After updating value, recalculate ROI or rent based on locks
         if (!locks.value && parseFloat(newData.value) > 0) {
           if (yearlyRent > 0 && !locks.roi) {
             newData.roi = ((yearlyRent / parseFloat(newData.value)) * 100).toFixed(2);
@@ -249,11 +307,9 @@ export default function CalculatorComponent() {
       case 'roi':
         if (roi > 0) {
           if (propValue > 0 && !locks.yearlyRent && !locks.monthlyRent) {
-            // Calculate rent from ROI and value
             newData.yearlyRent = ((roi * propValue) / 100).toFixed(2);
             newData.monthlyRent = (parseFloat(newData.yearlyRent) / 12).toFixed(2);
           } else if (yearlyRent > 0 && !locks.value) {
-            // Calculate property value from ROI and yearly rent
             newData.value = ((yearlyRent / roi) * 100).toFixed(2);
             if (parseFloat(newData.sqYard) > 0) {
               newData.rate = (parseFloat(newData.value) / parseFloat(newData.sqYard)).toFixed(2);
@@ -270,7 +326,6 @@ export default function CalculatorComponent() {
           if (propValue > 0 && !locks.roi) {
             newData.roi = ((yearlyRent / propValue) * 100).toFixed(2);
           } else if (roi > 0 && !locks.value) {
-            // Calculate property value from yearly rent and ROI
             newData.value = ((yearlyRent / roi) * 100).toFixed(2);
             if (parseFloat(newData.sqYard) > 0) {
               newData.rate = (parseFloat(newData.value) / parseFloat(newData.sqYard)).toFixed(2);
@@ -288,7 +343,6 @@ export default function CalculatorComponent() {
           if (propValue > 0 && !locks.roi) {
             newData.roi = ((calculatedYearlyRent / propValue) * 100).toFixed(2);
           } else if (roi > 0 && !locks.value) {
-            // Calculate property value from monthly rent and ROI
             newData.value = ((calculatedYearlyRent / roi) * 100).toFixed(2);
             if (parseFloat(newData.sqYard) > 0) {
               newData.rate = (parseFloat(newData.value) / parseFloat(newData.sqYard)).toFixed(2);
@@ -329,6 +383,7 @@ export default function CalculatorComponent() {
     };
     setData(emptyData);
     saveToHistory(emptyData);
+    clearPlotCalculation();
   }, [saveToHistory]);
 
   return (
@@ -350,7 +405,7 @@ export default function CalculatorComponent() {
               ROI & Valuation Calculator
             </h2>
             <p className="text-white/80 text-xs mt-1">
-              🔒 Lock fields to prevent auto-calculation
+              🔒 Lock fields to prevent auto-calculation • 📍 Calculate multiple plots
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -376,6 +431,184 @@ export default function CalculatorComponent() {
             </button>
           </div>
         </div>
+      </motion.div>
+
+      {/* Multi-Plot Calculator Card */}
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className={`rounded-2xl shadow-xl p-6 mb-6 border-l-4 border-purple-500 ${
+          theme === 'dark' 
+            ? 'bg-gray-800/90 backdrop-blur-sm' 
+            : 'bg-gradient-to-br from-purple-50 to-blue-50'
+        }`}
+      >
+        <h3 className={`text-lg font-bold mb-4 flex items-center gap-2 ${
+          theme === 'dark' ? 'text-purple-400' : 'text-purple-700'
+        }`}>
+          <Calculator className="w-5 h-5" />
+          Calculate Multiple Plots (Optional)
+        </h3>
+
+        <div className="mb-3">
+          <label className={`block text-sm font-semibold mb-2 ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Enter Plot Numbers
+          </label>
+          <input
+            type="text"
+            value={plotInput}
+            onChange={(e) => setPlotInput(e.target.value)}
+            placeholder="e.g., p1p3p13p29 or 1,3,13,29 or 1 3 13 29"
+            className={`w-full px-4 py-3 rounded-lg border-2 transition-all ${
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500'
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+            } focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20`}
+            disabled={plotLoading}
+          />
+          <p className={`text-xs mt-1 ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+          }`}>
+            Formats: <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">p1p3p5</code> • <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">1,3,5</code> • <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">1 3 5</code>
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            onClick={handlePlotCalculation}
+            disabled={plotLoading || !plotInput.trim()}
+            className={`flex-1 px-4 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${
+              plotLoading || !plotInput.trim()
+                ? 'bg-gray-400 cursor-not-allowed'
+                : theme === 'dark'
+                  ? 'bg-purple-600 hover:bg-purple-700'
+                  : 'bg-purple-500 hover:bg-purple-600'
+            } text-white shadow-lg hover:shadow-xl`}
+          >
+            {plotLoading ? (
+              <>
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Calculating...
+              </>
+            ) : (
+              <>
+                <Calculator className="w-5 h-5" />
+                Calculate Total Area
+              </>
+            )}
+          </button>
+
+          {plotResult && (
+            <button
+              onClick={clearPlotCalculation}
+              className={`px-4 py-3 rounded-lg font-bold transition-all ${
+                theme === 'dark'
+                  ? 'bg-gray-600 hover:bg-gray-500 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
+              }`}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Error Message */}
+        {plotError && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`mt-3 p-3 rounded-lg border-l-4 ${
+              plotError.includes('Warning')
+                ? 'bg-orange-100 border-orange-500'
+                : 'bg-red-100 border-red-500'
+            }`}
+          >
+            <p className={`text-sm font-semibold ${
+              plotError.includes('Warning') ? 'text-orange-800' : 'text-red-800'
+            }`}>
+              {plotError}
+            </p>
+          </motion.div>
+        )}
+
+        {/* Success Result */}
+        {plotResult && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="mt-4 p-4 bg-green-100 border-2 border-green-500 rounded-xl"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-green-800 font-bold text-lg flex items-center gap-2">
+                ✅ Calculation Complete
+              </h4>
+              <span className="text-xs text-green-700 font-semibold bg-green-200 px-2 py-1 rounded">
+                {plotResult.plotCount} plots
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <div className="bg-white p-3 rounded-lg border border-green-300">
+                <p className="text-xs text-gray-600 mb-1">Total Area</p>
+                <p className="text-2xl font-bold text-green-700">
+                  {plotResult.totalSqYd} <span className="text-sm">SQ YD</span>
+                </p>
+                <p className="text-xs text-gray-500 mt-1">✓ Auto-filled above</p>
+              </div>
+              <div className="bg-white p-3 rounded-lg border border-green-300">
+                <p className="text-xs text-gray-600 mb-1">Square Feet</p>
+                <p className="text-2xl font-bold text-green-700">
+                  {plotResult.totalSqFt} <span className="text-sm">SQ FT</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Plot Breakdown Table */}
+            {plotResult.validPlots.length > 0 && (
+              <details className="mt-3">
+                <summary className="cursor-pointer text-sm font-semibold text-green-800 hover:text-green-900 hover:underline">
+                  📋 View Plot Breakdown ({plotResult.validPlots.length} plots)
+                </summary>
+                <div className="mt-2 bg-white rounded-lg overflow-hidden border border-green-300">
+                  <table className="w-full text-sm">
+                    <thead className="bg-green-50">
+                      <tr>
+                        <th className="text-left py-2 px-3 font-semibold text-green-900">Plot</th>
+                        <th className="text-right py-2 px-3 font-semibold text-green-900">Area</th>
+                        <th className="text-right py-2 px-3 font-semibold text-green-900">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {plotResult.validPlots.map((plot, idx) => (
+                        <tr key={plot.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                          <td className="py-2 px-3 font-medium">Plot {plot.id}</td>
+                          <td className="text-right py-2 px-3">{plot.area}</td>
+                          <td className="text-right py-2 px-3">
+                            <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                              plot.status === 'available' ? 'bg-green-100 text-green-800' :
+                              plot.status === 'pre-leased' ? 'bg-blue-100 text-blue-800' :
+                              plot.status === 'leased' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {plot.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            )}
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Formula Card */}
@@ -434,6 +667,7 @@ export default function CalculatorComponent() {
             value={data.sqYard}
             onChange={handleInputChange('sqYard')}
             suffix="yd²"
+            highlighted={plotResult !== null}
           />
           <InputField 
             label="Sq. Ft" 
