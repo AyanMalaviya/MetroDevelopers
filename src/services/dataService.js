@@ -49,22 +49,34 @@ export const getPlotData = () => {
 };
 
 /**
- * Parse area string to square feet number
- * Examples: "112.92 FT" -> 112.92, "LARGE" -> null
+ * Parse area string to square yards number
+ * Examples: "12.55 YD" -> 12.55, "LARGE" -> null
+ * Also supports legacy "112.92 FT" format (converts to yards)
  */
-export const parseAreaToSqFt = (areaString) => {
+export const parseAreaToSqYd = (areaString) => {
   if (!areaString || areaString === 'LARGE' || areaString === 'N/A') {
     return null;
   }
 
-  const match = areaString.match(/([0-9.]+)/);
-  return match ? parseFloat(match[1]) : null;
+  const match = areaString.match(/([0-9.]+)\s*(YD|FT)?/i);
+  if (!match) return null;
+
+  const value = parseFloat(match[1]);
+  const unit = match[2] ? match[2].toUpperCase() : 'YD';
+
+  // If unit is FT (legacy), convert to yards
+  if (unit === 'FT') {
+    return value / 9;
+  }
+
+  // Otherwise assume square yards
+  return value;
 };
 
 /**
  * Get total area for multiple plots
- * Input: "p1p3p13p29" or "1,3,13,29" or ["1", "3", "13", "29"]
- * Returns: { totalSqFt: number, plotCount: number, plots: [...] }
+ * Input: "1,3,13,29" or "1 3 13 29" or ["1", "3", "13", "29"]
+ * Returns: { totalSqYd: number, totalSqFt: number, plotCount: number, plots: [...] }
  */
 export const calculateMultiplePlotArea = async (plotInput) => {
   const plotData = await getPlotData();
@@ -82,20 +94,21 @@ export const calculateMultiplePlotArea = async (plotInput) => {
   }
 
   // Calculate total area
-  let totalSqFt = 0;
+  let totalSqYd = 0;
   const validPlots = [];
   const invalidPlots = [];
 
   plotIds.forEach(id => {
     const plot = plotData[id];
     if (plot && plot.area) {
-      const sqFt = parseAreaToSqFt(plot.area);
-      if (sqFt !== null) {
-        totalSqFt += sqFt;
+      const sqYd = parseAreaToSqYd(plot.area);
+      if (sqYd !== null) {
+        totalSqYd += sqYd;
         validPlots.push({
           id,
           area: plot.area,
-          sqFt,
+          sqYd,
+          sqFt: Math.round(sqYd * 9 * 100) / 100,
           status: plot.status
         });
       } else {
@@ -107,8 +120,8 @@ export const calculateMultiplePlotArea = async (plotInput) => {
   });
 
   return {
-    totalSqFt: Math.round(totalSqFt * 100) / 100,
-    totalSqYd: Math.round((totalSqFt / 9) * 100) / 100,
+    totalSqYd: Math.round(totalSqYd * 100) / 100,
+    totalSqFt: Math.round((totalSqYd * 9) * 100) / 100,
     plotCount: validPlots.length,
     validPlots,
     invalidPlots

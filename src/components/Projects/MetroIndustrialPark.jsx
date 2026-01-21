@@ -106,8 +106,8 @@ const MetroIndustrialPark = () => {
   ];
 
   const layoutImages = {
-    areaTable1: '/images/metro-industrial-table1.jpeg',
-    areaTable2: '/images/metro-industrial-table2.jpeg',
+    areaTable1: '/images/table1.jpg',
+    areaTable2: '/images/table2.jpg',
     siteMap: '/images/metro-industrial-map.jpg'
   };
 

@@ -193,11 +193,11 @@ export default function InteractiveSiteMap() {
             <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Available</p>
           </div>
           <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
-            <p className="text-2xl font-bold text-blue-500">{stats.prefo}</p>
-            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>pre-leased</p>
+            <p className="text-2xl font-bold text-blue-500">{stats.preLeased}</p>
+            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Pre leased</p>
           </div>
           <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-red-900/30' : 'bg-red-100'}`}>
-            <p className="text-2xl font-bold text-red-500">{stats.fo}</p>
+            <p className="text-2xl font-bold text-red-500">{stats.forLease}</p>
             <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>For Lease</p>
           </div>
           <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
