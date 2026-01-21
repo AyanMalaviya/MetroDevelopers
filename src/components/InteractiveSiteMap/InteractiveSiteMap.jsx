@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { X, ZoomIn, ZoomOut, RefreshCw, ExternalLink } from 'lucide-react';
-import { plotCoordinates, getPlotCenter } from '../../data/plotCoordinates';
+import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { getPlotData } from '../../services/dataService';
 
 // REPLACE with your actual Google Sheet edit URL
