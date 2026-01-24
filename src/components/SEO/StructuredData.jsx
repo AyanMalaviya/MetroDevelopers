@@ -54,8 +54,8 @@ const StructuredData = () => {
     "priceRange": "Contact for pricing",
     "openingHours": "Mo-Sa 09:00-18:00",
     "sameAs": [
-      "https://www.facebook.com/metroenterpriseindustrialestate",
-      "https://www.instagram.com/metroenterprise2023"
+      "https://www.facebook.com/metroindustrialpark1",
+      "https://www.instagram.com/metro.indsutrialpark/",
     ]
   };
 

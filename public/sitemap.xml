@@ -5,29 +5,73 @@
   <!-- Home Page -->
   <url>
     <loc>https://www.metrodevelopers.co.in/</loc>
-    <lastmod>2026-01-09</lastmod>
+    <lastmod>2026-01-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/map.jpg</image:loc>
-      <image:title>Metro Industrial Park</image:title>
+      <image:title>Metro Industrial Park - 3D Map View</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/2shed.jpg</image:loc>
+      <image:title>Modern Industrial Sheds</image:title>
     </image:image>
   </url>
   
-  <!-- Projects Page -->
+  <!-- Metro Industrial Park - Direct Page -->
   <url>
-    <loc>https://www.metrodevelopers.co.in/projects</loc>
-    <lastmod>2026-01-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://www.metrodevelopers.co.in/metro-industrial-park</loc>
+    <lastmod>2026-01-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/2shed.jpg</image:loc>
+      <image:title>Metro Industrial Park - Modern Industrial Shed</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/4shed.jpg</image:loc>
+      <image:title>Metro Industrial Park - Warehouse Facility</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/entrance.jpg</image:loc>
+      <image:title>Metro Industrial Park - Main Entrance</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/mainroad.jpg</image:loc>
+      <image:title>Metro Industrial Park - 60ft Wide Roads</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/office.jpg</image:loc>
+      <image:title>Metro Industrial Park - Office Space</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-map.jpg</image:loc>
+      <image:title>Metro Industrial Park - Site Map Layout</image:title>
+    </image:image>
   </url>
   
   <!-- Contact Page -->
   <url>
     <loc>https://www.metrodevelopers.co.in/contact</loc>
-    <lastmod>2026-01-09</lastmod>
+    <lastmod>2026-01-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  
+  <!-- Calculator Page (if exists) -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/calculator</loc>
+    <lastmod>2026-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Site Map Page (if exists) -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/site-map</loc>
+    <lastmod>2026-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   
 </urlset>

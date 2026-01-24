@@ -1,7 +1,7 @@
 // src/components/Layout/Navbar.jsx
 import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Menu, X, Calculator, MapPin, Home, Briefcase, Mail } from 'lucide-react';
+import { Menu, X, Calculator, MapPin, Home, Building2, Mail } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -68,9 +68,10 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  // UPDATED: Direct link to Metro Industrial Park instead of Projects
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/projects', label: 'Projects', icon: Briefcase },
+    { path: '/metro-industrial-park', label: 'Industrial Park', icon: Building2 },
     { path: '/contact', label: 'Contact', icon: Mail },
     { path: '/calculator', label: 'Calculator', icon: Calculator },
     { path: '/site-map', label: 'Site Map', icon: MapPin }

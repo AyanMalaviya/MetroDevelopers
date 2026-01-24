@@ -4,7 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
-import ProjectsPage from './pages/ProjectsPage';
+import MetroIndustrialPark from './components/Projects/MetroIndustrialPark';
 import ContactPage from './pages/ContactPage';
 import Calculator from './pages/CalculatorPage';
 import SiteMapPage from './pages/SiteMapPage';
@@ -22,7 +22,7 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
