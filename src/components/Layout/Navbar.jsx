@@ -113,7 +113,7 @@ const Navbar = () => {
               <span className={`text-sm sm:text-base md:text-lg lg:text-xl font-bold transition-colors ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
               }`}>
-                Metro Industrial Park
+                Metro Enterprise
               </span>
               <span className={`text-[10px] sm:text-xs md:text-sm font-medium transition-colors ${
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
