@@ -349,7 +349,7 @@ const HomePage = () => {
               transition={{ delay: 0.7 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Link to="/projects">
+              <Link to="/metro-industrial-park">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
