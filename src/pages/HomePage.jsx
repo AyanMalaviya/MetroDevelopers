@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users, X } from 'lucide-react';
+import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users, X, MapPin } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import SEO from '../components/SEO/SEO.jsx';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.jsx';
@@ -364,7 +364,28 @@ const HomePage = () => {
                   />
                   <span className="relative z-10 flex items-center justify-center gap-2 text-base">
                     <Building2 size={20} />
-                    Explore Projects
+                    Explore Complete Project
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+              </Link>
+
+              <Link to="/site-map">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative px-8 py-4 bg-brand-red text-white font-bold rounded-2xl overflow-hidden shadow-2xl shadow-brand-red/50 w-full sm:w-auto"
+                  style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-brand-red"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-base">
+                    <MapPin size={20} />
+                    Check Availability
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
@@ -504,7 +525,7 @@ const HomePage = () => {
                 });
               }}
             >
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center">
                 <span 
                   className={`text-xs font-semibold tracking-wider ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-700'

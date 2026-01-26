@@ -66,8 +66,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/projects" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
-                  Projects
+                <Link to="/metro-industrial-park" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
+                  Metro Industrial Park
                 </Link>
               </li>
               <li>
