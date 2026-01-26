@@ -362,10 +362,10 @@ const HomePage = () => {
                     whileHover={{ x: 0 }}
                     transition={{ duration: 0.3 }}
                   />
-                  <span className="relative z-10 flex items-center justify-center gap-2 text-base">
-                    <Building2 size={20} />
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-xs">
+                    <Building2 size={16} />
                     Explore Complete Project
-                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
               </Link>
@@ -383,10 +383,10 @@ const HomePage = () => {
                     whileHover={{ x: 0 }}
                     transition={{ duration: 0.3 }}
                   />
-                  <span className="relative z-10 flex items-center justify-center gap-2 text-base">
-                    <MapPin size={20} />
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-xs">
+                    <MapPin size={16} />
                     Check Availability
-                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
               </Link>
@@ -402,8 +402,8 @@ const HomePage = () => {
                   }`}
                   style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
                 >
-                  <span className="flex items-center justify-center gap-2 text-base">
-                    <FaWhatsapp size={20} className="text-green-500" />
+                  <span className="flex items-center justify-center gap-2 text-xs">
+                    <FaWhatsapp size={16} className="text-green-500" />
                     Quick Contact
                   </span>
                 </motion.button>
