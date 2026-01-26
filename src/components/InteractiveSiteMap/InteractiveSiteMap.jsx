@@ -91,7 +91,7 @@ export default function InteractiveSiteMap() {
     switch(status) {
       case 'sold': return 'Sold';
       case 'for-lease': return 'Sold - Available for Lease';
-      case 'pre-leased': return 'pre-leased - Available';
+      case 'pre-leased': return 'Pre Leased - Available';
       case 'available': default: return 'Available';
     }
   };
@@ -137,11 +137,6 @@ export default function InteractiveSiteMap() {
       }`}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <h3 className={`text-xl font-bold ${
-              theme === 'dark' ? 'text-white' : 'text-gray-900'
-            }`}>
-              Interactive Site Map
-            </h3>
             {lastUpdated && (
               <span className={`text-xs ${
                 theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
@@ -150,38 +145,11 @@ export default function InteractiveSiteMap() {
               </span>
             )}
           </div>
-          <div className="flex gap-2">
-            <a
-              href={ADMIN_SHEET_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${
-                theme === 'dark'
-                  ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50'
-                  : 'bg-green-50 text-green-600 hover:bg-green-100'
-              }`}
-            >
-              <ExternalLink className="w-3 h-3" />
-              Edit Data
-            </a>
-            <button onClick={refreshData} disabled={loading} className={`p-2 rounded-lg transition-all ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              } ${theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-            <button onClick={() => setZoom(Math.max(0.5, zoom - 0.25))} disabled={zoom <= 0.5} className={`p-2 rounded-lg transition-all ${
-                theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-30' : 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:opacity-30'}`}>
-              <ZoomOut className="w-5 h-5" />
-            </button>
-            <button onClick={() => setZoom(Math.min(2, zoom + 0.25))} disabled={zoom >= 2} className={`p-2 rounded-lg transition-all ${
-                theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-30' : 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:opacity-30'}`}>
-              <ZoomIn className="w-5 h-5" />
-            </button>
-            <button onClick={() => setZoom(1)} className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
-                theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
-              Reset
-            </button>
+                    <div className={`ml-auto text-xs flex items-center gap-1 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
+            <RefreshCw className="w-3 h-3" />
+            Auto-updates every 30s
           </div>
+
         </div>
         <div className="grid grid-cols-5 gap-3 mb-4">
           <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -216,15 +184,43 @@ export default function InteractiveSiteMap() {
           </div>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-blue-500 border-2 border-white shadow-lg"></div>
-            <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>pre-leased</span>
+            <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Pre Leased</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-green-500 border-2 border-white shadow-lg"></div>
             <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Available</span>
           </div>
-          <div className={`ml-auto text-xs flex items-center gap-1 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
-            <RefreshCw className="w-3 h-3" />
-            Auto-updates every 30s
+          <div className="flex gap-2 mx-auto">
+            <a
+              href={ADMIN_SHEET_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${
+                theme === 'dark'
+                  ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50'
+                  : 'bg-green-50 text-green-600 hover:bg-green-100'
+              }`}
+            >
+              <ExternalLink className="w-3 h-3" />
+              Edit Data
+            </a>
+            <button onClick={refreshData} disabled={loading} className={`p-2 rounded-lg transition-all ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              } ${theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+            <button onClick={() => setZoom(Math.max(0.3, zoom - 0.2))} disabled={zoom <= 0.3} className={`p-2 rounded-lg transition-all ${
+                theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-30' : 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:opacity-30'}`}>
+              <ZoomOut className="w-5 h-5" />
+            </button>
+            <button onClick={() => setZoom(Math.min(2, zoom + 0.2))} disabled={zoom >= 2} className={`p-2 rounded-lg transition-all ${
+                theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-30' : 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:opacity-30'}`}>
+              <ZoomIn className="w-5 h-5" />
+            </button>
+            <button onClick={() => setZoom(1)} className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
+              Reset
+            </button>
           </div>
         </div>
       </div>

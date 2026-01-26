@@ -49,7 +49,7 @@ const SiteMapPage = () => {
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
               }`}
             >
-              Plot <span className="text-brand-red">Availability</span>
+              Shed <span className="text-brand-red">Availability</span>
             </motion.h1>
           </div>
         </div>
