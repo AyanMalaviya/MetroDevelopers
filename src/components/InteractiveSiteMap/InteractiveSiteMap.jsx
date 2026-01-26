@@ -65,9 +65,9 @@ export default function InteractiveSiteMap() {
   };
 
   const getCircleRadius = (plotNumber) => {
-    if (selectedPlot === plotNumber) return 18;
-    if (hoveredPlot === plotNumber) return 16;
-    return 14;
+    if (selectedPlot === plotNumber) return 14;
+    if (hoveredPlot === plotNumber) return 12;
+    return 10;
   };
 
   const getCircleStroke = (plotNumber) => {
@@ -151,25 +151,25 @@ export default function InteractiveSiteMap() {
           </div>
 
         </div>
-        <div className="grid grid-cols-5 gap-3 mb-4">
-          <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stats.total}</p>
+        <div className="grid grid-cols-5 gap-2 mb-4">
+          <div className={`p-2 rounded-lg text-center ${theme === 'dark' ? 'bg-black-700' : 'bg-white-100'}`}>
+            <p className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stats.total}</p>
             <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Total</p>
           </div>
-          <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-green-900/30' : 'bg-green-100'}`}>
-            <p className="text-2xl font-bold text-green-500">{stats.available}</p>
-            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Available</p>
+          <div className={`p-2 rounded-lg text-center ${theme === 'dark' ? 'bg-green-900/30' : 'bg-green-100'}`}>
+            <p className="text-xl font-bold text-green-500">{stats.available}</p>
+            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Avl</p>
           </div>
-          <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
-            <p className="text-2xl font-bold text-blue-500">{stats.preLeased}</p>
-            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Pre leased</p>
+          <div className={`p-2 rounded-lg text-center ${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
+            <p className="text-xl font-bold text-blue-500">{stats.preLeased}</p>
+            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Pre L</p>
           </div>
-          <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-red-900/30' : 'bg-red-100'}`}>
-            <p className="text-2xl font-bold text-red-500">{stats.forLease}</p>
-            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>For Lease</p>
+          <div className={`p-2 rounded-lg text-center ${theme === 'dark' ? 'bg-red-900/30' : 'bg-red-100'}`}>
+            <p className="text-xl font-bold text-red-500">{stats.forLease}</p>
+            <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>For L</p>
           </div>
-          <div className={`p-3 rounded-lg text-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
-            <p className="text-2xl font-bold text-gray-500">{stats.sold}</p>
+          <div className={`p-2 rounded-lg text-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
+            <p className="text-xl font-bold text-gray-500">{stats.sold}</p>
             <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Sold</p>
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function InteractiveSiteMap() {
             <div className="w-6 h-6 rounded-full bg-green-500 border-2 border-white shadow-lg"></div>
             <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Available</span>
           </div>
-          <div className="flex gap-2 mx-auto">
+          <div className="flex gap-2 ml-auto">
             <a
               href={ADMIN_SHEET_URL}
               target="_blank"
@@ -209,11 +209,11 @@ export default function InteractiveSiteMap() {
               } ${theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
-            <button onClick={() => setZoom(Math.max(0.3, zoom - 0.2))} disabled={zoom <= 0.3} className={`p-2 rounded-lg transition-all ${
+            <button onClick={() => setZoom(Math.max(0.5, zoom - 0.25))} disabled={zoom <= 0.5} className={`p-2 rounded-lg transition-all ${
                 theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-30' : 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:opacity-30'}`}>
               <ZoomOut className="w-5 h-5" />
             </button>
-            <button onClick={() => setZoom(Math.min(2, zoom + 0.2))} disabled={zoom >= 2} className={`p-2 rounded-lg transition-all ${
+            <button onClick={() => setZoom(Math.min(2, zoom + 0.25))} disabled={zoom >= 2} className={`p-2 rounded-lg transition-all ${
                 theme === 'dark' ? 'bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-30' : 'bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:opacity-30'}`}>
               <ZoomIn className="w-5 h-5" />
             </button>
@@ -267,22 +267,22 @@ export default function InteractiveSiteMap() {
               </button>
               <div className="text-center mb-8">
                 <div className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-3xl shadow-2xl mx-auto mb-4" style={{ backgroundColor: getStatusColor(plotData[selectedPlot]?.status || 'available') }}>{selectedPlot}</div>
-                <h3 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Plot {selectedPlot}</h3>
+                <h3 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Shed {selectedPlot}</h3>
               </div>
               <div className="space-y-4">
                 <div className={`p-6 rounded-xl text-center ${theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                  <p className={`text-sm font-semibold mb-2 uppercase tracking-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Plot Area</p>
-                  <p className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{plotData[selectedPlot]?.area || plotCoordinates[selectedPlot]?.area || 'N/A'}</p>
+                  <p className={`text-sm font-semibold mb-2 uppercase tracking-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Shed Area</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{plotData[selectedPlot]?.area || plotCoordinates[selectedPlot]?.area || 'N/A'}</p>
                 </div>
                 <div className={`p-6 rounded-xl text-center ${theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
                   <p className={`text-sm font-semibold mb-2 uppercase tracking-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Status</p>
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-5 h-5 rounded-full shadow-lg" style={{ backgroundColor: getStatusColor(plotData[selectedPlot]?.status || 'available') }}></div>
-                    <p className={`text-2xl font-bold ${getStatusColorClass(plotData[selectedPlot]?.status)}`}>{getStatusLabel(plotData[selectedPlot]?.status)}</p>
+                    <p className={`text-lg font-bold ${getStatusColorClass(plotData[selectedPlot]?.status)}`}>{getStatusLabel(plotData[selectedPlot]?.status)}</p>
                   </div>
                 </div>
               </div>
-              <button onClick={() => setSelectedPlot(null)} className="mt-8 w-full px-6 py-4 rounded-xl font-bold text-lg bg-brand-red text-white hover:bg-red-700 transition-all duration-300 shadow-xl">Close</button>
+              <button onClick={() => setSelectedPlot(null)} className="mt-8 w-full px-6 py-4 rounded-xl font-bold text-md bg-brand-red text-white hover:bg-red-700 transition-all duration-300 shadow-xl">Close</button>
             </motion.div>
           </motion.div>
         )}
