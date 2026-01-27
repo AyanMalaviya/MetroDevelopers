@@ -49,6 +49,26 @@
       <image:title>Metro Industrial Park - Site Map Layout</image:title>
     </image:image>
   </url>
+
+  <!-- Metro Arcade - Direct Page -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/metro-arcade</loc>
+    <lastmod>2026-01-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/arcade-top.jpeg</image:loc>
+      <image:title>Metro Arcade - Front View</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/arcade-shops.jpeg</image:loc>
+      <image:title>Metro Arcade - Commercial Units</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/arcade-3.jpg</image:loc>
+      <image:title>Metro Arcade - Interior View</image:title>
+    </image:image>
+  </url>
   
   <!-- Contact Page -->
   <url>

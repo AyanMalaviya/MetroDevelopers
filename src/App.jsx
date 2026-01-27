@@ -11,6 +11,7 @@ import SiteMapPage from './pages/SiteMapPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
+import MetroArcade from './components/Projects/MetroArcade';
 
 function App() {
   return (
@@ -22,10 +23,13 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="*" element={<HomePage />} />
               <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
+              <Route path="/metro-arcade" element={<MetroArcade />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
+              
             </Routes>
           </main>
           <Footer />

@@ -69,18 +69,18 @@ const Calculator = () => {
                   <>
                     <button
                       onClick={prevTable}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-brand-red text-white rounded-full shadow-lg hover:bg-red-700 transition-all"
+                      className="opacity-75 absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-brand-red text-white rounded-full shadow-lg hover:bg-red-700 transition-all"
                     >
-                      <ChevronLeft className="w-6 h-6" />
+                      <ChevronLeft className="w-3 h-3" />
                     </button>
                     <button
                       onClick={nextTable}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-brand-red text-white rounded-full shadow-lg hover:bg-red-700 transition-all"
+                      className="opacity-75 absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-brand-red text-white rounded-full shadow-lg hover:bg-red-700 transition-all"
                     >
-                      <ChevronRight className="w-6 h-6" />
+                      <ChevronRight className="w-3 h-3" />
                     </button>
 
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                    <div className="opacity-75 absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
                       {tables.map((_, index) => (
                         <button
                           key={index}
@@ -88,7 +88,7 @@ const Calculator = () => {
                           className={`w-3 h-3 rounded-full transition-all ${
                             index === currentTable
                               ? 'bg-brand-red w-8'
-                              : 'bg-white/50 hover:bg-white/80'
+                              : 'bg-white/90 hover:bg-white/100'
                           }`}
                         />
                       ))}

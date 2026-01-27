@@ -14,8 +14,8 @@ const MetroArcade = () => {
 
   const images = [
     { url: '/images/arcade-top.jpeg', alt: 'Metro Arcade Front View', title: 'Metro Arcade', description: 'Modern commercial arcade on main road' },
-    { url: '/images/arcade-2.jpg', alt: 'Shop Units', title: 'Commercial Units', description: 'Prime retail and office spaces' },
-    { url: '/images/arcade-3.jpg', alt: 'Arcade Interior', title: 'Interior View', description: 'Well-designed commercial spaces' }
+    { url: '/images/arcade-shops.jpeg', alt: 'Shop Units', title: 'Commercial Units', description: 'Prime retail and office spaces' }
+    // { url: '/images/arcade-3.jpg', alt: 'Arcade Interior', title: 'Interior View', description: 'Well-designed commercial spaces' }
   ];
 
 
