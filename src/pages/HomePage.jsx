@@ -154,13 +154,13 @@ const HomePage = () => {
   return (
     <>
       <SEO 
-        title="Metro Enterprise - Industrial Sheds & Warehouses in Ahmedabad | Moraiya"
-        description="Premium industrial park in Moraiya, Changodar, Ahmedabad. 54,000 sq.yard (4.86 lakh sq.ft) with 63 industrial sheds. Units: 4K-50K sq.ft ✓ 30-35ft Height ✓ 60ft Roads ✓ Weigh Bridge ✓ 24x7 Water ✓ CCTV Security ✓ 90 Days Possession ✓ 6-8% ROI. Perfect for manufacturing, warehousing, logistics."
-        keywords="industrial shed Ahmedabad, warehouse Moraiya, factory space Changodar, industrial park 4000 sqft, shed 10000 sqft, warehouse 50000 sqft, 54000 sq yard industrial park, 63 industrial units, weigh bridge facility, 60ft road width, 6% ROI, 8% ROI, GIDC approved, possession in 90 days"
+        title="Buy or Lease Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
+        description="Call 9624965017 OR 9824235642 to secure your plot! 6-8% ROI & possession in 90 days of customised industrial shed/warehouse for lease & sale in Moraiya near Ahmedabad."
+        keywords="industrial shed for sale in Moraiya Ahmedabad, warehouse for rent in Changodar, industrial land for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, pre-engineered building manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property with weigh bridge"
         canonical="/"
         ogImage="/images/map.jpg"
-        structuredData={structuredData}
       />
+
 
       <PWAInstallPrompt />
       <ThemeToggle />
@@ -223,17 +223,18 @@ const HomePage = () => {
         )}
 
         {/* ===== HERO SECTION ===== */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center justify-center">
           {/* Animated Background */}
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0">
             <motion.div 
               className="absolute inset-0 bg-cover bg-center"
               style={{ 
                 backgroundImage: "url('/images/map.jpg')",
-                scale: 1.1,
+                scale: 1,
               }}
               animate={{
-                scale: [1.1, 1.15, 1.1],
+                scale: [1, 1.1, 1],
+                translateY: [0, -20, 0]
               }}
               transition={{
                 duration: 20,
@@ -302,7 +303,7 @@ const HomePage = () => {
               transition={{ delay: 0.3 }}
             >
               <h1
-                className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-3 ${
+                className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-2 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}
                 style={{ 
@@ -315,7 +316,7 @@ const HomePage = () => {
               </h1>
               
               <h1
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-8 text-brand-red"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 text-brand-red"
                 style={{ 
                   fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
                   letterSpacing: '0.01em',
@@ -331,7 +332,7 @@ const HomePage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className={`text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-3xl mx-auto ${
+              className={`text-md sm:text-lg md:text-xl leading-relaxed mb-8 max-w-3xl mx-auto ${
                 theme === 'dark' ? 'text-gray-300' : 'text-gray-900'
               }`}
               style={{ 
@@ -347,21 +348,49 @@ const HomePage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-2 justify-center items-center"
             >
               <Link to="/metro-industrial-park">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="group relative px-8 py-4 bg-brand-red text-white font-bold rounded-2xl overflow-hidden shadow-2xl shadow-brand-red/50 w-full sm:w-auto"
+                  /* Added overflow-visible so the glow isn't cut off */
+                  className="group relative px-6 py-3 bg-brand-red text-white font-bold rounded-2xl shadow-2xl shadow-brand-red/50 w-full sm:w-auto overflow-hidden"
                   style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
                 >
+                  {/* 1. RUNNING EDGE LIGHT EFFECT */}
+                  <div className="absolute inset-[-2px] z-0">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ 
+                        duration: 2, // Faster for a "lightning" feel
+                        repeat: Infinity, 
+                        ease: "linear" 
+                      }}
+                      className="w-full h-full"
+                      style={{
+                        background: "conic-gradient(from 0deg, transparent 60%, rgba(255,255,255,0.1) 80%, white 100%)",
+                        width: "300%",
+                        height: "300%",
+                        position: "absolute",
+                        top: "-100%",
+                        left: "-100%",
+                      }}
+                    />
+                  </div>
+
+                  {/* 2. INNER MASK (To keep the light only on the edge) */}
+                  <div className="absolute inset-[1px] bg-brand-red rounded-[calc(1rem-1px)] z-0 group-hover:bg-red-600 transition-colors duration-300" />
+
+                  {/* 3. YOUR EXISTING GRADIENT HOVER */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-brand-red"
+                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-brand-red z-0"
                     initial={{ x: '-100%' }}
                     whileHover={{ x: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.5 }}
                   />
+
+                  {/* 4. CONTENT */}
                   <span className="relative z-10 flex items-center justify-center gap-2 text-xs">
                     <Building2 size={16} />
                     Explore Complete Project
@@ -370,11 +399,12 @@ const HomePage = () => {
                 </motion.button>
               </Link>
 
+              {/* Button 2: Site Map (Unchanged) */}
               <Link to="/site-map">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="group relative px-8 py-4 bg-brand-red text-white font-bold rounded-2xl overflow-hidden shadow-2xl shadow-brand-red/50 w-full sm:w-auto"
+                  className="group relative px-6 py-3 bg-brand-red text-white font-bold rounded-2xl overflow-hidden shadow-2xl shadow-brand-red/50 w-full sm:w-auto"
                   style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: '700' }}
                 >
                   <motion.div
@@ -391,11 +421,12 @@ const HomePage = () => {
                 </motion.button>
               </Link>
 
+              {/* Button 3: WhatsApp (Unchanged) */}
               <a href={`https://wa.me/919824235642?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`group px-8 py-4 font-bold rounded-2xl border-2 backdrop-blur-xl w-full sm:w-auto ${
+                  className={`group px-6 py-3 font-bold rounded-2xl border-2 backdrop-blur-xl w-full sm:w-auto ${
                     theme === 'dark'
                       ? 'border-white/30 text-white hover:border-white hover:bg-white/10'
                       : 'border-gray-900/30 text-gray-900 hover:border-gray-900 hover:bg-gray-900/10'
@@ -410,12 +441,13 @@ const HomePage = () => {
               </a>
             </motion.div>
 
+
             {/* Floating Info Cards */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
-              className="grid grid-cols-3 gap-3 sm:gap-4 mt-12 max-w-3xl mx-auto"
+              className="grid grid-cols-3 gap-2 sm:gap-4 mt-10 max-w-3xl mx-auto"
             >
               {/* Card 1 - ROI */}
               <motion.div
@@ -517,7 +549,7 @@ const HomePage = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: scrollY < 100 ? 1 : 0 }}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 cursor-pointer"
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 cursor-pointer"
               onClick={() => {
                 window.scrollTo({
                   top: window.innerHeight,
