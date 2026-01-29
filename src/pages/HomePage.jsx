@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users, X, MapPin } from 'lucide-react';
+import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users, X, MapPin, LucideFactory, LucideLandPlot } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import SEO from '../components/SEO/SEO.jsx';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.jsx';
@@ -130,8 +130,8 @@ const HomePage = () => {
   ];
 
   const stats = [
-    { value: '30k+', label: 'Sq.yards of area', icon: <Building2 size={24} /> },
-    { value: '43+', label: 'Industrial Units Made', icon: <Award size={24} /> },
+    { value: '30k+', label: 'Sq.yards of area', icon: <LucideLandPlot size={24} /> },
+    { value: '43+', label: 'Industrial Units Made', icon: <LucideFactory size={24} /> },
     { value: '100%', label: 'Client Satisfaction', icon: <Star size={24} /> },
     { value: '6+', label: 'Years Experience', icon: <Clock size={24} /> }
   ];
@@ -155,7 +155,7 @@ const HomePage = () => {
     <>
       <SEO 
         title="Buy or Lease Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
-        description="Call 9624965017 OR 9824235642 to secure your plot! 6-8% ROI & possession in 90 days of customised industrial shed/warehouse for lease & sale in Moraiya near Ahmedabad."
+        description="Call 9624965017 OR 9824235642 to buy or lease indsutrial shed / Godown at affordable prices! 6-8% ROI & possession in 90 days customised industrial shed/warehouse for lease & sale in Moraiya near Ahmedabad in changodar."
         keywords="industrial shed for sale in Moraiya Ahmedabad, warehouse for rent in Changodar, industrial land for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, pre-engineered building manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property with weigh bridge"
         canonical="/"
         ogImage="/images/map.jpg"
@@ -494,7 +494,7 @@ const HomePage = () => {
                   <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${
                     theme === 'dark' ? 'bg-brand-red/20' : 'bg-brand-red/10'
                   }`}>
-                    <Building2 className="text-brand-red" size={18} />
+                    <LucideFactory className="text-brand-red" size={18} />
                   </div>
                   <div className="text-center">
                     <div 
@@ -526,7 +526,7 @@ const HomePage = () => {
                   <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${
                     theme === 'dark' ? 'bg-brand-red/20' : 'bg-brand-red/10'
                   }`}>
-                    <Award className="text-brand-red" size={18} />
+                    <LucideLandPlot className="text-brand-red" size={18} />
                   </div>
                   <div className="text-center">
                     <div 
