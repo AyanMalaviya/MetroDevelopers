@@ -102,7 +102,7 @@ const Navbar = () => {
             <div className="relative">
               <img 
                 src="/MDLogo.png" 
-                alt="Metro Industrial Park Logo" 
+                alt="Metro Industrial Park - Industrial Sheds for Lease and Sale" 
                 className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 object-contain rounded-lg transition-transform duration-300 group-hover:scale-110"
               />
               {/* Glow effect on hover */}

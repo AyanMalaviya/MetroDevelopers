@@ -156,7 +156,7 @@ const HomePage = () => {
       <SEO 
         title="Buy or Lease Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
         description="Call 9624965017 OR 9824235642 to buy or lease indsutrial shed / Godown at affordable prices! 6-8% ROI & possession in 90 days customised industrial shed/warehouse for lease & sale in Moraiya near Ahmedabad in changodar."
-        keywords="industrial shed for sale in Moraiya Ahmedabad, warehouse for rent in Changodar, industrial land for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, pre-engineered building manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property with weigh bridge"
+        keywords="industrial shed for sale in Moraiya Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
         canonical="/"
         ogImage="/images/map.jpg"
       />
@@ -232,6 +232,7 @@ const HomePage = () => {
                 backgroundImage: "url('/images/map.jpg')",
                 scale: 1,
               }}
+              alt={"Metro Industrial Park - High security with premium features Industrial Sheds for Lease and Sale in Ahmedabad"}
               animate={{
                 scale: [1, 1.1, 1],
                 translateY: [0, -20, 0]
