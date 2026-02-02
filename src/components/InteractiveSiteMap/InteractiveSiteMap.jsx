@@ -169,7 +169,7 @@ export default function InteractiveSiteMap() {
             <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>For L</p>
           </div>
           <div className={`p-2 rounded-lg text-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
-            <p className="text-xl font-bold text-gray-500">{stats.sold}</p>
+            <p className="text-xl font-bold text-gray-500">{stats.sold + stats.forLease}</p>
             <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Sold</p>
           </div>
         </div>
