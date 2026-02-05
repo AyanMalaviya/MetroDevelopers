@@ -302,7 +302,7 @@ const HomePage = () => {
     fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
     letterSpacing: '0.01em',
     fontWeight: '900',
-    WebkitTextStroke: theme === 'dark' ? '0.5px white' : '1px #000000', // Thin stroke color
+    WebkitTextStroke: theme === 'dark' ? '1px white' : '1px #000000', // Thin stroke color
     WebkitTextFillColor: '#e92d2d' // Makes the inside hollow
   }}
 >
@@ -315,7 +315,7 @@ const HomePage = () => {
     fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
     letterSpacing: '0.01em',
     fontWeight: '900',
-    WebkitTextStroke: theme === 'dark' ? '0.5px white' : '1px #000000', 
+    WebkitTextStroke: theme === 'dark' ? '1px white' : '1px #000000', 
     WebkitTextFillColor: theme === 'dark' ? 'black' : 'white' // Hollow effect
   }}
 >
