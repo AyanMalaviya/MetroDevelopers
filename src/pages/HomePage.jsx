@@ -151,6 +151,20 @@ const HomePage = () => {
     }
   }, []);
 
+  const outlineShadow = (c, w = 1) =>
+  [
+    `${-w}px ${-w}px 0 ${c}`,
+    `${ w}px ${-w}px 0 ${c}`,
+    `${-w}px ${ w}px 0 ${c}`,
+    `${ w}px ${ w}px 0 ${c}`,
+    `${-w}px 0 0 ${c}`,
+    `${ w}px 0 0 ${c}`,
+    `0 ${-w}px 0 ${c}`,
+    `0 ${ w}px 0 ${c}`,
+  ].join(", ");
+
+const stroke = theme === "dark" ? "#ffffff" : "#0b0b0b";
+
   return (
     <>
       <SEO 
@@ -296,14 +310,12 @@ const HomePage = () => {
             >
 <h1
   className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-2 ${
-    theme === 'dark' ? 'text-white' : 'text-gray-900'
+    theme === 'dark' ? 'text-white' : 'text-black'
   }`}
   style={{ 
     fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
     letterSpacing: '0.01em',
     fontWeight: '900',
-    WebkitTextStroke: theme === 'dark' ? '1px white' : '1px #000000', // Thin stroke color
-    WebkitTextFillColor: '#e92d2d' // Makes the inside hollow
   }}
 >
   METRO
@@ -315,8 +327,6 @@ const HomePage = () => {
     fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
     letterSpacing: '0.01em',
     fontWeight: '900',
-    WebkitTextStroke: theme === 'dark' ? '1px white' : '1px #000000', 
-    WebkitTextFillColor: theme === 'dark' ? 'black' : 'white' // Hollow effect
   }}
 >
   INDUSTRIAL PARK
