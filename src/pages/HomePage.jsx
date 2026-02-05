@@ -249,7 +249,7 @@ const HomePage = () => {
             <div className={`absolute inset-0 ${
               theme === 'dark' 
                 ? 'bg-gradient-to-br from-black/40 via-black/50 to-brand-red/20' 
-                : 'bg-gradient-to-br from-white/40 via-white/50 to-brand-red/20'
+                : 'bg-gradient-to-br from-white/30 via-white/40 to-brand-red/20'
             }`}></div>
 
             {/* Animated Background Orbs */}
@@ -265,7 +265,7 @@ const HomePage = () => {
             />
 
             {/* Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(220,38,38,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+            {/* <div className="absolute inset-0 bg-[linear-gradient(rgba(220,38,38,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div> */}
           </div>
 
 
@@ -294,29 +294,34 @@ const HomePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h1
-                className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-2 ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}
-                style={{ 
-                  fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
-                  letterSpacing: '0.01em',
-                  fontWeight: '900'
-                }}
-              >
-                METRO
-              </h1>
-              
-              <h1
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 text-brand-red"
-                style={{ 
-                  fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
-                  letterSpacing: '0.01em',
-                  fontWeight: '900'
-                }}
-              >
-                INDUSTRIAL PARK
-              </h1>
+<h1
+  className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-2 ${
+    theme === 'dark' ? 'text-white' : 'text-gray-900'
+  }`}
+  style={{ 
+    fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
+    letterSpacing: '0.01em',
+    fontWeight: '900',
+    WebkitTextStroke: theme === 'dark' ? '1px white' : '1px #000000', // Thin stroke color
+    WebkitTextFillColor: '#e92d2d' // Makes the inside hollow
+  }}
+>
+  METRO
+</h1>
+
+<h1
+  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 text-brand-red"
+  style={{ 
+    fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
+    letterSpacing: '0.01em',
+    fontWeight: '900',
+    WebkitTextStroke: theme === 'dark' ? '1px white' : '1px #000000', 
+    WebkitTextFillColor: theme === 'dark' ? 'black' : 'white' // Hollow effect
+  }}
+>
+  INDUSTRIAL PARK
+</h1>
+
             </motion.div>
 
             {/* Description */}

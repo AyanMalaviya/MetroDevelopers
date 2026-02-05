@@ -151,11 +151,11 @@ const MetroArcade = () => {
                 <span className="text-xs sm:text-sm text-black font-semibold">Taking Investor Bookings</span>
               </div>
               
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-3 sm:mb-4 drop-shadow-2xl">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-3 sm:mb-4 drop-shadow-2xl ${theme === 'dark' ? 'text-white' : 'text-gray-900'}">
                 Metro Arcade
               </h1>
               
-              <p className="text-sm sm:text-lg text-white/90 mb-4 sm:mb-6 drop-shadow-lg">
+              <p className={`text-sm sm:text-lg mb-4 sm:mb-6 drop-shadow-lg ${theme === 'dark' ? 'text-white/90' : 'text-gray-900/90'}`}>
                 {images[currentSlide].description}
               </p>
 
@@ -169,7 +169,7 @@ const MetroArcade = () => {
                 </a>
                 <button
                   onClick={() => openGallery(currentSlide)}
-                  className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold rounded-lg transition-all text-sm sm:text-base"
+                  className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 font-bold rounded-lg transition-all text-sm sm:text-base ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
                 >
                   <Maximize2 size={18} />
                   <span>View Gallery</span>
