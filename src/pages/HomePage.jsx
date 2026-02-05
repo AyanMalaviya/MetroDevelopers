@@ -225,58 +225,49 @@ const HomePage = () => {
         {/* ===== HERO SECTION ===== */}
         <section className="relative min-h-screen flex items-center justify-center">
           {/* Animated Background */}
-          <div className="absolute inset-0">
-            <motion.div 
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ 
-                backgroundImage: "url('/images/map.jpg')",
-                scale: 1,
-              }}
-              alt={"Metro Industrial Park - High security with premium features Industrial Sheds for Lease and Sale in Ahmedabad"}
+          <div className="absolute inset-0 overflow-hidden">
+            <motion.video
+              autoPlay
+              muted
+              playsInline
+              // 'loop' removed so it stops at the last frame
+              className="absolute inset-0 w-full h-full object-cover"
               animate={{
-                scale: [1, 1.1, 1],
-                translateY: [0, -20, 0]
+                // Back and forth zoom (scale) and subtle movement
+                scale: [1, 1.05, 1]
               }}
               transition={{
-                duration: 20,
+                duration: 10, // Slower for a professional "industrial" feel
                 repeat: Infinity,
-                ease: "linear"
+                ease: "easeInOut"
               }}
-            />
+            >
+              <source src="/videos/intro.mp4" type="video/mp4" />
+            </motion.video>
             
+            {/* Existing Overlays */}
             <div className={`absolute inset-0 ${
               theme === 'dark' 
-                ? 'bg-gradient-to-br from-black/80 via-black/70 to-brand-red/30' 
-                : 'bg-gradient-to-br from-white/70 via-white/50 to-brand-red/20'
+                ? 'bg-gradient-to-br from-black/40 via-black/50 to-brand-red/20' 
+                : 'bg-gradient-to-br from-white/40 via-white/50 to-brand-red/20'
             }`}></div>
 
+            {/* Animated Background Orbs */}
             <motion.div
-              className="absolute top-20 left-20 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl"
-              animate={{
-                x: [0, 100, 0],
-                y: [0, 50, 0],
-              }}
-              transition={{
-                duration: 15,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              className="absolute top-20 left-20 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl"
+              animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-              className="absolute bottom-20 right-20 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl"
-              animate={{
-                x: [0, -100, 0],
-                y: [0, -50, 0],
-              }}
-              transition={{
-                duration: 18,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              className="absolute bottom-20 right-20 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl"
+              animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
             />
 
+            {/* Grid Pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(220,38,38,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
           </div>
+
 
           {/* Content - Centered */}
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-20 text-center">
@@ -394,7 +385,7 @@ const HomePage = () => {
                   {/* 4. CONTENT */}
                   <span className="relative z-10 flex items-center justify-center gap-2 text-xs">
                     <Building2 size={16} />
-                    Explore Complete Project
+                    Explore more
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
