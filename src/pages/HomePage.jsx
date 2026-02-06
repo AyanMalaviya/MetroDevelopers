@@ -308,29 +308,29 @@ const stroke = theme === "dark" ? "#ffffff" : "#0b0b0b";
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-<h1
-  className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-2 ${
-    theme === 'dark' ? 'text-white' : 'text-black'
-  }`}
-  style={{ 
-    fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
-    letterSpacing: '0.01em',
-    fontWeight: '900',
-  }}
->
-  METRO
-</h1>
+            <h1
+              className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-2 ${
+                theme === 'dark' ? 'text-white' : 'text-black'
+              }`}
+              style={{ 
+                fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
+                letterSpacing: '0.01em',
+                fontWeight: '900',
+              }}
+            >
+              METRO
+            </h1>
 
-<h1
-  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 text-brand-red"
-  style={{ 
-    fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
-    letterSpacing: '0.01em',
-    fontWeight: '900',
-  }}
->
-  INDUSTRIAL PARK
-</h1>
+            <h1
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6 text-brand-red"
+              style={{ 
+                fontFamily: '"Bebas Neue", "Oswald", "Arial Black", sans-serif',
+                letterSpacing: '0.01em',
+                fontWeight: '900',
+              }}
+            >
+              INDUSTRIAL PARK
+            </h1>
 
             </motion.div>
 
