@@ -6,7 +6,7 @@ const StructuredData = () => {
     "@type": "RealEstate",
     "name": "Metro Enterprise - Metro Industrial Park",
     "alternateName": "Metro Industrial Park Changodar",
-    "description": "Premium industrial sheds for lease and sale in Moraiya, Changodar, Ahmedabad. Past projects in Shiv Industrial Estate, Moraiya, and Chavda Estate.",
+    "description": "Industrial sheds for lease and sale in Moraiya, Changodar, Ahmedabad. Past projects in Shiv Industrial Estate, Chavda Estate, and now Metro Industrial Park behind siya industrial park. Contact us for the best industrial spaces in Ahmedabad.",
     "url": "https://metrodevelopers.co.in",
     "logo": "https://metrodevelopers.co.in/Logo.jpeg",
     "image": "https://metrodevelopers.co.in/og-image.jpg",
@@ -52,7 +52,7 @@ const StructuredData = () => {
       "areaServed": "IN"
     },
     "priceRange": "Contact for pricing",
-    "openingHours": "Mo-Sa 09:00-18:00",
+    "openingHours": "Mo-Su 10:00-19:00",
     "sameAs": [
       "https://www.facebook.com/metroindustrialpark1",
       "https://www.instagram.com/metro.indsutrialpark/",
