@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, Ruler, Shield, Truck, Phone, CheckCircle, Maximize2, Building2, Factory, Camera, Droplets, Scale, TrendingUp, Clock, MapPin } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Ruler, Shield, Truck, Phone, CheckCircle, Maximize2, Building2, Factory, Camera, Droplets, Scale, TrendingUp, Clock, MapPin, ListCheckIcon } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
@@ -170,8 +170,8 @@ const MetroIndustrialPark = () => {
   return (
     <>
       <SEO 
-        title="Metro Industrial Park - 54,000 sq.yard Industrial Sheds | Moraiya, Ahmedabad"
-        description="Premium industrial park with 63 sheds (4,000-50,000 sq.ft) in Moraiya, Ahmedabad. ✓ 54,000 sq.yard ✓ 30-35ft Height ✓ 60ft Roads ✓ CCTV & Guards ✓ 24x7 Water ✓ Separate Weigh Bridge ✓ Waste Management ✓ 90 Days Possession ✓ 6-8% ROI. RCC construction available on request with additional charges."
+        title="Rent or invest in Industrial shed in Ahmedabad with high ROI - Metro Industrial Park"
+        description="Buy Industrial sheds in Metro park with total of 63 sheds (4,000 sq.ft to 50,000 sq.ft) in Moraiya, Ahmedabad. Total 54,000 sq.yard, Approx 30-35ft Height with wide 60ft Roads, 24x7 CCTV & Guards for your security, 24x7 Water supply, Separate Weigh Bridge, Waste Management, quick 90 Days Possession with high ROI 6-8% ROI. RCC construction available on request with additional charges."
         keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, industrial shed 4000 sqft, warehouse 10000 sqft, factory space 50000 sqft, 60 feet road width, weigh bridge facility, 6 percent ROI, 8 percent ROI, possession 90 days, RCC shed on request, Moraiya, GIDC approved Changodar"
         canonical="/metro-industrial-park"
         ogImage="/images/2shed.jpg"
@@ -179,115 +179,115 @@ const MetroIndustrialPark = () => {
       />
       <div className="min-h-screen theme-bg-primary">
         {/* ===== Hero Section with Slideshow - IMPROVED VISIBILITY ===== */}
-<section className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden">
-  <div className="relative w-full h-full">
-    {images.map((image, index) => (
-      <div
-        key={index}
-        className={`absolute inset-0 transition-opacity duration-1000 ${
-          index === currentSlide ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        <img
-          src={image.url}
-          alt={image.alt}
-          className="w-full h-full object-cover"
-        />
-        {/* ENHANCED OVERLAY - Better visibility for both themes */}
-        <div className={`absolute inset-0 ${
-          theme === 'dark' 
-            ? 'bg-gradient-to-t from-black via-black/50 to-transparent' 
-            : 'bg-gradient-to-t from-black/70 via-black/30 to-transparent'
-        }`}></div>
-      </div>
-    ))}
-  </div>
+        <section className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden">
+          <div className="relative w-full h-full">
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ${
+                  index === currentSlide ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  className="w-full h-full object-cover"
+                />
+                {/* ENHANCED OVERLAY - Better visibility for both themes */}
+                <div className={`absolute inset-0 ${
+                  theme === 'dark' 
+                    ? 'bg-gradient-to-t from-black via-black/50 to-transparent' 
+                    : 'bg-gradient-to-t from-black/70 via-black/30 to-transparent'
+                }`}></div>
+              </div>
+            ))}
+          </div>
 
-  {/* Navigation Buttons */}
-  <button
-    onClick={prevSlide}
-    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all z-10"
-    aria-label="Previous slide"
-  >
-    <ChevronLeft size={24} />
-  </button>
-  <button
-    onClick={nextSlide}
-    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all z-10"
-    aria-label="Next slide"
-  >
-    <ChevronRight size={24} />
-  </button>
-
-  {/* Slide Indicators */}
-  <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-    {images.map((_, index) => (
-      <button
-        key={index}
-        onClick={() => {
-          setCurrentSlide(index);
-          setIsAutoPlaying(false);
-        }}
-        className={`w-2 h-2 rounded-full transition-all ${
-          index === currentSlide ? 'bg-brand-red w-8' : 'bg-white/60 hover:bg-white/80'
-        }`}
-        aria-label={`Go to slide ${index + 1}`}
-      />
-    ))}
-  </div>
-
-  {/* Content Overlay */}
-  <div className="absolute inset-0 flex items-end">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 w-full">
-      <div className="max-w-3xl">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 mb-3 px-3 py-1.5 bg-brand-red/90 backdrop-blur-sm rounded-full shadow-lg">
-          <Building2 size={16} className="text-white" />
-          <span className="text-xs sm:text-sm text-white font-semibold">Available Now</span>
-        </div>
-        
-        {/* Title - Always white for readability on images */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-3 sm:mb-4 drop-shadow-2xl">
-          Metro Industrial Park
-        </h1>
-        
-        {/* Description - Always white/light for readability */}
-        <p className="text-sm sm:text-lg text-white mb-4 sm:mb-6 drop-shadow-lg font-medium">
-          {images[currentSlide].description}
-        </p>
-
-        {/* RCC Notice - Enhanced visibility */}
-        <p className="text-xs sm:text-sm text-gray-200 mb-4 drop-shadow-md font-medium">
-          RCC construction is available on request with additional charges.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-wrap gap-3">
-          <a
-            href={`https://wa.me/916356766767?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm sm:text-base shadow-xl hover:shadow-2xl hover:scale-105"
-          >
-            <FaWhatsapp size={18} />
-            <span>Inquire Now</span>
-          </a>
+          {/* Navigation Buttons */}
           <button
-            onClick={() => openGallery(currentSlide)}
-            className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 backdrop-blur-md border font-bold rounded-lg transition-all text-sm sm:text-base hover:scale-105 ${
-              theme === 'dark'
-                ? 'bg-white/10 hover:bg-white/20 border-white/30 text-white'
-                : 'bg-white/20 hover:bg-white/30 border-white/40 text-white shadow-lg'
-            }`}
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all z-10"
+            aria-label="Previous slide"
           >
-            <Maximize2 size={18} />
-            <span>View Gallery</span>
+            <ChevronLeft size={24} />
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all z-10"
+            aria-label="Next slide"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          {/* Slide Indicators */}
+          <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setCurrentSlide(index);
+                  setIsAutoPlaying(false);
+                }}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentSlide ? 'bg-brand-red w-8' : 'bg-white/60 hover:bg-white/80'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Content Overlay */}
+          <div className="absolute inset-0 flex items-end">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 w-full">
+              <div className="max-w-3xl">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 mb-3 px-3 py-1.5 bg-brand-red/90 backdrop-blur-sm rounded-full shadow-lg">
+                  <Factory size={12} className="text-white" />
+                  <span className="text-xs sm:text-sm text-white font-semibold">Available Now</span>
+                </div>
+                
+                {/* Title - Always white for readability on images */}
+                <h1 className="text-xl sm:text-xl lg:text-3xl font-extrabold text-white mb-3 sm:mb-4 drop-shadow-xl">
+                  Metro Industrial Park
+                </h1>
+                
+                {/* Description - Always white/light for readability */}
+                <p className="text-xs sm:text-md text-white mb-4 sm:mb-6 drop-shadow-lg font-medium">
+                  {images[currentSlide].description}
+                </p>
+
+                {/* RCC Notice - Enhanced visibility */}
+                <p className="text-[0.6rem] sm:text-sm text-gray-200 mb-4 drop-shadow-md font-medium">
+                  RCC construction is available on request with additional charges*
+                </p>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href={`https://wa.me/916356766767?text=${whatsappMessage}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-xs sm:text-base shadow-xl hover:shadow-xl hover:scale-105"
+                  >
+                    <FaWhatsapp size={16} />
+                    <span>Inquire Now</span>
+                  </a>
+                  <button
+                    onClick={() => openGallery(currentSlide)}
+                    className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 backdrop-blur-md border font-bold rounded-lg transition-all text-xs sm:text-base hover:scale-105 ${
+                      theme === 'dark'
+                        ? 'bg-white/10 hover:bg-white/20 border-white/30 text-white'
+                        : 'bg-white/20 hover:bg-white/30 border-white/40 text-white shadow-lg'
+                    }`}
+                  >
+                    <Maximize2 size={16} />
+                    <span>View Gallery</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
 
         {/* ===== Quick Stats Bar ===== */}
@@ -295,19 +295,19 @@ const MetroIndustrialPark = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
               <div className="text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-brand-red mb-1">54,000</div>
+                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">54,000</div>
                 <div className="text-xs sm:text-sm theme-text-tertiary">Sq.yards</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-brand-red mb-1">63</div>
+                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">63</div>
                 <div className="text-xs sm:text-sm theme-text-tertiary">Units Available</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-brand-red mb-1">60 ft</div>
+                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">60 ft</div>
                 <div className="text-xs sm:text-sm theme-text-tertiary">Road Width</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-4xl font-bold text-brand-red mb-1">90 Days</div>
+                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">90 D</div>
                 <div className="text-xs sm:text-sm theme-text-tertiary">Possession</div>
               </div>
             </div>
@@ -323,11 +323,11 @@ const MetroIndustrialPark = () => {
                 {/* Overview Section */}
                 <div ref={overviewRef}>
                   <h2
-                    className={`text-2xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
+                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
                       overviewInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                     }`}
                   >
-                    <Building2 className="text-brand-red" size={28} />
+                    <Factory className="text-brand-red" size={28} />
                     Project Overview
                   </h2>
                   <div
@@ -335,19 +335,19 @@ const MetroIndustrialPark = () => {
                       overviewInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                     }`}
                   >
-                    <p className="theme-text-secondary leading-relaxed mb-4">
+                    <p className="text-sm sm:text-base theme-text-secondary leading-relaxed mb-4">
                       Metro Industrial Park is a premier industrial development strategically located in Moraiya, Changodar. 
                       Spread across 54,000 sq.yards, this modern facility offers 63 industrial units ranging from 4,000 to 50,000 sq.ft.
                     </p>
-                    <p className="theme-text-secondary leading-relaxed mb-4">
+                    <p className="text-sm sm:text-base  theme-text-secondary leading-relaxed mb-4">
                       The park features wide 60 feet roads, 24x7 water supply, comprehensive CCTV surveillance, and a dedicated weigh bridge facility. 
                       With possession available in just 90 days, it is suitable for businesses seeking quick occupancy.
                     </p>
-                    <p className="theme-text-secondary leading-relaxed mb-2">
+                    <p className="text-sm sm:text-base theme-text-secondary leading-relaxed mb-2">
                       Designed for manufacturing and warehousing operations, the park offers high ceilings (30-35 feet), modern waste management systems, 
                       and connectivity to major highways and ports.
                     </p>
-                    <p className="theme-text-secondary leading-relaxed text-sm mt-3">
+                    <p className="text-sm sm:text-base theme-text-secondary leading-relaxed mt-3">
                       RCC construction is not standard; it is provided only on request with additional charges.
                     </p>
                   </div>
@@ -356,11 +356,11 @@ const MetroIndustrialPark = () => {
                 {/* Features Grid Section */}
                 <div ref={featuresRef}>
                   <h2
-                    className={`text-2xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
+                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
                       featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                     }`}
                   >
-                    <CheckCircle className="text-brand-red" size={28} />
+                    <ListCheckIcon className="text-brand-red" size={28} />
                     Key Features
                   </h2>
                   <div className="grid grid-cols-2 gap-4 sm:gap-6">
@@ -389,7 +389,7 @@ const MetroIndustrialPark = () => {
                 {/* Amenities Section */}
                 <div ref={amenitiesRef}>
                   <h2
-                    className={`text-2xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
+                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
                       amenitiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                     }`}
                   >
@@ -421,7 +421,7 @@ const MetroIndustrialPark = () => {
                 {/* Layout & Site Plan Section */}
                 <div ref={layoutRef}>
                   <h2
-                    className={`text-2xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
+                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
                       layoutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                     }`}
                   >
@@ -607,7 +607,7 @@ const MetroIndustrialPark = () => {
                       <Clock className="text-brand-red" size={24} />
                       <h3 className="text-lg font-bold theme-text-primary">Quick Possession</h3>
                     </div>
-                    <p className="text-2xl font-bold theme-text-primary mb-2">90 Days</p>
+                    <p className="text-xl font-bold theme-text-primary mb-2">90 Days</p>
                     <p className="theme-text-tertiary text-sm">Ready for immediate occupancy</p>
                   </div>
                 </div>
