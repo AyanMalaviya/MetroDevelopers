@@ -1,4 +1,3 @@
-// Add to src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
@@ -9,7 +8,7 @@ import ContactPage from './pages/ContactPage';
 import Calculator from './pages/CalculatorPage';
 import SiteMapPage from './pages/SiteMapPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-import ThemeToggle from './components/ThemeToggle';
+import FloatingActionMenu from './components/FloatingActionMenu'; // Updated import
 import ScrollToTop from './components/ScrollToTop';
 import MetroArcade from './components/Projects/MetroArcade';
 
@@ -30,12 +29,10 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
-              
             </Routes>
           </main>
           <Footer />
-          
-          <ThemeToggle />
+          <FloatingActionMenu /> {/* Replaced ThemeToggle */}
         </div>
       </Router>
     </ThemeProvider>

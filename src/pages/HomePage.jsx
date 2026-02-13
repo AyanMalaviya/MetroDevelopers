@@ -4,8 +4,6 @@ import { motion } from 'framer-motion';
 import { Building2, Phone, Shield, ArrowRight, ChevronDown, Star, Award, Clock, Camera, Droplets, Route, Truck, Sparkles, TrendingUp, Users, X, MapPin, LucideFactory, LucideLandPlot } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import SEO from '../components/SEO/SEO.jsx';
-import PWAInstallPrompt from '../components/PWAInstallPrompt.jsx';
-import ThemeToggle from '../components/ThemeToggle.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 
 const HomePage = () => {
@@ -174,10 +172,6 @@ const stroke = theme === "dark" ? "#ffffff" : "#0b0b0b";
         canonical="/"
         ogImage="/images/map.jpg"
       />
-
-
-      <PWAInstallPrompt />
-      <ThemeToggle />
 
       <div className="min-h-screen theme-bg-primary overflow-hidden">
         {/* ===== Floating Review Prompt ===== */}
