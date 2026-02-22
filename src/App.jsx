@@ -29,6 +29,7 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />
