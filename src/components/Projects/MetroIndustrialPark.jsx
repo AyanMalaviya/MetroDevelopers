@@ -242,7 +242,7 @@ const MetroIndustrialPark = () => {
     <>
       <SEO
         title="Rent or invest in Industrial shed in Ahmedabad with high ROI - Metro Industrial Park"
-        description="Buy Industrial sheds in Metro park with total of 63 sheds (4,000 sq.ft to 50,000 sq.ft) in Moraiya, Ahmedabad. 54,000 sq.yard, 30-35ft Height, 60ft Roads, 24x7 CCTV, Water supply, Weigh Bridge, Waste Management, 90 Days Possession, 6-8% ROI."
+        description="Buy Industrial sheds in Metro industrial park with total of 63 sheds (4,000 sq.ft to 50,000 sq.ft) in Moraiya, Ahmedabad. 54,000 sq.yard, 30-35ft Height, 60ft Roads, 24x7 CCTV, Water supply, Weigh Bridge, Waste Management, 90 Days Possession, 6-8% ROI."
         keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, Moraiya, GIDC approved Changodar"
         canonical="/metro-industrial-park"
         ogImage="/images/2shed.jpg"
@@ -254,7 +254,7 @@ const MetroIndustrialPark = () => {
         <section className="flex flex-col" style={{ minHeight: '100svh' }}>
 
           {/* IMAGE ZONE — 60svh, clean, no text overlay */}
-          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: '80svh' }}>
+          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: '70svh' }}>
 
             {/* All slides stacked — inactive ones are pointer-events-none */}
             {images.map((img, i) => (
@@ -324,7 +324,7 @@ const MetroIndustrialPark = () => {
             </div>
           </div>
 
-          {/* CONTENT ZONE — flex-1 (~40svh), completely separate from images */}
+          {/* CONTENT ZONE — completely separate from images */}
           <div className={`flex-1 flex items-center px-4 sm:px-6 py-5 ${
             theme === 'dark'
               ? 'bg-gray-950 border-t border-gray-800'
@@ -740,12 +740,12 @@ const MetroIndustrialPark = () => {
           }}
           thumbnails={{
             position: 'bottom',
-            width: 100,
-            height: 68,
-            border: 2,
-            borderRadius: 8,
-            padding: 4,
-            gap: 10,
+            width: 64,       
+            height: 44,    
+            border: 1,      
+            borderRadius: 6,
+            padding: 2,      
+            gap: 6,  
             vignette: true,
           }}
           captions={{
@@ -755,8 +755,22 @@ const MetroIndustrialPark = () => {
           }}
           slideshow={{ autoplay: false, delay: 4000 }}
           carousel={{ finite: false, preload: 2 }}
-          styles={{ container: { backgroundColor: 'rgba(0,0,0,0.97)' } }}
+          styles={{
+            container: { backgroundColor: 'rgba(0,0,0,0.97)' },
+            /*
+              CSS variables are the only reliable way to override
+              yarl's internal thumbnail strip sizing at runtime.
+              This hard-caps the strip to 56px regardless of screen size.
+            */
+            root: {
+              '--yarl__thumbnails_thumbnail_width':  '64px',
+              '--yarl__thumbnails_thumbnail_height': '44px',
+              '--yarl__thumbnails_container_padding': '4px 8px',
+              '--yarl__thumbnails_container_gap':    '6px',
+            },
+          }}
         />
+
 
         {/* ══════════════════════════════════════
             SINGLE-IMAGE VIEWER (tables / sitemap)
@@ -771,11 +785,25 @@ const MetroIndustrialPark = () => {
             maxZoomPixelRatio: 8,
             scrollToZoom: true,
             doubleTapDelay: 300,
+            doubleClickDelay: 300,
           }}
-          captions={{ showToggle: false }}
+          captions={{
+            showToggle: false,
+            descriptionTextAlign: 'center',
+          }}
           carousel={{ finite: true }}
-          styles={{ container: { backgroundColor: 'rgba(0,0,0,0.98)' } }}
+          styles={{
+            container: { backgroundColor: 'rgba(0,0,0,0.98)' },
+            /*
+              No thumbnails plugin here — but Captions takes space.
+              Push the slide area to use maximum height.
+            */
+            slide: {
+              padding: '16px',
+            },
+          }}
         />
+
 
       </div>
     </>

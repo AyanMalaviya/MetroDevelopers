@@ -2,52 +2,49 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { Delete, RotateCcw } from 'lucide-react';
+import { Delete, RotateCcw, Hash } from 'lucide-react';
+
+/* ─── Motion variants ─── */
+const fadeUp = {
+  hidden:  { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+};
 
 export default function SimpleCalculator() {
   const { theme } = useTheme();
-  const [display, setDisplay] = useState('0');
+  const isDark = theme === 'dark';
+
+  /* ── All original state (unchanged) ── */
+  const [display, setDisplay]       = useState('0');
   const [expression, setExpression] = useState('');
   const [lastResult, setLastResult] = useState(null);
 
+  /* ── All original handlers (unchanged) ── */
   const handleNumber = (num) => {
     if (display === '0' || lastResult !== null) {
-      setDisplay(num);
-      setExpression(num);
-      setLastResult(null);
+      setDisplay(num); setExpression(num); setLastResult(null);
     } else {
-      setDisplay(display + num);
-      setExpression(expression + num);
+      setDisplay(display + num); setExpression(expression + num);
     }
   };
 
   const handleOperator = (op) => {
     setLastResult(null);
     const lastChar = expression.slice(-1);
-
-    // Don't add operator if expression is empty or last char is already an operator
     if (expression === '' && op !== '-') return;
-
-    // Replace last operator if user clicks another operator
     if (['+', '-', '×', '÷', '%'].includes(lastChar)) {
-      setExpression(expression.slice(0, -1) + op);
-      setDisplay(op);
+      setExpression(expression.slice(0, -1) + op); setDisplay(op);
     } else {
-      setExpression(expression + op);
-      setDisplay(op);
+      setExpression(expression + op); setDisplay(op);
     }
   };
 
   const handleDecimal = () => {
     setLastResult(null);
-    // Get the current number being typed
     const parts = expression.split(/[+\-×÷%()]/);
     const currentNumber = parts[parts.length - 1];
-
-    // Only add decimal if current number doesn't have one
     if (!currentNumber.includes('.')) {
-      setDisplay(display + '.');
-      setExpression(expression + '.');
+      setDisplay(display + '.'); setExpression(expression + '.');
     }
   };
 
@@ -58,14 +55,11 @@ export default function SimpleCalculator() {
   };
 
   const handleClear = () => {
-    setDisplay('0');
-    setExpression('');
-    setLastResult(null);
+    setDisplay('0'); setExpression(''); setLastResult(null);
   };
 
   const handleBackspace = () => {
     if (expression.length === 0) return;
-
     const newExpression = expression.slice(0, -1);
     setExpression(newExpression);
     setDisplay(newExpression.slice(-1) || '0');
@@ -74,154 +68,188 @@ export default function SimpleCalculator() {
 
   const evaluateExpression = (expr) => {
     try {
-      // Replace symbols for calculation
       let calcExpr = expr
         .replace(/×/g, '*')
         .replace(/÷/g, '/')
         .replace(/%/g, '/100');
-
-      // Use Function constructor for safe evaluation (better than eval)
       const result = Function('"use strict"; return (' + calcExpr + ')')();
-
       return result;
-    } catch (error) {
-      return 'Error';
-    }
+    } catch { return 'Error'; }
   };
 
   const handleEquals = () => {
     if (expression === '') return;
-
     try {
       const result = evaluateExpression(expression);
-
       if (result === 'Error' || isNaN(result) || !isFinite(result)) {
-        setDisplay('Error');
-        setLastResult(null);
+        setDisplay('Error'); setLastResult(null);
       } else {
         const formatted = parseFloat(result.toFixed(10)).toString();
-        setDisplay(formatted);
-        setLastResult(formatted);
-        setExpression(formatted);
+        setDisplay(formatted); setLastResult(formatted); setExpression(formatted);
       }
-    } catch (error) {
-      setDisplay('Error');
-      setLastResult(null);
-    }
+    } catch { setDisplay('Error'); setLastResult(null); }
   };
 
-  const Button = ({ children, onClick, className = '', variant = 'default' }) => {
-    const baseClasses = "px-4 py-3 rounded-lg font-semibold transition-all duration-200 text-lg";
+  /* ══════════════════════════════════════════
+     BUTTON COMPONENT — redesigned
+     ══════════════════════════════════════════ */
+  const Btn = ({ children, onClick, variant = 'num', wide = false }) => {
+    const base = `
+      relative flex items-center justify-center
+      rounded-xl font-bold text-base
+      transition-all duration-150
+      active:scale-95 select-none
+      ${wide ? 'col-span-4 py-3.5' : 'aspect-square'}
+    `;
 
     const variants = {
-      default: theme === 'dark'
-        ? 'bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500'
-        : 'bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400',
-      operator: theme === 'dark'
-        ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-        : 'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700',
-      equals: theme === 'dark'
-        ? 'bg-brand-red text-white hover:bg-red-700 active:bg-red-800'
-        : 'bg-brand-red text-white hover:bg-red-700 active:bg-red-800',
-      clear: theme === 'dark'
-        ? 'bg-orange-600 text-white hover:bg-orange-700 active:bg-orange-800'
-        : 'bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700',
+      num: isDark
+        ? 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700 hover:border-gray-600'
+        : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-200',
+
+      op: isDark
+        ? 'bg-brand-red/15 text-brand-red hover:bg-brand-red/25 border border-brand-red/20'
+        : 'bg-brand-red/10 text-brand-red hover:bg-brand-red/20 border border-brand-red/15',
+
+      action: isDark
+        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 border border-gray-200',
+
+      equals:
+        'bg-brand-red hover:bg-red-700 text-white border border-brand-red shadow-lg shadow-brand-red/25 hover:scale-[1.01]',
     };
 
     return (
-      <button
-        onClick={onClick}
-        className={`${baseClasses} ${variants[variant]} ${className}`}
-      >
+      <button type="button" onClick={onClick} className={`${base} ${variants[variant]}`}>
         {children}
       </button>
     );
   };
 
+  /* display value is too long → shrink font */
+  const displayFontSize = display.length > 12
+    ? 'text-lg'
+    : display.length > 8
+      ? 'text-2xl'
+      : 'text-3xl';
+
+  /* ══════════════════════════════════════════
+     RENDER
+     ══════════════════════════════════════════ */
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`rounded-2xl shadow-xl p-6 border-l-4 border-purple-500 ${
-        theme === 'dark'
-          ? 'bg-gray-800/90 backdrop-blur-sm'
-          : 'bg-white'
+      className={`rounded-2xl border overflow-hidden shadow-lg ${
+        isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'
       }`}
     >
-      <h3 className={`text-lg font-bold mb-4 ${
-        theme === 'dark' ? 'text-purple-400' : 'text-purple-600'
-      }`}>
-        Quick Calculator
-      </h3>
 
-      {/* Display */}
-      <div className={`mb-4 p-4 rounded-lg ${
-        theme === 'dark'
-          ? 'bg-gray-900/50 border border-gray-700'
-          : 'bg-gray-50 border border-gray-300'
+      {/* ── Card header ── */}
+      <div className={`flex items-center gap-3 px-5 py-4 border-b ${
+        isDark ? 'border-gray-800 bg-gray-900/80' : 'border-gray-100 bg-gray-50/80'
       }`}>
-        {/* Expression */}
-        <div className={`text-sm mb-1 h-6 ${
-          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-        }`}>
-          {expression || ' '}
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-brand-red/10">
+          <Hash size={15} className="text-brand-red" />
         </div>
-
-        {/* Result Display */}
-        <div className={`text-3xl font-bold text-right ${
-          theme === 'dark' ? 'text-white' : 'text-gray-900'
-        }`}>
-          {display}
+        <div>
+          <h3 className={`text-sm font-extrabold uppercase tracking-widest ${
+            isDark ? 'text-gray-200' : 'text-gray-700'
+          }`}>
+            Quick Calculator
+          </h3>
+          <p className={`text-[10px] ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+            Supports BODMAS expressions
+          </p>
         </div>
       </div>
 
-      {/* Calculator Grid */}
-      <div className="grid grid-cols-4 gap-2">
-        {/* Row 1 */}
-        <Button variant="clear" onClick={handleClear}>AC</Button>
-        <Button variant="clear" onClick={handleBackspace}>
-          <Delete className="w-5 h-5 mx-auto" />
-        </Button>
-        <Button variant="operator" onClick={() => handleBracket('(')}>(</Button>
-        <Button variant="operator" onClick={() => handleBracket(')')}>)</Button>
+      <div className="p-4">
 
-        {/* Row 2 */}
-        <Button onClick={() => handleNumber('7')}>7</Button>
-        <Button onClick={() => handleNumber('8')}>8</Button>
-        <Button onClick={() => handleNumber('9')}>9</Button>
-        <Button variant="operator" onClick={() => handleOperator('÷')}>÷</Button>
+        {/* ── Display ── */}
+        <div className={`mb-4 rounded-2xl border overflow-hidden ${
+          isDark ? 'bg-gray-950 border-gray-800' : 'bg-gray-50 border-gray-200'
+        }`}>
+          {/* Expression strip */}
+          <div className={`px-4 pt-3 pb-1 min-h-[28px] text-right text-xs font-mono truncate ${
+            isDark ? 'text-gray-600' : 'text-gray-400'
+          }`}>
+            {expression || ' '}
+          </div>
 
-        {/* Row 3 */}
-        <Button onClick={() => handleNumber('4')}>4</Button>
-        <Button onClick={() => handleNumber('5')}>5</Button>
-        <Button onClick={() => handleNumber('6')}>6</Button>
-        <Button variant="operator" onClick={() => handleOperator('×')}>×</Button>
+          {/* Main result */}
+          <div className={`px-4 pb-4 text-right font-extrabold tabular-nums leading-none ${displayFontSize} ${
+            display === 'Error'
+              ? 'text-brand-red'
+              : isDark ? 'text-white' : 'text-gray-900'
+          }`}>
+            {display}
+          </div>
 
-        {/* Row 4 */}
-        <Button onClick={() => handleNumber('1')}>1</Button>
-        <Button onClick={() => handleNumber('2')}>2</Button>
-        <Button onClick={() => handleNumber('3')}>3</Button>
-        <Button variant="operator" onClick={() => handleOperator('-')}>−</Button>
+          {/* Last result indicator */}
+          {lastResult !== null && (
+            <div className={`px-4 pb-2 text-right text-[10px] font-semibold ${
+              isDark ? 'text-green-500/60' : 'text-green-600/70'
+            }`}>
+              ✓ Result
+            </div>
+          )}
+        </div>
 
-        {/* Row 5 */}
-        <Button onClick={() => handleNumber('0')}>0</Button>
-        <Button onClick={handleDecimal}>.</Button>
-        <Button variant="operator" onClick={() => handleOperator('%')}>%</Button>
-        <Button variant="operator" onClick={() => handleOperator('+')}>+</Button>
+        {/* ── Button grid ── */}
+        <div className="grid grid-cols-4 gap-2">
 
-        {/* Row 6 - Equals button spanning 4 columns */}
-        <Button variant="equals" onClick={handleEquals} className="col-span-4">
-          = Calculate
-        </Button>
-      </div>
+          {/* Row 1: AC, ⌫, (, ) */}
+          <Btn variant="action" onClick={handleClear}>
+            <span className="text-brand-red font-extrabold text-sm">AC</span>
+          </Btn>
+          <Btn variant="action" onClick={handleBackspace}>
+            <Delete className="w-4 h-4" />
+          </Btn>
+          <Btn variant="op" onClick={() => handleBracket('(')}>(</Btn>
+          <Btn variant="op" onClick={() => handleBracket(')')}>)</Btn>
 
-      {/* Help Text */}
-      <div className={`mt-4 text-xs ${
-        theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
-      }`}>
-        <p>Supports BODMAS: Brackets, Orders, Division, Multiplication, Addition, Subtraction</p>
-        <p className="mt-1">Example: (100+50)×2÷3 = 100</p>
+          {/* Row 2: 7 8 9 ÷ */}
+          <Btn onClick={() => handleNumber('7')}>7</Btn>
+          <Btn onClick={() => handleNumber('8')}>8</Btn>
+          <Btn onClick={() => handleNumber('9')}>9</Btn>
+          <Btn variant="op" onClick={() => handleOperator('÷')}>÷</Btn>
+
+          {/* Row 3: 4 5 6 × */}
+          <Btn onClick={() => handleNumber('4')}>4</Btn>
+          <Btn onClick={() => handleNumber('5')}>5</Btn>
+          <Btn onClick={() => handleNumber('6')}>6</Btn>
+          <Btn variant="op" onClick={() => handleOperator('×')}>×</Btn>
+
+          {/* Row 4: 1 2 3 − */}
+          <Btn onClick={() => handleNumber('1')}>1</Btn>
+          <Btn onClick={() => handleNumber('2')}>2</Btn>
+          <Btn onClick={() => handleNumber('3')}>3</Btn>
+          <Btn variant="op" onClick={() => handleOperator('-')}>−</Btn>
+
+          {/* Row 5: 0 . % + */}
+          <Btn onClick={() => handleNumber('0')}>0</Btn>
+          <Btn onClick={handleDecimal}>.</Btn>
+          <Btn variant="op" onClick={() => handleOperator('%')}>%</Btn>
+          <Btn variant="op" onClick={() => handleOperator('+')}>+</Btn>
+
+          {/* Row 6: = full width */}
+          <Btn variant="equals" wide onClick={handleEquals}>
+            <span className="flex items-center gap-2">
+              <span className="text-lg">=</span>
+              <span className="text-sm font-bold">Calculate</span>
+            </span>
+          </Btn>
+        </div>
+
+        {/* ── Example hint ── */}
+        <div className={`mt-4 px-3 py-2.5 rounded-xl text-[11px] ${
+          isDark ? 'bg-gray-800/60 text-gray-500' : 'bg-gray-50 text-gray-400 border border-gray-100'
+        }`}>
+          <p className="font-semibold mb-0.5">Example</p>
+          <p className="font-mono">(100+50)×2÷3 = 100</p>
+        </div>
       </div>
     </motion.div>
   );

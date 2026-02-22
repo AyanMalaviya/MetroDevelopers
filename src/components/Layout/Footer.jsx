@@ -1,269 +1,221 @@
+// src/components/Footer/Footer.jsx
 import React from 'react';
-import { MapPin, Phone, Mail, Webhook, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 
 const Footer = () => {
   const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const currentYear = new Date().getFullYear();
 
-  const surface = theme === 'dark'
-    ? 'bg-gradient-to-b from-black to-gray-950 border-gray-800'
-    : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200';
-
-  const pill = theme === 'dark'
-    ? 'bg-gray-800/70 hover:bg-brand-red'
-    : 'bg-gray-200 hover:bg-brand-red';
+  const pill = isDark
+    ? 'bg-gray-800/70 hover:bg-brand-red text-gray-300'
+    : 'bg-gray-100 hover:bg-brand-red text-gray-600';
 
   return (
-    <footer className={`${surface} border-t`}>
-      {/* Top CTA strip */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
-        <div
-          className={`rounded-2xl border ${
-            theme === 'dark' ? 'border-gray-800 bg-gray-900/20' : 'border-gray-200 bg-white/60'
-          } p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`}
-        >
+    <footer className={`border-t ${
+      isDark
+        ? 'bg-gradient-to-b from-black to-gray-950 border-gray-800'
+        : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200'
+    }`}>
+
+      {/* ── Top CTA strip ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
+        <div className={`rounded-2xl border p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+          isDark ? 'border-gray-800 bg-gray-900/30' : 'border-gray-200 bg-white/60'
+        }`}>
           <div>
-            <p className="theme-text-primary font-semibold text-base">
+            <p className="theme-text-primary font-semibold text-sm">
               Need industrial space in Ahmedabad?
             </p>
-            <p className="theme-text-secondary text-sm">
-              Call us for availability, pricing, and site visits.
+            <p className="theme-text-secondary text-xs mt-0.5">
+              Call us for availability, pricing &amp; site visits.
             </p>
           </div>
-
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             <a
               href="tel:+919824235642"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-red text-white font-semibold text-sm hover:opacity-95 transition"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-red text-white font-semibold text-xs hover:bg-red-700 transition-all"
             >
-              Call now <ArrowUpRight size={16} />
+              Call Now <ArrowUpRight size={13} />
             </a>
             <a
               href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border ${
-                theme === 'dark'
-                  ? 'border-gray-800 text-gray-100 hover:bg-gray-900/40'
-                  : 'border-gray-200 text-gray-800 hover:bg-gray-50'
-              } text-sm font-semibold transition`}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
+                isDark
+                  ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+                  : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
             >
-              Get directions <ArrowUpRight size={16} />
+              Get Directions <ArrowUpRight size={13} />
             </a>
           </div>
         </div>
       </div>
 
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
-          {/* Company Info */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div
-                className={`w-12 h-12 rounded-xl border flex items-center justify-center overflow-hidden ${
-                  theme === 'dark' ? 'border-gray-800 bg-gray-900/30' : 'border-gray-200 bg-white'
-                }`}
-              >
+      {/* ── Main 3-col grid ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="grid sm:grid-cols-3 gap-8">
+
+          {/* Col 1: Brand + socials */}
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden flex-shrink-0 ${
+                isDark ? 'border-gray-800 bg-gray-900/30' : 'border-gray-200 bg-white'
+              }`}>
                 <img
-                  src='/MDLogo.png'
+                  src="/MDLogo.png"
                   alt="Metro Developers logo"
-                  className="w-14 h-14 object-contain"
+                  className="w-10 h-10 object-contain"
                   loading="lazy"
                 />
               </div>
-
               <div className="leading-tight">
-                <span className="block text-xl font-bold theme-text-primary">Metro Enterprise</span>
-                <span className="block text-xs theme-text-secondary">
-                  Metro Industrial Park • Ahmedabad
+                <span className="block text-base font-bold theme-text-primary">Metro Enterprise</span>
+                <span className="block text-[11px] theme-text-secondary">
+                  Metro Industrial Park · Ahmedabad
                 </span>
               </div>
             </div>
 
-            <p className="theme-text-secondary text-sm leading-relaxed mb-5">
-              Premium industrial and warehousing infrastructure in Ahmedabad. Building spaces for
-              growing businesses.
+            <p className="theme-text-secondary text-xs leading-relaxed mb-4">
+              Premium industrial &amp; warehousing infrastructure in Ahmedabad. Building spaces for growing businesses.
             </p>
 
-            <div className="flex gap-3">
-              <a
-                href="https://wa.me/919824235642"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-10 h-10 ${pill} rounded-full flex items-center justify-center theme-text-primary transition-all focus:outline-none focus:ring-2 focus:ring-brand-red/60`}
-                aria-label="WhatsApp"
-                title="WhatsApp"
-              >
-                <FaWhatsapp size={20} />
-              </a>
-              <a
-                href="https://www.instagram.com/metro.industrialpark/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-10 h-10 ${pill} rounded-full flex items-center justify-center theme-text-primary transition-all focus:outline-none focus:ring-2 focus:ring-brand-red/60`}
-                aria-label="Instagram"
-                title="Instagram"
-              >
-                <FaInstagram size={20} />
-              </a>
-              <a
-                href="https://www.facebook.com/metroindustrialpark1"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-10 h-10 ${pill} rounded-full flex items-center justify-center theme-text-primary transition-all focus:outline-none focus:ring-2 focus:ring-brand-red/60`}
-                aria-label="Facebook"
-                title="Facebook"
-              >
-                <FaFacebook size={20} />
-              </a>
+            <div className="flex gap-2">
+              {[
+                { href: 'https://wa.me/919824235642', icon: <FaWhatsapp size={17} />, label: 'WhatsApp' },
+                { href: 'https://www.instagram.com/metro.industrialpark/', icon: <FaInstagram size={17} />, label: 'Instagram' },
+                { href: 'https://www.facebook.com/metroindustrialpark1', icon: <FaFacebook size={17} />, label: 'Facebook' },
+              ].map(({ href, icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  title={label}
+                  className={`w-9 h-9 ${pill} rounded-full flex items-center justify-center transition-all hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-red/50`}
+                >
+                  {icon}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Col 2: Quick links */}
           <nav aria-label="Quick links">
-            <h3 className="theme-text-primary font-bold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/metro-industrial-park"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-sm"
-                >
-                  Metro Industrial Park
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://g.page/r/CfbFhZSjMaH1EBI/review"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-sm"
-                >
-                  Write a Review
-                </a>
-              </li>
+            <h3 className="theme-text-primary font-bold text-sm uppercase tracking-widest mb-4">
+              Quick Links
+            </h3>
+            <ul className="space-y-2.5">
+              {[
+                { to: '/',                         label: 'Home'                   },
+                { to: '/metro-industrial-park',    label: 'Metro Industrial Park'  },
+                { to: '/metro-arcade',             label: 'Metro Arcade'           },
+                { to: '/site-map',                 label: 'Site Map'               },
+                { to: '/calculator',               label: 'ROI Calculator'         },
+                { to: '/contact',                  label: 'Contact Us'             },
+                {
+                  href: 'https://g.page/r/CfbFhZSjMaH1EBI/review',
+                  label: 'Write a Review',
+                  external: true,
+                },
+              ].map(({ to, href, label, external }) =>
+                external ? (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ) : (
+                  <li key={label}>
+                    <Link
+                      to={to}
+                      className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </nav>
 
-          {/* Contact Info */}
+          {/* Col 3: Contact */}
           <div>
-            <h3 className="theme-text-primary font-bold text-lg mb-4">Contact Us</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <MapPin className="text-brand-red flex-shrink-0 mt-1" size={18} />
+            <h3 className="theme-text-primary font-bold text-sm uppercase tracking-widest mb-4">
+              Contact Us
+            </h3>
+            <ul className="space-y-2.5">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="text-brand-red flex-shrink-0 mt-0.5" size={14} />
                 <a
                   href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-sm"
+                  className="theme-text-secondary hover:text-brand-red transition-colors text-xs leading-relaxed"
                 >
-                  Opp. Suvas Ind Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad - 382213
+                  Opp. Suvas Ind Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad — 382213
                 </a>
               </li>
 
-              <li className="flex items-center gap-3">
-                <Phone className="text-brand-red flex-shrink-0" size={18} />
-                <a href="tel:+919824235642" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
-                  +91 98242 35642
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="text-brand-red flex-shrink-0" size={18} />
-                <a href="tel:+916356776767" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
-                  +91 63567 76767
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="text-brand-red flex-shrink-0" size={18} />
-                <a href="tel:+916356766767" className="theme-text-secondary hover:text-brand-red transition-colors text-sm">
-                  +91 63567 66767
-                </a>
-              </li>
+              {[
+                { href: 'tel:+919824235642',   label: '+91 98242 35642' },
+                { href: 'tel:+916356776767',   label: '+91 63567 76767' },
+                { href: 'tel:+916356766767',   label: '+91 63567 66767' },
+              ].map(({ href, label }) => (
+                <li key={href} className="flex items-center gap-2.5">
+                  <Phone className="text-brand-red flex-shrink-0" size={14} />
+                  <a href={href} className="theme-text-secondary hover:text-brand-red transition-colors text-xs">
+                    {label}
+                  </a>
+                </li>
+              ))}
 
-              <li className="flex items-center gap-3">
-                <Mail className="text-brand-red flex-shrink-0" size={18} />
+              <li className="flex items-center gap-2.5">
+                <Mail className="text-brand-red flex-shrink-0" size={14} />
                 <a
                   href="mailto:metrodevelopers26@gmail.com"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-sm break-all"
+                  className="theme-text-secondary hover:text-brand-red transition-colors text-xs break-all"
                 >
                   metrodevelopers26@gmail.com
                 </a>
               </li>
-
-              <li className="flex items-center gap-3">
-                <Webhook className="text-brand-red flex-shrink-0" size={18} />
-                <a
-                  href="https://metrodevelopers.co.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-sm break-all"
-                >
-                  metrodevelopers.co.in
-                </a>
-              </li>
             </ul>
           </div>
-
-          {/* Optional: small “Legal”/extra column */}
-          <div className="sm:col-span-2 lg:col-span-4 mx-auto">
-            <div className={`mt-2 pt-8 border-t ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>
-              <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-                <div className="flex items-center gap-3">
-                  <img
-                    src='/MDLogo.png'
-                    alt="Metro Developers"
-                    className="w-8 h-8 object-contain opacity-90"
-                    loading="lazy"
-                  />
-                  <span className="theme-text-secondary text-sm">
-                    Trusted industrial infrastructure partner in Ahmedabad.
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm mx-auto">
-                  <Link to="/privacy" className="theme-text-secondary hover:text-brand-red transition-colors">
-                    Privacy
-                  </Link>
-                  <Link to="/terms" className="theme-text-secondary hover:text-brand-red transition-colors">
-                    Terms
-                  </Link>
-                  <a href="#top" className="theme-text-secondary hover:text-brand-red transition-colors">
-                    Back to top
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className={`border-t ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-sm text-center sm:text-left`}>
-              © {currentYear} Metro Developers. All rights reserved.
-            </p>
-            <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-sm text-center sm:text-right`}>
+      {/* ── Bottom bar ── */}
+      <div className={`border-t ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className={`text-xs text-center sm:text-left ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+            © {currentYear} Metro Enterprise. All rights reserved.
+          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href="#top"
+              className={`text-xs transition-colors hover:text-brand-red ${isDark ? 'text-gray-600' : 'text-gray-400'}`}
+            >
+              ↑ Back to top
+            </a>
+            <span className={`text-xs ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
               Developed by <span className="text-brand-red font-semibold">Ayan Malaviya</span>
-            </p>
+            </span>
           </div>
         </div>
       </div>
+
     </footer>
   );
 };
