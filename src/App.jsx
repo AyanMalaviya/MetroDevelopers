@@ -11,6 +11,7 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import FloatingActionMenu from './components/FloatingActionMenu'; // Updated import
 import ScrollToTop from './components/ScrollToTop';
 import MetroArcade from './components/Projects/MetroArcade';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -23,7 +24,6 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="*" element={<HomePage />} />
               <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
               <Route path="/metro-arcade" element={<MetroArcade />} />
               <Route path="/contact" element={<ContactPage />} />
