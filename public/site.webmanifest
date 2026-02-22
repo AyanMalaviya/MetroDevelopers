@@ -13,6 +13,11 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/MDLogo.png",
+      "sizes": "1600x1600",
+      "type": "image/png"
     }
   ],
   "theme_color": "#000000",

@@ -1,34 +1,121 @@
-import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, Ruler, Shield, Truck, Phone, CheckCircle, Maximize2, Building2, Factory, Camera, Droplets, Scale, TrendingUp, Clock, MapPin, ListCheckIcon } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  ChevronLeft, ChevronRight, Ruler, Shield, Truck, Phone,
+  CheckCircle, Maximize2, Building2, Factory, Camera, Droplets,
+  Scale, TrendingUp, Clock, MapPin, ListCheckIcon,
+  FileDiffIcon,
+  LandPlot,
+  CctvIcon,
+  FactoryIcon,
+  Trash,
+  WeightTilde,
+  Scale3d,
+  Scale3DIcon,
+  WeightIcon,
+} from 'lucide-react';
+import { FaRoad, FaWeight, FaWhatsapp } from 'react-icons/fa';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import CountUp from 'react-countup';
+import Lightbox    from 'yet-another-react-lightbox';
+import Zoom        from 'yet-another-react-lightbox/plugins/zoom';
+import Thumbnails  from 'yet-another-react-lightbox/plugins/thumbnails';
+import Captions    from 'yet-another-react-lightbox/plugins/captions';
+import Fullscreen  from 'yet-another-react-lightbox/plugins/fullscreen';
+import Counter     from 'yet-another-react-lightbox/plugins/counter';
+import Download    from 'yet-another-react-lightbox/plugins/download';
+import Slideshow   from 'yet-another-react-lightbox/plugins/slideshow';
+import 'yet-another-react-lightbox/styles.css';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import 'yet-another-react-lightbox/plugins/captions.css';
+import 'yet-another-react-lightbox/plugins/counter.css';
 import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
 
+/* ─── Motion variants ─── */
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+const itemVariants = {
+  hidden:  { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
+const fadeUp = {
+  hidden:  { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+/* ─── Sub-components ─── */
+const SectionHeader = ({ icon, title }) => (
+  <h2 className="text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3">
+    <span className="text-brand-red">{icon}</span>
+    {title}
+  </h2>
+);
+
+const ImageCard = ({ src, title, onOpen, theme, tall = false }) => (
+  <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden">
+    <div className={`${tall ? 'min-h-[500px]' : 'min-h-[380px]'} w-full ${
+      theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'
+    } flex flex-col items-center justify-center p-4`}>
+      <img
+        src={src}
+        alt={title}
+        className="max-w-full h-auto cursor-zoom-in hover:scale-[1.02] transition-transform duration-300 rounded-lg shadow"
+        onClick={onOpen}
+        onError={(e) => {
+          e.target.style.display = 'none';
+          e.target.parentElement.innerHTML = `
+            <div class="text-gray-500 text-center p-8">
+              <p class="text-lg mb-2">${title}</p>
+              <p class="text-sm">Image coming soon</p>
+            </div>`;
+        }}
+      />
+      <button
+        onClick={onOpen}
+        className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red hover:bg-red-700 text-white rounded-xl transition-all text-sm font-semibold hover:scale-105 shadow-lg shadow-brand-red/30"
+      >
+        <Maximize2 size={15} /> View Full Size
+      </button>
+    </div>
+  </div>
+);
+
+/* ══════════════════════════════════════
+   MAIN COMPONENT
+   ══════════════════════════════════════ */
 const MetroIndustrialPark = () => {
   const { theme } = useTheme();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const [galleryImage, setGalleryImage] = useState(null);
+  const [currentSlide, setCurrentSlide]   = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [activeTab, setActiveTab] = useState('areaTables');
+  const [activeTab, setActiveTab]         = useState('areaTables');
 
-  // WhatsApp pre-filled message
-  const whatsappMessage = encodeURIComponent("Hello, I would like to inquire about the industrial sheds.");
+  /* ── Lightbox states — completely independent from currentSlide ── */
+  const [galleryOpen, setGalleryOpen]   = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);   // ← never tied to currentSlide after open
+  const [viewerOpen, setViewerOpen]     = useState(false);
+  const [viewerSlides, setViewerSlides] = useState([]);
 
-  const overviewRef = useRef(null);
-  const featuresRef = useRef(null);
+  /* ─── Section refs + useInView ─── */
+  const overviewRef  = useRef(null);
+  const featuresRef  = useRef(null);
   const amenitiesRef = useRef(null);
-  const layoutRef = useRef(null);
-  const [overviewInView, setOverviewInView] = useState(false);
-  const [featuresInView, setFeaturesInView] = useState(false);
-  const [amenitiesInView, setAmenitiesInView] = useState(false);
-  const [layoutInView, setLayoutInView] = useState(false);
+  const layoutRef    = useRef(null);
 
+  const overviewInView  = useInView(overviewRef,  { once: true, margin: '-60px' });
+  const featuresInView  = useInView(featuresRef,  { once: true, margin: '-60px' });
+  const amenitiesInView = useInView(amenitiesRef, { once: true, margin: '-60px' });
+  const layoutInView    = useInView(layoutRef,    { once: true, margin: '-60px' });
+
+  const whatsappMessage = encodeURIComponent('Hello, I would like to inquire about the industrial sheds.');
+
+  /* ─── Data ─── */
   const propertySchema = {
     "@context": "https://schema.org",
     "@type": "Place",
     "name": "Metro Industrial Park",
-    "description": "54,000 sq.yard industrial park with 63 sheds (4K-50K sq.ft), 30-35ft height, 60ft roads, weigh bridge, 6-8% ROI. RCC construction available on request with additional charges.",
+    "description": "54,000 sq.yard industrial park with 63 sheds, 30-35ft height, 60ft roads, 6-8% ROI.",
     "url": "https://www.metrodevelopers.co.in/metro-industrial-park",
     "address": {
       "@type": "PostalAddress",
@@ -42,54 +129,41 @@ const MetroIndustrialPark = () => {
       "@type": "GeoCoordinates",
       "latitude": "22.914141879249897",
       "longitude": "72.41748307531053"
-    },
-    "amenityFeature": [
-      { "@type": "LocationFeatureSpecification", "name": "Total Area", "value": "54,000 sq.yard" },
-      { "@type": "LocationFeatureSpecification", "name": "Total Units", "value": "63 Sheds" },
-      { "@type": "LocationFeatureSpecification", "name": "Unit Sizes", "value": "4,000-50,000 sq.ft" },
-      { "@type": "LocationFeatureSpecification", "name": "RCC Construction (On Request)", "value": "Available with additional charges" },
-      { "@type": "LocationFeatureSpecification", "name": "Height", "value": "30-35 feet" },
-      { "@type": "LocationFeatureSpecification", "name": "Road Width", "value": "60 feet" },
-      { "@type": "LocationFeatureSpecification", "name": "Possession", "value": "90 days" },
-      { "@type": "LocationFeatureSpecification", "name": "Security", "value": "CCTV & Guards" },
-      { "@type": "LocationFeatureSpecification", "name": "Water Supply", "value": "24x7" },
-      { "@type": "LocationFeatureSpecification", "name": "Weigh Bridge", "value": "Separate" },
-      { "@type": "LocationFeatureSpecification", "name": "Waste Management", "value": true },
-      { "@type": "LocationFeatureSpecification", "name": "ROI", "value": "6-8%" }
-    ]
+    }
   };
 
+  /* NOTE: uses `src` key — required by yet-another-react-lightbox */
   const images = [
-    { url: '/images/2shed.jpg', alt: 'Modern Industrial Shed', title: 'Modern Industrial Shed', description: 'State-of-the-art industrial sheds with high ceilings' },
-    { url: '/images/4shed.jpg', alt: 'Warehouse Facility', title: 'Warehouse Facility', description: 'Spacious warehouse units with optimal storage' },
-    { url: '/images/entrance.jpg', alt: 'Park Entrance', title: 'Park Entrance', description: 'Professional entrance with 24/7 security' },
-    { url: '/images/mainroad.jpg', alt: 'Main Road & Access', title: 'Main Road & Access', description: 'Wide internal roads for heavy vehicles' },
-    { url: '/images/map.jpg', alt: '3D Map View', title: '3D Map View', description: 'Comprehensive site layout' },
-    { url: '/images/office.jpg', alt: 'Office Space', title: 'Office Space', description: 'Modern office facilities' }
+    { src: '/images/2shed.jpg',    title: 'Modern Industrial Shed', description: 'State-of-the-art industrial sheds with high ceilings'  },
+    { src: '/images/4shed.jpg',    title: 'Warehouse Facility',     description: 'Spacious warehouse units with optimal storage'        },
+    { src: '/images/entrance.jpg', title: 'Park Entrance',          description: 'Professional entrance with 24/7 security'            },
+    { src: '/images/mainroad.jpg', title: 'Main Road & Access',     description: 'Wide internal roads engineered for heavy vehicles'    },
+    { src: '/images/map.jpg',      title: '3D Map View',            description: 'Comprehensive site layout overview'                  },
+    { src: '/images/office.jpg',   title: 'Office Space',           description: 'Modern office facilities within the park'            },
   ];
 
   const features = [
-    { icon: <Ruler size={24} />, title: 'Flexible Sizes', description: '4,000 - 50,000 sq.ft units available' },
-    { icon: <Shield size={24} />, title: 'Security', description: 'CCTV surveillance & guards at main gate' },
-    { icon: <Truck size={24} />, title: 'Logistics', description: 'Easy highway and port access' },
-    { icon: <Camera size={24} />, title: 'CCTV Coverage', description: 'Complete surveillance system' },
-    { icon: <Droplets size={24} />, title: '24x7 Water Supply', description: 'Continuous water availability' },
-    { icon: <Scale size={24} />, title: 'Weigh Bridge', description: 'Separate dedicated weigh bridge facility' },
-    { icon: <Factory size={24} />, title: 'Waste Management', description: 'Professional waste disposal system' },
-    { icon: <Building2 size={24} />, title: 'Infrastructure', description: 'Modern industrial facilities; RCC available on request with additional charges' }
+    { icon: <Ruler size={22} />,     title: 'Flexible Sizes',  description: '4,000 – 50,000 sq.ft units available'                          },
+    { icon: <Shield size={22} />,    title: 'Security',        description: 'CCTV surveillance & guards at main gate'                       },
+    { icon: <Truck size={22} />,     title: 'Logistics',       description: 'Easy highway and port access'                                  },
+    { icon: <CctvIcon size={22} />,    title: 'CCTV Coverage',   description: 'Complete 24x7 surveillance system'                             },
+    { icon: <Droplets size={22} />,  title: '24x7 Water',      description: 'Continuous water availability across all units'                },
+    { icon: <WeightIcon size={22} />,     title: 'Weigh Bridge',    description: 'Separate dedicated weigh bridge facility'                      },
+    { icon: <Trash size={22} />,   title: 'Waste Mgmt.',     description: 'Professional waste disposal system'                            },
+    { icon: <FactoryIcon size={22} />, title: 'Infrastructure',  description: 'Modern facilities; RCC available on request with extra charges' },
   ];
 
   const specifications = [
-    { label: 'Location', value: 'Moraiya, Changodar' },
-    { label: 'Total Area', value: '54,000 sq.yards' },
-    { label: 'Units', value: '63 Industrial Sheds' },
-    { label: 'Unit Sizes', value: '4,000 - 50,000 sq.ft' },
-    { label: 'Height', value: '30-35 feet' },
-    { label: 'Road Width', value: '60 feet' },
-    { label: 'Possession', value: '90 days' },
-    { label: 'Expected ROI', value: '6-8%' },
-    { label: 'RCC Option', value: 'Available on request with additional charges' },
-    { label: 'Status', value: 'Available Now' }
+    { label: 'Location',     value: 'Moraiya, Changodar'                  },
+    { label: 'Total Area',   value: '54,000 sq.yards'                     },
+    { label: 'Units',        value: '63 Industrial Sheds'                 },
+    { label: 'Unit Sizes',   value: '4,000 – 50,000 sq.ft'               },
+    { label: 'Height',       value: '30–35 feet'                          },
+    { label: 'Road Width',   value: '60 feet'                             },
+    { label: 'Possession',   value: '90 days'                             },
+    { label: 'Expected ROI', value: '6–8%'                                },
+    { label: 'RCC Option',   value: 'On request with additional charges'  },
+    { label: 'Status',       value: 'Available Now'                       },
   ];
 
   const amenities = [
@@ -99,465 +173,482 @@ const MetroIndustrialPark = () => {
     'Separate Weigh Bridge',
     'Wide 60 feet Roads',
     'Waste Management System',
-    'High Ceiling (30-35 ft)',
-    'Modern Infrastructure (RCC on request with extra cost)',
+    'High Ceiling (30–35 ft)',
+    'Modern Infrastructure (RCC on request)',
     'Easy Highway Access',
-    'Ample Parking Space'
+    'Ample Parking Space',
   ];
 
   const layoutImages = {
     areaTable1: '/images/table1.jpg',
     areaTable2: '/images/table2.jpg',
-    siteMap: '/images/metro-industrial-map.jpg'
+    siteMap:    '/images/metro-industrial-map.jpg',
   };
 
+  const quickStats = [
+    { end: 54000, suffix: '',    separator: ',', label: 'Sq.yards Total',  icon: <LandPlot size={26} />   },
+    { end: 63,    suffix: '',    separator: '',  label: 'Units Available', icon: <Factory size={26} />  },
+    { end: 60,    suffix: ' ft', separator: '',  label: 'Road Width',      icon: <FaRoad size={26} />    },
+    { end: 90,    suffix: 'D',   separator: '',  label: 'Possession',      icon: <Clock size={26} />    },
+  ];
+
+  /* ─── Slide navigation ─── */
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((p) => (p + 1) % images.length);
+    setIsAutoPlaying(false);
+  }, [images.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((p) => (p - 1 + images.length) % images.length);
+    setIsAutoPlaying(false);
+  }, [images.length]);
+
+  /* ─── Lightbox openers ─── */
+  const openGallery = useCallback((index) => {
+    setGalleryIndex(index);  // set once on open — yarl takes over after
+    setGalleryOpen(true);
+    setIsAutoPlaying(false);
+  }, []);
+
+  const openViewer = useCallback((src, title) => {
+    setViewerSlides([{ src, title, description: 'Click zoom icon or scroll to zoom · Pinch on mobile' }]);
+    setViewerOpen(true);
+  }, []);
+
+  /* ─── Auto-play ─── */
   useEffect(() => {
-    if (!isAutoPlaying || isGalleryOpen) return;
+    if (!isAutoPlaying || galleryOpen || viewerOpen) return;
+    const id = setInterval(() => setCurrentSlide((p) => (p + 1) % images.length), 5000);
+    return () => clearInterval(id);
+  }, [isAutoPlaying, galleryOpen, viewerOpen, images.length]);
 
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % images.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, isGalleryOpen, images.length]);
-
+  /* ─── Keyboard shortcuts for hero slideshow ─── */
   useEffect(() => {
-    const handleScroll = () => {
-      const checkInView = (ref, setter, alreadyInView) => {
-        if (!ref.current || alreadyInView) return;
-        const rect = ref.current.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.8) {
-          setter(true);
-        }
-      };
-
-      checkInView(overviewRef, setOverviewInView, overviewInView);
-      checkInView(featuresRef, setFeaturesInView, featuresInView);
-      checkInView(amenitiesRef, setAmenitiesInView, amenitiesInView);
-      checkInView(layoutRef, setLayoutInView, layoutInView);
+    const onKey = (e) => {
+      if (galleryOpen || viewerOpen) return;   // let yarl handle keys when open
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft')  prevSlide();
     };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [galleryOpen, viewerOpen, nextSlide, prevSlide]);
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [overviewInView, featuresInView, amenitiesInView, layoutInView]);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length);
-    setIsAutoPlaying(false);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-    setIsAutoPlaying(false);
-  };
-
-  const openGallery = (index) => {
-    setCurrentSlide(index);
-    setIsGalleryOpen(true);
-    setIsAutoPlaying(false);
-  };
-
-  const closeGallery = () => {
-    setIsGalleryOpen(false);
-    setGalleryImage(null);
-  };
-
-  const openImageGallery = (imageSrc, title) => {
-    setGalleryImage({ src: imageSrc, title });
-  };
-
+  /* ════════════════════════════════════════════════
+     RENDER
+     ════════════════════════════════════════════════ */
   return (
     <>
-      <SEO 
+      <SEO
         title="Rent or invest in Industrial shed in Ahmedabad with high ROI - Metro Industrial Park"
-        description="Buy Industrial sheds in Metro park with total of 63 sheds (4,000 sq.ft to 50,000 sq.ft) in Moraiya, Ahmedabad. Total 54,000 sq.yard, Approx 30-35ft Height with wide 60ft Roads, 24x7 CCTV & Guards for your security, 24x7 Water supply, Separate Weigh Bridge, Waste Management, quick 90 Days Possession with high ROI 6-8% ROI. RCC construction available on request with additional charges."
-        keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, industrial shed 4000 sqft, warehouse 10000 sqft, factory space 50000 sqft, 60 feet road width, weigh bridge facility, 6 percent ROI, 8 percent ROI, possession 90 days, RCC shed on request, Moraiya, GIDC approved Changodar"
+        description="Buy Industrial sheds in Metro park with total of 63 sheds (4,000 sq.ft to 50,000 sq.ft) in Moraiya, Ahmedabad. 54,000 sq.yard, 30-35ft Height, 60ft Roads, 24x7 CCTV, Water supply, Weigh Bridge, Waste Management, 90 Days Possession, 6-8% ROI."
+        keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, Moraiya, GIDC approved Changodar"
         canonical="/metro-industrial-park"
         ogImage="/images/2shed.jpg"
         structuredData={propertySchema}
       />
+
       <div className="min-h-screen theme-bg-primary">
-        {/* ===== Hero Section with Slideshow - IMPROVED VISIBILITY ===== */}
-        <section className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden">
-          <div className="relative w-full h-full">
-            {images.map((image, index) => (
+
+        <section className="flex flex-col" style={{ minHeight: '100svh' }}>
+
+          {/* IMAGE ZONE — 60svh, clean, no text overlay */}
+          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: '80svh' }}>
+
+            {/* All slides stacked — inactive ones are pointer-events-none */}
+            {images.map((img, i) => (
               <div
-                key={index}
-                className={`absolute inset-0 transition-opacity duration-1000 ${
-                  index === currentSlide ? 'opacity-100' : 'opacity-0'
+                key={i}
+                aria-hidden={i !== currentSlide}
+                className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                  i === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
               >
                 <img
-                  src={image.url}
-                  alt={image.alt}
+                  src={img.src}
+                  alt={img.title}
                   className="w-full h-full object-cover"
+                  loading={i === 0 ? 'eager' : 'lazy'}
                 />
-                {/* ENHANCED OVERLAY - Better visibility for both themes */}
-                <div className={`absolute inset-0 ${
-                  theme === 'dark' 
-                    ? 'bg-gradient-to-t from-black via-black/50 to-transparent' 
-                    : 'bg-gradient-to-t from-black/70 via-black/30 to-transparent'
-                }`}></div>
               </div>
             ))}
+
+            {/* Prev */}
+            <button
+              type="button"
+              onClick={prevSlide}
+              className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-brand-red backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={22} />
+            </button>
+
+            {/* Next */}
+            <button
+              type="button"
+              onClick={nextSlide}
+              className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-brand-red backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
+              aria-label="Next image"
+            >
+              <ChevronRight size={22} />
+            </button>
+
+            {/* Image counter */}
+            <div className="absolute top-3 right-3 z-10 px-3 py-1 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-semibold tabular-nums">
+              {currentSlide + 1} / {images.length}
+            </div>
+
+            {/* View Gallery shortcut */}
+            <button
+              type="button"
+              onClick={() => openGallery(currentSlide)}
+              className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/60 hover:bg-brand-red backdrop-blur-sm border border-white/20 text-white text-xs font-semibold rounded-xl transition-all duration-200"
+            >
+              <Maximize2 size={13} /> View All Photos
+            </button>
+
+            {/* Dot indicators */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => { setCurrentSlide(i); setIsAutoPlaying(false); }}
+                  aria-label={`Go to image ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === currentSlide ? 'bg-brand-red w-8' : 'bg-white/60 hover:bg-white w-2'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Navigation Buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all z-10"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={24} />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all z-10"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={24} />
-          </button>
+          {/* CONTENT ZONE — flex-1 (~40svh), completely separate from images */}
+          <div className={`flex-1 flex items-center px-4 sm:px-6 py-5 ${
+            theme === 'dark'
+              ? 'bg-gray-950 border-t border-gray-800'
+              : 'bg-white border-t border-gray-200'
+          }`}>
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
-          {/* Slide Indicators */}
-          <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setCurrentSlide(index);
-                  setIsAutoPlaying(false);
-                }}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  index === currentSlide ? 'bg-brand-red w-8' : 'bg-white/60 hover:bg-white/80'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+                {/* Left — title + description + CTAs */}
+                <div className="flex-1 min-w-0">
 
-          {/* Content Overlay */}
-          <div className="absolute inset-0 flex items-end">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 w-full">
-              <div className="max-w-3xl">
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 mb-3 px-3 py-1.5 bg-brand-red/90 backdrop-blur-sm rounded-full shadow-lg">
-                  <Factory size={12} className="text-white" />
-                  <span className="text-xs sm:text-sm text-white font-semibold">Available Now</span>
+                  <div className="inline-flex items-center gap-2 mb-2.5 px-3 py-1.5 bg-brand-red rounded-full shadow-lg shadow-brand-red/30">
+                    <Factory size={12} className="text-white" />
+                    <span className="text-xs text-white font-bold tracking-wide">Available Now</span>
+                  </div>
+
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold theme-text-primary mb-1.5">
+                    Metro Industrial Park
+                  </h1>
+
+                  {/* Slide description animates in sync with image */}
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={currentSlide}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-sm sm:text-base theme-text-secondary mb-1"
+                    >
+                      {images[currentSlide].description}
+                    </motion.p>
+                  </AnimatePresence>
+
+                  <p className="text-[0.65rem] sm:text-xs text-gray-400 mb-4 italic">
+                    * RCC construction available on request with additional charges
+                  </p>
+
+                  <div className="flex flex-wrap gap-2.5">
+                    <a
+                      href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all text-xs sm:text-sm shadow-lg shadow-brand-red/30 hover:scale-105"
+                    >
+                      <FaWhatsapp size={16} /> Inquire Now
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => openGallery(currentSlide)}
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 border-2 font-bold rounded-xl transition-all text-xs sm:text-sm hover:scale-105 ${
+                        theme === 'dark'
+                          ? 'border-gray-700 hover:border-brand-red text-white hover:text-white'
+                          : 'border-gray-300 hover:border-brand-red text-gray-900'
+                      }`}
+                    >
+                      <Maximize2 size={16} /> View Gallery
+                    </button>
+                  </div>
                 </div>
-                
-                {/* Title - Always white for readability on images */}
-                <h1 className="text-xl sm:text-xl lg:text-3xl font-extrabold text-white mb-3 sm:mb-4 drop-shadow-xl">
-                  Metro Industrial Park
-                </h1>
-                
-                {/* Description - Always white/light for readability */}
-                <p className="text-xs sm:text-md text-white mb-4 sm:mb-6 drop-shadow-lg font-medium">
-                  {images[currentSlide].description}
-                </p>
 
-                {/* RCC Notice - Enhanced visibility */}
-                <p className="text-[0.6rem] sm:text-sm text-gray-200 mb-4 drop-shadow-md font-medium">
-                  RCC construction is available on request with additional charges*
-                </p>
-
-                {/* CTA Buttons */}
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    href={`https://wa.me/916356766767?text=${whatsappMessage}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-xs sm:text-base shadow-xl hover:shadow-xl hover:scale-105"
-                  >
-                    <FaWhatsapp size={16} />
-                    <span>Inquire Now</span>
-                  </a>
-                  <button
-                    onClick={() => openGallery(currentSlide)}
-                    className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 backdrop-blur-md border font-bold rounded-lg transition-all text-xs sm:text-base hover:scale-105 ${
-                      theme === 'dark'
-                        ? 'bg-white/10 hover:bg-white/20 border-white/30 text-white'
-                        : 'bg-white/20 hover:bg-white/30 border-white/40 text-white shadow-lg'
-                    }`}
-                  >
-                    <Maximize2 size={16} />
-                    <span>View Gallery</span>
-                  </button>
+                {/* Right — mini quick-spec grid, desktop only */}
+                <div className="hidden sm:grid grid-cols-2 gap-2.5 flex-shrink-0">
+                  {[
+                    { label: '54,000', sub: 'Sq.yards',   icon: <LandPlot size={20} />   },
+                    { label: '63',     sub: 'Units',       icon: <Factory size={20} />  },
+                    { label: '60 ft',  sub: 'Road Width',  icon: <FaRoad size={20} />    },
+                    { label: '90 D',   sub: 'Possession',  icon: <Clock size={20} />    },
+                  ].map((q, i) => (
+                    <div
+                      key={i}
+                      className={`text-center px-5 py-3 rounded-xl border transition-colors ${
+                        theme === 'dark'
+                          ? 'bg-gray-900 border-gray-800 hover:border-brand-red/50'
+                          : 'bg-gray-50 border-gray-200 hover:border-brand-red/40'
+                      }`}
+                    >
+                      <div className="text-brand-red flex justify-center mb-1">{q.icon}</div>
+                      <div className="font-extrabold theme-text-primary text-sm" style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}>{q.label}</div>
+                      <div className="text-[10px] theme-text-tertiary font-medium">{q.sub}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-
-        {/* ===== Quick Stats Bar ===== */}
-        <section className={`${theme === 'dark' ? 'bg-gradient-to-r from-gray-900 to-black border-gray-800' : 'bg-gradient-to-r from-gray-100 to-gray-50 border-gray-200'} border-y`}>
+        {/* ══════════════════════════════════
+            QUICK STATS BAR — CountUp
+            ══════════════════════════════════ */}
+        <section className={`border-y ${
+          theme === 'dark'
+            ? 'bg-gradient-to-r from-gray-900 to-black border-gray-800'
+            : 'bg-gradient-to-r from-gray-100 to-white border-gray-200'
+        }`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">54,000</div>
-                <div className="text-xs sm:text-sm theme-text-tertiary">Sq.yards</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">63</div>
-                <div className="text-xs sm:text-sm theme-text-tertiary">Units Available</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">60 ft</div>
-                <div className="text-xs sm:text-sm theme-text-tertiary">Road Width</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-brand-red mb-1">90 D</div>
-                <div className="text-xs sm:text-sm theme-text-tertiary">Possession</div>
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 divide-x divide-dashed divide-gray-500/20">
+              {quickStats.map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  className="text-center group px-2"
+                >
+                  <div className="flex justify-center mb-1 text-brand-red/50 group-hover:text-brand-red transition-colors duration-300">
+                    {stat.icon}
+                  </div>
+                  <div
+                    className="text-2xl sm:text-3xl font-extrabold text-brand-red mb-0.5"
+                    style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}
+                  >
+                    <CountUp
+                      end={stat.end}
+                      suffix={stat.suffix}
+                      separator={stat.separator}
+                      duration={2.2}
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  </div>
+                  <div className="text-xs sm:text-sm theme-text-tertiary font-medium">{stat.label}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ===== Main Content ===== */}
+        {/* ══════════════════════════════════
+            MAIN CONTENT
+            ══════════════════════════════════ */}
         <section className={`py-12 sm:py-16 lg:py-20 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
-              {/* Left Column - Main Info */}
-              <div className="lg:col-span-2 space-y-12">
-                {/* Overview Section */}
-                <div ref={overviewRef}>
-                  <h2
-                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
-                      overviewInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
-                    <Factory className="text-brand-red" size={28} />
-                    Project Overview
-                  </h2>
-                  <div
-                    className={`theme-bg-card rounded-xl p-6 sm:p-8 border theme-border transition-all duration-1000 delay-150 ${
-                      overviewInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
-                    <p className="text-sm sm:text-base theme-text-secondary leading-relaxed mb-4">
-                      Metro Industrial Park is a premier industrial development strategically located in Moraiya, Changodar. 
-                      Spread across 54,000 sq.yards, this modern facility offers 63 industrial units ranging from 4,000 to 50,000 sq.ft.
-                    </p>
-                    <p className="text-sm sm:text-base  theme-text-secondary leading-relaxed mb-4">
-                      The park features wide 60 feet roads, 24x7 water supply, comprehensive CCTV surveillance, and a dedicated weigh bridge facility. 
-                      With possession available in just 90 days, it is suitable for businesses seeking quick occupancy.
-                    </p>
-                    <p className="text-sm sm:text-base theme-text-secondary leading-relaxed mb-2">
-                      Designed for manufacturing and warehousing operations, the park offers high ceilings (30-35 feet), modern waste management systems, 
-                      and connectivity to major highways and ports.
-                    </p>
-                    <p className="text-sm sm:text-base theme-text-secondary leading-relaxed mt-3">
-                      RCC construction is not standard; it is provided only on request with additional charges.
-                    </p>
-                  </div>
-                </div>
 
-                {/* Features Grid Section */}
-                <div ref={featuresRef}>
-                  <h2
-                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
-                      featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
+              {/* ── LEFT (2/3) ── */}
+              <div className="lg:col-span-2 space-y-14">
+
+                {/* Project Overview */}
+                <motion.div
+                  ref={overviewRef}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate={overviewInView ? 'visible' : 'hidden'}
+                >
+                  <motion.div variants={fadeUp}>
+                    <SectionHeader icon={<Factory size={26} />} title="Project Overview" />
+                  </motion.div>
+                  <motion.div
+                    variants={fadeUp}
+                    className="theme-bg-card rounded-2xl p-6 sm:p-8 border theme-border hover:border-brand-red/30 transition-colors duration-300"
                   >
-                    <ListCheckIcon className="text-brand-red" size={28} />
-                    Key Features
-                  </h2>
-                  <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                    {features.map((feature, index) => (
-                      <div
-                        key={index}
-                        className={`theme-bg-card p-4 sm:p-6 rounded-xl border theme-border hover:border-brand-red/60 transition-all duration-1000 ${
-                          featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                        }`}
-                        style={{ transitionDelay: `${index * 80}ms` }}
+                    {[
+                      'Metro Industrial Park is a premier industrial development strategically located in Moraiya, Changodar. Spread across 54,000 sq.yards, this modern facility offers 63 industrial units ranging from 4,000 to 50,000 sq.ft.',
+                      'The park features wide 60 feet roads, 24x7 water supply, comprehensive CCTV surveillance, and a dedicated weigh bridge facility. With possession available in just 90 days, it is ideal for businesses seeking quick occupancy.',
+                      'Designed for manufacturing and warehousing operations, the park offers high ceilings (30–35 feet), modern waste management systems, and seamless connectivity to major highways and ports.',
+                    ].map((para, i) => (
+                      <p key={i} className="text-sm sm:text-base theme-text-secondary leading-relaxed mb-4 last:mb-0">
+                        {para}
+                      </p>
+                    ))}
+                    <p className={`text-xs mt-4 pt-4 border-t italic ${
+                      theme === 'dark' ? 'border-gray-800 text-gray-500' : 'border-gray-200 text-gray-400'
+                    }`}>
+                      * RCC construction is not standard — available only on request with additional charges.
+                    </p>
+                  </motion.div>
+                </motion.div>
+
+                {/* Key Features */}
+                <motion.div
+                  ref={featuresRef}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate={featuresInView ? 'visible' : 'hidden'}
+                >
+                  <motion.div variants={fadeUp}>
+                    <SectionHeader icon={<ListCheckIcon size={26} />} title="Key Features" />
+                  </motion.div>
+                  <div className="grid grid-cols-2 gap-4 sm:gap-5">
+                    {features.map((feat, i) => (
+                      <motion.div
+                        key={i}
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.03, y: -3 }}
+                        className="group relative theme-bg-card p-4 sm:p-6 rounded-2xl border theme-border hover:border-brand-red/50 transition-all duration-300 overflow-hidden cursor-default"
                       >
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 text-brand-red mx-auto">
-                          {feature.icon}
+                        <div className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-brand-red to-red-400 transition-all duration-500 pointer-events-none" />
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-3 mx-auto transition-all duration-300 
+                          text-brand-red bg-brand-red/10 group-hover:bg-brand-red group-hover:text-white`}>
+                          {feat.icon}
                         </div>
-                        <h3 className="text-sm sm:text-lg font-bold theme-text-primary mb-2 text-center">
-                          {feature.title}
+                        <h3 className="text-sm sm:text-base font-bold theme-text-primary mb-1.5 text-center group-hover:text-brand-red transition-colors duration-300">
+                          {feat.title}
                         </h3>
-                        <p className="theme-text-secondary text-xs sm:text-sm text-center">
-                          {feature.description}
+                        <p className="theme-text-secondary text-xs sm:text-sm text-center leading-relaxed">
+                          {feat.description}
                         </p>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Amenities Section */}
-                <div ref={amenitiesRef}>
-                  <h2
-                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
-                      amenitiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
-                    <Factory className="text-brand-red" size={28} />
-                    Amenities & Facilities
-                  </h2>
-                  <div
-                    className={`theme-bg-card rounded-xl p-6 sm:p-8 border theme-border transition-all duration-1000 delay-150 ${
-                      amenitiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
+                {/* Amenities */}
+                <motion.div
+                  ref={amenitiesRef}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate={amenitiesInView ? 'visible' : 'hidden'}
+                >
+                  <motion.div variants={fadeUp}>
+                    <SectionHeader icon={<CheckCircle size={26} />} title="Amenities & Facilities" />
+                  </motion.div>
+                  <motion.div variants={fadeUp} className="theme-bg-card rounded-2xl p-6 sm:p-8 border theme-border">
                     <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                      {amenities.map((amenity, index) => (
-                        <div
-                          key={index}
-                          className={`flex items-center gap-3 theme-text-secondary transition-all duration-700 ${
-                            amenitiesInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                          }`}
-                          style={{ transitionDelay: `${index * 60}ms` }}
-                        >
-                          <CheckCircle size={18} className="text-brand-red flex-shrink-0" />
-                          <span className="text-sm sm:text-base">{amenity}</span>
-                        </div>
+                      {amenities.map((item, i) => (
+                        <motion.div key={i} variants={itemVariants} className="flex items-center gap-3 group">
+                          <CheckCircle size={17} className="text-brand-red flex-shrink-0 group-hover:scale-110 transition-transform" />
+                          <span className="text-sm sm:text-base theme-text-secondary">{item}</span>
+                        </motion.div>
                       ))}
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
 
-                {/* Layout & Site Plan Section */}
-                <div ref={layoutRef}>
-                  <h2
-                    className={`text-xl sm:text-3xl font-bold theme-text-primary mb-6 flex items-center gap-3 transition-all duration-1000 ${
-                      layoutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
-                    <MapPin className="text-brand-red" size={28} />
-                    Layout & Site Plan
-                  </h2>
+                {/* Layout & Site Plan */}
+                <motion.div
+                  ref={layoutRef}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate={layoutInView ? 'visible' : 'hidden'}
+                >
+                  <motion.div variants={fadeUp}>
+                    <SectionHeader icon={<MapPin size={26} />} title="Layout & Site Plan" />
+                  </motion.div>
 
-                  <div
-                    className={`flex gap-2 sm:gap-3 mb-6 flex-wrap transition-all duration-1000 delay-150 ${
-                      layoutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
-                    <button
-                      onClick={() => setActiveTab('areaTables')}
-                      className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all ${
-                        activeTab === 'areaTables'
-                          ? 'bg-brand-red text-white'
-                          : `${theme === 'dark' ? 'bg-gray-900 text-gray-400 hover:bg-gray-800' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`
-                      }`}
+                  <motion.div variants={fadeUp} className="flex gap-2 sm:gap-3 mb-6 flex-wrap">
+                    {[
+                      { key: 'areaTables', label: 'Area Details' },
+                      { key: 'siteMap',    label: 'Site Map'     },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        onClick={() => setActiveTab(tab.key)}
+                        className={`px-5 sm:px-7 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                          activeTab === tab.key
+                            ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30'
+                            : theme === 'dark'
+                              ? 'bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-white'
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </motion.div>
+
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.28 }}
+                      className="space-y-6"
                     >
-                      Area Details
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('siteMap')}
-                      className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all ${
-                        activeTab === 'siteMap'
-                          ? 'bg-brand-red text-white'
-                          : `${theme === 'dark' ? 'bg-gray-900 text-gray-400 hover:bg-gray-800' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`
-                      }`}
-                    >
-                      Site Map
-                    </button>
-                  </div>
-
-                  <div
-                    className={`space-y-6 transition-all duration-1000 delay-300 ${
-                      layoutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                    }`}
-                  >
-                    {activeTab === 'areaTables' && (
-                      <>
-                        <div className={`theme-bg-card rounded-xl border theme-border overflow-hidden`}>
-                          <div className={`min-h-[400px] w-full ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'} flex flex-col items-center justify-center p-4`}>
-                            <img
-                              src={layoutImages.areaTable1}
-                              alt="Area Details Table 1"
-                              className="max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
-                              onClick={() => openImageGallery(layoutImages.areaTable1, 'Area Details Table 1')}
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.parentElement.innerHTML =
-                                  '<div class="text-gray-500 text-center p-8"><p class="text-lg mb-2">Area Details Table 1</p><p class="text-sm">Image will be available soon</p></div>';
-                              }}
-                            />
-                            <button
-                              onClick={() => openImageGallery(layoutImages.areaTable1, 'Area Details Table 1')}
-                              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-red/20 hover:bg-brand-red/30 text-brand-red rounded-lg transition-all text-sm"
-                            >
-                              <Maximize2 size={16} />
-                              <span>View Full Size</span>
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className={`theme-bg-card rounded-xl border theme-border overflow-hidden`}>
-                          <div className={`min-h-[400px] w-full ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'} flex flex-col items-center justify-center p-4`}>
-                            <img
-                              src={layoutImages.areaTable2}
-                              alt="Area Details Table 2"
-                              className="max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
-                              onClick={() => openImageGallery(layoutImages.areaTable2, 'Area Details Table 2')}
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.parentElement.innerHTML =
-                                  '<div class="text-gray-500 text-center p-8"><p class="text-lg mb-2">Area Details Table 2</p><p class="text-sm">Image will be available soon</p></div>';
-                              }}
-                            />
-                            <button
-                              onClick={() => openImageGallery(layoutImages.areaTable2, 'Area Details Table 2')}
-                              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-red/20 hover:bg-brand-red/30 text-brand-red rounded-lg transition-all text-sm"
-                            >
-                              <Maximize2 size={16} />
-                              <span>View Full Size</span>
-                            </button>
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {activeTab === 'siteMap' && (
-                      <div className={`theme-bg-card rounded-xl border theme-border overflow-hidden`}>
-                        <div className={`min-h-[600px] w-full ${theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'} flex flex-col items-center justify-center p-4`}>
-                          <img
-                            src={layoutImages.siteMap}
-                            alt="Site Map - High Resolution"
-                            className="max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => openImageGallery(layoutImages.siteMap, 'Site Map - High Resolution')}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                              e.target.parentElement.innerHTML =
-                                '<div class="text-gray-500 text-center p-8"><p class="text-lg mb-2">Site Map</p><p class="text-sm">High-resolution image will be available soon</p></div>';
-                            }}
+                      {activeTab === 'areaTables' && (
+                        <>
+                          <ImageCard
+                            src={layoutImages.areaTable1}
+                            title="Area Details Table 1"
+                            onOpen={() => openViewer(layoutImages.areaTable1, 'Area Details — Table 1')}
+                            theme={theme}
                           />
-                          <div className="mt-4 flex gap-3">
-                            <button
-                              onClick={() => openImageGallery(layoutImages.siteMap, 'Site Map - High Resolution')}
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-red hover:bg-red-700 text-white rounded-lg transition-all text-sm font-semibold"
-                            >
-                              <Maximize2 size={16} />
-                              <span>View Full Size</span>
-                            </button>
-                          </div>
-                          <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-xs mt-3`}>
-                            Click on image or button to view in full screen
+                          <ImageCard
+                            src={layoutImages.areaTable2}
+                            title="Area Details Table 2"
+                            onOpen={() => openViewer(layoutImages.areaTable2, 'Area Details — Table 2')}
+                            theme={theme}
+                          />
+                        </>
+                      )}
+                      {activeTab === 'siteMap' && (
+                        <>
+                          <ImageCard
+                            src={layoutImages.siteMap}
+                            title="Site Map — High Resolution"
+                            onOpen={() => openViewer(layoutImages.siteMap, 'Site Map — High Resolution')}
+                            theme={theme}
+                            tall
+                          />
+                          <p className={`text-xs text-center ${theme === 'dark' ? 'text-gray-600' : 'text-gray-400'}`}>
+                            Click image or button to zoom · Pinch on mobile
                           </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                        </>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.div>
               </div>
 
-              {/* Right Column - Sidebar */}
+              {/* ── RIGHT SIDEBAR (sticky) ── */}
               <div className="lg:col-span-1">
-                <div className="sticky top-24 space-y-6">
-                  {/* Specifications Card */}
-                  <div className={`theme-bg-card rounded-xl p-6 border theme-border`}>
-                    <h3 className="text-xl font-bold theme-text-primary mb-6">Specifications</h3>
-                    <div className="space-y-4">
-                      {specifications.map((spec, index) => (
+                <div className="sticky top-24 space-y-5">
+
+                  {/* Specifications */}
+                  <div className="theme-bg-card rounded-2xl p-6 border theme-border">
+                    <h3 className="text-lg font-bold theme-text-primary mb-5 pb-3 border-b theme-border">
+                      Specifications
+                    </h3>
+                    <div className="space-y-3">
+                      {specifications.map((spec, i) => (
                         <div
-                          key={index}
-                          className={`flex justify-between items-start border-b ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'} pb-3`}
+                          key={i}
+                          className={`flex justify-between items-start gap-3 pb-3 border-b last:border-0 last:pb-0 ${
+                            theme === 'dark' ? 'border-gray-800' : 'border-gray-100'
+                          }`}
                         >
-                          <span className="theme-text-tertiary text-sm">{spec.label}</span>
-                          <span className="theme-text-primary font-semibold text-sm text-right">
+                          <span className="theme-text-tertiary text-xs sm:text-sm shrink-0">{spec.label}</span>
+                          <span className={`font-semibold text-xs sm:text-sm text-right ${
+                            spec.label === 'Status' ? 'text-green-500' : 'theme-text-primary'
+                          }`}>
                             {spec.value}
                           </span>
                         </div>
@@ -565,129 +656,127 @@ const MetroIndustrialPark = () => {
                     </div>
                   </div>
 
-                  {/* ROI Highlight */}
-                  <div className={`${theme === 'dark' ? 'bg-gradient-to-br from-green-500/20 to-transparent border-green-500/30' : 'bg-gradient-to-br from-green-100 to-transparent border-green-300'} rounded-xl p-6 border`}>
-                    <div className="flex items-center gap-3 mb-3">
-                      <TrendingUp className="text-green-500" size={28} />
-                      <h3 className="text-xl font-bold theme-text-primary">Expected ROI</h3>
+                  {/* ROI */}
+                  <div className={`rounded-2xl p-6 border ${
+                    theme === 'dark'
+                      ? 'bg-gradient-to-br from-green-900/30 to-transparent border-green-700/30'
+                      : 'bg-gradient-to-br from-green-50 to-white border-green-200'
+                  }`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <TrendingUp className="text-green-500" size={22} />
+                      <h3 className="text-base font-bold theme-text-primary">Expected ROI</h3>
                     </div>
-                    <p className="text-3xl font-bold text-green-500 mb-2">6-8%</p>
-                    <p className="theme-text-tertiary text-sm">Annual return on investment</p>
+                    <p className="text-3xl font-extrabold text-green-500 mb-1"
+                      style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}>
+                      6–8%
+                    </p>
+                    <p className="theme-text-tertiary text-xs">Annual return on investment</p>
                   </div>
 
-                  {/* Quick Contact */}
-                  <div className={`theme-bg-card rounded-xl p-6 border theme-border`}>
-                    <h3 className="text-xl font-bold theme-text-primary mb-4">Interested?</h3>
-                    <p className="theme-text-tertiary text-sm mb-6">
-                      Contact for Personalized options, detailed information, site visits, and booking.
+                  {/* Contact */}
+                  <div className="theme-bg-card rounded-2xl p-6 border theme-border">
+                    <h3 className="text-base font-bold theme-text-primary mb-1">Interested?</h3>
+                    <p className="theme-text-tertiary text-xs mb-5 leading-relaxed">
+                      Contact us for pricing, site visits, and customised unit options.
                     </p>
                     <div className="space-y-3">
                       <a
-                        href={`https://wa.me/916356766767?text=${whatsappMessage}`}
+                        href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all"
+                        className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-brand-red/30 text-sm"
                       >
-                        <FaWhatsapp size={20} />
-                        <span>WhatsApp</span>
+                        <FaWhatsapp size={18} /> WhatsApp Us
                       </a>
                       <a
-                        href="tel:+919635676767"
-                        className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3 border-2 ${theme === 'dark' ? 'border-gray-700' : 'border-gray-300'} hover:border-brand-red theme-text-primary font-bold rounded-lg transition-all`}
+                        href="tel:+919824235642"
+                        className={`w-full inline-flex items-center justify-center gap-2 px-5 py-3 border-2 font-bold rounded-xl transition-all hover:scale-105 text-sm ${
+                          theme === 'dark'
+                            ? 'border-gray-700 hover:border-brand-red text-white'
+                            : 'border-gray-300 hover:border-brand-red text-gray-900'
+                        }`}
                       >
-                        <Phone size={20} />
-                        <span>Call Now</span>
+                        <Phone size={18} /> Call Now
                       </a>
                     </div>
                   </div>
 
-                  {/* Possession Timeline */}
-                  <div className={`theme-bg-card rounded-xl p-6 border theme-border`}>
-                    <div className="flex items-center gap-3 mb-3">
-                      <Clock className="text-brand-red" size={24} />
-                      <h3 className="text-lg font-bold theme-text-primary">Quick Possession</h3>
+                  {/* Possession */}
+                  <div className="theme-bg-card rounded-2xl p-6 border theme-border">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Clock className="text-brand-red" size={22} />
+                      <h3 className="text-base font-bold theme-text-primary">Quick Possession</h3>
                     </div>
-                    <p className="text-xl font-bold theme-text-primary mb-2">90 Days</p>
-                    <p className="theme-text-tertiary text-sm">Ready for immediate occupancy</p>
+                    <p className="text-2xl font-extrabold theme-text-primary mb-1"
+                      style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}>
+                      90 Days
+                    </p>
+                    <p className="theme-text-tertiary text-xs">Ready for immediate occupancy</p>
                   </div>
+
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ===== Hero Gallery Modal ===== */}
-        {isGalleryOpen && (
-          <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
-            <button
-              onClick={closeGallery}
-              className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-              aria-label="Close gallery"
-            >
-              <X size={24} />
-            </button>
+        {/* ══════════════════════════════════════════════════════════
+            GALLERY LIGHTBOX
+            FIX: no `on.view` callback — yarl manages index internally
+            after open; external state never changes it mid-session
+            ══════════════════════════════════════════════════════════ */}
+        <Lightbox
+          open={galleryOpen}
+          close={() => setGalleryOpen(false)}
+          index={galleryIndex}
+          slides={images}
+          plugins={[Zoom, Thumbnails, Captions, Fullscreen, Counter, Download, Slideshow]}
+          zoom={{
+            maxZoomPixelRatio: 5,
+            zoomInMultiplier: 2,
+            doubleTapDelay: 300,
+            doubleClickDelay: 300,
+            scrollToZoom: true,
+          }}
+          thumbnails={{
+            position: 'bottom',
+            width: 100,
+            height: 68,
+            border: 2,
+            borderRadius: 8,
+            padding: 4,
+            gap: 10,
+            vignette: true,
+          }}
+          captions={{
+            descriptionTextAlign: 'center',
+            descriptionMaxLines: 2,
+            showToggle: true,
+          }}
+          slideshow={{ autoplay: false, delay: 4000 }}
+          carousel={{ finite: false, preload: 2 }}
+          styles={{ container: { backgroundColor: 'rgba(0,0,0,0.97)' } }}
+        />
 
-            <button
-              onClick={prevSlide}
-              className="absolute left-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-              aria-label="Previous image"
-            >
-              <ChevronLeft size={28} />
-            </button>
+        {/* ══════════════════════════════════════
+            SINGLE-IMAGE VIEWER (tables / sitemap)
+            ══════════════════════════════════════ */}
+        <Lightbox
+          open={viewerOpen}
+          close={() => setViewerOpen(false)}
+          index={0}
+          slides={viewerSlides}
+          plugins={[Zoom, Fullscreen, Download, Captions]}
+          zoom={{
+            maxZoomPixelRatio: 8,
+            scrollToZoom: true,
+            doubleTapDelay: 300,
+          }}
+          captions={{ showToggle: false }}
+          carousel={{ finite: true }}
+          styles={{ container: { backgroundColor: 'rgba(0,0,0,0.98)' } }}
+        />
 
-            <div className="max-w-6xl mx-auto px-4">
-              <img
-                src={images[currentSlide].url}
-                alt={images[currentSlide].alt}
-                className="w-full h-auto max-h-[80vh] object-contain"
-              />
-              <div className="text-center mt-4">
-                <h3 className="text-white text-xl font-bold mb-2">
-                  {images[currentSlide].title}
-                </h3>
-                <p className="text-gray-400">{images[currentSlide].description}</p>
-                <p className="text-gray-500 text-sm mt-2">
-                  {currentSlide + 1} / {images.length}
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={nextSlide}
-              className="absolute right-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-              aria-label="Next image"
-            >
-              <ChevronRight size={28} />
-            </button>
-          </div>
-        )}
-
-        {/* ===== Full Screen Image Gallery Modal ===== */}
-        {galleryImage && (
-          <div className="fixed inset-0 z-50 bg-black flex items-center justify-center p-4">
-            <button
-              onClick={closeGallery}
-              className="absolute top-4 right-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-10"
-              aria-label="Close"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="w-full h-full flex flex-col items-center justify-center">
-              <img
-                src={galleryImage.src}
-                alt={galleryImage.title}
-                className="max-w-full max-h-[90vh] object-contain"
-              />
-              <p className="text-white text-lg font-semibold mt-4">
-                {galleryImage.title}
-              </p>
-              <p className="text-gray-400 text-sm mt-2">
-                Use pinch to zoom on mobile • Right-click to save
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );

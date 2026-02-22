@@ -5,6 +5,7 @@ const urlsToCache = [
   '/manifest.json',
   '/icon-192x192.png',
   '/icon-512x512.png',
+  '/MDLogo.png',
   '/images/2shed.jpg',
   '/images/map.jpg'
 ];
