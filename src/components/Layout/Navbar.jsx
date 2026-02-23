@@ -91,7 +91,7 @@ const Navbar = () => {
                 Metro Enterprise
               </span>
               <span className={`block text-[10px] font-medium transition-colors ${
-                isDark ? 'text-gray-500' : 'text-gray-400'
+                isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Industrial Sheds · Lease &amp; Sale
               </span>

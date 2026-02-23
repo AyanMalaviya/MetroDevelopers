@@ -24,11 +24,13 @@ const cardVariants = {
 
 /* ─── Slideshow images ─── */
 const heroSlides = [
-  '/images/2shed.jpg',
-  '/images/4shed.jpg',
+  '/images/map.jpg',
   '/images/entrance.jpg',
   '/images/mainroad.jpg',
-  '/images/map.jpg',
+  '/images/2shed.jpg',
+  '/images/4shed.jpg',
+  '/images/office.jpg',
+  
 ];
 
 /* ─── Features & Stats data ─── */
@@ -236,27 +238,6 @@ const HomePage = () => {
             {/* Slideshow — shows before video loads, resumes after video ends */}
             <SlideshowPoster
               slides={heroSlides}
-              videoReady={videoReady}
-              videoEnded={videoEnded}
-            />
-
-            {/* Video — deferred, plays once, then fades out */}
-            <video
-              ref={videoRef}
-              autoPlay
-              muted
-              playsInline
-              preload="none"
-              onEnded={() => {
-                if (videoRef.current) {
-                  videoRef.current.style.opacity = '0';
-                  setVideoEnded(true);
-                }
-              }}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                videoReady ? 'opacity-100' : 'opacity-0'
-              }`}
-              style={{ animation: 'kenBurns 12s ease-in-out infinite' }}
             />
 
             {/* On-video overlay: Logo + Badge + Cards */}
@@ -265,9 +246,9 @@ const HomePage = () => {
                 src="/MDLogoBG.png"
                 alt="Metro Developers Logo"
                 width={288} height={288}
-                initial={{ opacity: 0, scale: 2, y: 60 }}
-                animate={{ opacity: 1, scale: 1.6, y: 40 }}
-                transition={{ duration: 4, ease: 'easeOut' }}
+                initial={{ opacity: 0.2, scale: 4, y: 120 }}
+                animate={{ opacity: 1, scale: 1.8, y: 40 }}
+                transition={{ duration: 3, ease: 'easeOut' }}
                 className="w-36 sm:w-52 md:w-64 lg:w-72 drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
               />
 
@@ -353,7 +334,7 @@ const HomePage = () => {
             {showScrollCue && (
               <button
                 className={`flex flex-col items-center gap-0.5 cursor-pointer border-0 bg-transparent mt-1 ${
-                  isDark ? 'text-gray-500' : 'text-gray-400'
+                  isDark ? 'text-gray-400' : 'text-gray-600'
                 }`}
                 onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                 aria-label="Scroll down"
