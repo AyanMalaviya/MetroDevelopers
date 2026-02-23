@@ -1,3 +1,4 @@
+// src/pages/HomePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
@@ -11,6 +12,7 @@ import SEO from '../components/SEO/SEO.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
 
+/* ─── Framer variants ─── */
 const containerVariants = {
   hidden:  {},
   visible: { transition: { staggerChildren: 0.1 } },
@@ -20,6 +22,16 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 };
 
+/* ─── Slideshow images ─── */
+const heroSlides = [
+  '/images/2shed.jpg',
+  '/images/4shed.jpg',
+  '/images/entrance.jpg',
+  '/images/mainroad.jpg',
+  '/images/map.jpg',
+];
+
+/* ─── Features & Stats data ─── */
 const features = [
   { icon: <Factory size={28} />,    title: 'Modern Infrastructure', description: 'World-class facilities designed for manufacturing excellence'   },
   { icon: <Truck size={28} />,      title: 'Strategic Location',    description: 'Prime connectivity to national highways & logistics hubs'      },
@@ -36,27 +48,76 @@ const stats = [
   { countEnd: 6,   suffix: '+',  label: 'Years of Experience',   icon: <Clock          size={24} /> },
 ];
 
+/* ════════════════════════════════════════════════
+   SLIDESHOW POSTER COMPONENT
+   - Cycles before video loads
+   - Pauses while video plays
+   - Resumes after video ends
+   ════════════════════════════════════════════════ */
+const SlideshowPoster = ({ slides, videoReady, videoEnded }) => {
+  const [current, setCurrent] = useState(0);
+  const showSlideshow = !videoReady || videoEnded;
 
-// Add this array near your features/stats arrays at the top of the file:
-const heroSlides = [
-  '/images/2shed.jpg',
-  '/images/4shed.jpg',
-  '/images/entrance.jpg',
-  '/images/mainroad.jpg',
-  '/images/map.jpg',
-];
+  useEffect(() => {
+    if (!showSlideshow) return;
+    const interval = setInterval(() => {
+      setCurrent(prev => (prev + 1) % slides.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [showSlideshow, slides.length]);
 
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {slides.map((src, i) => (
+        <div
+          key={src}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+          style={{
+            backgroundImage: `url(${src})`,
+            opacity: i === current && showSlideshow ? 1 : 0,
+          }}
+          aria-hidden="true"
+        />
+      ))}
 
+      {/* Subtle overlay so text stays readable */}
+      <div className="absolute inset-0 bg-black/20" aria-hidden="true" />
+
+      {/* Slide indicator dots */}
+      {showSlideshow && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`rounded-full transition-all duration-300 ${
+                i === current
+                  ? 'w-5 h-1.5 bg-white'
+                  : 'w-1.5 h-1.5 bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ════════════════════════════════════════════════
+   MAIN COMPONENT
+   ════════════════════════════════════════════════ */
 const HomePage = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const rafRef                                  = useRef(null);
-  const videoRef                                = useRef(null);
-  const [videoReady,       setVideoReady]       = useState(false);
-  const [showScrollCue,    setShowScrollCue]    = useState(true);
-  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
-  const [promptDismissed,  setPromptDismissed]  = useState(false);
+  const rafRef                                    = useRef(null);
+  const videoRef                                  = useRef(null);
+  const [videoReady,       setVideoReady]         = useState(false);
+  const [videoEnded,       setVideoEnded]         = useState(false);
+  const [showScrollCue,    setShowScrollCue]      = useState(true);
+  const [showReviewPrompt, setShowReviewPrompt]   = useState(false);
+  const [promptDismissed,  setPromptDismissed]    = useState(false);
 
   const featuresRef = useRef(null);
   const statsRef    = useRef(null);
@@ -75,7 +136,7 @@ const HomePage = () => {
       setPromptDismissed(true);
   }, []);
 
-  /* Throttled scroll — RAF prevents setState on every pixel */
+  /* Throttled scroll — RAF prevents re-render on every pixel */
   useEffect(() => {
     const onScroll = () => {
       if (rafRef.current) return;
@@ -98,7 +159,7 @@ const HomePage = () => {
     };
   }, [promptDismissed]);
 
-  /* Defer video until browser is idle — doesn't compete with LCP */
+  /* Defer video load until browser is idle — doesn't block LCP */
   useEffect(() => {
     const load = () => {
       if (!videoRef.current) return;
@@ -134,7 +195,7 @@ const HomePage = () => {
 
       <div className="min-h-screen theme-bg-primary overflow-hidden">
 
-        {/* Review Prompt */}
+        {/* ── Review Prompt ── */}
         {showReviewPrompt && !promptDismissed && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
@@ -172,15 +233,14 @@ const HomePage = () => {
         <section className="relative h-screen flex flex-col overflow-hidden">
           <div className="relative overflow-hidden" style={{ height: '90vh' }}>
 
-            {/* Poster — LCP element, shows instantly */}
-            {/* Poster — use existing image since hero-poster.jpg not generated yet */}
-            <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: 'url(/images/2shed.jpg)' }}
-              aria-hidden="true"
+            {/* Slideshow — shows before video loads, resumes after video ends */}
+            <SlideshowPoster
+              slides={heroSlides}
+              videoReady={videoReady}
+              videoEnded={videoEnded}
             />
 
-
+            {/* Video — deferred, plays once, then fades out */}
             <video
               ref={videoRef}
               autoPlay
@@ -190,6 +250,7 @@ const HomePage = () => {
               onEnded={() => {
                 if (videoRef.current) {
                   videoRef.current.style.opacity = '0';
+                  setVideoEnded(true);
                 }
               }}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
@@ -198,7 +259,7 @@ const HomePage = () => {
               style={{ animation: 'kenBurns 12s ease-in-out infinite' }}
             />
 
-
+            {/* On-video overlay: Logo + Badge + Cards */}
             <div className="absolute inset-0 flex flex-col items-center justify-between py-6 sm:py-10 pointer-events-none px-4">
               <motion.img
                 src="/MDLogoBG.png"
@@ -245,7 +306,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Button strip */}
+          {/* ── Button strip ── */}
           <div className={`flex-1 flex flex-col items-center justify-center gap-2 px-4 py-3 ${
             isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'
           }`}>
@@ -291,7 +352,9 @@ const HomePage = () => {
 
             {showScrollCue && (
               <button
-                className={`flex flex-col items-center gap-0.5 cursor-pointer border-0 bg-transparent mt-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
+                className={`flex flex-col items-center gap-0.5 cursor-pointer border-0 bg-transparent mt-1 ${
+                  isDark ? 'text-gray-500' : 'text-gray-400'
+                }`}
                 onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                 aria-label="Scroll down"
               >
@@ -308,10 +371,8 @@ const HomePage = () => {
         <section ref={featuresRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }} animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7 }} className="text-center mb-14"
-            >
+            <motion.div initial={{ opacity: 0, y: 24 }} animate={featuresInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7 }} className="text-center mb-14">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase bg-brand-red/10 text-brand-red border border-brand-red/30 mb-4">
                 <Sparkles size={11} className="animate-pulse" /> Why Choose Us
               </span>
@@ -323,8 +384,7 @@ const HomePage = () => {
 
             <motion.div variants={containerVariants} initial="hidden"
               animate={featuresInView ? 'visible' : 'hidden'}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feat, i) => (
                 <motion.div key={i} variants={cardVariants} whileHover={{ scale: 1.03, y: -4 }}
                   className={`group relative p-7 rounded-2xl border transition-all duration-300 cursor-default overflow-hidden ${
@@ -353,10 +413,8 @@ const HomePage = () => {
         <section ref={statsRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-black' : 'bg-white'}`}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7 }} className="text-center mb-14"
-            >
+            <motion.div initial={{ opacity: 0, y: 24 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7 }} className="text-center mb-14">
               <h2 className="text-3xl sm:text-5xl font-bold theme-text-primary mb-4">
                 Experience by <span className="text-brand-red">Numbers</span>
               </h2>
@@ -394,8 +452,7 @@ const HomePage = () => {
         <section ref={ctaRef} className={`py-20 sm:py-32 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" />
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 32 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+            <motion.div initial={{ opacity: 0, y: 32 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }}
               className={`p-10 sm:p-16 rounded-3xl border shadow-2xl transition-colors duration-500 ${
                 isDark ? 'bg-gray-900/80 border-gray-800 hover:border-brand-red/30' : 'bg-white/90 border-gray-200 hover:border-brand-red/30'
