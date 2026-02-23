@@ -18,14 +18,14 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import CountUp from 'react-countup';
 import Lightbox    from 'yet-another-react-lightbox';
 import Zoom        from 'yet-another-react-lightbox/plugins/zoom';
-import Thumbnails  from 'yet-another-react-lightbox/plugins/thumbnails';
+// import Thumbnails  from 'yet-another-react-lightbox/plugins/thumbnails';
 import Captions    from 'yet-another-react-lightbox/plugins/captions';
 import Fullscreen  from 'yet-another-react-lightbox/plugins/fullscreen';
 import Counter     from 'yet-another-react-lightbox/plugins/counter';
 import Download    from 'yet-another-react-lightbox/plugins/download';
 import Slideshow   from 'yet-another-react-lightbox/plugins/slideshow';
 import 'yet-another-react-lightbox/styles.css';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
+// import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/plugins/captions.css';
 import 'yet-another-react-lightbox/plugins/counter.css';
 import { useTheme } from '../../context/ThemeContext';
@@ -730,7 +730,7 @@ const MetroIndustrialPark = () => {
           close={() => setGalleryOpen(false)}
           index={galleryIndex}
           slides={images}
-          plugins={[Zoom, Thumbnails, Captions, Fullscreen, Counter, Download, Slideshow]}
+          plugins={[Zoom, Captions, Fullscreen, Counter, Download, Slideshow]}
           zoom={{
             maxZoomPixelRatio: 5,
             zoomInMultiplier: 2,
