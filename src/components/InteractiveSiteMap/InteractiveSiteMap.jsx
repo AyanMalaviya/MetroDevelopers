@@ -73,7 +73,7 @@ export default function InteractiveSiteMap() {
   */
   const zoomAt = useCallback((cx, cy, factor) => {
     setTfm(t => {
-      const s = Math.min(Math.max(t.scale * factor, 0.8), 2);
+      const s = Math.min(Math.max(t.scale * factor, 0.6), 2);
       const r = s / t.scale;
       return { scale: s, x: cx - r * (cx - t.x), y: cy - r * (cy - t.y) };
     });
