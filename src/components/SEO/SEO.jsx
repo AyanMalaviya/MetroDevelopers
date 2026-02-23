@@ -9,7 +9,6 @@ const SEO = ({
 }) => {
   const siteUrl = 'https://www.metrodevelopers.co.in';
 
-  // Always produce a full absolute URL — never a relative path
   const fullCanonical = canonical
     ? `${siteUrl}${canonical.startsWith('/') ? canonical : '/' + canonical}`
     : siteUrl;
@@ -21,8 +20,6 @@ const SEO = ({
       <title>{title}</title>
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
-
-      {/* This is the critical one — React 19 hoists this into <head> */}
       <link rel="canonical" href={fullCanonical} />
 
       <meta name="robots" content={
@@ -53,3 +50,5 @@ const SEO = ({
     </>
   );
 };
+
+export default SEO;
