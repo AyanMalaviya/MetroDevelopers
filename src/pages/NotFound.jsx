@@ -23,6 +23,7 @@ export default function NotFound() {
         title="Page Not Found (404) – Metro Enterprise"
         description="The page you're looking for doesn't exist. Browse Metro Industrial Park's available sheds, ROI calculator, and contact information."
         canonical="/404"
+        noindex={true}
         />
 
       <div className={`min-h-screen flex items-center justify-center pt-24 pb-20 px-4 ${
