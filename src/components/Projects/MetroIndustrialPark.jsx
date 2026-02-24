@@ -242,7 +242,7 @@ const MetroIndustrialPark = () => {
     <>
       <SEO
         title="Rent or invest in Industrial shed in Ahmedabad with high ROI - Metro Industrial Park"
-        description="Buy Industrial sheds in Metro industrial park with total of 63 sheds (4,000 sq.ft to 50,000 sq.ft) in Moraiya, Ahmedabad. 54,000 sq.yard, 30-35ft Height, 60ft Roads, 24x7 CCTV, Water supply, Weigh Bridge, Waste Management, 90 Days Possession, 6-8% ROI."
+        description="Metro Industrial Park: 63 sheds (4,000–50,000 sq.ft) in Moraiya, Ahmedabad. 54K sq.yard, 60ft roads, CCTV, weigh bridge, 6–8% ROI, Quick possession."        
         keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, Moraiya, GIDC approved Changodar"
         canonical="/metro-industrial-park"
         ogImage="/images/2shed.jpg"
