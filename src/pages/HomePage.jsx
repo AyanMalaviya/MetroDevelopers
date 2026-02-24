@@ -188,7 +188,7 @@ const HomePage = () => {
       <SEO
         title="Buy or Lease Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
         description="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar, Ahmedabad. 6–8% ROI, 90-day possession. Call 9824235642 or 9624965017 for pricing."        
-        keywords="industrial shed for sale in Moraiya Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
+        keywords="industrial shed for sale in Moraiya, Changodar, Sanand, Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
         canonical="/"
         ogImage="/images/map.jpg"
       />
@@ -196,6 +196,9 @@ const HomePage = () => {
       <style>{`@keyframes kenBurns{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}`}</style>
 
       <div className="min-h-screen theme-bg-primary overflow-hidden">
+        <h1 className="sr-only">
+          Industrial Sheds & Warehouses for Sale & Lease in Moraiya, Changodar, Ahmedabad
+        </h1>
 
         {/* ── Review Prompt ── */}
         {showReviewPrompt && !promptDismissed && (
@@ -263,15 +266,6 @@ const HomePage = () => {
                     #1 Industrial Park in Ahmedabad
                   </span>
                 </motion.div>
-
-                <motion.h1
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.58, duration: 0.6 }}
-                  className="text-lg sm:text-2xl font-extrabold text-white text-center drop-shadow-lg px-4 leading-tight"
-                >
-                  Industrial Sheds & Warehouses<br />
-                  <span className="text-brand-red">for Sale & Lease in Moraiya, Ahmedabad</span>
-                </motion.h1>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
