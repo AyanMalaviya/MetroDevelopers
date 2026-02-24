@@ -132,6 +132,71 @@ const MetroIndustrialPark = () => {
     }
   };
 
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the price of industrial sheds in Moraiya, Ahmedabad?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Industrial sheds at Metro Industrial Park in Moraiya are available for sale and lease. Contact us at +91 98242 35642 for current pricing and customised unit options."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What sizes are available at Metro Industrial Park?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Units range from 4,000 sq.ft to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park in Moraiya, Changodar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does possession take at Metro Industrial Park?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Possession is available within 90 days of booking at Metro Industrial Park, Moraiya."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the expected ROI on industrial sheds in Metro Industrial Park?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The expected annual return on investment is 6–8% for industrial sheds and warehouses at Metro Industrial Park, Moraiya, Ahmedabad."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is RCC construction available at Metro Industrial Park?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RCC construction is not standard but is available on request with additional charges."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is Metro Industrial Park located?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near Sarkhej Bavla Highway."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What amenities are available at Metro Industrial Park?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The park offers 24x7 water supply, CCTV surveillance, security guards, a dedicated weigh bridge, 60ft internal roads, waste management, and high ceilings of 30–35 feet."
+        }
+      }
+    ]
+  };
+
+
   /* NOTE: uses `src` key — required by yet-another-react-lightbox */
   const images = [
     { src: '/images/2shed.jpg',    title: 'Industrial Shed for Sale in Moraiya Ahmedabad', description: 'State-of-the-art industrial sheds with high ceilings'  },
@@ -241,7 +306,7 @@ const MetroIndustrialPark = () => {
   return (
     <>
       <SEO
-        title="Rent or invest in Industrial shed in Ahmedabad with high ROI - Metro Industrial Park"
+        title="Rent or Buy Industrial shed in Ahmedabad at Metro Industrial Park"
         description="Metro Industrial Park: 63 sheds (4,000–50,000 sq.ft) in Moraiya, Ahmedabad. 54K sq.yard, 60ft roads, CCTV, weigh bridge, 6–8% ROI, Quick possession."        
         keywords="Metro Industrial Park Moraiya, industrial shed Changodar, warehouse for rent Ahmedabad, factory shed near Sarkhej Bavla Highway, 54000 sq yard industrial park"
         canonical="/metro-industrial-park"
