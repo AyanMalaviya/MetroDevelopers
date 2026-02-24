@@ -303,7 +303,7 @@ const HomePage = () => {
                 <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
                   className="group w-full sm:w-auto px-7 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-2xl shadow-lg shadow-brand-red/40 transition-colors duration-300">
                   <span className="flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <Building2 size={15} /> Explore More
+                    <Factory size={15} /> Explore More
                     <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>

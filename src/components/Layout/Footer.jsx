@@ -1,9 +1,12 @@
 // src/components/Footer/Footer.jsx
 import React from 'react';
-import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, Mail, ArrowUpRight, MessageCircle} from 'lucide-react';
+
+
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
+import FAQ from '../FAQ/FAQ';
 
 const Footer = () => {
   const { theme } = useTheme();
@@ -21,41 +24,84 @@ const Footer = () => {
         : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200'
     }`}>
 
-      {/* ── Top CTA strip ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
-        <div className={`rounded-2xl border p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
-          isDark ? 'border-gray-800 bg-gray-900/30' : 'border-gray-200 bg-white/60'
-        }`}>
-          <div>
-            <p className="theme-text-primary font-semibold text-sm">
-              Need industrial space in Ahmedabad?
-            </p>
-            <p className="theme-text-secondary text-xs mt-0.5">
-              Call us for availability, pricing &amp; site visits.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <a
-              href="tel:+919824235642"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-red text-white font-semibold text-xs hover:bg-red-700 transition-all"
-            >
-              Call Now <ArrowUpRight size={13} />
-            </a>
-            <a
-              href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
-                isDark
-                  ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-                  : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              Get Directions <ArrowUpRight size={13} />
-            </a>
-          </div>
+      <FAQ />
+
+{/* ── Top CTA Strip ── */}
+<div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
+  <div className={`relative rounded-2xl border overflow-hidden ${
+    isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white'
+  }`}>
+
+    {/* Red accent bar on left */}
+    <div className="absolute left-0 top-0 h-full w-1 bg-brand-red rounded-l-2xl" />
+
+    {/* Subtle background glow */}
+    <div className="absolute -top-10 -right-10 w-48 h-48 bg-brand-red/5 rounded-full blur-3xl pointer-events-none" />
+
+    <div className="relative px-6 sm:px-8 py-5 sm:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+      {/* Left — copy */}
+      <div className="flex items-start gap-1">
+        {/* Pulsing dot */}
+        <div className="mt-1 flex-shrink-0">
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
+          </span>
+        </div>
+        <div>
+          <p className={`font-bold text-sm sm:text-base leading-snug ${
+            isDark ? 'text-white' : 'text-gray-900'
+          }`}>
+            We're available for site visits & consultations
+          </p>
+          <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+            Call, WhatsApp, or drop by — Mon–Sun, 9 AM to 7 PM
+          </p>
         </div>
       </div>
+
+      {/* Right — CTAs */}
+      <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:ml-4 flex-shrink-0">
+        {/* Call */}
+        <a
+          href="tel:+919824235642"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand-red text-white font-semibold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-md shadow-red-500/20"
+        >
+          <Phone size={12} />
+          Call Now
+        </a>
+
+        {/* WhatsApp */}
+        <a
+          href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-green-500 text-white font-semibold text-xs hover:bg-green-600 active:scale-95 transition-all shadow-md shadow-green-500/20"
+        >
+          <MessageCircle size={12} />
+          WhatsApp
+        </a>
+
+        {/* Directions */}
+        <a
+          href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border text-xs font-semibold active:scale-95 transition-all ${
+            isDark
+              ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+              : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+          }`}
+        >
+          <MapPin size={12} />
+          Directions
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
 
       {/* ── Main 3-col grid ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
