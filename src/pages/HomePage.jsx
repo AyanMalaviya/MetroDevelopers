@@ -190,7 +190,7 @@ const HomePage = () => {
         description="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar, Ahmedabad. 6–8% ROI, 90-day possession. Call 9824235642 or 9624965017 for pricing."        
         keywords="industrial shed for sale in Moraiya, Changodar, Sanand, Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
         canonical="/"
-        ogImage="/images/map.jpg"
+        ogImage="/images/map.jpg" alt="Metro Enterprise - Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
       />
 
       <style>{`@keyframes kenBurns{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}`}</style>
@@ -247,7 +247,7 @@ const HomePage = () => {
             <div className="absolute inset-0 flex flex-col items-center justify-between py-6 sm:py-10 pointer-events-none px-4">
               <motion.img
                 src="/MDLogoBG.png"
-                alt="Metro Developers Logo"
+                alt="Metro Enterprise - Industrial Shed Developer Ahmedabad"
                 width={288} height={288}
                 initial={{ opacity: 0.2, scale: 4, x:10 , y: 180 }}
                 animate={{ opacity: 1, scale: 1.2, x: 10, y: 40 }}

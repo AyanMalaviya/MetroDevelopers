@@ -94,12 +94,13 @@ const ContactPage = () => {
   return (
     <>
       <SEO
-        title="Contact Us - Metro Enterprise | Industrial Sheds Ahmedabad"
-        description="Contact Metro Enterprise for industrial sheds, warehouses in Moraiya, Ahmedabad. Call +91 98242 35642, +91 96249 65017."
-        keywords="contact Metro Enterprise, industrial shed inquiry Ahmedabad, warehouse contact Moraiya"
+        title="Contact Metro Enterprise — Industrial Shed Inquiries, Moraiya Ahmedabad"
+        description="Contact Metro Enterprise for industrial shed pricing, site visits, and leasing. Call +91 98242 35642 or WhatsApp. Located in Moraiya, Changodar, Ahmedabad."
         canonical="/contact"
-        structuredData={structuredData}
+        ogImage="/images/office.jpg" alt="Contact Metro Enterprise Industrial Park Moraiya Ahmedabad"
       />
+      <h1 className="sr-only">Contact Metro Enterprise — Industrial Park Moraiya Ahmedabad</h1>
+
 
       <div className="min-h-screen theme-bg-primary">
 

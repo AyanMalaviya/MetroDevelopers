@@ -134,12 +134,12 @@ const MetroIndustrialPark = () => {
 
   /* NOTE: uses `src` key — required by yet-another-react-lightbox */
   const images = [
-    { src: '/images/2shed.jpg',    title: 'Modern Industrial Shed', description: 'State-of-the-art industrial sheds with high ceilings'  },
-    { src: '/images/4shed.jpg',    title: 'Warehouse Facility',     description: 'Spacious warehouse units with optimal storage'        },
-    { src: '/images/entrance.jpg', title: 'Park Entrance',          description: 'Professional entrance with 24/7 security'            },
-    { src: '/images/mainroad.jpg', title: 'Main Road & Access',     description: 'Wide internal roads engineered for heavy vehicles'    },
-    { src: '/images/map.jpg',      title: '3D Map View',            description: 'Comprehensive site layout overview'                  },
-    { src: '/images/office.jpg',   title: 'Office Space',           description: 'Modern office facilities within the park'            },
+    { src: '/images/2shed.jpg',    title: 'Industrial Shed for Sale in Moraiya Ahmedabad', description: 'State-of-the-art industrial sheds with high ceilings'  },
+    { src: '/images/4shed.jpg',    title: 'Warehouse Unit Available for Lease near Changodar', description: 'Spacious warehouse units with optimal storage'        },
+    { src: '/images/entrance.jpg', title: 'Metro Industrial Park Entrance — 24x7 Security',          description: 'Professional entrance with 24/7 security'            },
+    { src: '/images/mainroad.jpg', title: '60ft RCC Road Inside Metro Industrial Park',     description: 'Wide internal roads engineered for heavy vehicles'    },
+    { src: '/images/map.jpg',      title: 'Metro Industrial Park 3D Map drone view — Moraiya Gujarat',            description: 'Comprehensive site layout overview'                  },
+    { src: '/images/office.jpg',   title: 'Office of Metro Industrial Park',           description: 'Modern office facilities within the park'            },
   ];
 
   const features = [
@@ -243,11 +243,15 @@ const MetroIndustrialPark = () => {
       <SEO
         title="Rent or invest in Industrial shed in Ahmedabad with high ROI - Metro Industrial Park"
         description="Metro Industrial Park: 63 sheds (4,000–50,000 sq.ft) in Moraiya, Ahmedabad. 54K sq.yard, 60ft roads, CCTV, weigh bridge, 6–8% ROI, Quick possession."        
-        keywords="Metro Industrial Park, 54000 sq yard industrial park, 63 industrial sheds, Moraiya, GIDC approved Changodar"
+        keywords="Metro Industrial Park Moraiya, industrial shed Changodar, warehouse for rent Ahmedabad, factory shed near Sarkhej Bavla Highway, 54000 sq yard industrial park"
         canonical="/metro-industrial-park"
         ogImage="/images/2shed.jpg"
-        structuredData={propertySchema}
+        structuredData={[propertySchema, faqSchema]}
       />
+      <h1 className="sr-only">
+        Metro Industrial Park — Industrial Sheds for Sale & Lease in Moraiya, Ahmedabad
+      </h1>
+
 
       <div className="min-h-screen theme-bg-primary">
 

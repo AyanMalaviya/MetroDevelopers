@@ -39,10 +39,13 @@ const SiteMapPage = () => {
   return (
     <>
       <SEO
-        title="Shed Availability – Metro Industrial Park Site Map"
-        description="Interactive site map showing real-time shed availability at Metro Industrial Park, Moraiya, Changodar."
+        title="Metro Industrial Park Site Map — Unit Availability Moraiya"
+        description="View the Metro Industrial Park site map and check unit availability. 63 industrial sheds in Moraiya, Changodar, Ahmedabad. Call +91 98242 35642."
         canonical="/site-map"
+        ogImage="/images/metro-industrial-map.jpg"
       />
+      <h1 className="sr-only">Metro Industrial Park Site Map — Check Unit Availability</h1>
+
 
       <div className={`min-h-screen pt-20 pb-12 ${
         isDark
