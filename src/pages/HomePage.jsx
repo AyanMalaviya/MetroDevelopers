@@ -250,7 +250,7 @@ const HomePage = () => {
                 alt="Metro Developers Logo"
                 width={288} height={288}
                 initial={{ opacity: 0.2, scale: 4, x:10 , y: 180 }}
-                animate={{ opacity: 1, scale: 1.8, x: 10, y: 40 }}
+                animate={{ opacity: 1, scale: 1.2, x: 10, y: 40 }}
                 transition={{ duration: 2, ease: 'easeOut' }}
                 className="w-36 sm:w-52 md:w-64 lg:w-72 drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
               />
