@@ -1,17 +1,72 @@
 // src/components/Footer/Footer.jsx
-import React from 'react';
-import { MapPin, Phone, Mail, ArrowUpRight, MessageCircle} from 'lucide-react';
-
-
+import { useState } from 'react';
+import { MapPin, Phone, Mail, MessageCircle, ChevronDown, HelpCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
-import FAQ from '../FAQ/FAQ';
 
+// ── FAQ sub-component (inline accordion row) ──
+const FaqRow = ({ item, isDark }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      onClick={() => setOpen(!open)}
+      className={`rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+        isDark
+          ? open ? 'border-brand-red/30 bg-gray-900' : 'border-gray-800 bg-gray-900/40 hover:border-gray-700'
+          : open ? 'border-brand-red/20 bg-white'   : 'border-gray-100 bg-gray-50 hover:border-gray-200'
+      }`}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className={`text-xs font-semibold leading-snug ${
+          open ? 'text-brand-red' : isDark ? 'text-gray-200' : 'text-gray-800'
+        }`}>
+          {item.q}
+        </span>
+        <motion.div
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="flex-shrink-0"
+        >
+          <ChevronDown size={13} className={open ? 'text-brand-red' : isDark ? 'text-gray-500' : 'text-gray-400'} />
+        </motion.div>
+      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.p
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className={`text-xs mt-2 leading-relaxed overflow-hidden ${
+              isDark ? 'text-gray-400' : 'text-gray-500'
+            }`}
+          >
+            {item.a}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const FAQ_ITEMS = [
+  { q: 'What sizes are available?',         a: 'Units range from 4,000 to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park.' },
+  { q: 'What is the expected ROI?',          a: '6–8% annual return on investment for industrial sheds at Metro Industrial Park.' },
+  { q: 'How long does possession take?',     a: 'Possession is available within 90 days of booking.' },
+  { q: 'Is RCC construction available?',     a: 'Available on request with additional charges.' },
+  { q: 'What amenities are included?',       a: '24x7 water, CCTV, security, weigh bridge, 60ft roads, 30–35ft ceilings.' },
+  { q: 'Where is the park located?',         a: 'Moraiya, Changodar — near Sarkhej Bavla Highway, opposite Suvas Industrial Estate.' },
+  { q: 'What is the pricing?',               a: 'Contact us at +91 98242 35642 for current sale and lease pricing.' },
+];
+
+// ── Main Footer ──
 const Footer = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const currentYear = new Date().getFullYear();
+  const [faqOpen, setFaqOpen] = useState(false); // ✅ inside component
 
   const pill = isDark
     ? 'bg-gray-800/70 hover:bg-brand-red text-gray-300'
@@ -24,84 +79,55 @@ const Footer = () => {
         : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200'
     }`}>
 
-      <FAQ />
+      {/* ── Collapsible FAQ Bar ── */}
+      <div className={`mt-6 border-y ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-{/* ── Top CTA Strip ── */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
-  <div className={`relative rounded-2xl border overflow-hidden ${
-    isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white'
-  }`}>
+          {/* Toggle Header */}
+          <button
+            onClick={() => setFaqOpen(!faqOpen)}
+            className={`w-full flex items-center justify-between py-4 text-left transition-colors ${
+              isDark ? 'hover:bg-gray-900/40' : 'hover:bg-gray-50/60'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <HelpCircle size={14} className="text-brand-red flex-shrink-0" />
+              <span className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                Frequently Asked Questions
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-red/10 text-brand-red border border-brand-red/20">
+                7 Questions
+              </span>
+            </div>
+            <motion.div
+              animate={{ rotate: faqOpen ? 180 : 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <ChevronDown size={16} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
+            </motion.div>
+          </button>
 
-    {/* Red accent bar on left */}
-    <div className="absolute left-0 top-0 h-full w-1 bg-brand-red rounded-l-2xl" />
+          {/* Dropdown Panel */}
+          <AnimatePresence initial={false}>
+            {faqOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="overflow-hidden"
+              >
+                <div className="pb-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {FAQ_ITEMS.map((item, i) => (
+                    <FaqRow key={i} item={item} isDark={isDark} />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-    {/* Subtle background glow */}
-    <div className="absolute -top-10 -right-10 w-48 h-48 bg-brand-red/5 rounded-full blur-3xl pointer-events-none" />
-
-    <div className="relative px-6 sm:px-8 py-5 sm:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-
-      {/* Left — copy */}
-      <div className="flex items-start gap-1">
-        {/* Pulsing dot */}
-        <div className="mt-1 flex-shrink-0">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
-          </span>
-        </div>
-        <div>
-          <p className={`font-bold text-sm sm:text-base leading-snug ${
-            isDark ? 'text-white' : 'text-gray-900'
-          }`}>
-            We're available for site visits & consultations
-          </p>
-          <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            Call, WhatsApp, or drop by — Mon–Sun, 9 AM to 7 PM
-          </p>
         </div>
       </div>
-
-      {/* Right — CTAs */}
-      <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:ml-4 flex-shrink-0">
-        {/* Call */}
-        <a
-          href="tel:+919824235642"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand-red text-white font-semibold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-md shadow-red-500/20"
-        >
-          <Phone size={12} />
-          Call Now
-        </a>
-
-        {/* WhatsApp */}
-        <a
-          href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-green-500 text-white font-semibold text-xs hover:bg-green-600 active:scale-95 transition-all shadow-md shadow-green-500/20"
-        >
-          <MessageCircle size={12} />
-          WhatsApp
-        </a>
-
-        {/* Directions */}
-        <a
-          href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border text-xs font-semibold active:scale-95 transition-all ${
-            isDark
-              ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-              : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          <MapPin size={12} />
-          Directions
-        </a>
-      </div>
-
-    </div>
-  </div>
-</div>
 
       {/* ── Main 3-col grid ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
@@ -127,16 +153,14 @@ const Footer = () => {
                 </span>
               </div>
             </div>
-
             <p className="theme-text-secondary text-xs leading-relaxed mb-4">
               Premium industrial &amp; warehousing infrastructure in Ahmedabad. Building spaces for growing businesses.
             </p>
-
             <div className="flex gap-2">
               {[
-                { href: 'https://wa.me/919824235642', icon: <FaWhatsapp size={17} />, label: 'WhatsApp' },
-                { href: 'https://www.instagram.com/metro.industrialpark/', icon: <FaInstagram size={17} />, label: 'Instagram' },
-                { href: 'https://www.facebook.com/metroindustrialpark1', icon: <FaFacebook size={17} />, label: 'Facebook' },
+                { href: 'https://wa.me/919824235642',                        icon: <FaWhatsapp size={17} />,  label: 'WhatsApp'  },
+                { href: 'https://www.instagram.com/metro.industrialpark/',    icon: <FaInstagram size={17} />, label: 'Instagram' },
+                { href: 'https://www.facebook.com/metroindustrialpark1',      icon: <FaFacebook size={17} />,  label: 'Facebook'  },
               ].map(({ href, icon, label }) => (
                 <a
                   key={label}
@@ -166,11 +190,7 @@ const Footer = () => {
                 { to: '/site-map',                 label: 'Site Map'               },
                 { to: '/calculator',               label: 'ROI Calculator'         },
                 { to: '/contact',                  label: 'Contact Us'             },
-                {
-                  href: 'https://g.page/r/CfbFhZSjMaH1EBI/review',
-                  label: 'Write a Review',
-                  external: true,
-                },
+                { href: 'https://g.page/r/CfbFhZSjMaH1EBI/review', label: 'Write a Review', external: true },
               ].map(({ to, href, label, external }) =>
                 external ? (
                   <li key={label}>
@@ -185,10 +205,7 @@ const Footer = () => {
                   </li>
                 ) : (
                   <li key={label}>
-                    <Link
-                      to={to}
-                      className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
-                    >
+                    <Link to={to} className="theme-text-secondary hover:text-brand-red transition-colors text-xs">
                       {label}
                     </Link>
                   </li>
@@ -214,11 +231,10 @@ const Footer = () => {
                   Opp. Suvas Ind Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad — 382213
                 </a>
               </li>
-
               {[
-                { href: 'tel:+919824235642',   label: '+91 98242 35642' },
-                { href: 'tel:+916356776767',   label: '+91 63567 76767' },
-                { href: 'tel:+916356766767',   label: '+91 63567 66767' },
+                { href: 'tel:+919824235642', label: '+91 98242 35642' },
+                { href: 'tel:+916356776767', label: '+91 63567 76767' },
+                { href: 'tel:+916356766767', label: '+91 63567 66767' },
               ].map(({ href, label }) => (
                 <li key={href} className="flex items-center gap-2.5">
                   <Phone className="text-brand-red flex-shrink-0" size={14} />
@@ -227,7 +243,6 @@ const Footer = () => {
                   </a>
                 </li>
               ))}
-
               <li className="flex items-center gap-2.5">
                 <Mail className="text-brand-red flex-shrink-0" size={14} />
                 <a
