@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, ZoomIn, ZoomOut, RefreshCw, ExternalLink, RotateCcw } from 'lucide-react';
+import { X, RefreshCw, ExternalLink, RotateCcw, Maximize2 } from 'lucide-react';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { getPlotData } from '../../services/dataService';
 
@@ -13,21 +13,20 @@ export default function InteractiveSiteMap() {
   const isDark = theme === 'dark';
 
   /* ── Data state ── */
-  const [plotData, setPlotData]       = useState({});
+  const [plotData,     setPlotData]     = useState({});
   const [selectedPlot, setSelectedPlot] = useState(null);
-  const [hoveredPlot, setHoveredPlot]   = useState(null);
-  const [loading, setLoading]           = useState(true);
-  const [lastUpdated, setLastUpdated]   = useState(null);
+  const [hoveredPlot,  setHoveredPlot]  = useState(null);
+  const [loading,      setLoading]      = useState(true);
+  const [lastUpdated,  setLastUpdated]  = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  /* ── Transform state ── */
-  const [tfm, setTfm]       = useState({ x: 0, y: 0, scale: 1 });
+  /* ── Fullscreen pan/zoom state ── */
+  const [tfm,    setTfm]    = useState({ x: 0, y: 0, scale: 1 });
   const [cursor, setCursor] = useState('grab');
 
-  /* ── Drag / pinch refs (no re-render needed) ── */
   const containerRef = useRef(null);
   const dragging     = useRef(false);
-  const moved        = useRef(false);      // true if pointer moved during drag
+  const moved        = useRef(false);
   const lastPos      = useRef({ x: 0, y: 0 });
   const pinchDist    = useRef(null);
 
@@ -59,28 +58,35 @@ export default function InteractiveSiteMap() {
     }
   };
 
-  /* ══════════════════ FULLSCREEN ══════════════════ */
-  useEffect(() => {
-    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', onChange);
-    return () => document.removeEventListener('fullscreenchange', onChange);
+  /* ══════════════════ AUTO-FIT on fullscreen open ══════════════════ */
+  const fitToContainer = useCallback(() => {
+    setTimeout(() => {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        const scale = Math.min(width / 910, height / 980) * 0.92;
+        const x = (width - 910 * scale) / 2;
+        const y = (height - 980 * scale) / 2;
+        setTfm({ x, y, scale });
+      }
+    }, 60);
   }, []);
 
-  /* ══════════════════ ZOOM HELPER ══════════════════ */
-  /*
-    Zooms toward container-space point (cx, cy).
-    All zoom sources (wheel, pinch, buttons) call this.
-  */
+  useEffect(() => {
+    if (isFullscreen) fitToContainer();
+  }, [isFullscreen, fitToContainer]);
+
+  /* ══════════════════ ZOOM ══════════════════ */
   const zoomAt = useCallback((cx, cy, factor) => {
     setTfm(t => {
-      const s = Math.min(Math.max(t.scale * factor, 0.6), 2);
+      const s = Math.min(Math.max(t.scale * factor, 0.3), 4);
       const r = s / t.scale;
       return { scale: s, x: cx - r * (cx - t.x), y: cy - r * (cy - t.y) };
     });
   }, []);
 
-  /* ══════════════════ WHEEL (passive:false required) ══════════════════ */
+  /* ── Wheel — fullscreen only ── */
   useEffect(() => {
+    if (!isFullscreen) return;
     const el = containerRef.current;
     if (!el) return;
     const handler = (e) => {
@@ -90,9 +96,9 @@ export default function InteractiveSiteMap() {
     };
     el.addEventListener('wheel', handler, { passive: false });
     return () => el.removeEventListener('wheel', handler);
-  }, [zoomAt]);
+  }, [zoomAt, isFullscreen]);
 
-  /* ══════════════════ TOUCH MOVE (passive:false required) ══════════════════ */
+  /* ── Touch move — fullscreen only ── */
   const handleTouchMove = useCallback((e) => {
     e.preventDefault();
     if (e.touches.length === 1 && dragging.current) {
@@ -116,18 +122,19 @@ export default function InteractiveSiteMap() {
   }, [zoomAt]);
 
   useEffect(() => {
+    if (!isFullscreen) return;
     const el = containerRef.current;
     if (!el) return;
     el.addEventListener('touchmove', handleTouchMove, { passive: false });
     return () => el.removeEventListener('touchmove', handleTouchMove);
-  }, [handleTouchMove]);
+  }, [handleTouchMove, isFullscreen]);
 
-  /* ══════════════════ MOUSE EVENTS ══════════════════ */
+  /* ══════════════════ MOUSE / TOUCH EVENTS ══════════════════ */
   const onMouseDown = useCallback((e) => {
     if (e.button !== 0) return;
-    dragging.current  = true;
-    moved.current     = false;
-    lastPos.current   = { x: e.clientX, y: e.clientY };
+    dragging.current = true;
+    moved.current    = false;
+    lastPos.current  = { x: e.clientX, y: e.clientY };
     setCursor('grabbing');
   }, []);
 
@@ -145,12 +152,11 @@ export default function InteractiveSiteMap() {
     setCursor('grab');
   }, []);
 
-  /* ══════════════════ TOUCH START / END ══════════════════ */
   const onTouchStart = useCallback((e) => {
     if (e.touches.length === 1) {
-      dragging.current  = true;
-      moved.current     = false;
-      lastPos.current   = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      dragging.current = true;
+      moved.current    = false;
+      lastPos.current  = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     } else {
       dragging.current  = false;
       pinchDist.current = null;
@@ -162,38 +168,18 @@ export default function InteractiveSiteMap() {
     pinchDist.current = null;
   }, []);
 
-  /* ══════════════════ PLOT CLICK (only if not dragged) ══════════════════ */
   const handlePlotClick = useCallback((plotNumber) => {
-    if (moved.current) return;   // was a drag, not a tap
+    if (moved.current) return;
     setSelectedPlot(plotNumber);
   }, []);
 
-  /* ══════════════════ ZOOM BUTTONS ══════════════════ */
-const btnZoomIn = useCallback(() => {
-  const r = containerRef.current?.getBoundingClientRect();
-  if (r && tfm.scale < 3) zoomAt(r.width / 2, r.height / 2, 1.3);  // ← add guard
-}, [zoomAt, tfm.scale]);
-
-const btnZoomOut = useCallback(() => {
-  const r = containerRef.current?.getBoundingClientRect();
-  if (r && tfm.scale > 0.5) zoomAt(r.width / 2, r.height / 2, 0.77); // ← add guard
-}, [zoomAt, tfm.scale]);
-
-
-  const resetView = useCallback(() => {
-    setTfm({ x: 0, y: 0, scale: 1 });
-  }, []);
-
-  /* ══════════════════ TOOLTIP POSITION (screen space) ══════════════════ */
-  /*
-    SVG coords → container-space coords so tooltip follows the zoomed map.
-  */
+  /* ══════════════════ TOOLTIP (fullscreen only) ══════════════════ */
   const toScreen = (svgX, svgY) => ({
     x: svgX * tfm.scale + tfm.x,
     y: svgY * tfm.scale + tfm.y,
   });
 
-  /* ══════════════════ STATUS HELPERS (unchanged) ══════════════════ */
+  /* ══════════════════ STATUS HELPERS ══════════════════ */
   const getStatusColor = (status) => {
     switch (status) {
       case 'sold':       return isDark ? '#9CA3AF' : '#6B7280';
@@ -221,15 +207,15 @@ const btnZoomOut = useCallback(() => {
     }
   };
 
-  const getCircleRadius    = (p) => selectedPlot === p ? 14 : hoveredPlot === p ? 12 : 10;
-  const getCircleStroke    = (p) => (selectedPlot === p || hoveredPlot === p)
-    ? (isDark ? '#FFFFFF' : '#000000') : (isDark ? '#374151' : '#E5E7EB');
+  const getCircleRadius      = (p) => selectedPlot === p ? 14 : hoveredPlot === p ? 12 : 10;
+  const getCircleStroke      = (p) => (selectedPlot === p || hoveredPlot === p)
+    ? '#FFFFFF' : (isDark ? '#374151' : '#E5E7EB');
   const getCircleStrokeWidth = (p) => selectedPlot === p ? 3 : hoveredPlot === p ? 2.5 : 2;
 
   const formatLastUpdated = () => {
     if (!lastUpdated) return '';
     const diff = Math.floor((Date.now() - lastUpdated) / 1000);
-    if (diff < 60)  return 'Just now';
+    if (diff < 60)   return 'Just now';
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     return `${Math.floor(diff / 3600)}h ago`;
   };
@@ -242,236 +228,328 @@ const btnZoomOut = useCallback(() => {
     sold:      Object.keys(plotCoordinates).filter(p => plotData[p]?.status === 'sold').length,
   };
 
+  /* ══════════════════ SHARED DOT RENDERER ══════════════════ */
+  const renderDots = () =>
+    Object.entries(plotCoordinates).map(([plotNumber]) => {
+      const center = getPlotCenter(plotNumber);
+      const status = plotData[plotNumber]?.status || 'available';
+      const radius = getCircleRadius(plotNumber);
+      const isHov  = hoveredPlot  === plotNumber;
+      const isSel  = selectedPlot === plotNumber;
+      return (
+        <g key={plotNumber}>
+          {(isHov || isSel) && (
+            <circle
+              cx={center.x} cy={center.y}
+              r={radius + 6}
+              fill={getStatusColor(status)}
+              opacity="0.35"
+              className="animate-pulse"
+            />
+          )}
+          <circle
+            cx={center.x} cy={center.y} r={radius}
+            fill={getStatusColor(status)}
+            stroke={getCircleStroke(plotNumber)}
+            strokeWidth={getCircleStrokeWidth(plotNumber)}
+            className="transition-all duration-200 drop-shadow-lg"
+            style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+            onMouseEnter={() => setHoveredPlot(plotNumber)}
+            onMouseLeave={() => setHoveredPlot(null)}
+            onClick={() => handlePlotClick(plotNumber)}
+          />
+          <text
+            x={center.x} y={center.y}
+            textAnchor="middle" dominantBaseline="middle"
+            style={{
+              fontSize: isSel ? '11px' : isHov ? '10px' : '9px',
+              fill: '#FFFFFF',
+              fontWeight: 'bold',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          >
+            {plotNumber}
+          </text>
+        </g>
+      );
+    });
+
   /* ══════════════════ RENDER ══════════════════ */
   return (
-    <div className={`rounded-2xl shadow-xl overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+    <>
+      {/* ════════════════════════════════════════
+          MAIN CARD — preview mode
+      ════════════════════════════════════════ */}
+      <div className={`rounded-2xl shadow-xl overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
 
-      {/* ── Header (stats + controls) ── */}
-      <div className={`p-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+        {/* ── Header ── */}
+        <div className={`p-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
 
-        {/* Top row */}
-        <div className="flex items-center justify-between mb-3">
-          <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-            {lastUpdated ? `Updated ${formatLastUpdated()}` : ''}
-          </span>
-          <div className={`flex items-center gap-1 text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-            <RefreshCw className="w-3 h-3" />
-            Auto-updates every 30s
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-5 gap-2 mb-3">
-          {[
-            { val: stats.total,     label: 'Total',  cls: isDark ? 'text-white'      : 'text-gray-900', bg: '' },
-            { val: stats.available, label: 'Avl',    cls: 'text-green-500',           bg: isDark ? 'bg-green-900/30' : 'bg-green-50' },
-            { val: stats.preLeased, label: 'Pre L',  cls: 'text-blue-500',            bg: isDark ? 'bg-blue-900/30'  : 'bg-blue-50'  },
-            { val: stats.forLease,  label: 'For L',  cls: 'text-red-500',             bg: isDark ? 'bg-red-900/30'   : 'bg-red-50'   },
-            { val: stats.sold + stats.forLease, label: 'Sold', cls: 'text-gray-500', bg: isDark ? 'bg-gray-700'     : 'bg-gray-100' },
-          ].map(({ val, label, cls, bg }) => (
-            <div key={label} className={`p-2 rounded-xl text-center ${bg}`}>
-              <p className={`text-xl font-bold ${cls}`}>{val}</p>
-              <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Legend + controls */}
-        <div className="flex flex-wrap gap-2 text-[0.7rem] items-center">
-          {[
-            { color: 'bg-green-500', label: 'Available'   },
-            { color: 'bg-blue-500',  label: 'Pre Leased'  },
-            { color: 'bg-red-500',   label: 'For Lease'   },
-            { color: 'bg-gray-500',  label: 'Sold'        },
-          ].map(({ color, label }) => (
-            <div key={label} className="flex items-center gap-1">
-              <div className={`w-3.5 h-3.5 rounded-full border-2 border-white shadow ${color}`} />
-              <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
-            </div>
-          ))}
-
-          {/* Controls */}
-          <div className="flex gap-1.5 ml-auto items-center">
-
-            {/* Zoom % */}
-            <span className={`text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg border ${
-              isDark ? 'bg-gray-900 border-gray-700 text-gray-400' : 'bg-gray-100 border-gray-200 text-gray-500'
-            }`}>
-              {Math.round(tfm.scale * 100)}%
+          {/* Top row */}
+          <div className="flex items-center justify-between mb-3">
+            <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+              {lastUpdated ? `Updated ${formatLastUpdated()}` : ''}
             </span>
+            <div className={`flex items-center gap-1 text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+              <RefreshCw className="w-3 h-3" /> Auto-updates every 30s
+            </div>
+          </div>
 
-            <a href={ADMIN_SHEET_URL} target="_blank" rel="noopener noreferrer"
-              className={`flex items-center gap-1 px-2 py-1.5 text-[0.62rem] font-semibold rounded-lg transition-all ${
-                isDark ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50' : 'bg-green-50 text-green-600 hover:bg-green-100'
-              }`}>
-              <ExternalLink className="w-3 h-3" /> Edit
-            </a>
+          {/* Stats */}
+          <div className="grid grid-cols-5 gap-2 mb-3">
+            {[
+              { val: stats.total,                 label: 'Total', cls: isDark ? 'text-white' : 'text-gray-900', bg: '' },
+              { val: stats.available,             label: 'Avl',   cls: 'text-green-500', bg: isDark ? 'bg-green-900/30' : 'bg-green-50'  },
+              { val: stats.preLeased,             label: 'Pre L', cls: 'text-blue-500',  bg: isDark ? 'bg-blue-900/30'  : 'bg-blue-50'   },
+              { val: stats.forLease,              label: 'For L', cls: 'text-red-500',   bg: isDark ? 'bg-red-900/30'   : 'bg-red-50'    },
+              { val: stats.sold + stats.forLease, label: 'Sold',  cls: 'text-gray-500', bg: isDark ? 'bg-gray-700'     : 'bg-gray-100'  },
+            ].map(({ val, label, cls, bg }) => (
+              <div key={label} className={`p-2 rounded-xl text-center ${bg}`}>
+                <p className={`text-xl font-bold ${cls}`}>{val}</p>
+                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{label}</p>
+              </div>
+            ))}
+          </div>
 
-            <button onClick={() => loadData()} disabled={loading}
-              className={`p-1.5 rounded-lg transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''} ${
-                isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-              }`}>
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            </button>
+          {/* Legend + action buttons */}
+          <div className="flex flex-wrap gap-2 text-[0.7rem] items-center">
+            {[
+              { color: 'bg-green-500', label: 'Available'  },
+              { color: 'bg-blue-500',  label: 'Pre Leased' },
+              { color: 'bg-red-500',   label: 'For Lease'  },
+              { color: 'bg-gray-500',  label: 'Sold'       },
+            ].map(({ color, label }) => (
+              <div key={label} className="flex items-center gap-1">
+                <div className={`w-3.5 h-3.5 rounded-full border-2 border-white shadow ${color}`} />
+                <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
+              </div>
+            ))}
 
-            <button onClick={btnZoomOut}
-              className={`p-1.5 rounded-lg transition-all ${isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
-              <ZoomOut className="w-4 h-4" />
-            </button>
-
-            <button onClick={btnZoomIn}
-              className={`p-1.5 rounded-lg transition-all ${isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
-              <ZoomIn className="w-4 h-4" />
-            </button>
-
-            <button onClick={resetView}
-              className={`p-1.5 rounded-lg transition-all ${isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'}`}>
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex gap-1.5 ml-auto">
+              <a
+                href={ADMIN_SHEET_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-1 px-2 py-1.5 text-[0.62rem] font-semibold rounded-lg transition-all ${
+                  isDark ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50' : 'bg-green-50 text-green-600 hover:bg-green-100'
+                }`}
+              >
+                <ExternalLink className="w-3 h-3" /> Edit
+              </a>
+              <button
+                onClick={() => loadData()}
+                disabled={loading}
+                className={`p-1.5 rounded-lg transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''} ${
+                  isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
+                }`}
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ════════════════════════════════════════════
-          MAP CANVAS
-          KEY FIX:
-          - overflow: hidden  → clips transformed content, NO scroll bleed
-          - touchAction: none → hands all touch events to our handlers
-          - events on THIS div (not on SVG or inner div)
-          - transform on inner div via translate+scale at origin 0,0
-          ════════════════════════════════════════════ */}
-      <div
-        ref={containerRef}
-        className={`relative ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}
-        style={{
-          height: isFullscreen ? '100vh' : '65vh',
-          overflow: 'hidden',         // ← no scroll, clips zoom
-          cursor,
-          userSelect: 'none',
-          touchAction: 'none',        // ← hands ALL touch to JS
-        }}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
+        {/* ── Portrait Preview ── */}
+        <div className={`relative flex justify-center items-center py-4 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
 
-        {/* Transformed layer — image + circles */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0,
-            transform: `translate(${tfm.x}px, ${tfm.y}px) scale(${tfm.scale})`,
-            transformOrigin: '0 0',
-            willChange: 'transform',
-          }}
-        >
-          <div className="relative" style={{ width: '910px', height: '980px' }}>
-
+          {/* ✅ inline-block shrink-wraps to exact image dimensions */}
+          <div className="relative" style={{ display: 'inline-block' }}>
             <img
               src="/images/metro-industrial-map.jpg"
               alt="Metro Industrial Park Site Map"
-              className="select-none"
-              style={{ width: '910px', height: 'auto', display: 'block' }}
+              className="block select-none"
+              style={{ maxHeight: '68vh', width: 'auto' }}
               draggable={false}
             />
 
-            {/* SVG overlay — pointerEvents:none on SVG, auto on circles */}
+            {/* SVG now overlays exactly — no extra height to misalign */}
             <svg
-              className="absolute top-0 left-0"
-              width="910" height="980"
-              viewBox="0 0 910 980"
+              viewBox="0 150 910 980"
+              className="absolute inset-0 w-full h-full"
               style={{ pointerEvents: 'none' }}
             >
-              {Object.entries(plotCoordinates).map(([plotNumber]) => {
-                const center   = getPlotCenter(plotNumber);
-                const status   = plotData[plotNumber]?.status || 'available';
-                const radius   = getCircleRadius(plotNumber);
-                const isHov    = hoveredPlot  === plotNumber;
-                const isSel    = selectedPlot === plotNumber;
-                return (
-                  <g key={plotNumber}>
-                    {(isHov || isSel) && (
-                      <circle
-                        cx={center.x} cy={center.y}
-                        r={radius + 6}
-                        fill={getStatusColor(status)}
-                        opacity="0.3"
-                        className="animate-pulse"
-                      />
-                    )}
-                    <circle
-                      cx={center.x} cy={center.y} r={radius}
-                      fill={getStatusColor(status)}
-                      stroke={getCircleStroke(plotNumber)}
-                      strokeWidth={getCircleStrokeWidth(plotNumber)}
-                      className="transition-all duration-200 drop-shadow-lg"
-                      style={{ pointerEvents: 'auto', cursor: 'pointer' }}
-                      onMouseEnter={() => setHoveredPlot(plotNumber)}
-                      onMouseLeave={() => setHoveredPlot(null)}
-                      onClick={() => handlePlotClick(plotNumber)}
-                    />
-                    <text
-                      x={center.x} y={center.y}
-                      textAnchor="middle" dominantBaseline="middle"
-                      style={{
-                        fontSize: isSel ? '11px' : isHov ? '10px' : '9px',
-                        fill: '#FFFFFF',
-                        fontWeight: 'bold',
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                      }}
-                    >
-                      {plotNumber}
-                    </text>
-                  </g>
-                );
-              })}
+              {renderDots()}
             </svg>
+          </div>
+
+          {/* Fullscreen CTA — unchanged */}
+          <button
+            onClick={() => setIsFullscreen(true)}
+            className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-red text-white font-bold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-xl shadow-red-500/25"
+          >
+            <Maximize2 size={14} />
+            View Fullscreen
+          </button>
+
+          {/* Hint pill — unchanged */}
+          <div className={`absolute bottom-4 left-4 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium ${
+            isDark ? 'bg-black/60 text-gray-300' : 'bg-black/50 text-white'
+          }`}>
+            Tap shed for details
           </div>
         </div>
 
-        {/* Tooltip — positioned in screen space, outside the transform */}
-        {hoveredPlot && (() => {
-          const center = getPlotCenter(hoveredPlot);
-          const pos    = toScreen(center.x, center.y);
-          return (
-            <div
-              className={`absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl text-sm z-50 ${
-                isDark
-                  ? 'bg-gray-900 border border-gray-700 text-white'
-                  : 'bg-white border border-gray-300 text-gray-900'
-              }`}
-              style={{ top: pos.y - 70, left: pos.x + 16, maxWidth: '200px', minWidth: '140px' }}
-            >
-              <p className="font-bold text-sm mb-0.5">Plot {hoveredPlot}</p>
-              <p className={`text-xs opacity-70 mb-1`}>
-                Area: {plotData[hoveredPlot]?.area || plotCoordinates[hoveredPlot]?.area || 'N/A'}
-              </p>
-              <p className={`text-xs font-semibold ${getStatusColorClass(plotData[hoveredPlot]?.status)}`}>
-                {getStatusLabel(plotData[hoveredPlot]?.status)}
-              </p>
-              <p className="text-[10px] opacity-40 mt-1">Click for details</p>
-            </div>
-          );
-        })()}
-
-        {/* Hint pill */}
-        <div className={`absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium flex items-center gap-1.5 ${
-          isDark ? 'bg-black/60 text-gray-300' : 'bg-black/50 text-white'
-        }`}>
-          🖱 Scroll/Pinch zoom · Drag to pan · Tap shed for details
-        </div>
       </div>
 
-      {/* ── Selected plot modal (unchanged from your original) ── */}
+      {/* ════════════════════════════════════════
+          FULLSCREEN OVERLAY
+      ════════════════════════════════════════ */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex flex-col bg-gray-950"
+          >
+
+            {/* ── Fullscreen top bar ── */}
+            <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-gray-900">
+              <div className="flex items-center gap-3">
+                <span className="text-white font-bold text-sm hidden sm:block">
+                  Metro Industrial Park — Site Map
+                </span>
+                {/* Compact stat pills */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {[
+                    { val: stats.available, label: 'Available', cls: 'text-green-400 bg-green-900/40 border-green-800' },
+                    { val: stats.preLeased, label: 'Pre Leased', cls: 'text-blue-400 bg-blue-900/40 border-blue-800'   },
+                    { val: stats.forLease,  label: 'For Lease',  cls: 'text-red-400 bg-red-900/40 border-red-800'      },
+                    { val: stats.sold,      label: 'Sold',       cls: 'text-gray-400 bg-gray-800 border-gray-700'      },
+                  ].map(({ val, label, cls }) => (
+                    <span
+                      key={label}
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cls}`}
+                    >
+                      {val} {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right controls */}
+              <div className="flex items-center gap-2">
+                {/* Zoom % */}
+                <span className="text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg bg-gray-800 border border-gray-700 text-gray-400 hidden sm:inline">
+                  {Math.round(tfm.scale * 100)}%
+                </span>
+
+                {/* Reset / re-fit */}
+                <button
+                  onClick={fitToContainer}
+                  title="Reset view"
+                  className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-all"
+                >
+                  <RotateCcw size={14} />
+                </button>
+
+                {/* Refresh */}
+                <button
+                  onClick={() => loadData()}
+                  disabled={loading}
+                  className={`p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-all ${
+                    loading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+
+                {/* Close */}
+                <button
+                  onClick={() => setIsFullscreen(false)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-red text-white text-xs font-bold hover:bg-red-700 active:scale-95 transition-all"
+                >
+                  <X size={14} /> Close
+                </button>
+              </div>
+            </div>
+
+            {/* ── Fullscreen map canvas ── */}
+            <div
+              ref={containerRef}
+              className="flex-1 relative overflow-hidden bg-gray-950"
+              style={{
+                cursor,
+                userSelect:  'none',
+                touchAction: 'none',
+              }}
+              onMouseDown={onMouseDown}
+              onMouseMove={onMouseMove}
+              onMouseUp={onMouseUp}
+              onMouseLeave={onMouseUp}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+            >
+
+              {/* Transformed layer */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0, left: 0,
+                  transform: `translate(${tfm.x}px, ${tfm.y}px) scale(${tfm.scale})`,
+                  transformOrigin: '0 0',
+                  willChange: 'transform',
+                }}
+              >
+                <div className="relative" style={{ width: '910px', height: '980px' }}>
+                  <img
+                    src="/images/metro-industrial-map.jpg"
+                    alt="Metro Industrial Park Site Map"
+                    className="select-none"
+                    style={{ width: '910px', height: 'auto', display: 'block' }}
+                    draggable={false}
+                  />
+                  <svg
+                    className="absolute top-0 left-0"
+                    width="910" height="980"
+                    viewBox="0 0 910 980"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    {renderDots()}
+                  </svg>
+                </div>
+              </div>
+
+              {/* Tooltip */}
+              {hoveredPlot && (() => {
+                const center = getPlotCenter(hoveredPlot);
+                const pos    = toScreen(center.x, center.y);
+                return (
+                  <div
+                    className="absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl text-sm z-50 bg-gray-900 border border-gray-700 text-white"
+                    style={{ top: pos.y - 70, left: pos.x + 16, maxWidth: '200px', minWidth: '140px' }}
+                  >
+                    <p className="font-bold text-sm mb-0.5">Plot {hoveredPlot}</p>
+                    <p className="text-xs opacity-70 mb-1">
+                      Area: {plotData[hoveredPlot]?.area || plotCoordinates[hoveredPlot]?.area || 'N/A'}
+                    </p>
+                    <p className={`text-xs font-semibold ${getStatusColorClass(plotData[hoveredPlot]?.status)}`}>
+                      {getStatusLabel(plotData[hoveredPlot]?.status)}
+                    </p>
+                    <p className="text-[10px] opacity-40 mt-1">Click for details</p>
+                  </div>
+                );
+              })()}
+
+              {/* Hint pill */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium bg-black/60 text-gray-300 whitespace-nowrap">
+                🖱 Scroll / Pinch to zoom · Drag to pan · Tap shed for details
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Selected plot modal ── */}
       <AnimatePresence>
         {selectedPlot && plotCoordinates[selectedPlot] && (
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
             onClick={() => setSelectedPlot(null)}
           >
             <motion.div
@@ -534,6 +612,6 @@ const btnZoomOut = useCallback(() => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
