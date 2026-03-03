@@ -85,7 +85,7 @@ const Navbar = () => {
           <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
             <div className="relative flex-shrink-0">
               <img
-                src="/MDLogo.png"
+                src="/MDLogoHoli.png"
                 alt="Metro Industrial Park"
                 className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
               />
