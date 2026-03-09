@@ -186,11 +186,11 @@ const HomePage = () => {
   return (
     <>
       <SEO
-        title="Buy or Lease Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
-        description="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar, Ahmedabad. 6–8% ROI, 90-day possession. Call 9824235642 or 9624965017 for pricing."        
+        title="Metro Industrial Park Ahmedabad, Buy or Lease Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
+        description="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar, Ahmedabad. CCTV, Water Supply and more.6–8% ROI, 90-day possession. Call 9824235642 or 9624965017 for pricing."        
         keywords="industrial shed for sale in Moraiya, Changodar, Sanand, Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
         canonical="/"
-        ogImage="/images/map.jpg" alt="Metro Enterprise - Industrial Sheds & Warehouses in Moraiya, Ahmedabad"
+        ogImage="/images/map.jpg" alt="Metro Industrial Park Ahmedabad, Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
       />
 
       <style>{`@keyframes kenBurns{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}`}</style>
@@ -291,65 +291,120 @@ const HomePage = () => {
           </div>
 
           {/* ── Button strip ── */}
-          <div className={`flex-1 flex flex-col items-center justify-center gap-2 px-4 py-3 ${
+          <div className={`flex-1 flex flex-col items-center justify-center gap-3 px-4 py-4 ${
             isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'
           }`}>
+
+            {/* Primary CTA — Explore More */}
             <motion.div
-              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-3 items-center justify-center w-full max-w-2xl"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-xs sm:max-w-sm"
             >
-              <Link to="/metro-industrial-park" className="w-full sm:w-auto">
-                <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                  className="group w-full sm:w-auto px-7 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-2xl shadow-lg shadow-brand-red/40 transition-colors duration-300">
-                  <span className="flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <Factory size={15} /> Explore More
-                    <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+              <Link to="/metro-industrial-park" className="w-full block">
+                <motion.button
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative overflow-hidden w-full px-8 py-3.5
+                    bg-gradient-to-r from-red-600 via-brand-red to-rose-600
+                    text-white font-extrabold rounded-2xl
+                    text-sm tracking-wide"
+                >
+
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <Factory size={16} />
+                    <span>Explore More</span>
+                    <motion.span
+                      animate={{ x: [0, 3, 0] }}
+                      transition={{
+                        duration: 2.4,
+                        repeat: Infinity,
+                        repeatDelay: 2.0,
+                        ease: "easeInOut",
+                      }}
+                      className="flex items-center"
+                    >
+                      <ArrowRight size={16} />
+                    </motion.span>
                   </span>
                 </motion.button>
               </Link>
+            </motion.div>
 
+            {/* Secondary row — Check Availability + WhatsApp */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col sm:flex-row gap-2.5 items-center justify-center w-full max-w-xs sm:max-w-sm"
+            >
+              {/* Check Availability — outlined secondary */}
               <Link to="/site-map" className="w-full sm:w-auto">
-                <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                  className="group w-full sm:w-auto px-7 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-2xl shadow-lg shadow-brand-red/40 transition-colors duration-300">
-                  <span className="flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <MapPin size={15} /> Check Availability
-                    <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`group w-full sm:w-auto px-6 py-2.5 font-semibold rounded-xl border-2 text-xs sm:text-sm transition-all duration-300 ${
+                    isDark
+                      ? 'border-brand-red/60 text-red-400 hover:border-brand-red hover:bg-brand-red/10'
+                      : 'border-brand-red/50 text-brand-red hover:border-brand-red hover:bg-red-50'
+                  }`}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <MapPin size={14} />
+                    Check Availability
+                    <ArrowRight
+                      size={14}
+                      className="group-hover:translate-x-1 transition-transform duration-200"
+                    />
                   </span>
                 </motion.button>
               </Link>
 
-              <a href={`https://wa.me/919824235642?text=${whatsappMessage}`}
-                target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                  className={`group w-full sm:w-auto px-7 py-3 font-bold rounded-2xl border-2 transition-all duration-300 ${
+              {/* WhatsApp — ghost tertiary */}
+              <a
+                href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`group w-full sm:w-auto px-6 py-2.5 font-semibold rounded-xl border text-xs sm:text-sm transition-all duration-300 ${
                     isDark
-                      ? 'border-white/30 text-white hover:border-green-400 hover:bg-green-400/10'
-                      : 'border-gray-900/30 text-gray-900 hover:border-green-600 hover:bg-green-50'
-                  }`}>
-                  <span className="flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <FaWhatsapp size={15} className="text-green-500" /> WhatsApp
+                      ? 'border-white/15 text-gray-400 hover:border-green-400/50 hover:text-green-400 hover:bg-green-400/8'
+                      : 'border-gray-300 text-gray-500 hover:border-green-500/50 hover:text-green-600 hover:bg-green-50/60'
+                  }`}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <FaWhatsapp size={14} className="text-green-500" />
+                    WhatsApp
                   </span>
                 </motion.button>
               </a>
             </motion.div>
 
+            {/* Scroll cue */}
             {showScrollCue && (
               <button
                 className={`flex flex-col items-center gap-0.5 cursor-pointer border-0 bg-transparent mt-1 ${
-                  isDark ? 'text-gray-400' : 'text-gray-600'
+                  isDark ? 'text-gray-500' : 'text-gray-400'
                 }`}
                 onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                 aria-label="Scroll down"
               >
                 <span className="text-[8px] font-bold tracking-widest uppercase">scroll</span>
-                <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}>
+                <motion.div
+                  animate={{ y: [0, 4, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
                   <ChevronDown size={14} />
                 </motion.div>
               </button>
             )}
           </div>
-        </section>
+          </section>
 
         {/* ════════ FEATURES ════════ */}
         <section ref={featuresRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
