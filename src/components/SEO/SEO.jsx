@@ -18,9 +18,15 @@ const SEO = ({
   return (
     <>
       <title>{title}</title>
+      <meta charSet="UTF-8" />                                          {/* ✅ Added */}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" /> {/* ✅ Added */}
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={fullCanonical} />
+
+      {/* ✅ Added og:site_name and og:locale */}
+      <meta property="og:site_name" content="Metro Enterprise" />
+      <meta property="og:locale"    content="en_IN" />
 
       <meta name="robots" content={
         noindex
@@ -35,6 +41,7 @@ const SEO = ({
       <meta property="og:image"        content={fullOgImage} />
       <meta property="og:image:width"  content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt"    content={title} />               {/* ✅ Added */}
 
       <meta name="twitter:card"        content="summary_large_image" />
       <meta name="twitter:url"         content={fullCanonical} />
@@ -55,7 +62,6 @@ const SEO = ({
               </script>
             )
       )}
-
     </>
   );
 };

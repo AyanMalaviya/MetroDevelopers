@@ -1,8 +1,34 @@
 {
+  "redirects": [
+    {
+      "source": "/project",
+      "destination": "/404",
+      "statusCode": 410
+    },
+    {
+      "source": "/projects",
+      "destination": "/404",
+      "statusCode": 410
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "metrodevelopers.co.in" }],
+      "destination": "https://www.metrodevelopers.co.in/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "index, follow" }
+      ]
     }
   ]
 }
