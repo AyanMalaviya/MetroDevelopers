@@ -1,6 +1,8 @@
 {
  "name": "Metro Enterprise",
- "icons": [
+   "short_name": "Metro Enterprise",
+  "description": "Metro Enterprise — Industrial & Commercial Real Estate in Ahmedabad",
+  "icons": [
   {
    "src": "\/android-icon-36x36.png",
    "sizes": "36x36",
