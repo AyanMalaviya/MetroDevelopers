@@ -1,4 +1,5 @@
-const CACHE_NAME = 'metro-enterprise-v1';
+const CACHE_NAME = 'metro-enterprise-v2';
+
 const urlsToCache = [
   '/',
   '/index.html',
@@ -7,8 +8,10 @@ const urlsToCache = [
   '/icon-512x512.png',
   '/MDLogo.png',
   '/images/2shed.jpg',
-  '/images/map.jpg'
+  '/images/map.jpg',
+  '/images/metro-industrial-map.jpg',
 ];
+
 
 // Install
 self.addEventListener('install', (event) => {
