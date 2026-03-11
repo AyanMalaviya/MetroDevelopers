@@ -67,19 +67,21 @@ const ContactPage = () => {
   };
 
   const partners = [
-    {
-      name: 'Amir Malaviya',
-      role: 'Director',
-      phone: '+91 98242 35642',
-      email: 'amirmalaviya786@gmail.com',
-      whatsapp: '919824235642',
-    },
-    {
-      name: 'Nazim Kazani',
-      role: 'Director',
-      phone: '+91 96249 65017',
-      whatsapp: '919624965017',
-    },
+  {
+    name: 'Amir Malaviya',
+    role: 'Director',
+    phone: '+91 98242 35642',
+    email: 'amirmalaviya786@gmail.com',
+    whatsapp: '919824235642',
+    image: '/images/amir.png' // update with actual extension
+  },
+  {
+    name: 'Nazim Kazani',
+    role: 'Director',
+    phone: '+91 96249 65017',
+    whatsapp: '919624965017',
+    image: '/images/nazim.png' // update with actual extension
+  },
     {
       name: 'Kaushar Kalyani',
       role: 'Director',
@@ -95,7 +97,7 @@ const ContactPage = () => {
     <>
       <SEO
         title="Contact Metro Enterprise — Industrial Shed Inquiries, Moraiya Ahmedabad"
-        description="Contact Metro Enterprise for industrial shed pricing, site visits, and leasing. Call +91 98242 35642 or WhatsApp. Located in Moraiya, Changodar, Ahmedabad."
+        description="Contact Metro Enterprise for industrial shed pricing, site visits, and leasing. Call or WhatsApp at +91 98242 35642. Located in Moraiya, Changodar, Ahmedabad."
         canonical="/contact"
         ogImage="/images/office.jpg" alt="Contact Metro Enterprise Industrial Park Moraiya Ahmedabad"
       />
@@ -247,12 +249,21 @@ const ContactPage = () => {
                   <div className="p-6 sm:p-7">
                     {/* Avatar */}
                     <div className="flex justify-center mb-4">
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-brand-red/20 ${
+                      <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:ring-2 group-hover:ring-brand-red ${
                         isDark ? 'bg-gray-800' : 'bg-gray-100'
                       }`}>
-                        <User size={30} className={`transition-colors duration-300 group-hover:text-brand-red ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+                        {partner.image ? (
+                          <img 
+                            src={partner.image} 
+                            alt={partner.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <User size={30} className={`transition-colors duration-300 group-hover:text-brand-red ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+                        )}
                       </div>
                     </div>
+
 
                     {/* Name + role */}
                     <div className="text-center mb-5">
@@ -314,35 +325,6 @@ const ContactPage = () => {
             </motion.div>
           </div>
         </section>
-
-        {/* ══════════════════════════════════
-            QUICK CONTACT BAR
-            ══════════════════════════════════ */}
-        <div className={`border-y ${isDark ? 'bg-gray-950 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
-            <div className="flex flex-wrap items-center justify-center sm:justify-between gap-4">
-              <p className={`text-sm font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Prefer a direct call?
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {[
-                  { label: '+91 98242 35642', href: 'tel:+919824235642' },
-                  { label: '+91 63567 66767', href: 'tel:+916356766767' },
-                ].map(({ label, href }) => (
-                  <a
-                    key={href}
-                    href={href}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all hover:scale-105 hover:border-brand-red hover:text-brand-red ${
-                      isDark ? 'border-gray-700 text-gray-300 bg-gray-900' : 'border-gray-200 text-gray-800 bg-white shadow-sm'
-                    }`}
-                  >
-                    <Phone size={13} className="text-brand-red" /> {label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* ══════════════════════════════════
             LOCATION
