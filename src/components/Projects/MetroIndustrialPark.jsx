@@ -113,8 +113,8 @@ const MetroIndustrialPark = () => {
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 22.914141879249897,
-      longitude: 72.41748307531053,
+      latitude: 22.914149390337524,
+      longitude: 72.42066559191518,
     },
   };
 
