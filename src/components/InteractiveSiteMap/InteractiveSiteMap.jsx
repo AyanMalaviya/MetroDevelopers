@@ -356,7 +356,7 @@ export default function InteractiveSiteMap() {
           {/* ✅ inline-block shrink-wraps to exact image dimensions */}
           <div className="relative" style={{ display: 'inline-block' }}>
             <img
-              src="/images/metro-industrial-map.jpg"
+              src="/images/metro-industrial-park-site-plan-moraiya.jpg"
               alt="Metro Industrial Park Site Map"
               className="block select-none"
               style={{ maxHeight: '68vh', width: 'auto' }}
@@ -495,8 +495,8 @@ export default function InteractiveSiteMap() {
               >
                 <div className="relative" style={{ width: '910px', height: '980px' }}>
                   <img
-                    src="/images/metro-industrial-map.jpg"
-                    alt="Metro Industrial Park Site Map"
+                    src="/images/metro-industrial-park-site-plan-moraiya.jpg"
+                    alt="Metro Industrial Park Site Plan"
                     className="select-none"
                     style={{ width: '910px', height: 'auto', display: 'block' }}
                     draggable={false}

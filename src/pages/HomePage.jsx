@@ -12,51 +12,84 @@ import SEO from '../components/SEO/SEO.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
 
-/* ─── Framer variants ─── */
-const containerVariants = {
-  hidden:  {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-const cardVariants = {
-  hidden:  { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-};
-
 /* ─── Slideshow images ─── */
 const heroSlides = [
-  '/images/map.jpg',
-  '/images/entrance.jpg',
-  '/images/mainroad.jpg',
-  '/images/2shed.jpg',
-  '/images/4shed.jpg',
-  '/images/office.jpg',
+  '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+  '/images/metro-industrial-park-entrance-security-moraiya.jpg',
+  '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
+  '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+  '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
+  '/images/metro-industrial-park-office-changodar.jpg',
 ];
 
-/* ─── Features & Stats data ─── */
+/* ─── Per-feature color palette ─── */
+const featureColors = [
+  { gradient: 'from-red-500 to-orange-500',    bg: 'from-red-950 to-orange-950',    text: 'text-red-400',    shadow: 'shadow-red-500/30'    },
+  { gradient: 'from-blue-500 to-cyan-400',      bg: 'from-blue-950 to-cyan-950',      text: 'text-blue-400',   shadow: 'shadow-blue-500/30'   },
+  { gradient: 'from-purple-500 to-violet-500',  bg: 'from-purple-950 to-violet-950',  text: 'text-purple-400', shadow: 'shadow-purple-500/30' },
+  { gradient: 'from-amber-500 to-yellow-400',   bg: 'from-amber-950 to-yellow-950',   text: 'text-amber-400',  shadow: 'shadow-amber-500/30'  },
+  { gradient: 'from-cyan-500 to-teal-400',      bg: 'from-cyan-950 to-teal-950',      text: 'text-cyan-400',   shadow: 'shadow-cyan-500/30'   },
+  { gradient: 'from-green-500 to-emerald-400',  bg: 'from-green-950 to-emerald-950',  text: 'text-green-400',  shadow: 'shadow-green-500/30'  },
+];
+
+/* ─── Features data with image + detail bullets ─── */
 const features = [
-  { icon: <Factory size={28} />,    title: 'Modern Infrastructure', description: 'World-class facilities designed for manufacturing excellence'   },
-  { icon: <Truck size={28} />,      title: 'Strategic Location',    description: 'Prime connectivity to national highways & logistics hubs'      },
-  { icon: <LucideCctv size={28} />, title: '24/7 Security',         description: 'Advanced CCTV surveillance with trained security personnel'    },
-  { icon: <FaRoad size={28} />,     title: 'Wide Roads',            description: '60 ft RCC roads engineered for heavy-duty vehicles'            },
-  { icon: <Droplets size={28} />,   title: 'Water Supply',          description: 'Reliable 24/7 water availability across all units'             },
-  { icon: <FaTrash size={28} />,    title: 'Hygienic Drainage',     description: 'Well-planned drainage for efficient waste management'          },
+  {
+    icon: <Factory size={26} />,
+    title: 'Modern Infrastructure',
+    description: 'World-class facilities designed for manufacturing and warehousing excellence with premium construction standards.',
+    details: ['30–35 ft high ceiling clearance', 'Reinforced flooring for heavy loads', 'RCC construction available on request'],
+    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    alt: 'Modern industrial shed infrastructure at Metro Industrial Park Moraiya Ahmedabad',
+  },
+  {
+    icon: <Truck size={26} />,
+    title: 'Strategic Location',
+    description: 'Prime connectivity to national highways, logistics hubs, and major ports for seamless supply chain operations.',
+    details: ['Near Sarkhej Bavla National Highway', 'Easy access to GIDC industrial areas', 'Close to Ahmedabad city & airport'],
+    image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+    alt: 'Strategic location map of Metro Industrial Park near Sarkhej Bavla Highway Moraiya',
+  },
+  {
+    icon: <LucideCctv size={26} />,
+    title: '24/7 Security',
+    description: 'Advanced CCTV surveillance system combined with trained security personnel ensuring round-the-clock safety.',
+    details: ['HD CCTV cameras throughout the park', 'Security guards at main gate', 'Controlled access entry system'],
+    image: '/images/metro-industrial-park-entrance-security-moraiya.jpg',
+    alt: 'CCTV security surveillance at Metro Industrial Park entrance Moraiya Ahmedabad',
+  },
+  {
+    icon: <FaRoad size={26} />,
+    title: 'Wide Roads',
+    description: '60 ft RCC roads engineered specifically for heavy-duty vehicles ensuring smooth logistics and truck movement.',
+    details: ['60 ft wide internal road network', 'Durable RCC construction', 'Designed for heavy trucks & trailers'],
+    image: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
+    alt: '60 ft wide RCC road inside Metro Industrial Park designed for heavy vehicles Ahmedabad',
+  },
+  {
+    icon: <Droplets size={26} />,
+    title: 'Water Supply',
+    description: 'Reliable 24/7 water availability across all industrial units to support uninterrupted manufacturing operations.',
+    details: ['Round-the-clock water availability', 'Dedicated supply per industrial unit', 'Emergency water reserve system'],
+    image: '/images/feature-water-supply.jpg',
+    alt: '24x7 water supply facility at Metro Industrial Park Moraiya Changodar Ahmedabad',
+  },
+  {
+    icon: <FaTrash size={26} />,
+    title: 'Hygienic Drainage',
+    description: 'Well-planned drainage infrastructure for efficient waste management keeping the park clean and fully operational.',
+    details: ['Underground drainage network', 'Industrial waste management system', 'Eco-friendly disposal processes'],
+    image: '/images/feature-drainage-system.jpg',
+    alt: 'Hygienic drainage and waste management system at Metro Industrial Park Ahmedabad',
+  },
 ];
 
+/* ─── Stats data ─── */
 const stats = [
   { countEnd: 30,  suffix: 'k+', label: 'Sq.yards of Area',      icon: <LucideLandPlot size={24} /> },
   { countEnd: 43,  suffix: '+',  label: 'Industrial Units Made', icon: <LucideFactory  size={24} /> },
   { countEnd: 100, suffix: '%',  label: 'Client Satisfaction',   icon: <Star           size={24} /> },
   { countEnd: 6,   suffix: '+',  label: 'Years of Experience',   icon: <Clock          size={24} /> },
-];
-
-/* ─── Per-card asymmetric corner patterns ─── */
-const cornerPatterns = [
-  'rounded-tl-[2.5rem] rounded-br-[2.5rem] rounded-tr-2xl rounded-bl-2xl',
-  'rounded-tr-[2.5rem] rounded-bl-[2.5rem] rounded-tl-2xl rounded-br-2xl',
-  'rounded-[2rem]',
-  'rounded-tr-[2.5rem] rounded-bl-[2.5rem] rounded-tl-2xl rounded-br-2xl',
-  'rounded-tl-[2.5rem] rounded-br-[2.5rem] rounded-tr-2xl rounded-bl-2xl',
-  'rounded-[2rem]',
 ];
 
 /* ════════════════════════════════════════════════
@@ -96,6 +129,119 @@ const SlideshowPoster = ({ slides }) => {
         ))}
       </div>
     </div>
+  );
+};
+
+/* ════════════════════════════════════════════════
+   FEATURE ROW COMPONENT
+   Alternates image-left / image-right per row
+   ════════════════════════════════════════════════ */
+const FeatureRow = ({ feat, index, isDark }) => {
+  const rowRef = useRef(null);
+  const inView = useInView(rowRef, { once: true, margin: '-80px' });
+  const isEven = index % 2 === 0; // even → image left, odd → image right
+  const color  = featureColors[index];
+
+  return (
+    <motion.div
+      ref={rowRef}
+      initial={{ opacity: 0, x: isEven ? -56 : 56 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 items-center`}
+    >
+
+      {/* ── Image side ── */}
+      <div className="w-full lg:w-[46%] flex-shrink-0">
+        <div className="relative">
+
+          {/* Colorful gradient border */}
+          <div className={`p-[3px] rounded-3xl bg-gradient-to-br ${color.gradient} shadow-2xl ${color.shadow}`}>
+            <div className={`rounded-[calc(1.5rem-3px)] overflow-hidden aspect-[4/3] relative ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
+
+              {/* Gradient placeholder — visible until real image loads */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} flex items-center justify-center`}>
+                <div className="opacity-[0.12] scale-[4] text-white pointer-events-none select-none">
+                  {feat.icon}
+                </div>
+                <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-semibold tracking-widest uppercase ${color.text} opacity-50`}>
+                  Image coming soon
+                </div>
+              </div>
+
+              {/* Actual image — covers placeholder on load */}
+              <img
+                src={feat.image}
+                alt={feat.alt}
+                width={800} height={600}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+                onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+              />
+            </div>
+          </div>
+
+          {/* Feature number badge */}
+          <div className={`absolute -bottom-4 ${isEven ? 'right-5' : 'left-5'} z-10`}>
+            <div
+              className={`px-5 py-2 rounded-2xl bg-gradient-to-r ${color.gradient} text-white font-extrabold text-xl shadow-xl ${color.shadow}`}
+              style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}
+            >
+              0{index + 1} / 06
+            </div>
+          </div>
+
+          {/* Blurred glow — top corner */}
+          <div className={`absolute ${isEven ? '-top-5 -left-5' : '-top-5 -right-5'} w-20 h-20 rounded-full bg-gradient-to-br ${color.gradient} opacity-25 blur-2xl pointer-events-none`} />
+          {/* Blurred glow — bottom corner */}
+          <div className={`absolute ${isEven ? '-bottom-8 right-10' : '-bottom-8 left-10'} w-14 h-14 rounded-full bg-gradient-to-br ${color.gradient} opacity-15 blur-2xl pointer-events-none`} />
+        </div>
+      </div>
+
+      {/* ── Content side ── */}
+      <div className="w-full lg:w-[54%] pt-6 lg:pt-0">
+
+        {/* Icon + feature label row */}
+        <div className="flex items-center gap-4 mb-5">
+          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-lg ${color.shadow}`}>
+            {feat.icon}
+          </div>
+          <span className={`text-[10px] font-black tracking-[0.22em] uppercase ${color.text}`}>
+            Feature {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h3 className={`text-2xl sm:text-3xl font-extrabold mb-4 leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+          {feat.title}
+        </h3>
+
+        {/* Description */}
+        <p className={`text-sm sm:text-base leading-relaxed mb-7 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+          {feat.description}
+        </p>
+
+        {/* Detail bullets */}
+        <ul className="space-y-3 mb-7">
+          {feat.details.map((detail, di) => (
+            <li key={di} className="flex items-center gap-3">
+              <div className={`w-5 h-5 rounded-full flex-shrink-0 bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-sm`}>
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                  <path d="M1.5 4L3.5 6.5L8.5 1.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <span className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                {detail}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Color accent underline */}
+        <div className={`h-[3px] w-16 rounded-full bg-gradient-to-r ${color.gradient}`} />
+      </div>
+    </motion.div>
   );
 };
 
@@ -221,21 +367,19 @@ const HomePage = () => {
 
             <SlideshowPoster slides={heroSlides} />
 
-          {/* ── Logo: absolute dead-centre of the 90vh area ── */}
-          <motion.img
-            src="/MDLogoBG.png"
-            alt="Metro Enterprise - Industrial Shed Developer Ahmedabad"
-            width={288} height={288}
-            initial={{ opacity: 1, scale: 1.6 }}
-            animate={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
-            style={{ x: '-50%', y: '-50%' }}
-            className="absolute top-1/2 left-1/2
-                      w-36 sm:w-52 md:w-64 lg:w-72 z-10 pointer-events-none
-                      drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
-          />
+            {/* Logo — absolute dead-centre */}
+            <motion.img
+              src="/MDLogoBG.png"
+              alt="Metro Enterprise - Industrial Shed Developer Ahmedabad"
+              width={288} height={288}
+              initial={{ opacity: 1, scale: 1.6 }}
+              animate={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 2, ease: 'easeOut' }}
+              style={{ x: '-50%', y: '-50%' }}
+              className="absolute top-1/2 left-1/2 w-36 sm:w-52 md:w-64 lg:w-72 z-10 pointer-events-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
+            />
 
-            {/* ── Badge + stat cards pinned to bottom ── */}
+            {/* Badge + stat cards pinned to bottom */}
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 sm:pb-10 pointer-events-none px-4">
               <div className="flex flex-col items-center gap-3 w-full pointer-events-auto">
 
@@ -263,10 +407,8 @@ const HomePage = () => {
                     <motion.div key={label} whileHover={{ scale: 1.06, y: -5 }}
                       className={`p-3 sm:p-4 rounded-xl bg-black/50 backdrop-blur-md border ${border} transition-all duration-300 text-center shadow-lg cursor-default`}>
                       <span className={`${color} flex justify-center mb-1`}>{icon}</span>
-                      <div
-                        className={`text-lg sm:text-2xl font-black ${color}`}
-                        style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}
-                      >{value}</div>
+                      <div className={`text-lg sm:text-2xl font-black ${color}`}
+                        style={{ fontFamily: '"Bebas Neue","Oswald",sans-serif' }}>{value}</div>
                       <div className="text-[9px] sm:text-[11px] text-white/70 font-semibold">{label}</div>
                     </motion.div>
                   ))}
@@ -372,50 +514,30 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ FEATURES ════════ */}
-        <section ref={featuresRef} className="py-20 sm:py-28 relative overflow-hidden">
+        {/* ════════ FEATURES — Alternating Image + Content ════════ */}
+        <section ref={featuresRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
 
-          {/* Layer 1 — background image */}
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
-            style={{ backgroundImage: "url('/images/4shed.jpg')" }}
-            aria-hidden="true"
-          />
+          {/* Subtle red accent glows */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" />
 
-          {/* Layer 2 — single unified theme-aware overlay (no stacking) */}
-          <div
-            className={`absolute inset-0 ${
-              isDark
-                ? 'bg-gradient-to-b from-black/85 via-black/70 to-black/88'
-                : 'bg-gradient-to-b from-white/88 via-white/75 to-white/90'
-            }`}
-            aria-hidden="true"
-          />
-
-          {/* Layer 3 — red accent glows */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.12),transparent_60%)] pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.07),transparent_60%)] pointer-events-none" />
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
 
             {/* Section header */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={featuresInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }}
-              className="text-center mb-14"
+              className="text-center mb-20"
             >
-              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                text-[11px] font-bold tracking-widest uppercase border mb-4 ${
+              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 ${
                 isDark
                   ? 'bg-white/10 text-red-300 border-red-400/40'
                   : 'bg-brand-red/10 text-brand-red border-brand-red/30'
               }`}>
                 <Sparkles size={11} className="animate-pulse" /> Why Choose Us
               </span>
-              <h2 className={`text-3xl sm:text-5xl font-bold mt-3 mb-4 ${
-                isDark ? 'text-white' : 'text-gray-900'
-              }`}>
+              <h2 className={`text-3xl sm:text-5xl font-bold mt-3 mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 Everything Your Business{' '}
                 <span className={isDark ? 'text-red-400' : 'text-brand-red'}>Needs</span>
               </h2>
@@ -424,72 +546,12 @@ const HomePage = () => {
               }`} />
             </motion.div>
 
-            {/* Asymmetric card grid */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate={featuresInView ? 'visible' : 'hidden'}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5 sm:gap-6"
-            >
+            {/* Alternating feature rows */}
+            <div className="space-y-24 sm:space-y-32">
               {features.map((feat, i) => (
-                <motion.div
-                  key={i}
-                  variants={cardVariants}
-                  whileHover={{ scale: 1.03, y: -5 }}
-                  className={[
-                    'group relative overflow-hidden cursor-default transition-all duration-300',
-                    cornerPatterns[i],
-                    // mobile zigzag offset — resets on sm+
-                    i % 2 === 0 ? '-translate-x-3 sm:translate-x-0' : 'translate-x-3 sm:translate-x-0',
-                    // odd cards drop slightly on mobile for stagger depth
-                    i % 2 !== 0 ? 'mt-2 sm:mt-0' : '',
-                    'border backdrop-blur-md',
-                    isDark
-                      ? 'bg-black/50 border-white/10 hover:border-red-500/50 hover:shadow-xl hover:shadow-red-900/20'
-                      : 'bg-white/80 border-gray-200/70 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/10',
-                  ].join(' ')}
-                >
-                  {/* Hover glow overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-900/0 to-red-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                  {/* Animated bottom bar */}
-                  <div className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full bg-gradient-to-r from-brand-red via-red-400 to-rose-500 transition-all duration-500" />
-
-                  {/* Top-right accent dot */}
-                  <div className={`absolute top-4 right-4 w-2 h-2 rounded-full transition-colors duration-300 ${
-                    isDark
-                      ? 'bg-red-400/30 group-hover:bg-red-400/80'
-                      : 'bg-brand-red/20 group-hover:bg-brand-red/60'
-                  }`} />
-
-                  <div className="relative p-6 sm:p-7">
-                    {/* Icon */}
-                    <div className={[
-                      'w-[52px] h-[52px] rounded-xl mb-5 flex items-center justify-center',
-                      'transition-all duration-300 group-hover:scale-110 group-hover:rotate-3',
-                      'group-hover:bg-brand-red group-hover:text-white group-hover:shadow-lg group-hover:shadow-brand-red/30',
-                      isDark ? 'bg-white/10 text-gray-200' : 'bg-gray-100 text-gray-600',
-                    ].join(' ')}>
-                      {feat.icon}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className={`text-base sm:text-lg font-bold mb-2 transition-colors duration-300 group-hover:text-brand-red ${
-                      isDark ? 'text-white' : 'text-gray-900'
-                    }`}>
-                      {feat.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className={`text-sm leading-relaxed ${
-                      isDark ? 'text-gray-300' : 'text-gray-600'
-                    }`}>
-                      {feat.description}
-                    </p>
-                  </div>
-                </motion.div>
+                <FeatureRow key={i} feat={feat} index={i} isDark={isDark} />
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -517,7 +579,7 @@ const HomePage = () => {
                       ? 'bg-gray-900 border-gray-800 hover:border-brand-red/50 hover:shadow-lg hover:shadow-brand-red/20'
                       : 'bg-gray-50 border-gray-200 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/10'
                   }`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand-red/0 to-brand-red/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-red/0 to-brand-red/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   <div className={`w-12 h-12 mx-auto mb-5 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-brand-red/20 group-hover:text-brand-red group-hover:scale-110 group-hover:rotate-6 ${
                     isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-200 text-gray-500'
                   }`}>{stat.icon}</div>
@@ -608,3 +670,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
