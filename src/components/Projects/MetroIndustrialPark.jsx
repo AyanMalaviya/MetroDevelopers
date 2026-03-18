@@ -45,13 +45,19 @@ const SectionHeader = ({ icon, title }) => (
   </h2>
 );
 
-const ImageCard = ({ src, title, onOpen, theme, tall = false }) => (
+/* ── ImageCard: added loading="lazy", decoding="async", width/height, keyword alt ── */
+const ImageCard = ({ src, alt, title, onOpen, theme, tall = false }) => (
   <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden">
     <div className={`${tall ? 'min-h-[500px]' : 'min-h-[380px]'} w-full ${
       theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'
     } flex flex-col items-center justify-center p-4`}>
       <img
-        src={src} alt={title}
+        src={src}
+        alt={alt}
+        width={1200}
+        height={800}
+        loading="lazy"
+        decoding="async"
         className="max-w-full h-auto cursor-zoom-in hover:scale-[1.02] transition-transform duration-300 rounded-lg shadow"
         onClick={onOpen}
         onError={(e) => {
@@ -122,24 +128,123 @@ const MetroIndustrialPark = () => {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: [
-      { '@type': 'Question', name: 'What is the price of industrial sheds in Moraiya, Ahmedabad?', acceptedAnswer: { '@type': 'Answer', text: 'Industrial sheds at Metro Industrial Park in Moraiya are available for sale and lease. Contact us at +91 98242 35642 for current pricing and customised unit options.' } },
-      { '@type': 'Question', name: 'What sizes are available at Metro Industrial Park?',           acceptedAnswer: { '@type': 'Answer', text: 'Units range from 4,000 sq.ft to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park in Moraiya, Changodar.' } },
-      { '@type': 'Question', name: 'How long does possession take at Metro Industrial Park?',      acceptedAnswer: { '@type': 'Answer', text: 'Possession is available within 90 days of booking at Metro Industrial Park, Moraiya.' } },
-      { '@type': 'Question', name: 'What is the expected ROI on industrial sheds in Metro Industrial Park?', acceptedAnswer: { '@type': 'Answer', text: 'The expected annual return on investment is 6–8% for industrial sheds and warehouses at Metro Industrial Park, Moraiya, Ahmedabad.' } },
-      { '@type': 'Question', name: 'Is RCC construction available at Metro Industrial Park?',     acceptedAnswer: { '@type': 'Answer', text: 'RCC construction is not standard but is available on request with additional charges.' } },
-      { '@type': 'Question', name: 'Where is Metro Industrial Park located?',                     acceptedAnswer: { '@type': 'Answer', text: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near Sarkhej Bavla Highway.' } },
-      { '@type': 'Question', name: 'What amenities are available at Metro Industrial Park?',      acceptedAnswer: { '@type': 'Answer', text: 'The park offers 24x7 water supply, CCTV surveillance, security guards, a dedicated weigh bridge, 60ft internal roads, waste management, and high ceilings of 30–35 feet.' } },
+      { '@type': 'Question', name: 'What is the price of industrial sheds in Moraiya, Ahmedabad?',              acceptedAnswer: { '@type': 'Answer', text: 'Industrial sheds at Metro Industrial Park in Moraiya are available for sale and lease. Contact us at +91 98242 35642 for current pricing and customised unit options.' } },
+      { '@type': 'Question', name: 'What sizes are available at Metro Industrial Park?',                        acceptedAnswer: { '@type': 'Answer', text: 'Units range from 4,000 sq.ft to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park in Moraiya, Changodar.' } },
+      { '@type': 'Question', name: 'How long does possession take at Metro Industrial Park?',                   acceptedAnswer: { '@type': 'Answer', text: 'Possession is available within 90 days of booking at Metro Industrial Park, Moraiya.' } },
+      { '@type': 'Question', name: 'What is the expected ROI on industrial sheds in Metro Industrial Park?',    acceptedAnswer: { '@type': 'Answer', text: 'The expected annual return on investment is 6–8% for industrial sheds and warehouses at Metro Industrial Park, Moraiya, Ahmedabad.' } },
+      { '@type': 'Question', name: 'Is RCC construction available at Metro Industrial Park?',                   acceptedAnswer: { '@type': 'Answer', text: 'RCC construction is not standard but is available on request with additional charges.' } },
+      { '@type': 'Question', name: 'Where is Metro Industrial Park located?',                                   acceptedAnswer: { '@type': 'Answer', text: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near Sarkhej Bavla Highway.' } },
+      { '@type': 'Question', name: 'What amenities are available at Metro Industrial Park?',                    acceptedAnswer: { '@type': 'Answer', text: 'The park offers 24x7 water supply, CCTV surveillance, security guards, a dedicated weigh bridge, 60ft internal roads, waste management, and high ceilings of 30–35 feet.' } },
     ],
   };
 
+  /* ── ImageObject schema — tells Google exactly what each image shows ── */
+  const imageObjectSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: 'Metro Industrial Park — Industrial Sheds & Warehouses Moraiya Ahmedabad',
+    description: 'Photo gallery of Metro Industrial Park, 63 industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad.',
+    url: 'https://www.metrodevelopers.co.in/metro-industrial-park',
+    image: [
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+        name: 'Industrial Shed for Sale in Moraiya Ahmedabad',
+        description: 'State-of-the-art industrial sheds with high ceilings of 30–35 ft at Metro Industrial Park, Moraiya.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
+        name: 'Warehouse Unit Available for Lease near Changodar Ahmedabad',
+        description: 'Spacious warehouse units for lease at Metro Industrial Park, Changodar, Ahmedabad.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/metro-industrial-park-entrance-security-moraiya.jpg',
+        name: 'Metro Industrial Park Entrance with 24x7 Security — Moraiya',
+        description: 'Professional park entrance with 24/7 CCTV surveillance and security guards at Metro Industrial Park.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/60ft-rcc-road-metro-industrial-park-ahmedabad.jpg',
+        name: '60ft Wide Internal Road at Metro Industrial Park Ahmedabad',
+        description: '60 feet wide RCC road inside Metro Industrial Park, Moraiya, engineered for heavy-duty vehicles.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+        name: 'Metro Industrial Park Aerial Site Map — Moraiya Gujarat',
+        description: 'Drone view site map of Metro Industrial Park in Moraiya, Changodar, Ahmedabad, Gujarat.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/metro-industrial-park-office-changodar.jpg',
+        name: 'Metro Industrial Park Office — Changodar Ahmedabad',
+        description: 'Modern office facility inside Metro Industrial Park, Changodar, Ahmedabad.',
+        width: 1920, height: 1080,
+      },
+    ],
+  };
+
+  /* ── images array — renamed files + stronger alt text ── */
   const images = [
-    { src: '/images/2shed.jpg',    title: 'Industrial Shed for Sale in Moraiya Ahmedabad',       description: 'State-of-the-art industrial sheds with high ceilings' },
-    { src: '/images/4shed.jpg',    title: 'Warehouse Unit Available for Lease near Changodar',   description: 'Spacious warehouse units with optimal storage' },
-    { src: '/images/entrance.jpg', title: 'Metro Industrial Park Entrance 24x7 Security',        description: 'Professional entrance with 24/7 security' },
-    { src: '/images/mainroad.jpg', title: '60ft RCC Road Inside Metro Industrial Park',          description: 'Wide internal roads engineered for heavy vehicles' },
-    { src: '/images/map.jpg',      title: 'Metro Industrial Park 3D Map drone view Moraiya Gujarat', description: 'Comprehensive site layout overview' },
-    { src: '/images/office.jpg',   title: 'Office of Metro Industrial Park',                     description: 'Modern office facilities within the park' },
+    {
+      src:         '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+      alt:         'Industrial shed for sale in Moraiya Ahmedabad — Metro Industrial Park',
+      title:       'Industrial Shed for Sale in Moraiya Ahmedabad',
+      description: 'State-of-the-art industrial sheds with high ceilings',
+    },
+    {
+      src:         '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
+      alt:         'Warehouse unit available for lease near Changodar Ahmedabad',
+      title:       'Warehouse Unit Available for Lease near Changodar',
+      description: 'Spacious warehouse units with optimal storage',
+    },
+    {
+      src:         '/images/metro-industrial-park-entrance-security-moraiya.jpg',
+      alt:         'Metro Industrial Park entrance with 24x7 CCTV security — Moraiya',
+      title:       'Metro Industrial Park Entrance — 24x7 Security',
+      description: 'Professional entrance with 24/7 security',
+    },
+    {
+      src:         '/images/60ft-rcc-road-metro-industrial-park-ahmedabad.jpg',
+      alt:         '60 ft wide internal road inside Metro Industrial Park Ahmedabad',
+      title:       '60ft RCC Road Inside Metro Industrial Park',
+      description: 'Wide internal roads engineered for heavy vehicles',
+    },
+    {
+      src:         '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+      alt:         'Aerial drone view site map of Metro Industrial Park Moraiya Gujarat',
+      title:       'Metro Industrial Park — Aerial Site Map Moraiya Gujarat',
+      description: 'Comprehensive site layout overview',
+    },
+    {
+      src:         '/images/metro-industrial-park-office-changodar.jpg',
+      alt:         'Office building at Metro Industrial Park Changodar Ahmedabad',
+      title:       'Metro Industrial Park Office',
+      description: 'Modern office facilities within the park',
+    },
   ];
+
+  const layoutImages = {
+    areaTable1: {
+      src: '/images/metro-industrial-park-area-details-table-1.jpg',
+      alt: 'Metro Industrial Park unit area details table 1 — Moraiya Ahmedabad',
+    },
+    areaTable2: {
+      src: '/images/metro-industrial-park-area-details-table-2.jpg',
+      alt: 'Metro Industrial Park unit area details table 2 — Moraiya Ahmedabad',
+    },
+    siteMap: {
+      src: '/images/metro-industrial-park-site-plan-moraiya.jpg',
+      alt: 'Metro Industrial Park high-resolution site plan layout — Moraiya Changodar',
+    },
+  };
 
   const features = [
     { icon: <Ruler size={22} />,       title: 'Flexible Sizes',   description: '4,000–50,000 sq.ft units available' },
@@ -172,12 +277,6 @@ const MetroIndustrialPark = () => {
     'Easy Highway Access', 'Ample Parking Space',
   ];
 
-  const layoutImages = {
-    areaTable1: '/images/table1.jpg',
-    areaTable2: '/images/table2.jpg',
-    siteMap:    '/images/metro-industrial-map.jpg',
-  };
-
   const quickStats = [
     { end: 54000, suffix: '',   separator: ',', label: 'Sq.yards Total',  icon: <LandPlot size={26} /> },
     { end: 63,    suffix: '',   separator: '',  label: 'Units Available', icon: <Factory size={26} />  },
@@ -191,7 +290,10 @@ const MetroIndustrialPark = () => {
 
   /* ── Lightbox openers ── */
   const openGallery = useCallback((index) => { setGalleryIndex(index); setGalleryOpen(true); setIsAutoPlaying(false); }, []);
-  const openViewer  = useCallback((src, title) => { setViewerSlides([{ src, title, description: 'Click zoom icon or scroll to zoom · Pinch on mobile' }]); setViewerOpen(true); }, []);
+  const openViewer  = useCallback((src, alt) => {
+    setViewerSlides([{ src, title: alt, description: 'Click zoom icon or scroll to zoom · Pinch on mobile' }]);
+    setViewerOpen(true);
+  }, []);
 
   /* ── Auto-play ── */
   useEffect(() => {
@@ -217,23 +319,20 @@ const MetroIndustrialPark = () => {
   return (
     <>
       <SEO
-        title="Rent or Buy Industrial shed in Ahmedabad at Metro Industrial Park"
+        title="Rent or Buy Industrial Shed in Ahmedabad at Metro Industrial Park"
         description="Metro Industrial Park: 63 sheds (4,000–50,000 sq.ft) in Moraiya, Ahmedabad. 54K sq.yard, 60ft roads, CCTV, weigh bridge, 6–8% ROI, Quick possession."
         keywords="Metro Industrial Park Moraiya, industrial shed Changodar, warehouse for rent Ahmedabad, factory shed near Sarkhej Bavla Highway, 54000 sq yard industrial park"
         canonical="/metro-industrial-park"
-        ogImage="/images/2shed.jpg"
-        structuredData={[propertySchema, faqSchema]}
+        ogImage="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
+        structuredData={[propertySchema, faqSchema, imageObjectSchema]}
       />
 
       <h1 className="sr-only">Metro Industrial Park — Industrial Sheds for Sale &amp; Lease in Moraiya, Ahmedabad</h1>
 
       <div className="min-h-screen theme-bg-primary">
 
-        {/* ════════════════════════════════════════
-            HERO SECTION — ✅ pt-16 fixes navbar overlap
-        ════════════════════════════════════════ */}
-        <section className="flex flex-col pt-16"> {/* ✅ pt-16 = navbar height */}
-          {/* IMAGE ZONE — full width cover on all screens */}
+        {/* ════════ HERO ════════ */}
+        <section className="flex flex-col pt-16">
           <div className="relative flex-shrink-0 overflow-hidden h-[50svh] sm:h-[55svh] lg:h-[70svh]">
 
             {images.map((img, i) => (
@@ -244,12 +343,15 @@ const MetroIndustrialPark = () => {
                   i === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
               >
-                {/* ✅ object-cover on ALL screen sizes */}
                 <img
                   src={img.src}
-                  alt={img.title}
+                  alt={img.alt}
+                  width={1920}
+                  height={1080}
                   className="w-full h-full object-cover object-center"
                   loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding={i === 0 ? 'sync' : 'async'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
                 />
               </div>
             ))}
@@ -275,7 +377,7 @@ const MetroIndustrialPark = () => {
               {currentSlide + 1} / {images.length}
             </div>
 
-            {/* ✅ Translucent icon-only gallery button — bottom center */}
+            {/* Gallery button */}
             <button
               type="button"
               onClick={() => openGallery(currentSlide)}
@@ -355,17 +457,16 @@ const MetroIndustrialPark = () => {
                     >
                       <MapPin size={15} /> Check Availability
                     </a>
-
                   </div>
                 </div>
 
                 {/* Right — quick specs (desktop) */}
                 <div className="hidden sm:grid grid-cols-2 gap-2.5 flex-shrink-0">
                   {[
-                    { label: '54,000', sub: 'Sq.yards',  icon: <LandPlot size={20} /> },
-                    { label: '63',     sub: 'Units',     icon: <Factory size={20} />  },
-                    { label: '60 ft',  sub: 'Road Width',icon: <FaRoad size={20} />   },
-                    { label: '90 D',   sub: 'Possession',icon: <Clock size={20} />    },
+                    { label: '54,000', sub: 'Sq.yards',   icon: <LandPlot size={20} /> },
+                    { label: '63',     sub: 'Units',      icon: <Factory size={20} />  },
+                    { label: '60 ft',  sub: 'Road Width', icon: <FaRoad size={20} />   },
+                    { label: '90 D',   sub: 'Possession', icon: <Clock size={20} />    },
                   ].map((q, i) => (
                     <div
                       key={i}
@@ -386,9 +487,7 @@ const MetroIndustrialPark = () => {
           </div>
         </section>
 
-        {/* ════════════════════════════════════════
-            QUICK STATS BAR
-        ════════════════════════════════════════ */}
+        {/* ════════ QUICK STATS BAR ════════ */}
         <section className={`border-y ${
           isDark
             ? 'bg-gradient-to-r from-gray-900 to-black border-gray-800'
@@ -417,9 +516,7 @@ const MetroIndustrialPark = () => {
           </div>
         </section>
 
-        {/* ════════════════════════════════════════
-            MAIN CONTENT
-        ════════════════════════════════════════ */}
+        {/* ════════ MAIN CONTENT ════════ */}
         <section className={`py-12 sm:py-16 lg:py-20 ${isDark ? 'bg-black' : 'bg-white'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
@@ -511,11 +608,30 @@ const MetroIndustrialPark = () => {
                     >
                       {activeTab === 'areaTables' ? (
                         <>
-                          <ImageCard src={layoutImages.areaTable1} title="Area Details Table 1" onOpen={() => openViewer(layoutImages.areaTable1, 'Area Details Table 1')} theme={theme} />
-                          <ImageCard src={layoutImages.areaTable2} title="Area Details Table 2" onOpen={() => openViewer(layoutImages.areaTable2, 'Area Details Table 2')} theme={theme} />
+                          <ImageCard
+                            src={layoutImages.areaTable1.src}
+                            alt={layoutImages.areaTable1.alt}
+                            title="Area Details Table 1"
+                            onOpen={() => openViewer(layoutImages.areaTable1.src, layoutImages.areaTable1.alt)}
+                            theme={theme}
+                          />
+                          <ImageCard
+                            src={layoutImages.areaTable2.src}
+                            alt={layoutImages.areaTable2.alt}
+                            title="Area Details Table 2"
+                            onOpen={() => openViewer(layoutImages.areaTable2.src, layoutImages.areaTable2.alt)}
+                            theme={theme}
+                          />
                         </>
                       ) : (
-                        <ImageCard src={layoutImages.siteMap} title="Site Map — High Resolution" onOpen={() => openViewer(layoutImages.siteMap, 'Site Map — High Resolution')} theme={theme} tall />
+                        <ImageCard
+                          src={layoutImages.siteMap.src}
+                          alt={layoutImages.siteMap.alt}
+                          title="Site Map — High Resolution"
+                          onOpen={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.alt)}
+                          theme={theme}
+                          tall
+                        />
                       )}
                       <p className={`text-xs text-center ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
                         Click image or button to zoom · Pinch on mobile
@@ -599,9 +715,7 @@ const MetroIndustrialPark = () => {
           </div>
         </section>
 
-        {/* ════════════════════════════════════════
-            GALLERY LIGHTBOX
-        ════════════════════════════════════════ */}
+        {/* ════════ GALLERY LIGHTBOX ════════ */}
         <Lightbox
           open={galleryOpen}
           close={() => setGalleryOpen(false)}
@@ -616,10 +730,10 @@ const MetroIndustrialPark = () => {
           styles={{
             container: { backgroundColor: 'rgba(0,0,0,0.97)' },
             root: {
-              '--yarl__thumbnails_thumbnail_width':    '64px',
-              '--yarl__thumbnails_thumbnail_height':   '44px',
-              '--yarl__thumbnails_container_padding':  '4px 8px',
-              '--yarl__thumbnails_container_gap':      '6px',
+              '--yarl__thumbnails_thumbnail_width':   '64px',
+              '--yarl__thumbnails_thumbnail_height':  '44px',
+              '--yarl__thumbnails_container_padding': '4px 8px',
+              '--yarl__thumbnails_container_gap':     '6px',
             },
           }}
         />
