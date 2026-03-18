@@ -221,18 +221,19 @@ const HomePage = () => {
 
             <SlideshowPoster slides={heroSlides} />
 
-            {/* ── Logo: absolute dead-centre of the 90vh area ── */}
-            <motion.img
-              src="/MDLogoBG.png"
-              alt="Metro Enterprise - Industrial Shed Developer Ahmedabad"
-              width={288} height={288}
-              initial={{ opacity: 1, scale: 1, y: 0 }}
-              animate={{ opacity: 0, scale: 0.8, y: 0 }}
-              transition={{ duration: 3, ease: 'easeOut' }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                         w-36 sm:w-52 md:w-64 lg:w-72 z-10 pointer-events-none
-                         drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
-            />
+          {/* ── Logo: absolute dead-centre of the 90vh area ── */}
+          <motion.img
+            src="/MDLogoBG.png"
+            alt="Metro Enterprise - Industrial Shed Developer Ahmedabad"
+            width={288} height={288}
+            initial={{ opacity: 1, scale: 1.6 }}
+            animate={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 2, ease: 'easeOut' }}
+            style={{ x: '-50%', y: '-50%' }}
+            className="absolute top-1/2 left-1/2
+                      w-36 sm:w-52 md:w-64 lg:w-72 z-10 pointer-events-none
+                      drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
+          />
 
             {/* ── Badge + stat cards pinned to bottom ── */}
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 sm:pb-10 pointer-events-none px-4">
