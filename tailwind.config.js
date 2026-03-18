@@ -9,6 +9,8 @@ export default {
     extend: {
       colors: {
         'brand-red': '#dc2626',
+        'black' : '#000000',
+        'gray' : '#1f1f1f',
       },
       animation: {
         'fade-in': 'fadeIn 0.8s ease-out forwards',
