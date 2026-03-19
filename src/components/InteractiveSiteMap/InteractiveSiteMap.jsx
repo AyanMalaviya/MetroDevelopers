@@ -12,7 +12,6 @@ export default function InteractiveSiteMap() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  /* ── Data state ── */
   const [plotData,     setPlotData]     = useState({});
   const [selectedPlot, setSelectedPlot] = useState(null);
   const [hoveredPlot,  setHoveredPlot]  = useState(null);
@@ -20,7 +19,6 @@ export default function InteractiveSiteMap() {
   const [lastUpdated,  setLastUpdated]  = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  /* ── Fullscreen pan/zoom state ── */
   const [tfm,    setTfm]    = useState({ x: 0, y: 0, scale: 1 });
   const [cursor, setCursor] = useState('grab');
 
@@ -58,7 +56,7 @@ export default function InteractiveSiteMap() {
     }
   };
 
-  /* ══════════════════ AUTO-FIT on fullscreen open ══════════════════ */
+  /* ══════════════════ AUTO-FIT ══════════════════ */
   const fitToContainer = useCallback(() => {
     setTimeout(() => {
       if (containerRef.current) {
@@ -84,7 +82,6 @@ export default function InteractiveSiteMap() {
     });
   }, []);
 
-  /* ── Wheel — fullscreen only ── */
   useEffect(() => {
     if (!isFullscreen) return;
     const el = containerRef.current;
@@ -98,7 +95,6 @@ export default function InteractiveSiteMap() {
     return () => el.removeEventListener('wheel', handler);
   }, [zoomAt, isFullscreen]);
 
-  /* ── Touch move — fullscreen only ── */
   const handleTouchMove = useCallback((e) => {
     e.preventDefault();
     if (e.touches.length === 1 && dragging.current) {
@@ -173,7 +169,7 @@ export default function InteractiveSiteMap() {
     setSelectedPlot(plotNumber);
   }, []);
 
-  /* ══════════════════ TOOLTIP (fullscreen only) ══════════════════ */
+  /* ══════════════════ TOOLTIP ══════════════════ */
   const toScreen = (svgX, svgY) => ({
     x: svgX * tfm.scale + tfm.x,
     y: svgY * tfm.scale + tfm.y,
@@ -353,7 +349,6 @@ export default function InteractiveSiteMap() {
         {/* ── Portrait Preview ── */}
         <div className={`relative flex justify-center items-center py-4 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
 
-          {/* ✅ inline-block shrink-wraps to exact image dimensions */}
           <div className="relative" style={{ display: 'inline-block' }}>
             <img
               src="/images/metro-industrial-park-site-plan-moraiya.jpg"
@@ -362,8 +357,6 @@ export default function InteractiveSiteMap() {
               style={{ maxHeight: '68vh', width: 'auto' }}
               draggable={false}
             />
-
-            {/* SVG now overlays exactly — no extra height to misalign */}
             <svg
               viewBox="0 150 910 980"
               className="absolute inset-0 w-full h-full"
@@ -373,7 +366,7 @@ export default function InteractiveSiteMap() {
             </svg>
           </div>
 
-          {/* Fullscreen CTA — unchanged */}
+          {/* ✅ View Fullscreen button — unchanged, background goes black on click */}
           <button
             onClick={() => setIsFullscreen(true)}
             className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-red text-white font-bold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-xl shadow-red-500/25"
@@ -382,7 +375,7 @@ export default function InteractiveSiteMap() {
             View Fullscreen
           </button>
 
-          {/* Hint pill — unchanged */}
+          {/* Hint pill */}
           <div className={`absolute bottom-4 left-4 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium ${
             isDark ? 'bg-black/60 text-gray-300' : 'bg-black/50 text-white'
           }`}>
@@ -393,7 +386,7 @@ export default function InteractiveSiteMap() {
       </div>
 
       {/* ════════════════════════════════════════
-          FULLSCREEN OVERLAY
+          FULLSCREEN OVERLAY — pure black background
       ════════════════════════════════════════ */}
       <AnimatePresence>
         {isFullscreen && (
@@ -402,11 +395,11 @@ export default function InteractiveSiteMap() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex flex-col bg-gray-950"
+            className="fixed inset-0 z-50 flex flex-col bg-black" // ✅ bg-black for focus
           >
 
-            {/* ── Fullscreen top bar ── */}
-            <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-gray-900">
+            {/* ── Top bar — no fullscreen button ── */}
+            <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black">
               <div className="flex items-center gap-3">
                 <span className="text-white font-bold text-sm hidden sm:block">
                   Metro Industrial Park — Site Map
@@ -417,7 +410,7 @@ export default function InteractiveSiteMap() {
                     { val: stats.available, label: 'Available', cls: 'text-green-400 bg-green-900/40 border-green-800' },
                     { val: stats.preLeased, label: 'Pre Leased', cls: 'text-blue-400 bg-blue-900/40 border-blue-800'   },
                     { val: stats.forLease,  label: 'For Lease',  cls: 'text-red-400 bg-red-900/40 border-red-800'      },
-                    { val: stats.sold,      label: 'Sold',       cls: 'text-gray-400 bg-gray-800 border-gray-700'      },
+                    { val: stats.sold + stats.forLease,      label: 'Sold',       cls: 'text-gray-400 bg-white/5 border-white/10'       },
                   ].map(({ val, label, cls }) => (
                     <span
                       key={label}
@@ -429,34 +422,30 @@ export default function InteractiveSiteMap() {
                 </div>
               </div>
 
-              {/* Right controls */}
+              {/* Right controls — zoom %, reset, refresh, close. No fullscreen button. */}
               <div className="flex items-center gap-2">
-                {/* Zoom % */}
-                <span className="text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg bg-gray-800 border border-gray-700 text-gray-400 hidden sm:inline">
+                <span className="text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-400 hidden sm:inline">
                   {Math.round(tfm.scale * 100)}%
                 </span>
 
-                {/* Reset / re-fit */}
                 <button
                   onClick={fitToContainer}
                   title="Reset view"
-                  className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-all"
+                  className="p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/10"
                 >
                   <RotateCcw size={14} />
                 </button>
 
-                {/* Refresh */}
                 <button
                   onClick={() => loadData()}
                   disabled={loading}
-                  className={`p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-all ${
+                  className={`p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/10 ${
                     loading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                 </button>
 
-                {/* Close */}
                 <button
                   onClick={() => setIsFullscreen(false)}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-red text-white text-xs font-bold hover:bg-red-700 active:scale-95 transition-all"
@@ -466,10 +455,10 @@ export default function InteractiveSiteMap() {
               </div>
             </div>
 
-            {/* ── Fullscreen map canvas ── */}
+            {/* ── Map canvas — pure black bg for focus ── */}
             <div
               ref={containerRef}
-              className="flex-1 relative overflow-hidden bg-gray-950"
+              className="flex-1 relative overflow-hidden bg-black" // ✅ bg-black
               style={{
                 cursor,
                 userSelect:  'none',
@@ -518,7 +507,7 @@ export default function InteractiveSiteMap() {
                 const pos    = toScreen(center.x, center.y);
                 return (
                   <div
-                    className="absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl text-sm z-50 bg-gray-900 border border-gray-700 text-white"
+                    className="absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl text-sm z-50 bg-gray-900 border border-white/10 text-white"
                     style={{ top: pos.y - 70, left: pos.x + 16, maxWidth: '200px', minWidth: '140px' }}
                   >
                     <p className="font-bold text-sm mb-0.5">Plot {hoveredPlot}</p>
@@ -534,7 +523,7 @@ export default function InteractiveSiteMap() {
               })()}
 
               {/* Hint pill */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium bg-black/60 text-gray-300 whitespace-nowrap">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium bg-white/10 text-gray-300 whitespace-nowrap border border-white/10">
                 🖱 Scroll / Pinch to zoom · Drag to pan · Tap shed for details
               </div>
             </div>
@@ -549,7 +538,7 @@ export default function InteractiveSiteMap() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
             onClick={() => setSelectedPlot(null)}
           >
             <motion.div
