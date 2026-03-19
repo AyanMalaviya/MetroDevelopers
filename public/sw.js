@@ -7,9 +7,9 @@ const urlsToCache = [
   '/icon-192x192.png',
   '/icon-512x512.png',
   '/MDLogo.png',
-  '/images/2shed.jpg',
-  '/images/map.jpg',
-  '/images/metro-industrial-map.jpg',
+  '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+  '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+  '/images/metro-industrial-park-site-plan-moraiya.jpg',
 ];
 
 

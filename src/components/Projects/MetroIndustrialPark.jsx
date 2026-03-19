@@ -169,7 +169,7 @@ const MetroIndustrialPark = () => {
       },
       {
         '@type': 'ImageObject',
-        contentUrl: 'https://www.metrodevelopers.co.in/images/60ft-rcc-road-metro-industrial-park-ahmedabad.jpg',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
         name: '60ft Wide Internal Road at Metro Industrial Park Ahmedabad',
         description: '60 feet wide RCC road inside Metro Industrial Park, Moraiya, engineered for heavy-duty vehicles.',
         width: 1920, height: 1080,
@@ -195,13 +195,13 @@ const MetroIndustrialPark = () => {
   const images = [
     {
       src:         '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-      alt:         'Industrial shed for sale in Moraiya Ahmedabad — Metro Industrial Park',
-      title:       'Industrial Shed for Sale in Moraiya Ahmedabad',
+      alt:         'Metro Industrial Park - Industrial shed for sale in Moraiya, Changodar, Ahmedabad',
+      title:       'Industrial Shed for Sale in Moraiya, Changodar, Ahmedabad',
       description: 'State-of-the-art industrial sheds with high ceilings',
     },
     {
       src:         '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-      alt:         'Warehouse unit available for lease near Changodar Ahmedabad',
+      alt:         'Metro Industrial Park - Warehouse unit available for lease near Changodar Ahmedabad',
       title:       'Warehouse Unit Available for Lease near Changodar',
       description: 'Spacious warehouse units with optimal storage',
     },
@@ -212,7 +212,7 @@ const MetroIndustrialPark = () => {
       description: 'Professional entrance with 24/7 security',
     },
     {
-      src:         '/images/60ft-rcc-road-metro-industrial-park-ahmedabad.jpg',
+      src:         '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
       alt:         '60 ft wide internal road inside Metro Industrial Park Ahmedabad',
       title:       '60ft RCC Road Inside Metro Industrial Park',
       description: 'Wide internal roads engineered for heavy vehicles',
@@ -327,7 +327,7 @@ const MetroIndustrialPark = () => {
         structuredData={[propertySchema, faqSchema, imageObjectSchema]}
       />
 
-      <h1 className="sr-only">Metro Industrial Park — Industrial Sheds for Sale &amp; Lease in Moraiya, Ahmedabad</h1>
+      <h1 className="sr-only">Metro Industrial Park — Industrial Sheds for Sale &amp; Lease in Moraiya, Changodar, Ahmedabad</h1>
 
       <div className="min-h-screen theme-bg-primary">
 
