@@ -12,7 +12,7 @@ import SEO from '../components/SEO/SEO.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
 
-import { propertySchema, faqSchema, imageObjectSchema } from '../utils/schemas.js';
+import { propertySchema, faqSchema, imageObjectSchema, websiteSchema } from '../utils/schemas.js';
 
 /* ─── Slideshow images ─── */
 const heroSlides = [
@@ -314,7 +314,7 @@ const HomePage = () => {
         canonical="/"
         ogImage="/images/metro-industrial-park-site-map-moraiya-gujarat.jpg"
         alt="Metro Industrial Park Ahmedabad, Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
-        structuredData={{ propertySchema, faqSchema, imageObjectSchema }}
+        structuredData={{ propertySchema, faqSchema, imageObjectSchema, websiteSchema }}
       />
 
       <style>{`@keyframes kenBurns{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}`}</style>

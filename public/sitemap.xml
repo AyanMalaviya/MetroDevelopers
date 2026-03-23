@@ -2,13 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- ═══════════════════════════════════
-       HOME
-       ═══════════════════════════════════ -->
   <url>
     <loc>https://www.metrodevelopers.co.in/</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-23</lastmod> <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
@@ -22,20 +18,10 @@
     </image:image>
   </url>
 
-  <!-- ═══════════════════════════════════
-       METRO INDUSTRIAL PARK
-       ═══════════════════════════════════ -->
   <url>
     <loc>https://www.metrodevelopers.co.in/metro-industrial-park</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-    <image:image>
-      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
-      <image:title>Industrial Shed for Sale Lease - Metro Industrial Park Moraiya</image:title>
-      <image:caption>Industrial shed units from 4,000 to 50,000 sq.ft available for sale and lease at Metro Industrial Park</image:caption>
-    </image:image>
-    <image:image>
+    <lastmod>2026-03-23</lastmod> <changefreq>weekly</changefreq>
+    <priority>0.9</priority> <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
       <image:title>Warehouse Facility for Rent - Metro Industrial Park Ahmedabad</image:title>
       <image:caption>Large warehouse and storage facility available for lease near Sarkhej Bavla Highway, Ahmedabad</image:caption>
@@ -55,22 +41,11 @@
       <image:title>Office Space at Metro Industrial Park Ahmedabad</image:title>
       <image:caption>Dedicated office space and administrative facilities at Metro Industrial Park</image:caption>
     </image:image>
-    <image:image>
-      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
-      <image:title>Metro Industrial Park Site 3D Drone view - Full park photo Moraiya</image:title>
-      <image:caption>Site layout drone view showing all 63 industrial shed plots at Metro Industrial Park, Moraiya, Changodar, Ahmedabad 382213</image:caption>
-    </image:image>
   </url>
 
-  <!-- ═══════════════════════════════════
-       METRO ARCADE
-       ═══════════════════════════════════ -->
   <url>
     <loc>https://www.metrodevelopers.co.in/metro-arcade</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <image:image>
+    <lastmod>2026-03-23</lastmod> <changefreq>monthly</changefreq> <priority>0.8</priority> <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/arcade-top.jpeg</image:loc>
       <image:title>Metro Arcade Commercial Complex - Front View Ahmedabad</image:title>
       <image:caption>Front exterior view of Metro Arcade commercial complex by Metro Enterprise, Ahmedabad</image:caption>
@@ -87,33 +62,25 @@
     </image:image>
   </url>
 
-  <!-- ═══════════════════════════════════
-       CONTACT
-       ═══════════════════════════════════ -->
   <url>
     <loc>https://www.metrodevelopers.co.in/contact</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-03-23</lastmod> <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-office-changodar.jpg</image:loc>
+      <image:title>Metro Enterprise Contact Office</image:title>
+    </image:image>
   </url>
 
-  <!-- ═══════════════════════════════════
-       ROI CALCULATOR
-       ═══════════════════════════════════ -->
   <url>
     <loc>https://www.metrodevelopers.co.in/calculator</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-23</lastmod> <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
-  <!-- ═══════════════════════════════════
-       SITE MAP / PARK LAYOUT
-       ═══════════════════════════════════ -->
   <url>
     <loc>https://www.metrodevelopers.co.in/site-map</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-03-23</lastmod> <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-plan-plan-moraiya.jpg</image:loc>

@@ -1,5 +1,13 @@
 // src/utils/schemas.js
 
+export const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Metro Enterprise",
+  "alternateName": "Metro Developers",
+  "url": "https://www.metrodevelopers.co.in/"
+};
+
 export const propertySchema = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",    
