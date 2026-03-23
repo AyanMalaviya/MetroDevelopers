@@ -13,6 +13,9 @@ import CalculatorComponent from '../components/Calculator/CalculatorComponent';
 import SimpleCalculator from '../components/Calculator/SimpleCalculator';
 import SEO from '../components/SEO/SEO';
 
+// ✅ Import your global property schema
+import { propertySchema } from '../utils/schemas.js';
+
 /* ─── Motion variants (same as ContactPage) ─── */
 const fadeUp = {
   hidden:  { opacity: 0, y: 28 },
@@ -43,12 +46,23 @@ const Calculator = () => {
   const calcInView = useInView(calcRef, { once: true, margin: '-60px' });
 
   const tables = [
-    { src: '/images/table1.jpg', alt: 'Area Sheet - Table 1' },
-    { src: '/images/table2.jpg', alt: 'Area Sheet - Table 2' },
+    { src: '/images/metro-industrial-park-area-details-table-1.jpg', alt: 'Area Sheet - Table 1' },
+    { src: '/images/metro-industrial-park-area-details-table-2.jpg', alt: 'Area Sheet - Table 2' },
   ];
 
   const nextTable = () => setCurrentTable(p => (p + 1) % tables.length);
   const prevTable = () => setCurrentTable(p => (p - 1 + tables.length) % tables.length);
+
+  /* ─── Specific Calculator Schema ─── */
+  const calculatorSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Metro Industrial Park ROI Calculator",
+    "applicationCategory": "BusinessApplication",
+    "description": "Calculate ROI, rental yield, and property values for industrial sheds at Metro Industrial Park, Ahmedabad.",
+    "operatingSystem": "Web",
+    "url": "https://www.metrodevelopers.co.in/calculator"
+  };
 
   /* ─── Shared modal backdrop + container ─── */
   const Modal = ({ show, onClose, children, label }) => (
@@ -95,6 +109,7 @@ const Calculator = () => {
         title="Property ROI Calculator – Metro Industrial Park"
         description="Calculate ROI, rental yield and property values for industrial sheds at Metro Industrial Park, Moraiya, Ahmedabad."
         canonical="/calculator"
+        structuredData={[propertySchema, calculatorSchema]}
       />
 
       <div className={`min-h-screen theme-bg-primary ${
@@ -163,7 +178,7 @@ const Calculator = () => {
         >
           <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
             <img
-              src="/images/metro-industrial-map.jpg"
+              src="/images/metro-industrial-park-site-plan-moraiya.jpg"
               alt="Metro Industrial Park - Site Layout"
               className="w-full h-auto select-none"
               draggable={false}

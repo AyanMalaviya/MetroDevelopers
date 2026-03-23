@@ -1,14 +1,17 @@
 // src/pages/ContactPage.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Mail, Phone, MapPin, User, Building2, Clock,
   ExternalLink, Star, X, MessageSquare, ChevronRight,
+  Factory,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import SEO from '../components/SEO/SEO';
+
+// ✅ Import your global property schema
+import { propertySchema } from '../utils/schemas.js';
 
 /* ─── Motion variants ─── */
 const fadeUp = {
@@ -58,11 +61,12 @@ const ContactPage = () => {
   const reviewsInView   = useInView(reviewsRef,  { once: true, margin: '-60px' });
 
   /* ─── Data ─── */
-  const structuredData = {
+  // ✅ Specific Contact Page Schema
+  const contactPageSchema = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     "name": "Contact Metro Enterprise",
-    "description": "Get in touch for industrial sheds and warehouses",
+    "description": "Get in touch for industrial sheds and warehouses in Moraiya, Ahmedabad.",
     "url": "https://www.metrodevelopers.co.in/contact",
   };
 
@@ -73,14 +77,14 @@ const ContactPage = () => {
     phone: '+91 98242 35642',
     email: 'amirmalaviya786@gmail.com',
     whatsapp: '919824235642',
-    image: '/images/amir.png' // update with actual extension
+    image: '/images/amir.png'
   },
   {
     name: 'Nazim Kazani',
     role: 'Director',
     phone: '+91 96249 65017',
     whatsapp: '919624965017',
-    image: '/images/nazim.png' // update with actual extension
+    image: '/images/nazim.png'
   },
     {
       name: 'Kaushar Kalyani',
@@ -95,14 +99,16 @@ const ContactPage = () => {
 
   return (
     <>
+      {/* ✅ Updated ogImage and injected structuredData */}
       <SEO
         title="Contact Metro Enterprise — Industrial Shed Inquiries, Moraiya Ahmedabad"
         description="Contact Metro Enterprise for industrial shed pricing, site visits, and leasing. Call or WhatsApp at +91 98242 35642. Located in Moraiya, Changodar, Ahmedabad."
         canonical="/contact"
-        ogImage="/images/office.jpg" alt="Contact Metro Enterprise Industrial Park Moraiya Ahmedabad"
+        ogImage="/images/metro-industrial-park-office-changodar.jpg" 
+        alt="Contact Metro Enterprise Industrial Park Moraiya Ahmedabad"
+        structuredData={[propertySchema, contactPageSchema]}
       />
       <h1 className="sr-only">Contact Metro Enterprise — Industrial Park Moraiya Ahmedabad</h1>
-
 
       <div className="min-h-screen theme-bg-primary">
 
@@ -196,10 +202,10 @@ const ContactPage = () => {
               className={`mt-10 flex flex-wrap justify-center gap-6 text-xs font-semibold ${isDark ? 'text-gray-600' : 'text-gray-400'}`}
             >
               {[
-                '✓ 63 Industrial Sheds',
+                '✓ 100+ Industrial Sheds',
                 '✓ Since 2020',
                 '✓ 6–8% ROI',
-                '✓ 90 Day Possession',
+                '✓ 90 Day Possession Guarantee',
               ].map((t) => (
                 <span key={t}>{t}</span>
               ))}
@@ -362,8 +368,12 @@ const ContactPage = () => {
             >
               {/* Address strip */}
               <div className="p-5 sm:p-6 flex items-start gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
-                  <Building2 className="text-brand-red" size={22} />
+                <div className={`w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                  <img 
+                    src="/MDLogoBG.png" 
+                    alt="Metro Industrial Park Logo" 
+                    className="w-20 h-20 object-contain drop-shadow-sm" 
+                  />
                 </div>
                 <div>
                   <h4 className="text-base sm:text-lg font-extrabold theme-text-primary mb-1">
