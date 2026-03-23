@@ -1,12 +1,13 @@
-const CACHE_NAME = 'metro-enterprise-v2';
+const CACHE_NAME = 'metro-enterprise-v3';
 
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
+  '/android-chrome-192x192.png',
+  '/android-chrome-512x512.png',
   '/MDLogo.png',
+  '/MDLogoBG.png',
   '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
   '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
   '/images/metro-industrial-park-site-plan-moraiya.jpg',

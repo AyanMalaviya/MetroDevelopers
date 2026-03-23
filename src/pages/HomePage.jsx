@@ -12,6 +12,8 @@ import SEO from '../components/SEO/SEO.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
 
+import { propertySchema, faqSchema, imageObjectSchema } from '../utils/schemas.js';
+
 /* ─── Slideshow images ─── */
 const heroSlides = [
   '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
@@ -24,7 +26,7 @@ const heroSlides = [
 
 /* ─── Per-feature color palette ─── */
 const featureColors = [
-  { gradient: 'from-red-500 to-orange-500',    bg: 'from-red-950 to-orange-950',    text: 'text-red-400',    shadow: 'shadow-red-500/30'    },
+  { gradient: 'from-red-500 to-orange-500',   bg: 'from-red-950 to-orange-950',    text: 'text-red-400',    shadow: 'shadow-red-500/30'    },
   { gradient: 'from-blue-500 to-cyan-400',      bg: 'from-blue-950 to-cyan-950',      text: 'text-blue-400',   shadow: 'shadow-blue-500/30'   },
   { gradient: 'from-purple-500 to-violet-500',  bg: 'from-purple-950 to-violet-950',  text: 'text-purple-400', shadow: 'shadow-purple-500/30' },
   { gradient: 'from-amber-500 to-yellow-400',   bg: 'from-amber-950 to-yellow-950',   text: 'text-amber-400',  shadow: 'shadow-amber-500/30'  },
@@ -253,7 +255,7 @@ const HomePage = () => {
   const isDark = theme === 'dark';
 
   const rafRef                                  = useRef(null);
-  const [showScrollCue,    setShowScrollCue]    = useState(true);
+  const [showScrollCue,     setShowScrollCue]   = useState(true);
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
   const [promptDismissed,  setPromptDismissed]  = useState(false);
 
@@ -304,13 +306,15 @@ const HomePage = () => {
 
   return (
     <>
+      {/* ✅ ADDED structuredData PROP TO INJECT SCHEMAS */}
       <SEO
         title="Metro Industrial Park Ahmedabad, Buy or Lease Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
         description="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar, Ahmedabad. CCTV, Water Supply and more. 6–8% ROI, 90-day possession. Call 9824235642 or 9624965017 for pricing."
         keywords="industrial shed for sale in Moraiya, Changodar, Sanand, Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
         canonical="/"
-        ogImage="/images/map.jpg"
+        ogImage="/images/metro-industrial-park-site-map-moraiya-gujarat.jpg"
         alt="Metro Industrial Park Ahmedabad, Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
+        structuredData={{ propertySchema, faqSchema, imageObjectSchema }}
       />
 
       <style>{`@keyframes kenBurns{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}`}</style>
@@ -670,4 +674,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

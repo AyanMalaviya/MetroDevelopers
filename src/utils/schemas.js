@@ -1,14 +1,14 @@
-// src/components/StructuredData.jsx
-const StructuredData = () => {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "RealEstateAgent",    
-    "name": "Metro Enterprise - Metro Industrial Park",
-    "alternateName": "Metro Industrial Park Changodar",
+// src/utils/schemas.js
+
+export const propertySchema = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",    
+  "name": "Metro Enterprise - Metro Industrial Park",
+  "alternateName": "Metro Industrial Park Changodar",
     "description": "Industrial sheds for lease and sale in Moraiya, Changodar, Ahmedabad. Past projects in Shiv Industrial Estate, Chavda Estate, and now Metro Industrial Park behind Siya Industrial Park. Contact us for the best industrial spaces in Ahmedabad.",
     "url": "https://www.metrodevelopers.co.in",
-    "logo": "https://www.metrodevelopers.co.in/icon-512x512.png",
-    "image": "https://www.metrodevelopers.co.in/images/2shed.jpg",
+    "logo": "https://www.metrodevelopers.co.in/MDLogoBGH.png",
+    "image": "https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg",
     "telephone": "+919824235642",      
     "email": "metrodevelopers26@gmail.com",
     "address": {
@@ -67,13 +67,13 @@ const StructuredData = () => {
       "https://www.facebook.com/metroindustrialpark1",
       "https://www.instagram.com/metro.indsutrialpark/"
     ]
-  };
+};
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
+export const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
         "@type": "Question",
         "name": "What is the price of industrial sheds in Moraiya, Ahmedabad?",
         "acceptedAnswer": {
@@ -129,19 +129,57 @@ const StructuredData = () => {
           "text": "The park offers 24x7 water supply, CCTV surveillance, security guards, a dedicated weigh bridge, 60ft internal roads, waste management, and high ceilings of 30–35 feet."
         }
       }
-    ]
-  };
-
-  return (
-    <>
-      <script type="application/ld+json">
-        {JSON.stringify(schema)}
-      </script>
-      <script type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </script>
-    </>
-  );
+  ]
 };
 
-export default StructuredData;
+export const imageObjectSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: 'Metro Industrial Park — Industrial Sheds & Warehouses Moraiya Ahmedabad',
+    description: 'Photo gallery of Metro Industrial Park, 63 industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad.',
+    url: 'https://www.metrodevelopers.co.in/metro-industrial-park',
+    image: [
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+        name: 'Industrial Shed for Sale in Moraiya Ahmedabad',
+        description: 'State-of-the-art industrial sheds with high ceilings of 30–35 ft at Metro Industrial Park, Moraiya.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
+        name: 'Warehouse Unit Available for Lease near Changodar Ahmedabad',
+        description: 'Spacious warehouse units for lease at Metro Industrial Park, Changodar, Ahmedabad.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/metro-industrial-park-entrance-security-moraiya.jpg',
+        name: 'Metro Industrial Park Entrance with 24x7 Security — Moraiya',
+        description: 'Professional park entrance with 24/7 CCTV surveillance and security guards at Metro Industrial Park.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
+        name: '60ft Wide Internal Road at Metro Industrial Park Ahmedabad',
+        description: '60 feet wide RCC road inside Metro Industrial Park, Moraiya, engineered for heavy-duty vehicles.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+        name: 'Metro Industrial Park Aerial Site Map — Moraiya Gujarat',
+        description: 'Drone view site map of Metro Industrial Park in Moraiya, Changodar, Ahmedabad, Gujarat.',
+        width: 1920, height: 1080,
+      },
+      {
+        '@type': 'ImageObject',
+        contentUrl: 'https://www.metrodevelopers.co.in/images/metro-industrial-park-office-changodar.jpg',
+        name: 'Metro Industrial Park Office — Changodar Ahmedabad',
+        description: 'Modern office facility inside Metro Industrial Park, Changodar, Ahmedabad.',
+        width: 1920, height: 1080,
+      },
+    ],
+  };

@@ -1,5 +1,4 @@
 // src/components/Projects/PastProjects.jsx
-import React from 'react';
 import { MapPin, Calendar, Building2, CheckCircle, Users } from 'lucide-react';
 
 const PastProjects = () => {

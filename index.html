@@ -2,9 +2,6 @@
 <html lang="en-IN">
 <head>
 
-  <!-- ═══════════════════════════════════════
-       GOOGLE ANALYTICS — must stay first
-  ═══════════════════════════════════════ -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7ELQFH95QF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,186 +10,33 @@
     gtag('config', 'G-7ELQFH95QF', { anonymize_ip: true });
   </script>
 
-  <!-- ═══════════════════════════════════════
-       CORE
-  ═══════════════════════════════════════ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="author"           content="Metro Enterprise" />
   <meta name="application-name" content="Metro Enterprise" />
-  <meta property="og:site_name" content="Metro Enterprise" />
   <meta http-equiv="content-language" content="en-IN" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-
-  <!-- ═══════════════════════════════════════
-       GEO — local SEO
-  ═══════════════════════════════════════ -->
-  <meta name="geo.region"    content="IN-GJ" />
-  <meta name="geo.placename" content="Moraiya, Changodar, Ahmedabad, Gujarat" />
-  <meta name="geo.position"  content="22.914149390337524;72.42066559191518" />
-  <meta name="ICBM"          content="22.914149390337524, 72.42066559191518" />
-
-  <!-- Default Open Graph Tags for Social Media Bots -->
-  <meta property="og:title" content="Metro Industrial Park Ahmedabad" />
-  <meta property="og:description" content="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar. 6-8% ROI, 90-day possession." />
-  <meta property="og:image" content="https://www.metrodevelopers.co.in/images/map.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://www.metrodevelopers.co.in/" />
-  <meta property="og:type" content="website" />
-
-
-  <!-- ═══════════════════════════════════════
-       PWA + THEME
-  ═══════════════════════════════════════ -->
+  <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="/icons/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/icons/favicon-16x16.png" type="image/png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
   <link rel="manifest" href="/manifest.json" />
+  
   <meta name="theme-color"                           content="#000000" />
   <meta name="msapplication-TileColor"               content="#000000" />
-  <meta name="msapplication-TileImage"               content="/icon-144x144.png" />
+  <meta name="msapplication-TileImage"               content="/icons/icon-144x144.png" />
   <meta name="mobile-web-app-capable"                content="yes" />
   <meta name="apple-mobile-web-app-capable"          content="yes" />
   <meta name="apple-mobile-web-app-title"            content="Metro Enterprise" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <!-- ═══════════════════════════════════════
-       FAVICONS — trimmed, no duplicates
-  ═══════════════════════════════════════ -->
-  <link rel="icon"             type="image/svg+xml"  href="/favicon.svg" />
-  <link rel="icon"             type="image/x-icon"   href="/favicon.ico" />
-  <link rel="icon"             type="image/png" sizes="32x32"   href="/favicon-32x32.png" />
-  <link rel="icon"             type="image/png" sizes="16x16"   href="/favicon-16x16.png" />
-  <link rel="icon"             type="image/png" sizes="192x192" href="/icon-192x192.png" />
-  <link rel="icon"             type="image/png" sizes="512x512" href="/icon-512x512.png" />
-  <link rel="apple-touch-icon" sizes="180x180"                  href="/apple-touch-icon.png" />
-
-  <!-- ═══════════════════════════════════════
-       FONTS — preconnect before stylesheet
-  ═══════════════════════════════════════ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"  href="https://fonts.googleapis.com/css2?family=Anton&family=Bungee+Outline&display=swap" />
 
-  <!-- ═══════════════════════════════════════
-       PRELOAD — critical above-fold image
-  ═══════════════════════════════════════ -->
   <link rel="preload" as="image" href="/images/2shed.jpg" fetchpriority="high" />
 
-  <!-- Organization -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
-    "name": "Metro Enterprise",
-    "alternateName": "Metro Industrial Park",
-    "url": "https://www.metrodevelopers.co.in",
-    "logo": "https://www.metrodevelopers.co.in/icon-512x512.png",
-    "image": "https://www.metrodevelopers.co.in/images/2shed.jpg",
-    "description": "own or rent industrial sheds & warehouses in Moraiya, Changodar, Ahmedabad. 6-8% ROI, 90-day possession.",
-    "email": "metrodevelopers26@gmail.com",
-    "telephone": "+919824235642",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Opp. Suvas Ind Estate, b/h Siya Logistics Park",
-      "addressLocality": "Moraiya, Changodar",
-      "addressRegion": "Gujarat",
-      "postalCode": "382213",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "22.914149390337524",
-      "longitude": "72.42066559191518"
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      "opens": "11:00",
-      "closes": "19:00"
-    },
-    "sameAs": [
-      "https://wa.me/919824235642",
-      "https://wa.me/919624965017",
-      "https://g.page/r/CfbFhZSjMaH1EBI"
-    ],
-    "contactPoint": [
-      {
-        "@type": "ContactPoint",
-        "telephone": "+919824235642",
-        "contactType": "sales",
-        "name": "Amir Malaviya",
-        "email": "amirmalaviya786@gmail.com",
-        "availableLanguage": ["English", "Hindi", "Gujarati"]
-      },
-      {
-        "@type": "ContactPoint",
-        "telephone": "+919624965017",
-        "contactType": "sales",
-        "name": "Nazim Kazani",
-        "availableLanguage": ["English", "Hindi", "Gujarati"]
-      }
-    ]
-  }
-  </script>
-
-  <!-- LocalBusiness -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Metro Enterprise",
-    "image": "https://www.metrodevelopers.co.in/images/2shed.jpg",
-    "url": "https://www.metrodevelopers.co.in",
-    "telephone": "+919824235642",
-    "priceRange": "₹₹₹",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Opp. Suvas Ind Estate, b/h Siya Logistics Park",
-      "addressLocality": "Moraiya",
-      "addressRegion": "GJ",
-      "postalCode": "382213",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 22.914141879249897,
-      "longitude": 72.41748307531053
-    },
-    "hasMap": "https://g.page/r/CfbFhZSjMaH1EBI"
-  }
-  </script>
-
-  <!-- Metro Industrial Park -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Place",
-    "name": "Metro Industrial Park",
-    "description": "54,000 sq.yard industrial park with 63 sheds (4K–50K sq.ft), 30–35ft height, 60ft roads, weigh bridge, 6–8% ROI, 90-day possession.",
-    "url": "https://www.metrodevelopers.co.in/metro-industrial-park",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Moraiya",
-      "addressRegion": "Gujarat",
-      "postalCode": "382213",
-      "addressCountry": "IN"
-    },
-    "amenityFeature": [
-      { "@type": "LocationFeatureSpecification", "name": "Total Area",   "value": "54,000 sq.yard" },
-      { "@type": "LocationFeatureSpecification", "name": "Total Units",  "value": "63 Sheds"       },
-      { "@type": "LocationFeatureSpecification", "name": "Road Width",   "value": "60 feet"         },
-      { "@type": "LocationFeatureSpecification", "name": "Security",     "value": "CCTV & Guards"  },
-      { "@type": "LocationFeatureSpecification", "name": "Water Supply", "value": "24x7"            },
-      { "@type": "LocationFeatureSpecification", "name": "Weigh Bridge", "value": "Dedicated"       },
-      { "@type": "LocationFeatureSpecification", "name": "ROI",          "value": "6–8%"            }
-    ]
-  }
-  </script>
-
-  <!-- ═══════════════════════════════════════
-       LOADING SPLASH STYLES
-  ═══════════════════════════════════════ -->
   <style>
     #splash {
       position: fixed;
@@ -253,34 +97,21 @@
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════
-       LOADING SPLASH
-  ═══════════════════════════════════════ -->
   <div id="splash" role="status" aria-label="Loading Metro Enterprise">
-    <img src="/icon-192x192.png" alt="Metro Enterprise" />
+    <img src="/icons/icon-192x192.png" alt="Metro Enterprise" />
     <div id="splash-bar-track">
       <div id="splash-bar-fill"></div>
     </div>
     <span id="splash-label">Metro Enterprise</span>
   </div>
 
-  <!-- ═══════════════════════════════════════
-       APP ROOT
-  ═══════════════════════════════════════ -->
   <div id="root"></div>
-
-  <!-- ✅ Hidden h1 — SEO signal, not visible to users -->
-  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
-    Metro Industrial Park | Industrial Sheds for Sale &amp; Lease in Moraiya, Changodar, Ahmedabad
-  </h1>
 
   <script type="module" src="/src/main.jsx"></script>
 
-  <!-- Hide splash once React mounts -->
   <script>
     (function () {
       var splash = document.getElementById('splash');
-      // Watch for #root to have children (React mounted)
       var observer = new MutationObserver(function () {
         if (document.getElementById('root').children.length > 0) {
           splash.classList.add('hide');
@@ -289,7 +120,6 @@
         }
       });
       observer.observe(document.getElementById('root'), { childList: true });
-      // Fallback — remove after 4s no matter what
       setTimeout(function () { splash.classList.add('hide'); }, 4000);
     })();
   </script>

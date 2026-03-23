@@ -1,9 +1,11 @@
+// src/components/SEO.jsx
+
 const SEO = ({
   title,
   description,
   keywords,
   canonical,
-  ogImage = '/og-image.jpg',
+  ogImage = '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
   structuredData,
   noindex = false,
 }) => {
@@ -18,13 +20,12 @@ const SEO = ({
   return (
     <>
       <title>{title}</title>
-      <meta charSet="UTF-8" />                                          {/* ✅ Added */}
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" /> {/* ✅ Added */}
+      <meta charSet="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={fullCanonical} />
 
-      {/* ✅ Added og:site_name and og:locale */}
       <meta property="og:site_name" content="Metro Enterprise" />
       <meta property="og:locale"    content="en_IN" />
 
@@ -41,7 +42,7 @@ const SEO = ({
       <meta property="og:image"        content={fullOgImage} />
       <meta property="og:image:width"  content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt"    content={title} />               {/* ✅ Added */}
+      <meta property="og:image:alt"    content={title} />
 
       <meta name="twitter:card"        content="summary_large_image" />
       <meta name="twitter:url"         content={fullCanonical} />
@@ -49,17 +50,21 @@ const SEO = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image"       content={fullOgImage} />
 
+      {/* ✅ Fixed: Using dangerouslySetInnerHTML to prevent React from escaping JSON string */}
       {structuredData && (
         Array.isArray(structuredData)
           ? structuredData.map((schema, i) => (
-              <script key={i} type="application/ld+json">
-                {JSON.stringify(schema)}
-              </script>
+              <script 
+                key={i} 
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+              />
             ))
           : (
-              <script type="application/ld+json">
-                {JSON.stringify(structuredData)}
-              </script>
+              <script 
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+              />
             )
       )}
     </>
