@@ -16,28 +16,32 @@ export default defineConfig({
 
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto', // Ensures the service worker is injected
       includeAssets: [
         'favicon.ico', 'favicon.svg', 'robots.txt', 'apple-touch-icon.png',
+        'icons/*.png', 'icons/*.svg', // ✅ Added icons folder
         'images/*.jpg', 'images/*.jpeg', 'images/*.png', 'images/*.webp',
       ],
+      // ✅ Merged your correct manifest.json data right here
       manifest: {
-        name:             'Metro Enterprise - Industrial & Warehouse Spaces',
-        short_name:       'Metro Enterprise',
-        description:      'Premium industrial parks and warehouse spaces in Ahmedabad',
-        theme_color:      '#000000',
-        background_color: '#000000',
-        display:          'standalone',
+        name: 'Metro Enterprise',
+        short_name: 'Metro Enterprise',
+        description: 'Metro Enterprise — Industrial Shed for Sale in Moraiya, Changodar, Ahmedabad',
+        theme_color: '#DC2626',
+        background_color: '#ffffff',
+        display: 'standalone',
         display_override: ['fullscreen', 'standalone', 'minimal-ui'],
-        scope:            '/',
-        start_url:        '/',
-        orientation:      'any',
-        categories:       ['business', 'productivity'],
-        lang:             'en-IN',
+        scope: '/',
+        start_url: '/',
+        orientation: 'any',
+        categories: ['business', 'realestate'],
+        lang: 'en-IN',
         icons: [
-          { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any'      },
-          { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-          { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any'      },
-          { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-384x384.png', sizes: '384x384', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-192x192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/icons/icon-512x512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ],
       },
       workbox: {
@@ -87,7 +91,7 @@ export default defineConfig({
           },
         ],
       },
-      devOptions: { enabled: false },
+      devOptions: { enabled: false }, // Change this to true temporarily if you want to test PWA locally
     }),
   ],
 
