@@ -27,7 +27,7 @@ export default defineConfig({
         name: 'Metro Enterprise',
         short_name: 'Metro Enterprise',
         description: 'Metro Enterprise — Industrial Shed for Sale in Moraiya, Changodar, Ahmedabad',
-        theme_color: '#DC2626',
+        theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',
         display_override: ['fullscreen', 'standalone', 'minimal-ui'],
