@@ -308,13 +308,13 @@ const HomePage = () => {
     <>
       {/* ✅ ADDED structuredData PROP TO INJECT SCHEMAS */}
       <SEO
-        title="Metro Industrial Park Ahmedabad, Buy or Lease Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
-        description="Industrial sheds & warehouses for sale/lease in Moraiya, Changodar, Ahmedabad. CCTV, Water Supply and more. 6–8% ROI, 90-day possession. Call 9824235642 or 9624965017 for pricing."
-        keywords="industrial shed for sale in Moraiya, Changodar, Sanand, Ahmedabad, warehouse for rent in Changodar, industrial shed with waste management and water supply for lease Gujarat, 5000 sqft factory shed price, ready possession industrial shed Ahmedabad, GIDC approved warehouse Moraiya, affordable industrial shed manufacturer Gujarat, industrial plot near Sarkhej Bavla Highway, 6-8% ROI commercial property Ahmedabad, heavy industrial storage space rent, warehousing logistics park Ahmedabad, pharmaceutical industrial shed Moraiya, engineering unit space Changodar, 4000 to 50000 sqft industrial shed, buy industrial property, weigh bridge facility industrial park"
+        title="Industrial Sheds for Sale and Lease in Moraiya, Changodar, Ahmedabad | Metro Enterprise"
+        description="Explore industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad. 4,000 to 50,000 sq.ft units with 60 ft roads, CCTV, water supply, and fast possession options."
+        keywords="industrial shed moraiya, industrial shed changodar, industrial shed ahmedabad, warehouse for lease moraiya, warehouse for rent changodar, factory shed ahmedabad, industrial property near sarkhej bavla highway"
         canonical="/"
         ogImage="/images/metro-industrial-park-site-map-moraiya-gujarat.jpg"
-        alt="Metro Industrial Park Ahmedabad, Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad"
-        structuredData={{ propertySchema, faqSchema, imageObjectSchema, websiteSchema }}
+        ogImageAlt="Industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad"
+        structuredData={[propertySchema, faqSchema, imageObjectSchema, websiteSchema]}
       />
 
       <style>{`@keyframes kenBurns{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}`}</style>
@@ -323,47 +323,6 @@ const HomePage = () => {
         <h1 className="sr-only">
           Industrial Sheds & Warehouses for Sale & Lease in Moraiya, Changodar, Ahmedabad
         </h1>
-
-        {/* ── Review Prompt ── */}
-        {showReviewPrompt && !promptDismissed && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 max-w-xs sm:max-w-sm"
-          >
-            <div className={`rounded-xl shadow-2xl p-4 sm:p-6 relative border-2 ${
-              isDark ? 'bg-gray-900 border-brand-red/30' : 'bg-white border-brand-red/20'
-            }`}>
-              <button onClick={dismissPrompt} aria-label="Close"
-                className={`absolute top-2 right-2 transition-colors ${
-                  isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
-                }`}>
-                <X size={18} />
-              </button>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-brand-red rounded-full flex items-center justify-center flex-shrink-0">
-                  <Star size={20} className="text-white fill-white" />
-                </div>
-                <div>
-                  <h4 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    Enjoying our service?
-                  </h4>
-                  <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Leave us a review!
-                  </p>
-                </div>
-              </div>
-              <a
-                href="https://g.page/r/CfbFhZSjMaH1EBI/review"
-                target="_blank" rel="noopener noreferrer"
-                onClick={dismissPrompt}
-                className="block w-full text-center px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
-              >
-                Write a Review
-              </a>
-            </div>
-          </motion.div>
-        )}
 
         {/* ════════ HERO ════════ */}
         <section className="relative h-screen flex flex-col overflow-hidden">

@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
-const PWAInstallPrompt = ({ isDark }) => {
+const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showPrompt, setShowPrompt] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     const handleBeforeInstall = (e) => {
@@ -54,11 +57,11 @@ const PWAInstallPrompt = ({ isDark }) => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 animate-slide-up max-w-xs sm:max-w-sm">
-      <div className={`rounded-xl shadow-2xl p-4 sm:p-5 relative border-2 backdrop-blur-lg transition-colors duration-300 ${
+    <div className="fixed bottom-4 left-4 sm:bottom-5 sm:left-5 z-50 animate-slide-up w-[280px] sm:w-[300px]">
+      <div className={`rounded-lg shadow-xl p-3.5 sm:p-4 relative border backdrop-blur-lg transition-colors duration-300 ${
         isDark 
-          ? 'bg-gradient-to-br from-gray-900 to-black border-brand-red/30' 
-          : 'bg-gradient-to-br from-white to-gray-50 border-brand-red/20'
+          ? 'bg-gradient-to-br from-gray-900 to-black border-gray-700/80' 
+          : 'bg-gradient-to-br from-white to-gray-50 border-gray-200/90'
       }`}>
         
         <button
@@ -68,33 +71,33 @@ const PWAInstallPrompt = ({ isDark }) => {
           }`}
           aria-label="Close"
         >
-          <X size={18} />
+          <X size={16} />
         </button>
         
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-12 h-12 bg-brand-red/10 border border-brand-red/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Download size={24} className="text-brand-red" />
+        <div className="flex items-center gap-2.5 mb-2.5 pr-4">
+          <div className="w-10 h-10 bg-brand-red/10 border border-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Download size={20} className="text-brand-red" />
           </div>
           <div className="text-left flex-1">
-            <h4 className={`font-bold text-sm sm:text-base ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <h4 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Install Metro App
             </h4>
-            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-              Quick access anytime!
+            <p className={`text-[11px] leading-tight ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              Faster access and offline support.
             </p>
           </div>
         </div>
         
         <button
           onClick={handleInstall}
-          className="w-full px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+          className="w-full px-3 py-2 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-md transition-all text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg"
         >
-          <Download size={16} />
+          <Download size={14} />
           <span>Install Now</span>
         </button>
         
-        <p className={`text-[10px] text-center mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-          Fast, offline access to our properties
+        <p className={`text-[10px] text-center mt-1.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+          Works offline after install
         </p>
       </div>
     </div>

@@ -10,10 +10,10 @@ export const websiteSchema = {
 
 export const propertySchema = {
   "@context": "https://schema.org",
-  "@type": "RealEstateAgent",    
-  "name": "Metro Enterprise - Metro Industrial Park",
-  "alternateName": "Metro Industrial Park Changodar",
-    "description": "Industrial sheds for lease and sale in Moraiya, Changodar, Ahmedabad. Past projects in Shiv Industrial Estate, Chavda Estate, and now Metro Industrial Park behind Siya Industrial Park. Contact us for the best industrial spaces in Ahmedabad.",
+  "@type": ["RealEstateAgent", "LocalBusiness"],
+  "name": "Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad | Metro Enterprise",
+  "alternateName": "Metro Enterprise Moraiya Changodar Ahmedabad",
+    "description": "Industrial sheds and warehouses for sale and lease in Moraiya, Changodar, and Ahmedabad. Unit sizes from 4,000 to 50,000 sq.ft with modern infrastructure and fast possession support.",
     "url": "https://www.metrodevelopers.co.in",
     "logo": "https://www.metrodevelopers.co.in/MDLogoBGH.png",
     "image": "https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg",
@@ -22,7 +22,7 @@ export const propertySchema = {
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Opp. Suvas Ind Estate, b/h Siya Logistics Park",
-      "addressLocality": "Moraiya, Changodar",
+      "addressLocality": "Moraiya",
       "addressRegion": "Gujarat",
       "postalCode": "382213",
       "addressCountry": "IN"
@@ -33,9 +33,8 @@ export const propertySchema = {
       "longitude": "72.41748307531053"
     },
     "areaServed": [
+      { "@type": "Place", "name": "Moraiya, Changodar" },
       { "@type": "City",  "name": "Ahmedabad" },
-      { "@type": "Place", "name": "Changodar" },
-      { "@type": "Place", "name": "Moraiya"   },
       { "@type": "Place", "name": "Sanand"    }
     ],
     "contactPoint": [
@@ -64,7 +63,7 @@ export const propertySchema = {
       {
         "@type": "ContactPoint",
         "contactType": "sales",
-        "telephone": "+9163567 66767",
+        "telephone": "+916356766767",
         "availableLanguage": ["English", "Hindi", "Gujarati"],
         "areaServed": "IN"
       },
@@ -73,7 +72,7 @@ export const propertySchema = {
     "openingHours": "Mo-Su 10:00-19:00",
     "sameAs": [
       "https://www.facebook.com/metroindustrialpark1",
-      "https://www.instagram.com/metro.indsutrialpark/"
+      "https://www.instagram.com/metro.industrialpark/"
     ]
 };
 

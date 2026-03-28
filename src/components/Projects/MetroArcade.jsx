@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, X, Phone, CheckCircle, Maximize2, Building2, Home, MapPin, TrendingUp, Users, Package, Car } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useTheme } from '../../context/ThemeContext';
+import SEO from '../SEO/SEO';
 
 
 const MetroArcade = () => {
@@ -52,6 +53,18 @@ const MetroArcade = () => {
     { icon: <Users size={24} />, title: 'Commercial Hub', description: 'Ideal for retail and offices' }
   ];
 
+  const metroArcadePageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Commercial Shops in Moraiya, Changodar, Ahmedabad',
+    description: 'Commercial shops and investment spaces in Moraiya, Changodar, Ahmedabad at Metro Arcade.',
+    url: 'https://www.metrodevelopers.co.in/metro-arcade',
+    about: {
+      '@type': 'Place',
+      name: 'Moraiya, Changodar, Ahmedabad',
+    },
+  };
+
 
   useEffect(() => {
     if (!isAutoPlaying || isGalleryOpen) return;
@@ -91,7 +104,18 @@ const MetroArcade = () => {
 
 
   return (
-    <div className="min-h-screen theme-bg-primary">
+    <>
+      <SEO
+        title="Commercial Shops and warehouses in Moraiya, Changodar, Ahmedabad | Metro Arcade"
+        description="Book commercial shops and warehouses in Moraiya, Changodar, Ahmedabad. Metro Arcade offers G+1 RCC construction, main-road visibility, and personal parking for retail and office use."
+        keywords="commercial shops moraiya, shops changodar, commercial property ahmedabad, retail shops in moraiya, main road commercial shops changodar"
+        canonical="/metro-arcade"
+        ogImage="/images/arcade-top.jpeg"
+        ogImageAlt="Commercial shops and warehouses in Moraiya Changodar Ahmedabad"
+        structuredData={metroArcadePageSchema}
+      />
+
+      <div className="min-h-screen theme-bg-primary">
       {/* ===== Hero Section with Slideshow ===== */}
       <section className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden">
         <div className="relative w-full h-full">
@@ -151,7 +175,7 @@ const MetroArcade = () => {
                 <span className="text-xs sm:text-sm text-black font-semibold">Taking Investor Bookings</span>
               </div>
               
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-3 sm:mb-4 drop-shadow-2xl ${theme === 'dark' ? 'text-white' : 'text-gray-900'}">
+              <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-3 sm:mb-4 drop-shadow-2xl ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 Metro Arcade
               </h1>
               
@@ -474,7 +498,8 @@ const MetroArcade = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -12,6 +12,7 @@ import FloatingActionMenu from './components/FloatingActionMenu'; // Updated imp
 import ScrollToTop from './components/ScrollToTop';
 import MetroArcade from './components/Projects/MetroArcade';
 import NotFound from './pages/NotFound';
+import ReviewPrompt from './components/Review';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <ReviewPrompt />
           <FloatingActionMenu /> {/* Replaced ThemeToggle */}
         </div>
       </Router>

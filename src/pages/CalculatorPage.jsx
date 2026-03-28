@@ -106,9 +106,10 @@ const Calculator = () => {
   return (
     <>
       <SEO
-        title="Property ROI Calculator – Metro Industrial Park"
-        description="Calculate ROI, rental yield and property values for industrial sheds at Metro Industrial Park, Moraiya, Ahmedabad."
+        title="Industrial Shed ROI Calculator for Moraiya, Changodar, Ahmedabad"
+        description="Calculate ROI, rental yield, and estimated returns for industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad."
         canonical="/calculator"
+        ogImageAlt="Industrial shed ROI calculator for Moraiya Changodar Ahmedabad"
         structuredData={[propertySchema, calculatorSchema]}
       />
 

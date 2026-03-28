@@ -6,6 +6,8 @@ const SEO = ({
   keywords,
   canonical,
   ogImage = '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+  ogImageAlt,
+  alt,
   structuredData,
   noindex = false,
 }) => {
@@ -16,12 +18,11 @@ const SEO = ({
     : siteUrl;
 
   const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+  const resolvedOgImageAlt = ogImageAlt || alt || title;
 
   return (
     <>
       <title>{title}</title>
-      <meta charSet="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={fullCanonical} />
@@ -42,13 +43,14 @@ const SEO = ({
       <meta property="og:image"        content={fullOgImage} />
       <meta property="og:image:width"  content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt"    content={title} />
+      <meta property="og:image:alt"    content={resolvedOgImageAlt} />
 
       <meta name="twitter:card"        content="summary_large_image" />
       <meta name="twitter:url"         content={fullCanonical} />
       <meta name="twitter:title"       content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image"       content={fullOgImage} />
+      <meta name="twitter:image:alt"   content={resolvedOgImageAlt} />
 
       {/* ✅ Fixed: Using dangerouslySetInnerHTML to prevent React from escaping JSON string */}
       {structuredData && (
