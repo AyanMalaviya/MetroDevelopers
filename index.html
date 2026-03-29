@@ -2,6 +2,24 @@
 <html lang="en-IN">
 <head>
 
+  <script>
+    (function () {
+      try {
+        var key = 'metro-theme';
+        var savedTheme = localStorage.getItem(key);
+        var theme = (savedTheme === 'light' || savedTheme === 'dark')
+          ? savedTheme
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        var root = document.documentElement;
+        root.setAttribute('data-theme', theme);
+        root.classList.toggle('dark', theme === 'dark');
+      } catch (err) {
+        // Ignore initialization errors and continue with default theme.
+      }
+    })();
+  </script>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7ELQFH95QF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -52,6 +70,9 @@
       background: #0a0a0a;
       transition: opacity 0.4s ease, visibility 0.4s ease;
     }
+    html[data-theme='light'] #splash {
+      background: #ffffff;
+    }
     #splash.hide {
       opacity: 0;
       visibility: hidden;
@@ -69,6 +90,9 @@
       border-radius: 99px;
       overflow: hidden;
     }
+    html[data-theme='light'] #splash-bar-track {
+      background: #e5e7eb;
+    }
     #splash-bar-fill {
       height: 100%;
       width: 0%;
@@ -83,6 +107,9 @@
       letter-spacing: 0.12em;
       color: #4b4b4b;
       text-transform: uppercase;
+    }
+    html[data-theme='light'] #splash-label {
+      color: #6b7280;
     }
     @keyframes splashPop {
       from { opacity: 0; transform: scale(0.7); }

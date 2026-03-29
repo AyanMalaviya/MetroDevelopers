@@ -4,6 +4,8 @@
 
 /* ===== THEME VARIABLES ===== */
 :root {
+  color-scheme: light;
+
   /* Light Theme (White/Default) */
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
@@ -28,6 +30,8 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --bg-primary: #000000;
   --bg-secondary: #0a0a0a;
   --bg-tertiary: #111827;
@@ -53,18 +57,32 @@
   html {
     scroll-behavior: smooth;
   }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
   
   body {
     @apply antialiased;
+    margin: 0;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Smooth transitions for all theme-aware elements */
-  * {
+  /* Smooth transitions for interactive/theme-aware elements */
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  summary,
+  [role='button'],
+  .theme-transition {
     transition-property: background-color, color, border-color, box-shadow;
-    transition-duration: 0.3s;
+    transition-duration: 0.25s;
     transition-timing-function: ease;
   }
 

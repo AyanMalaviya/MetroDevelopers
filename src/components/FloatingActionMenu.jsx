@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -8,11 +8,17 @@ import {
   Moon, 
   Type, 
   Map,
-  Compass,
   X,
   Factory
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+
+const FONT_SIZE_STORAGE_KEY = 'metro-font-size';
+const FONT_SIZE_VALUES = {
+  normal: '16px',
+  large: '18px',
+  xlarge: '20px',
+};
 
 const FloatingActionMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,21 +26,50 @@ const FloatingActionMenu = () => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    try {
+      const savedFontSize = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
+      if (!savedFontSize || !FONT_SIZE_VALUES[savedFontSize]) return;
+
+      document.documentElement.style.fontSize = FONT_SIZE_VALUES[savedFontSize];
+      setFontSize(savedFontSize);
+    } catch {
+      // Ignore storage access failures.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [isOpen]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleFontSize = () => {
     const root = document.documentElement;
-    if (fontSize === 'normal') {
-      root.style.fontSize = '18px';
-      setFontSize('large');
-    } else if (fontSize === 'large') {
-      root.style.fontSize = '20px';
-      setFontSize('xlarge');
-    } else {
-      root.style.fontSize = '16px';
-      setFontSize('normal');
+    const nextFontSize = fontSize === 'normal'
+      ? 'large'
+      : fontSize === 'large'
+        ? 'xlarge'
+        : 'normal';
+
+    root.style.fontSize = FONT_SIZE_VALUES[nextFontSize];
+    setFontSize(nextFontSize);
+
+    try {
+      localStorage.setItem(FONT_SIZE_STORAGE_KEY, nextFontSize);
+    } catch {
+      // Ignore storage access failures.
     }
   };
 
@@ -48,6 +83,10 @@ const FloatingActionMenu = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const themeActionColor = theme === 'light'
+    ? 'bg-gray-900 hover:bg-black'
+    : 'bg-amber-500 hover:bg-amber-600';
+
   const menuItems = [
     {
       icon: ArrowUp,
@@ -59,7 +98,7 @@ const FloatingActionMenu = () => {
       icon: theme === 'light' ? Moon : Sun,
       label: theme === 'light' ? 'Dark Mode' : 'Light Mode',
       action: toggleTheme,
-      color: 'bg-purple-500 hover:bg-purple-600',
+      color: themeActionColor,
     },
     {
       icon: Type,
@@ -87,6 +126,21 @@ const FloatingActionMenu = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.button
+            type="button"
+            aria-label="Close quick actions"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[1px]"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Menu Items */}
       <AnimatePresence>
         {isOpen && menuItems.map((item, index) => {
@@ -117,7 +171,7 @@ const FloatingActionMenu = () => {
                 opacity: 0,
                 transition: { duration: 0.2 }
               }}
-              className="absolute bottom-0 right-0"
+              className="absolute bottom-0 right-0 z-50"
             >
               <motion.button
                 onClick={() => {
@@ -130,6 +184,15 @@ const FloatingActionMenu = () => {
                 aria-label={item.label}
               >
                 <item.icon size={20} />
+                <span
+                  className={`absolute right-14 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap pointer-events-none shadow-md border transition-all duration-200 opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 ${
+                    theme === 'dark'
+                      ? 'bg-gray-900 border-gray-700 text-gray-100'
+                      : 'bg-white border-gray-200 text-gray-700'
+                  }`}
+                >
+                  {item.label}
+                </span>
               </motion.button>
             </motion.div>
           );
@@ -146,7 +209,7 @@ const FloatingActionMenu = () => {
           backgroundColor: isOpen ? '#ef4444' : '#dc2626'
         }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="relative w-12 h-12 rounded-full bg-brand-red shadow-2xl flex items-center justify-center text-white overflow-hidden"
+        className="relative w-12 h-12 rounded-full bg-brand-red shadow-2xl border border-white/20 flex items-center justify-center text-white overflow-hidden"
         aria-label="Quick actions menu"
       >
         {/* Animated Background */}
@@ -200,32 +263,6 @@ const FloatingActionMenu = () => {
           />
         )}
       </motion.button>
-
-      {/* Particle Effects */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0, x: 0, y: 0 }}
-                animate={{
-                  scale: [0, 1, 0],
-                  x: Math.cos((i * 45) * (Math.PI / 180)) * 120,
-                  y: Math.sin((i * 45) * (Math.PI / 180)) * 120,
-                  opacity: [0, 1, 0]
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  delay: i * 0.1
-                }}
-                className="absolute bottom-8 right-8 w-1 h-1 bg-brand-red rounded-full"
-              />
-            ))}
-          </>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

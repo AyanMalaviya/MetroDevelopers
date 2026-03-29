@@ -25,10 +25,6 @@ const stagger = {
   hidden:  {},
   visible: { transition: { staggerChildren: 0.12 } },
 };
-const scaleIn = {
-  hidden:  { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: 'easeOut' } },
-};
 
 const Calculator = () => {
   const { theme }  = useTheme();
@@ -127,7 +123,9 @@ const Calculator = () => {
           onClose={() => setShowAreaSheet(false)}
           label={`Table ${currentTable + 1} of ${tables.length}`}
         >
-          <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl">
+          <div className={`relative rounded-2xl overflow-hidden shadow-2xl ${
+            isDark ? 'bg-gray-900 border border-gray-800' : 'bg-white'
+          }`}>
             <img
               src={tables[currentTable].src}
               alt={tables[currentTable].alt}
@@ -177,7 +175,9 @@ const Calculator = () => {
           onClose={() => setShowSiteLayout(false)}
           label="Metro Industrial Park — Site Layout"
         >
-          <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+          <div className={`rounded-2xl overflow-hidden shadow-2xl ${
+            isDark ? 'bg-gray-900 border border-gray-800' : 'bg-white'
+          }`}>
             <img
               src="/images/metro-industrial-park-site-plan-moraiya.jpg"
               alt="Metro Industrial Park - Site Layout"
