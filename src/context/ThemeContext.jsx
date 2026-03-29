@@ -24,6 +24,18 @@ const applyThemeToDocument = (theme) => {
   const root = document.documentElement;
   root.setAttribute('data-theme', theme);
   root.classList.toggle('dark', theme === 'dark');
+
+  const browserThemeColor = theme === 'dark' ? '#0b0b0d' : '#f4f5f7';
+  const themeColorMeta = document.querySelector("meta[name='theme-color']");
+  const tileColorMeta = document.querySelector("meta[name='msapplication-TileColor']");
+
+  if (themeColorMeta) {
+    themeColorMeta.setAttribute('content', browserThemeColor);
+  }
+
+  if (tileColorMeta) {
+    tileColorMeta.setAttribute('content', browserThemeColor);
+  }
 };
 
 export const useTheme = () => {
