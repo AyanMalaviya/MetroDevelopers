@@ -157,7 +157,7 @@ const investments = [
 /* ─── Investment reasons ─── */
 const investReasons = [
   { icon: Users,     title: 'Job Creation',          gradient: 'from-emerald-500 to-teal-400',   glow: 'shadow-emerald-500/15', desc: 'Each shed lease supports 10–50 local jobs. Your capital fuels real economic activity, not just paper wealth.' },
-  { icon: Globe,     title: 'Make in India Tailwind', gradient: 'from-blue-500 to-indigo-400',    glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
+  { icon: Globe,     title: 'Make in India', gradient: 'from-blue-500 to-indigo-400',    glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
   { icon: TrendingUp,title: 'Inflation-Proof Income', gradient: 'from-amber-500 to-orange-400',  glow: 'shadow-amber-500/15',   desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that beat inflation every year.' },
   { icon: Shield,    title: 'Tangible Asset',         gradient: 'from-green-500 to-emerald-400',  glow: 'shadow-green-500/15',   desc: "Unlike FDs or gold ETFs, you own a real, insurable, income-generating structure with enduring land value beneath it." },
   { icon: Award,     title: 'GST Input Credit',       gradient: 'from-violet-500 to-purple-400',  glow: 'shadow-violet-500/15',  desc: "Industrial lessees can claim full GST input credit — a unique fiscal advantage completely unavailable with residential leases." },

@@ -116,26 +116,6 @@ const SiteMapPage = () => {
                   Metro Industrial Park · Moraiya, Changodar
                 </motion.p>
               </div>
-
-              {/* Fullscreen button */}
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                type="button"
-                onClick={toggleFullscreen}
-                title={isFullscreen ? 'Exit Fullscreen (F)' : 'Enter Fullscreen (F)'}
-                className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:scale-105 ${
-                  isDark
-                    ? 'bg-gray-900 border-gray-700 text-gray-300 hover:bg-brand-red hover:border-brand-red hover:text-white'
-                    : 'bg-white border-gray-200 text-gray-700 hover:bg-brand-red hover:border-brand-red hover:text-white'
-                }`}
-              >
-                {isFullscreen
-                  ? <><Minimize2 size={15} /> Exit Fullscreen</>
-                  : <><Maximize2 size={15} /> Fullscreen</>
-                }
-              </motion.button>
             </div>
           </div>
         </motion.section>
@@ -148,19 +128,13 @@ const SiteMapPage = () => {
           className="px-4"
         >
           <div className="max-w-7xl mx-auto">
-            {/*
-              mapRef goes HERE — fullscreen captures the entire
-              InteractiveSiteMap including its stats header.
-              No TransformWrapper, no nested scroll conflict.
-              InteractiveSiteMap manages its own zoom + overflow-auto.
-            */}
             <div
               ref={mapRef}
               className={`rounded-2xl overflow-hidden shadow-2xl border ${
                 isDark
                   ? 'border-gray-800 shadow-black/50'
                   : 'border-gray-200 shadow-gray-300/40'
-              } ${isFullscreen ? '!rounded-none !border-none' : ''}`}
+              } `}
             >
               <InteractiveSiteMap />
             </div>
