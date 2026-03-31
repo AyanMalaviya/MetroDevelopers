@@ -45,21 +45,32 @@ const ReviewPrompt = () => {
           className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 max-w-xs sm:max-w-sm"
         >
           <div
-            className={`rounded-xl shadow-2xl p-4 sm:p-6 relative border-2 ${
-              isDark ? 'bg-gray-900 border-brand-red/30' : 'bg-white border-brand-red/20'
+            className={`rounded-2xl shadow-2xl p-4 sm:p-6 relative border backdrop-blur-xl ${
+              isDark
+                ? 'bg-gray-950/85 border-white/15 shadow-black/60'
+                : 'bg-white/90 border-gray-200/85 shadow-gray-300/70'
             }`}
           >
+            <div
+              className={`pointer-events-none absolute inset-0 rounded-2xl ${
+                isDark
+                  ? 'bg-gradient-to-br from-brand-red/18 via-white/5 to-transparent'
+                  : 'bg-gradient-to-br from-brand-red/12 via-white/35 to-transparent'
+              }`}
+              aria-hidden="true"
+            />
+
             <button
               onClick={dismissPrompt}
               aria-label="Close review prompt"
-              className={`absolute top-2 right-2 transition-colors ${
+              className={`absolute top-2 right-2 transition-colors z-20 ${
                 isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
               <X size={18} />
             </button>
 
-            <div className="flex items-center gap-3 mb-3 pr-4">
+            <div className="relative z-10 flex items-center gap-3 mb-3 pr-4">
               <div className="w-10 h-10 bg-brand-red rounded-full flex items-center justify-center flex-shrink-0">
                 <Star size={20} className="text-white fill-white" />
               </div>
@@ -78,7 +89,7 @@ const ReviewPrompt = () => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={dismissPrompt}
-              className="block w-full text-center px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
+              className="relative z-10 block w-full text-center px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
             >
               Write a Review
             </a>

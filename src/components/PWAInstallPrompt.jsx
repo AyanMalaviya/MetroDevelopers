@@ -58,15 +58,23 @@ const PWAInstallPrompt = () => {
 
   return (
     <div className="fixed bottom-4 left-4 sm:bottom-5 sm:left-5 z-50 animate-slide-up w-[280px] sm:w-[300px]">
-      <div className={`rounded-lg shadow-xl p-3.5 sm:p-4 relative border backdrop-blur-lg transition-colors duration-300 ${
+      <div className={`rounded-xl shadow-2xl p-3.5 sm:p-4 relative border backdrop-blur-xl transition-colors duration-300 ${
         isDark 
-          ? 'bg-gradient-to-br from-gray-900 to-black border-gray-700/80' 
-          : 'bg-gradient-to-br from-white to-gray-50 border-gray-200/90'
+          ? 'bg-gray-950/85 border-white/15 shadow-black/60' 
+          : 'bg-white/90 border-gray-200/85 shadow-gray-300/70'
       }`}>
+        <div
+          className={`pointer-events-none absolute inset-0 rounded-xl ${
+            isDark
+              ? 'bg-gradient-to-br from-brand-red/16 via-white/5 to-transparent'
+              : 'bg-gradient-to-br from-brand-red/10 via-white/40 to-transparent'
+          }`}
+          aria-hidden="true"
+        />
         
         <button
           onClick={handleDismiss}
-          className={`absolute top-2 right-2 transition-colors ${
+          className={`absolute top-2 right-2 transition-colors z-20 ${
             isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
           }`}
           aria-label="Close"
@@ -74,7 +82,7 @@ const PWAInstallPrompt = () => {
           <X size={16} />
         </button>
         
-        <div className="flex items-center gap-2.5 mb-2.5 pr-4">
+        <div className="relative z-10 flex items-center gap-2.5 mb-2.5 pr-4">
           <div className="w-10 h-10 bg-brand-red/10 border border-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
             <Download size={20} className="text-brand-red" />
           </div>
@@ -90,13 +98,13 @@ const PWAInstallPrompt = () => {
         
         <button
           onClick={handleInstall}
-          className="w-full px-3 py-2 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-md transition-all text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg"
+          className="relative z-10 w-full px-3 py-2 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-md transition-all text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg"
         >
           <Download size={14} />
           <span>Install Now</span>
         </button>
         
-        <p className={`text-[10px] text-center mt-1.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+        <p className={`relative z-10 text-[10px] text-center mt-1.5 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
           Works offline after install
         </p>
       </div>
