@@ -179,7 +179,9 @@ const MetroIndustrialPark = () => {
     { label: 'Height',       value: '30–35 feet' },
     { label: 'Road Width',   value: '60 feet' },
     { label: 'Possession',   value: '90 days' },
-    { label: 'Expected ROI', value: '6–8%' },
+    { label: 'Rental Yield', value: '6–8%' },
+    { label: 'Yearly Appreciation', value: 'Up to 6–8%' },
+    { label: 'Combined Potential', value: '12–16%' },
     { label: 'RCC Option',   value: 'On request with additional charges' },
     { label: 'Status',       value: 'Available Now' },
   ];
@@ -581,10 +583,10 @@ const MetroIndustrialPark = () => {
                   }`}>
                     <div className="flex items-center gap-3 mb-2">
                       <TrendingUp className="text-green-500" size={22} />
-                      <h3 className="text-base font-bold theme-text-primary">Expected ROI</h3>
+                      <h3 className="text-base font-bold theme-text-primary">Rental Yield + Appreciation Potential</h3>
                     </div>
-                    <p className="text-3xl font-extrabold text-green-500 mb-1" style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}>6–8%</p>
-                    <p className="theme-text-tertiary text-xs">Annual return on investment</p>
+                    <p className="text-3xl font-extrabold text-green-500 mb-1" style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}>12–16%</p>
+                    <p className="theme-text-tertiary text-xs">6–8% rental yield + up to 6–8% yearly appreciation</p>
                   </div>
 
                   {/* Contact */}

@@ -5,6 +5,9 @@
 /* ===== THEME VARIABLES ===== */
 :root {
   color-scheme: light;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Bebas Neue', 'Plus Jakarta Sans', sans-serif;
+  --font-accent: 'Instrument Serif', Georgia, serif;
 
   /* Light Theme (White/Default) */
   --bg-primary: #ffffff;
@@ -67,9 +70,17 @@
   body {
     @apply antialiased;
     margin: 0;
+    font-family: var(--font-body);
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0.03em;
   }
 
   /* Smooth transitions for interactive/theme-aware elements */
@@ -158,6 +169,20 @@
   
   .theme-overlay-dark {
     background-color: var(--overlay-dark);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.03em;
+  }
+
+  .font-accent {
+    font-family: var(--font-accent);
+    font-style: italic;
   }
 }
 

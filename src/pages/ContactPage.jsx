@@ -204,7 +204,7 @@ const ContactPage = () => {
               {[
                 '✓ 100+ Industrial Sheds',
                 '✓ Since 2020',
-                '✓ 6–8% ROI',
+                '✓ 12–16% Rental + Appreciation Potential',
                 '✓ 90 Day Possession Guarantee',
               ].map((t) => (
                 <span key={t}>{t}</span>

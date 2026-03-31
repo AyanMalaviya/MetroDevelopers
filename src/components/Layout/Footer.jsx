@@ -53,7 +53,7 @@ const FaqRow = ({ item, isDark }) => {
 
 const FAQ_ITEMS = [
   { q: 'What sizes are available?',         a: 'Units range from 4,000 to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park.' },
-  { q: 'What is the expected ROI?',          a: '6–8% annual return on investment for industrial sheds at Metro Industrial Park.' },
+  { q: 'What is the expected ROI?',          a: 'Rental yield is 6–8%, yearly appreciation can add up to 6–8%, and combined potential is 12–16% for industrial sheds at Metro Industrial Park.' },
   { q: 'How long does possession take?',     a: 'Possession is available within 90 days of booking.' },
   { q: 'Is RCC construction available?',     a: 'Available on request with additional charges.' },
   { q: 'What amenities are included?',       a: '24x7 water, CCTV, security, weigh bridge, 60ft roads, 30–35ft ceilings.' },
@@ -147,7 +147,7 @@ const Footer = () => {
                 />
               </div>
               <div className="leading-tight">
-                <span className="block text-base font-bold theme-text-primary">Metro Enterprise</span>
+                <span className="block text-base font-bold theme-text-primary font-display">Metro Enterprise</span>
                 <span className="block text-[11px] theme-text-secondary">
                   Metro Industrial Park · Ahmedabad
                 </span>

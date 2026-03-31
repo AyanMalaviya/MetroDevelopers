@@ -171,7 +171,7 @@ const FloatingActionMenu = () => {
                 }`}
               aria-label="Explore more industrial shed options"
             >
-              <span className="text-[8px] font-black tracking-[0.15em] uppercase whitespace-nowrap">
+              <span className="text-[8px] font-black tracking-[0.15em] uppercase whitespace-nowrap font-display">
                 Explore More
               </span>
               <span className="relative flex h-2 w-2 flex-shrink-0">

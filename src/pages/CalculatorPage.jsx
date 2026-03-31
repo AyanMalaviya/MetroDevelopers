@@ -270,7 +270,7 @@ const Calculator = () => {
                   transition={{ delay: 0.4 }}
                   className={`mt-4 flex flex-wrap gap-4 text-xs font-semibold ${isDark ? 'text-gray-600' : 'text-gray-400'}`}
                 >
-                  {['✓ 6–8% Annual ROI', '✓ From ₹4,000 sq.ft', '✓ 90 Day Possession', '✓ 63 Sheds'].map(t => (
+                  {['✓ 12–16% Rental + Appreciation Potential', '✓ From ₹4,000 sq.ft', '✓ 90 Day Possession', '✓ 63 Sheds'].map(t => (
                     <span key={t}>{t}</span>
                   ))}
                 </motion.div>

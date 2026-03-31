@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     question: 'What is the expected ROI?',
-    answer: 'The expected annual return on investment is 6–8% for industrial sheds and warehouses at Metro Industrial Park, Moraiya.',
+    answer: 'Rental yield is 6–8%, yearly appreciation can add up to 6–8%, and the combined potential is 12–16% for industrial sheds and warehouses at Metro Industrial Park, Moraiya.',
   },
   {
     question: 'Is RCC construction available?',

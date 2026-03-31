@@ -92,7 +92,7 @@ const Navbar = () => {
               <div className="absolute inset-0 rounded-xl bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10" />
             </div>
             <div className="leading-tight">
-              <span className={`block text-sm sm:text-base font-extrabold transition-colors ${
+              <span className={`block text-sm sm:text-base font-extrabold font-display transition-colors ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
                 Metro Enterprise
