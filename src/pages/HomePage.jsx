@@ -137,8 +137,8 @@ const investments = [
   {
     name: 'Industrial Shed',
     icon: Factory,
-    yield: '12–16%',
-    yieldNote: '6–8% rental yield + up to 6–8% appreciation',
+    yield: '16-20%',
+    yieldNote: '6–8% rental yield + up to 10–12% appreciation',
     gradient: 'from-red-500 via-orange-500 to-amber-500',
     border: 'border-red-400/60',
     textAccent: 'text-orange-500',
@@ -346,7 +346,7 @@ const InvestmentSection = ({ isDark }) => {
           <p className={`text-base sm:text-lg max-w-2xl mx-auto leading-relaxed ${bodyColor}`}>
             While others watch their FDs lose real value to inflation, smart investors are locking in
             <span className="text-orange-500 font-semibold"> 6–8% rental yields</span> plus
-            <span className="text-orange-500 font-semibold"> up to 6–8% yearly appreciation</span>.
+            <span className="text-orange-500 font-semibold"> up to 10-12% yearly appreciation</span>.
           </p>
         </motion.div>
 
@@ -566,8 +566,8 @@ const HomePage = () => {
   return (
     <>
       <SEO
-        title="Industrial Sheds for Sale and Lease in Moraiya, Changodar, Ahmedabad | Metro Enterprise"
-        description="Explore industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad. 4,000 to 50,000 sq.ft units with 60 ft roads, CCTV, water supply, and fast possession options."
+        title="Industrial Sheds for Sale/Lease in Moraiya, Changodar, Ahmedabad at Metro Industrial Park"
+        description="Industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad. 4,000 to 50,000 sq.ft units with 60 ft roads, CCTV, water supply, and fast possession."
         keywords="industrial shed moraiya, industrial shed changodar, industrial shed ahmedabad, warehouse for lease moraiya, warehouse for rent changodar, factory shed ahmedabad, industrial property near sarkhej bavla highway"
         canonical="/"
         ogImage="/images/metro-industrial-park-site-map-moraiya-gujarat.jpg"

@@ -180,8 +180,8 @@ const MetroIndustrialPark = () => {
     { label: 'Road Width',   value: '60 feet' },
     { label: 'Possession',   value: '90 days' },
     { label: 'Rental Yield', value: '6–8%' },
-    { label: 'Yearly Appreciation', value: 'Up to 6–8%' },
-    { label: 'Combined Potential', value: '12–16%' },
+    { label: 'Yearly Appreciation', value: 'Up to 10-12%' },
+    { label: 'Combined Potential', value: '16-20%' },
     { label: 'RCC Option',   value: 'On request with additional charges' },
     { label: 'Status',       value: 'Available Now' },
   ];
@@ -235,7 +235,7 @@ const MetroIndustrialPark = () => {
   return (
     <>
       <SEO
-        title="Industrial Sheds in Moraiya, Changodar, Ahmedabad | Sale and Lease Options"
+        title="Industrial Sheds in Moraiya, Changodar, Ahmedabad for Sale and Lease"
         description="Find industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad with 4,000 to 50,000 sq.ft units, 60 ft internal roads, CCTV security, and quick possession timelines."
         keywords="industrial shed in moraiya, industrial shed in changodar, warehouse in ahmedabad, factory shed near changodar, industrial property near sarkhej bavla highway"
         canonical="/metro-industrial-park"
@@ -585,8 +585,8 @@ const MetroIndustrialPark = () => {
                       <TrendingUp className="text-green-500" size={22} />
                       <h3 className="text-base font-bold theme-text-primary">Rental Yield + Appreciation Potential</h3>
                     </div>
-                    <p className="text-3xl font-extrabold text-green-500 mb-1" style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}>12–16%</p>
-                    <p className="theme-text-tertiary text-xs">6–8% rental yield + up to 6–8% yearly appreciation</p>
+                    <p className="text-3xl font-extrabold text-green-500 mb-1" style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}>16-20%</p>
+                    <p className="theme-text-tertiary text-xs">6–8% rental yield + up to 10-12% yearly appreciation</p>
                   </div>
 
                   {/* Contact */}
