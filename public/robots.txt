@@ -5,6 +5,7 @@ Allow: /
 # Disallow admin or private pages (if any)
 Disallow: /admin/
 Disallow: /private/
+Disallow: /records
 
 # Sitemap location
 Sitemap: https://www.metrodevelopers.co.in/sitemap.xml

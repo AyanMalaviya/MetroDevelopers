@@ -1,30 +1,91 @@
 // src/components/Calculator/SimpleCalculator.jsx
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
-import { Delete, RotateCcw, Hash } from 'lucide-react';
+import { Delete, Hash, Lock, Unlock } from 'lucide-react';
+import { unlockRecords } from '../../services/recordsService';
 
-/* ─── Motion variants ─── */
 const fadeUp = {
-  hidden:  { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
 
 export default function SimpleCalculator() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const navigate = useNavigate();
+  const secretBufferRef = useRef('');
+  const statusTimerRef = useRef(null);
+  const unlockCodeLength = 8;
 
-  /* ── All original state (unchanged) ── */
-  const [display, setDisplay]       = useState('0');
+  const [display, setDisplay] = useState('0');
   const [expression, setExpression] = useState('');
   const [lastResult, setLastResult] = useState(null);
+  const [unlockStatus, setUnlockStatus] = useState('');
 
-  /* ── All original handlers (unchanged) ── */
+  const resetUnlockBuffer = () => {
+    secretBufferRef.current = '';
+  };
+
+  const clearUnlockStatusTimer = () => {
+    if (statusTimerRef.current) {
+      window.clearTimeout(statusTimerRef.current);
+      statusTimerRef.current = null;
+    }
+  };
+
+  const setTemporaryStatus = (message, delay = 2200) => {
+    clearUnlockStatusTimer();
+    setUnlockStatus(message);
+    statusTimerRef.current = window.setTimeout(() => {
+      setUnlockStatus('');
+      statusTimerRef.current = null;
+    }, delay);
+  };
+
+  const submitSecret = async (code) => {
+    try {
+      setTemporaryStatus('Checking access...', 1200);
+      await unlockRecords(code);
+      resetUnlockBuffer();
+      setUnlockStatus('');
+      navigate('/records', { replace: true });
+    } catch {
+      resetUnlockBuffer();
+      setTemporaryStatus('Access denied', 2200);
+    }
+  };
+
+  const syncUnlockBuffer = (nextExpression) => {
+    if (/^\d+$/.test(nextExpression)) {
+      secretBufferRef.current = nextExpression;
+      return;
+    }
+
+    resetUnlockBuffer();
+  };
+
   const handleNumber = (num) => {
+    const nextExpression = (display === '0' || lastResult !== null)
+      ? num
+      : expression + num;
+
     if (display === '0' || lastResult !== null) {
-      setDisplay(num); setExpression(num); setLastResult(null);
+      setDisplay(num);
+      setExpression(num);
+      setLastResult(null);
     } else {
-      setDisplay(display + num); setExpression(expression + num);
+      setDisplay(display + num);
+      setExpression(expression + num);
+    }
+
+    syncUnlockBuffer(nextExpression);
+
+    if (secretBufferRef.current.length === unlockCodeLength) {
+      const code = secretBufferRef.current;
+      resetUnlockBuffer();
+      submitSecret(code);
     }
   };
 
@@ -33,10 +94,14 @@ export default function SimpleCalculator() {
     const lastChar = expression.slice(-1);
     if (expression === '' && op !== '-') return;
     if (['+', '-', '×', '÷', '%'].includes(lastChar)) {
-      setExpression(expression.slice(0, -1) + op); setDisplay(op);
+      setExpression(expression.slice(0, -1) + op);
+      setDisplay(op);
     } else {
-      setExpression(expression + op); setDisplay(op);
+      setExpression(expression + op);
+      setDisplay(op);
     }
+
+    resetUnlockBuffer();
   };
 
   const handleDecimal = () => {
@@ -44,18 +109,26 @@ export default function SimpleCalculator() {
     const parts = expression.split(/[+\-×÷%()]/);
     const currentNumber = parts[parts.length - 1];
     if (!currentNumber.includes('.')) {
-      setDisplay(display + '.'); setExpression(expression + '.');
+      setDisplay(display + '.');
+      setExpression(expression + '.');
     }
+
+    resetUnlockBuffer();
   };
 
   const handleBracket = (bracket) => {
     setLastResult(null);
     setExpression(expression + bracket);
     setDisplay(bracket);
+
+    resetUnlockBuffer();
   };
 
   const handleClear = () => {
-    setDisplay('0'); setExpression(''); setLastResult(null);
+    setDisplay('0');
+    setExpression('');
+    setLastResult(null);
+    resetUnlockBuffer();
   };
 
   const handleBackspace = () => {
@@ -64,17 +137,21 @@ export default function SimpleCalculator() {
     setExpression(newExpression);
     setDisplay(newExpression.slice(-1) || '0');
     setLastResult(null);
+
+    syncUnlockBuffer(newExpression);
   };
 
   const evaluateExpression = (expr) => {
     try {
-      let calcExpr = expr
+      const calcExpr = expr
         .replace(/×/g, '*')
         .replace(/÷/g, '/')
         .replace(/%/g, '/100');
       const result = Function('"use strict"; return (' + calcExpr + ')')();
       return result;
-    } catch { return 'Error'; }
+    } catch {
+      return 'Error';
+    }
   };
 
   const handleEquals = () => {
@@ -82,17 +159,28 @@ export default function SimpleCalculator() {
     try {
       const result = evaluateExpression(expression);
       if (result === 'Error' || isNaN(result) || !isFinite(result)) {
-        setDisplay('Error'); setLastResult(null);
+        setDisplay('Error');
+        setLastResult(null);
       } else {
         const formatted = parseFloat(result.toFixed(10)).toString();
-        setDisplay(formatted); setLastResult(formatted); setExpression(formatted);
+        setDisplay(formatted);
+        setLastResult(formatted);
+        setExpression(formatted);
       }
-    } catch { setDisplay('Error'); setLastResult(null); }
+    } catch {
+      setDisplay('Error');
+      setLastResult(null);
+    }
+
+    resetUnlockBuffer();
   };
 
-  /* ══════════════════════════════════════════
-     BUTTON COMPONENT — redesigned
-     ══════════════════════════════════════════ */
+  useEffect(() => {
+    return () => {
+      clearUnlockStatusTimer();
+    };
+  }, []);
+
   const Btn = ({ children, onClick, variant = 'num', wide = false }) => {
     const base = `
       relative flex items-center justify-center
@@ -106,17 +194,13 @@ export default function SimpleCalculator() {
       num: isDark
         ? 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700 hover:border-gray-600'
         : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-200',
-
       op: isDark
         ? 'bg-brand-red/15 text-brand-red hover:bg-brand-red/25 border border-brand-red/20'
         : 'bg-brand-red/10 text-brand-red hover:bg-brand-red/20 border border-brand-red/15',
-
       action: isDark
         ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
         : 'bg-gray-200 text-gray-700 hover:bg-gray-300 border border-gray-200',
-
-      equals:
-        'bg-brand-red hover:bg-red-700 text-white border border-brand-red shadow-lg shadow-brand-red/25 hover:scale-[1.01]',
+      equals: 'bg-brand-red hover:bg-red-700 text-white border border-brand-red shadow-lg shadow-brand-red/25 hover:scale-[1.01]',
     };
 
     return (
@@ -126,16 +210,12 @@ export default function SimpleCalculator() {
     );
   };
 
-  /* display value is too long → shrink font */
   const displayFontSize = display.length > 12
     ? 'text-lg'
     : display.length > 8
       ? 'text-2xl'
       : 'text-3xl';
 
-  /* ══════════════════════════════════════════
-     RENDER
-     ══════════════════════════════════════════ */
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -145,8 +225,6 @@ export default function SimpleCalculator() {
         isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'
       }`}
     >
-
-      {/* ── Card header ── */}
       <div className={`flex items-center gap-3 px-5 py-4 border-b ${
         isDark ? 'border-gray-800 bg-gray-900/80' : 'border-gray-100 bg-gray-50/80'
       }`}>
@@ -166,19 +244,15 @@ export default function SimpleCalculator() {
       </div>
 
       <div className="p-4">
-
-        {/* ── Display ── */}
         <div className={`mb-4 rounded-2xl border overflow-hidden ${
           isDark ? 'bg-gray-950 border-gray-800' : 'bg-gray-50 border-gray-200'
         }`}>
-          {/* Expression strip */}
           <div className={`px-4 pt-3 pb-1 min-h-[28px] text-right text-xs font-mono truncate ${
             isDark ? 'text-gray-600' : 'text-gray-400'
           }`}>
             {expression || ' '}
           </div>
 
-          {/* Main result */}
           <div className={`px-4 pb-4 text-right font-extrabold tabular-nums leading-none ${displayFontSize} ${
             display === 'Error'
               ? 'text-brand-red'
@@ -187,7 +261,6 @@ export default function SimpleCalculator() {
             {display}
           </div>
 
-          {/* Last result indicator */}
           {lastResult !== null && (
             <div className={`px-4 pb-2 text-right text-[10px] font-semibold ${
               isDark ? 'text-green-500/60' : 'text-green-600/70'
@@ -197,10 +270,7 @@ export default function SimpleCalculator() {
           )}
         </div>
 
-        {/* ── Button grid ── */}
         <div className="grid grid-cols-4 gap-2">
-
-          {/* Row 1: AC, ⌫, (, ) */}
           <Btn variant="action" onClick={handleClear}>
             <span className="text-brand-red font-extrabold text-sm">AC</span>
           </Btn>
@@ -210,31 +280,26 @@ export default function SimpleCalculator() {
           <Btn variant="op" onClick={() => handleBracket('(')}>(</Btn>
           <Btn variant="op" onClick={() => handleBracket(')')}>)</Btn>
 
-          {/* Row 2: 7 8 9 ÷ */}
           <Btn onClick={() => handleNumber('7')}>7</Btn>
           <Btn onClick={() => handleNumber('8')}>8</Btn>
           <Btn onClick={() => handleNumber('9')}>9</Btn>
           <Btn variant="op" onClick={() => handleOperator('÷')}>÷</Btn>
 
-          {/* Row 3: 4 5 6 × */}
           <Btn onClick={() => handleNumber('4')}>4</Btn>
           <Btn onClick={() => handleNumber('5')}>5</Btn>
           <Btn onClick={() => handleNumber('6')}>6</Btn>
           <Btn variant="op" onClick={() => handleOperator('×')}>×</Btn>
 
-          {/* Row 4: 1 2 3 − */}
           <Btn onClick={() => handleNumber('1')}>1</Btn>
           <Btn onClick={() => handleNumber('2')}>2</Btn>
           <Btn onClick={() => handleNumber('3')}>3</Btn>
           <Btn variant="op" onClick={() => handleOperator('-')}>−</Btn>
 
-          {/* Row 5: 0 . % + */}
           <Btn onClick={() => handleNumber('0')}>0</Btn>
           <Btn onClick={handleDecimal}>.</Btn>
           <Btn variant="op" onClick={() => handleOperator('%')}>%</Btn>
           <Btn variant="op" onClick={() => handleOperator('+')}>+</Btn>
 
-          {/* Row 6: = full width */}
           <Btn variant="equals" wide onClick={handleEquals}>
             <span className="flex items-center gap-2">
               <span className="text-lg">=</span>
@@ -243,13 +308,30 @@ export default function SimpleCalculator() {
           </Btn>
         </div>
 
-        {/* ── Example hint ── */}
         <div className={`mt-4 px-3 py-2.5 rounded-xl text-[11px] ${
           isDark ? 'bg-gray-800/60 text-gray-500' : 'bg-gray-50 text-gray-400 border border-gray-100'
         }`}>
           <p className="font-semibold mb-0.5">Example</p>
           <p className="font-mono">(100+50)×2÷3 = 100</p>
-        </div>
+\        </div>
+
+        {unlockStatus && (
+          <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-semibold ${
+            unlockStatus === 'Access denied'
+              ? isDark
+                ? 'bg-red-950/40 text-red-200'
+                : 'bg-red-50 text-red-700'
+              : isDark
+                ? 'bg-gray-800 text-gray-300'
+                : 'bg-gray-50 text-gray-500'
+          }`}>
+            {unlockStatus === 'Access denied'
+              ? <Lock className="h-3.5 w-3.5 text-brand-red" />
+              : <Unlock className="h-3.5 w-3.5 text-brand-red" />
+            }
+            <span>{unlockStatus}</span>
+          </div>
+        )}
       </div>
     </motion.div>
   );

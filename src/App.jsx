@@ -7,12 +7,14 @@ import MetroIndustrialPark from './components/Projects/MetroIndustrialPark';
 import ContactPage from './pages/ContactPage';
 import Calculator from './pages/CalculatorPage';
 import SiteMapPage from './pages/SiteMapPage';
+import RecordsPage from './pages/RecordsPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import FloatingActionMenu from './components/FloatingActionMenu'; // Updated import
 import ScrollToTop from './components/ScrollToTop';
 import MetroArcade from './components/Projects/MetroArcade';
 import NotFound from './pages/NotFound';
 import ReviewPrompt from './components/Review';
+import RecordsAccessGate from './components/RecordsAccessGate';
 
 function App() {
   return (
@@ -30,6 +32,14 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
+              <Route
+                path="/records"
+                element={(
+                  <RecordsAccessGate>
+                    <RecordsPage />
+                  </RecordsAccessGate>
+                )}
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
