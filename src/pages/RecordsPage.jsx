@@ -18,7 +18,7 @@ import {
   UserRound,
   Users,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import SEO from '../components/SEO/SEO';
 import {
@@ -77,6 +77,8 @@ const RecordsPage = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const navigate = useNavigate();
+  const { slug } = useParams();
+  const normalizedSlug = String(slug || '').trim().toLowerCase();
 
   const [records, setRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +93,7 @@ const RecordsPage = () => {
   useEffect(() => {
     const loadRecords = async () => {
       try {
-        const data = await fetchRecords();
+        const data = await fetchRecords(normalizedSlug);
         setRecords(Array.isArray(data.records) ? data.records : []);
         setCanAppend(Boolean(data.canAppend));
         setError('');
@@ -103,8 +105,14 @@ const RecordsPage = () => {
       }
     };
 
+    if (!/^[a-f0-9]{8}$/.test(normalizedSlug)) {
+      setError('Invalid access URL.');
+      setIsLoading(false);
+      return;
+    }
+
     loadRecords();
-  }, []);
+  }, [normalizedSlug]);
 
   const sortedRecords = useMemo(() => {
     return [...records].sort((left, right) => {
@@ -160,7 +168,7 @@ const RecordsPage = () => {
     setNotice('');
 
     try {
-      const data = await fetchRecords();
+      const data = await fetchRecords(normalizedSlug);
       setRecords(Array.isArray(data.records) ? data.records : []);
       setCanAppend(Boolean(data.canAppend));
       setNotice('Sheet synced successfully.');
@@ -181,7 +189,7 @@ const RecordsPage = () => {
       const data = await submitRecord({
         ...form,
         submittedAt: new Date().toISOString(),
-      });
+      }, normalizedSlug);
 
       if (data.record) {
         setRecords((previous) => [data.record, ...previous]);

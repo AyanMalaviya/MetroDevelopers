@@ -9,7 +9,9 @@ Currently, two official plugins are available:
 
 ## Private Records Dashboard
 
-The hidden records page lives at `/records` and is protected by the calculator unlock flow plus a server-issued HttpOnly cookie.
+The hidden records page now opens on a random 8-character route like `/records/a1b2c3d4` and is protected by the calculator unlock flow plus a server-issued HttpOnly cookie.
+
+By default, the hidden session expires after 10 minutes. You can override it with `RECORDS_SESSION_TTL_HOURS` on Vercel if needed.
 
 Current demo unlock code: `13579024`.
 
@@ -26,7 +28,9 @@ To enable it, set these environment variables on Vercel or your deployment targe
 
 The Google Sheet webhook should accept these fields: `recordId`, `submittedAt`, `role`, `fullName`, `phone`, `email`, `companyName`, `shedNumbers`, `dealType`, `agreementStatus`, and `notes`.
 
-To open the page, load `/calculator`, tap the simple calculator digits `13579024` in order, and the hidden page will open automatically.
+To open the page, load `/calculator`, tap the simple calculator digits `13579024` in order, and the hidden page will open automatically on a fresh random URL.
+
+The old static `/records` path is kept only as a redirect and no longer serves the dashboard itself.
 
 For local testing, use `vercel dev` or a Vercel preview deployment. Plain `vite dev` does not serve the `/api/records` function.
 

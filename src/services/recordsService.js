@@ -32,9 +32,15 @@ const requestJson = async (url, options = {}) => {
   return data;
 };
 
-export const getRecordsSession = () => requestJson(`${API_PATH}?action=session`);
+const withSlug = (path, slug) => {
+  if (!slug) return path;
+  const separator = path.includes('?') ? '&' : '?';
+  return `${path}${separator}slug=${encodeURIComponent(slug)}`;
+};
 
-export const fetchRecords = () => requestJson(API_PATH);
+export const getRecordsSession = (slug) => requestJson(withSlug(`${API_PATH}?action=session`, slug));
+
+export const fetchRecords = (slug) => requestJson(withSlug(API_PATH, slug));
 
 export const unlockRecords = (code) => requestJson(API_PATH, {
   method: 'POST',
@@ -57,7 +63,7 @@ export const logoutRecords = () => requestJson(API_PATH, {
   }),
 });
 
-export const submitRecord = (record) => requestJson(API_PATH, {
+export const submitRecord = (record, slug) => requestJson(withSlug(API_PATH, slug), {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',

@@ -47,10 +47,11 @@ export default function SimpleCalculator() {
   const submitSecret = async (code) => {
     try {
       setTemporaryStatus('Checking access...', 1200);
-      await unlockRecords(code);
+      const data = await unlockRecords(code);
       resetUnlockBuffer();
       setUnlockStatus('');
-      navigate('/records', { replace: true });
+      const accessPath = data.accessPath || (data.accessSlug ? `/records/${data.accessSlug}` : '/calculator');
+      navigate(accessPath, { replace: true });
     } catch {
       resetUnlockBuffer();
       setTemporaryStatus('Access denied', 2200);

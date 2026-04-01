@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { getRecordsSession } from '../services/recordsService';
@@ -8,13 +8,23 @@ const RecordsAccessGate = ({ children }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const location = useLocation();
+  const { slug } = useParams();
 
   const [status, setStatus] = useState('loading');
 
   useEffect(() => {
     let isMounted = true;
 
-    getRecordsSession()
+    const normalizedSlug = String(slug || '').trim().toLowerCase();
+
+    if (!/^[a-f0-9]{8}$/.test(normalizedSlug)) {
+      setStatus('blocked');
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    getRecordsSession(normalizedSlug)
       .then(() => {
         if (isMounted) setStatus('allowed');
       })
@@ -25,7 +35,7 @@ const RecordsAccessGate = ({ children }) => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [slug]);
 
   if (status === 'loading') {
     return (

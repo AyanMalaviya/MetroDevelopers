@@ -2,7 +2,9 @@ import crypto from 'crypto';
 import Papa from 'papaparse';
 
 const COOKIE_NAME = 'metro_records_session';
-const DEFAULT_TTL_HOURS = 8;
+const DEFAULT_TTL_MINUTES = 10;
+const DEFAULT_TTL_HOURS = DEFAULT_TTL_MINUTES / 60;
+const ACCESS_SLUG_LENGTH = 8;
 
 const getEnv = (name, fallback = '') => process.env[name] || fallback;
 
@@ -35,6 +37,7 @@ const safeEqual = (left, right) => {
 
 const encodeBase64Url = (value) => Buffer.from(value).toString('base64url');
 const decodeBase64Url = (value) => Buffer.from(value, 'base64url').toString('utf8');
+const generateAccessSlug = () => crypto.randomBytes(ACCESS_SLUG_LENGTH / 2).toString('hex');
 
 const signPayload = (payload, secret) => crypto
   .createHmac('sha256', secret)
@@ -42,35 +45,42 @@ const signPayload = (payload, secret) => crypto
   .digest('base64url');
 
 const createSessionToken = (secret, ttlHours = DEFAULT_TTL_HOURS) => {
+  const slug = generateAccessSlug();
+
   const payload = JSON.stringify({
     exp: Date.now() + (ttlHours * 60 * 60 * 1000),
     scope: 'records',
+    slug,
   });
 
   const encodedPayload = encodeBase64Url(payload);
   const signature = signPayload(encodedPayload, secret);
 
-  return `${encodedPayload}.${signature}`;
+  return {
+    token: `${encodedPayload}.${signature}`,
+    slug,
+  };
 };
 
-const verifySessionToken = (token, secret) => {
+const getSessionPayload = (token, secret) => {
   if (!token || !secret) return false;
 
   const [encodedPayload, signature] = String(token).split('.');
 
-  if (!encodedPayload || !signature) return false;
+  if (!encodedPayload || !signature) return null;
 
   const expectedSignature = signPayload(encodedPayload, secret);
 
-  if (!safeEqual(signature, expectedSignature)) return false;
+  if (!safeEqual(signature, expectedSignature)) return null;
 
   try {
     const payload = JSON.parse(decodeBase64Url(encodedPayload));
-    if (payload.scope !== 'records') return false;
-    if (!payload.exp || Date.now() > payload.exp) return false;
-    return true;
+    if (payload.scope !== 'records') return null;
+    if (!payload.exp || Date.now() > payload.exp) return null;
+    if (!payload.slug || typeof payload.slug !== 'string') return null;
+    return payload;
   } catch {
-    return false;
+    return null;
   }
 };
 
@@ -88,7 +98,19 @@ const parseCookies = (cookieHeader = '') => Object.fromEntries(
 
 const getAuthToken = (req) => parseCookies(req.headers.cookie || '')[COOKIE_NAME] || '';
 
-const isAuthorized = (req) => verifySessionToken(getAuthToken(req), getEnv('RECORDS_SESSION_SECRET'));
+const isAuthorized = (req, expectedSlug = '') => {
+  const payload = getSessionPayload(getAuthToken(req), getEnv('RECORDS_SESSION_SECRET'));
+
+  if (!payload) {
+    return false;
+  }
+
+  if (expectedSlug && payload.slug !== expectedSlug) {
+    return false;
+  }
+
+  return payload;
+};
 
 const setAuthCookie = (res, token, ttlHours = DEFAULT_TTL_HOURS) => {
   const cookiePieces = [
@@ -150,6 +172,8 @@ const pickValue = (row, keys) => {
 
   return '';
 };
+
+const isValidAccessSlug = (slug) => /^[a-f0-9]{8}$/.test(String(slug || '').trim().toLowerCase());
 
 const resolveCsvUrl = (csvUrl, req) => {
   if (!csvUrl) {
@@ -279,9 +303,23 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
+    const requestedSlug = String(req.query?.slug || '').trim().toLowerCase();
+
+    if (!isValidAccessSlug(requestedSlug)) {
+      toJson(res, 401, { error: 'Unauthorized' });
+      return;
+    }
+
     if (req.query?.action === 'session') {
-      if (isAuthorized(req)) {
-        toJson(res, 200, { authenticated: true, canAppend: canAppendToSheet() });
+      const sessionPayload = isAuthorized(req, requestedSlug);
+
+      if (sessionPayload) {
+        toJson(res, 200, {
+          authenticated: true,
+          canAppend: canAppendToSheet(),
+          accessSlug: sessionPayload.slug,
+          accessPath: `/records/${sessionPayload.slug}`,
+        });
         return;
       }
 
@@ -289,18 +327,28 @@ export default async function handler(req, res) {
       return;
     }
 
-    if (!isAuthorized(req)) {
+    const sessionPayload = isAuthorized(req, requestedSlug);
+
+    if (!sessionPayload) {
       toJson(res, 401, { error: 'Unauthorized' });
       return;
     }
 
     try {
       const records = await loadSheetRecords(req);
-      toJson(res, 200, { authenticated: true, canAppend: canAppendToSheet(), records });
+      toJson(res, 200, {
+        authenticated: true,
+        canAppend: canAppendToSheet(),
+        accessSlug: sessionPayload.slug,
+        accessPath: `/records/${sessionPayload.slug}`,
+        records,
+      });
     } catch (error) {
       toJson(res, 500, {
         authenticated: true,
         canAppend: canAppendToSheet(),
+        accessSlug: sessionPayload.slug,
+        accessPath: `/records/${sessionPayload.slug}`,
         error: error.message || 'Unable to load records.',
       });
     }
@@ -337,10 +385,15 @@ export default async function handler(req, res) {
       }
 
       const ttlHours = Number(getEnv('RECORDS_SESSION_TTL_HOURS', String(DEFAULT_TTL_HOURS))) || DEFAULT_TTL_HOURS;
-      const token = createSessionToken(sessionSecret, ttlHours);
+      const { token, slug } = createSessionToken(sessionSecret, ttlHours);
       setAuthCookie(res, token, ttlHours);
 
-      toJson(res, 200, { authenticated: true, expiresInHours: ttlHours });
+      toJson(res, 200, {
+        authenticated: true,
+        expiresInHours: ttlHours,
+        accessSlug: slug,
+        accessPath: `/records/${slug}`,
+      });
       return;
     }
 
@@ -351,7 +404,14 @@ export default async function handler(req, res) {
     }
 
     if (action === 'append') {
-      if (!isAuthorized(req)) {
+      const requestedSlug = String(req.query?.slug || '').trim().toLowerCase();
+
+      if (!isValidAccessSlug(requestedSlug)) {
+        toJson(res, 401, { error: 'Unauthorized' });
+        return;
+      }
+
+      if (!isAuthorized(req, requestedSlug)) {
         toJson(res, 401, { error: 'Unauthorized' });
         return;
       }
