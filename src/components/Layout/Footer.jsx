@@ -271,7 +271,15 @@ const Footer = () => {
               ↑ Back to top
             </a>
             <span className={`text-xs ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-              Developed by <span className="text-brand-red font-semibold">Ayan Malaviya</span>
+              Developed by{' '}
+              <a
+                href="https://www.instagram.com/ayanmalaviya"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-red font-semibold hover:underline underline-offset-2 transition-opacity hover:opacity-80"
+              >
+                Ayan Malaviya
+              </a>
             </span>
           </div>
         </div>
