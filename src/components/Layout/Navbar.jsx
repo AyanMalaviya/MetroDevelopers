@@ -83,11 +83,11 @@ const Navbar = () => {
 
           {/* ── Logo ── */}
           <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
-            <div className="relative flex-shrink-0 mt-0.5">
+            <div className="relative flex-shrink-0">
               <img
-                src="/MDLogoBGH.png"
+                src="/icons/icon-96x96.png"
                 alt="Metro Industrial Park"
-                className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
+                className="mt-1 h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 rounded-xl bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10" />
             </div>
@@ -98,7 +98,7 @@ const Navbar = () => {
                 Metro Enterprise
               </span>
               <span className={`block text-[10px] font-medium transition-colors ${
-                isDark ? 'text-gray-400' : 'text-gray-600' // ✅ unchanged — both pass
+                isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 Industrial Sheds · Lease &amp; Sale
               </span>
@@ -117,7 +117,7 @@ const Navbar = () => {
                       ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
                       : isDark
                         ? 'text-gray-400 hover:text-white hover:bg-gray-800/70'
-                        : 'text-gray-600 hover:text-brand-red hover:bg-gray-100' // ✅ unchanged — gray-600 passes
+                        : 'text-gray-600 hover:text-brand-red hover:bg-gray-100' 
                   }`
                 }
               >
@@ -351,7 +351,6 @@ const Navbar = () => {
 
                 {/* Panel header */}
                 <div className={`px-2 pb-4 mb-2 border-b ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
-                  {/* FIX 3: gray-600→gray-500 (dark) · gray-400→gray-500 (light) */}
                   <p className={`text-[10px] font-bold uppercase tracking-widest ${
                     isDark ? 'text-gray-500' : 'text-gray-500'
                   }`}>
@@ -376,7 +375,6 @@ const Navbar = () => {
                             ? 'bg-brand-red text-white shadow-md shadow-brand-red/25'
                             : isDark
                               ? 'text-gray-300 hover:text-white hover:bg-gray-800/70'
-                              // FIX 4: gray-400→gray-600 in light — primary nav text must be legible
                               : 'text-gray-500 hover:text-brand-red hover:bg-gray-100'
                         }`
                       }
@@ -403,7 +401,6 @@ const Navbar = () => {
                   transition={{ delay: navItems.length * 0.05 + 0.05, duration: 0.3 }}
                   className={`mt-3 pt-3 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}
                 >
-                  {/* FIX 5: gray-600→gray-500 (dark) · gray-400→gray-500 (light) */}
                   <p className={`text-[10px] font-bold uppercase tracking-widest px-2 mb-3 ${
                     isDark ? 'text-gray-500' : 'text-gray-500'
                   }`}>
@@ -452,7 +449,6 @@ const Navbar = () => {
                       </div>
                       <div>
                         <p className="text-xs font-bold">Get Directions</p>
-                        {/* FIX 6: gray-400→gray-500 (light) · gray-500→gray-400 (dark) */}
                         <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                           Moraiya, Ahmedabad
                         </p>
@@ -465,7 +461,6 @@ const Navbar = () => {
                 <div className={`mt-4 pt-4 border-t text-center ${
                   isDark ? 'border-gray-800' : 'border-gray-100'
                 }`}>
-                  {/* FIX 7: gray-700→gray-500 (dark) · gray-400→gray-500 (light) */}
                   <p className={`text-[10px] font-semibold ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                     Metro Industrial Park · Moraiya, Ahmedabad
                   </p>
