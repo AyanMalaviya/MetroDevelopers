@@ -107,28 +107,28 @@ export const plotCoordinates = {
     name: "Plot 14",
     area: "112.38 FT",
     section: "B",
-    center: { x: 565, y: 300 }
+    center: { x: 565, y: 310 }
   },
 
   "15": {
     name: "Plot 15",
     area: "112.38 FT",
     section: "B",
-    center: { x: 565, y: 356 }
+    center: { x: 565, y: 358 }
   },
 
   "16": {
     name: "Plot 16",
     area: "112.38 FT",
     section: "B",
-    center: { x: 565, y: 400 }
+    center: { x: 565, y: 402 }
   },
 
   "17": {
     name: "Plot 17",
     area: "112.38 FT",
     section: "B",
-    center: { x: 565, y: 440 }
+    center: { x: 565, y: 442 }
   },
 
   "18": {
@@ -153,28 +153,28 @@ export const plotCoordinates = {
     name: "Plot 35",
     area: "113.13 FT",
     section: "B",
-    center: { x: 465, y: 440 }
+    center: { x: 465, y: 442 }
   },
 
   "36": {
     name: "Plot 36",
     area: "113.13 FT",
     section: "B",
-    center: { x: 465, y: 398 }
+    center: { x: 465, y: 400 }
   },
 
   "37": {
     name: "Plot 37",
     area: "113.13 FT",
     section: "B",
-    center: { x: 465, y: 355 }
+    center: { x: 465, y: 358 }
   },
 
   "38": {
     name: "Plot 38",
     area: "113.13 FT",
     section: "B",
-    center: { x: 465, y: 312 }
+    center: { x: 465, y: 318 }
   },
 
   "39": {
@@ -368,70 +368,70 @@ export const plotCoordinates = {
     name: "Plot 47",
     area: "98.43 FT",
     section: "E",
-    center: { x: 340, y: 668 }
+    center: { x: 336, y: 668 }
   },
 
   "48": {
     name: "Plot 48",
     area: "98.43 FT",
     section: "E",
-    center: { x: 340, y: 710 }
+    center: { x: 336, y: 710 }
   },
 
   "49": {
     name: "Plot 49",
     area: "98.43 FT",
     section: "E",
-    center: { x: 340, y: 755 }
+    center: { x: 336, y: 755 }
   },
 
   "50": {
     name: "Plot 50",
     area: "98.43 FT",
     section: "E",
-    center: { x: 340, y: 795 }
+    center: { x: 336, y: 798 }
   },
 
   "51": {
     name: "Plot 51",
     area: "98.43 FT",
     section: "E",
-    center: { x: 340, y: 844 }
+    center: { x: 336, y: 848 }
   },
 
   "52": {
     name: "Plot 52",
     area: "83.25 FT",
     section: "E",
-    center: { x: 250, y: 844 }
+    center: { x: 248, y: 844 }
   },
 
   "53": {
     name: "Plot 53",
     area: "83.25 FT",
     section: "E",
-    center: { x: 250, y: 795 }
+    center: { x: 248, y: 795 }
   },
 
   "54": {
     name: "Plot 54",
     area: "93.36 FT",
     section: "E",
-    center: { x: 250, y: 752 }
+    center: { x: 248, y: 752 }
   },
 
   "55": {
     name: "Plot 55",
     area: "105.37 FT",
     section: "E",
-    center: { x: 250, y: 710 }
+    center: { x: 248, y: 710 }
   },
 
   "56": {
     name: "Plot 56",
     area: "105.37 FT",
     section: "E",
-    center: { x: 250, y: 668 }
+    center: { x: 248, y: 668 }
   },
 
   "57": {

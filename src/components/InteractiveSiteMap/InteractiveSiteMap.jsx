@@ -188,7 +188,7 @@ export default function InteractiveSiteMap() {
     setTimeout(() => {
       if (containerRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect();
-        const scale = Math.min(width / 910, height / 980) * 0.92;
+        const scale = Math.min(width / 910, height / 980) * 1;
         const x = (width  - 910 * scale) / 2;
         const y = (height - 980 * scale) / 2;
         setTfm({ x, y, scale });
@@ -603,7 +603,7 @@ export default function InteractiveSiteMap() {
                   draggable={false}
                 />
                 <svg className="absolute top-0 left-0"
-                  width="910" height="980" viewBox="0 0 910 980"
+                  width="910" height="980" viewBox="20 140 860 930"
                   style={{ pointerEvents: 'none' }}>
                   {renderDots()}
                 </svg>
@@ -809,7 +809,7 @@ export default function InteractiveSiteMap() {
               style={{ maxHeight: '68vh', width: 'auto' }}
               draggable={false}
             />
-            <svg viewBox="0 150 910 980" className="absolute inset-0 w-full h-full"
+            <svg viewBox="20 150 860 930" className="absolute inset-0 w-full h-full"
               style={{ pointerEvents: 'none' }}>
               {renderDots()}
             </svg>
