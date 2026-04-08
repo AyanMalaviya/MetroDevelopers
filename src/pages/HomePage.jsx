@@ -1,9 +1,9 @@
 // src/pages/HomePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
-  Phone, ArrowRight, ChevronDown, Star, Clock, Sparkles, TrendingUp,
+  Phone, ArrowRight, Star, Clock, Sparkles, TrendingUp,
   MapPin, LucideFactory, LucideLandPlot, Factory, LucideCctv, Droplets,
   Truck, BarChart3, Coins, Home, CheckCircle2, Banknote, Users, Globe,
   TrendingDown, Award, Leaf, Quote as QuoteIcon, Shield,
@@ -15,15 +15,9 @@ import CountUp from 'react-countup';
 import { propertySchema, faqSchema, imageObjectSchema, websiteSchema } from '../utils/schemas.js';
 
 
-/* ─── Slideshow ─── */
-const heroSlides = [
-  '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-  '/images/metro-industrial-park-entrance-security-moraiya.jpg',
-  '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
-  '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-  '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-  '/images/metro-industrial-park-office-changodar.jpg',
-];
+/* ─── Hero images — light vs dark ─── */
+const heroImageLight = '/images/metro-industrial-park-entrance-security-moraiya.jpg';
+const heroImageDark  = '/images/metro-industrial-park-entrance-dawn.jpg';
 
 
 /* ─── Feature colors ─── */
@@ -156,12 +150,12 @@ const investments = [
 
 /* ─── Investment reasons ─── */
 const investReasons = [
-  { icon: Users,     title: 'Job Creation',          gradient: 'from-emerald-500 to-teal-400',   glow: 'shadow-emerald-500/15', desc: 'Each shed lease supports 10–50 local jobs. Your capital fuels real economic activity, not just paper wealth.' },
-  { icon: Globe,     title: 'Make in India', gradient: 'from-blue-500 to-indigo-400',    glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
-  { icon: TrendingUp,title: 'Inflation-Proof Income', gradient: 'from-amber-500 to-orange-400',  glow: 'shadow-amber-500/15',   desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that beat inflation every year.' },
-  { icon: Shield,    title: 'Tangible Asset',         gradient: 'from-green-500 to-emerald-400',  glow: 'shadow-green-500/15',   desc: "Unlike FDs or gold ETFs, you own a real, insurable, income-generating structure with enduring land value beneath it." },
-  { icon: Award,     title: 'GST Input Credit',       gradient: 'from-violet-500 to-purple-400',  glow: 'shadow-violet-500/15',  desc: "Industrial lessees can claim full GST input credit — a unique fiscal advantage completely unavailable with residential leases." },
-  { icon: BarChart3, title: 'Long-Term Stability',    gradient: 'from-rose-500 to-pink-400',      glow: 'shadow-rose-500/15',    desc: 'Industrial tenants sign 5–10 year leases vs 11-month residential agreements — predictable, compounding returns.' },
+  { icon: Users,     title: 'Job Creation',           gradient: 'from-emerald-500 to-teal-400',  glow: 'shadow-emerald-500/15', desc: 'Each shed lease supports 10–50 local jobs. Your capital fuels real economic activity, not just paper wealth.' },
+  { icon: Globe,     title: 'Make in India',           gradient: 'from-blue-500 to-indigo-400',   glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
+  { icon: TrendingUp,title: 'Inflation-Proof Income',  gradient: 'from-amber-500 to-orange-400',  glow: 'shadow-amber-500/15',   desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that beat inflation every year.' },
+  { icon: Shield,    title: 'Tangible Asset',          gradient: 'from-green-500 to-emerald-400', glow: 'shadow-green-500/15',   desc: "Unlike FDs or gold ETFs, you own a real, insurable, income-generating structure with enduring land value beneath it." },
+  { icon: Award,     title: 'GST Input Credit',        gradient: 'from-violet-500 to-purple-400', glow: 'shadow-violet-500/15',  desc: "Industrial lessees can claim full GST input credit — a unique fiscal advantage completely unavailable with residential leases." },
+  { icon: BarChart3, title: 'Long-Term Stability',     gradient: 'from-rose-500 to-pink-400',     glow: 'shadow-rose-500/15',    desc: 'Industrial tenants sign 5–10 year leases vs 11-month residential agreements — predictable, compounding returns.' },
 ];
 
 
@@ -172,29 +166,113 @@ const bigQuotes = [
   { text: 'No country is ever successful in the long term without a really strong and vibrant manufacturing base.', author: 'Alan Mulally', role: 'Former CEO, Ford Motor Company', gradient: 'from-violet-500 via-purple-400 to-pink-400'},
 ];
 
+const heroQuotes = [
+  { text: 'The factory is the machine that builds the machine.', author: 'Elon Musk', role: 'Tesla & SpaceX', gradient: 'from-red-500 to-orange-400' },
+  { text: 'No country is ever successful in the long term without a strong manufacturing base.', author: 'Alan Mulally', role: 'Former CEO, Ford', gradient: 'from-blue-500 to-cyan-400' },
+  { text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.", author: 'James Dyson', role: 'Founder, Dyson', gradient: 'from-violet-500 to-purple-400' },
+];
 
-/* ════════════════════════════════════════════════
-   SLIDESHOW POSTER
-   ════════════════════════════════════════════════ */
-const SlideshowPoster = ({ slides }) => {
-  const [current, setCurrent] = useState(0);
+const QuoteCarousel = ({ quotes, isDark }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const total = quotes.length;
+
   useEffect(() => {
-    const id = setInterval(() => setCurrent(p => (p + 1) % slides.length), 6000);
+    const id = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total);
+    }, 5500);
     return () => clearInterval(id);
-  }, [slides.length]);
+  }, [total]);
+
+  const prevIndex = (activeIndex - 1 + total) % total;
+  const nextIndex = (activeIndex + 1) % total;
+
+  const handlePrev = () => setActiveIndex((prev) => (prev - 1 + total) % total);
+  const handleNext = () => setActiveIndex((prev) => (prev + 1) % total);
+
+  const visibleCards = [
+    { key: `left-${prevIndex}`, index: prevIndex, position: 'left' },
+    { key: `center-${activeIndex}`, index: activeIndex, position: 'center' },
+    { key: `right-${nextIndex}`, index: nextIndex, position: 'right' },
+  ];
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      {slides.map((src, i) => (
-        <div key={src} className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-          style={{ backgroundImage: `url(${src})`, opacity: i === current ? 1 : 0 }} aria-hidden="true" />
-      ))}
-      <div className="absolute inset-0 bg-black/20" aria-hidden="true" />
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-        {slides.map((_, i) => (
-          <button key={i} onClick={() => setCurrent(i)} aria-label={`Slide ${i + 1}`}
-            className={`rounded-full transition-all duration-300 ${i === current ? 'w-5 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/50'}`} />
-        ))}
+    <div>
+      <div className="grid grid-cols-[0.9fr_1.2fr_0.9fr] sm:grid-cols-[0.95fr_1.35fr_0.95fr] gap-2 sm:gap-4 items-stretch">
+        {visibleCards.map(({ key, index, position }) => {
+          const quote = quotes[index];
+          const isCenter = position === 'center';
+
+          return (
+            <motion.article
+              key={key}
+              initial={{ opacity: 0, y: 10, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: isCenter ? 1 : 0.94 }}
+              transition={{ duration: 0.3 }}
+              className={`rounded-2xl border p-3 sm:p-5 transition-all ${
+                isCenter
+                  ? isDark
+                    ? 'bg-gray-900 border-gray-700 shadow-xl shadow-black/40'
+                    : 'bg-white border-gray-300 shadow-xl shadow-gray-200/80'
+                  : isDark
+                    ? 'bg-gray-900/60 border-gray-800 opacity-85'
+                    : 'bg-gray-50 border-gray-200 opacity-85'
+              }`}
+            >
+              <div className={`h-1.5 rounded-full bg-gradient-to-r ${quote.gradient} ${isCenter ? 'w-16' : 'w-10'} mb-2.5`} />
+              <p className={`${isCenter ? 'text-xs sm:text-sm' : 'text-[10px] sm:text-xs'} leading-relaxed ${isDark ? 'text-gray-200' : 'text-gray-700'} mb-2.5`}>
+                "{quote.text}"
+              </p>
+              <div>
+                <p className={`font-semibold bg-gradient-to-r ${quote.gradient} bg-clip-text text-transparent ${isCenter ? 'text-xs sm:text-sm' : 'text-[11px] sm:text-xs'}`}>
+                  {quote.author}
+                </p>
+                <p className={`${isCenter ? 'text-[11px]' : 'text-[10px]'} ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  {quote.role}
+                </p>
+              </div>
+            </motion.article>
+          );
+        })}
+      </div>
+
+      <div className="mt-3 flex items-center justify-center gap-2 sm:gap-3">
+        <button
+          type="button"
+          onClick={handlePrev}
+          aria-label="Previous quote"
+          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
+            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white' : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <ArrowRight size={14} className="rotate-180" />
+        </button>
+
+        <div className="flex items-center gap-1.5">
+          {quotes.map((quote, i) => (
+            <button
+              key={`${quote.author}-${i}`}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              aria-label={`Go to quote ${i + 1}`}
+              className={`rounded-full transition-all ${
+                i === activeIndex
+                  ? 'w-6 h-1.5 bg-orange-400'
+                  : `w-1.5 h-1.5 ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`
+              }`}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleNext}
+          aria-label="Next quote"
+          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
+            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white' : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <ArrowRight size={14} />
+        </button>
       </div>
     </div>
   );
@@ -524,8 +602,14 @@ const HomePage = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  /* ── Hero image switches with theme ── */
+  const heroImage = isDark ? heroImageDark : heroImageLight;
+
+  const heroAlt = isDark
+    ? 'Metro Industrial Park entrance at dawn in Moraiya, Ahmedabad'
+    : 'Metro Industrial Park entrance security gate in Moraiya, Ahmedabad';
+
   const rafRef                                  = useRef(null);
-  const [showScrollCue,    setShowScrollCue]    = useState(true);
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
   const [promptDismissed,  setPromptDismissed]  = useState(false);
 
@@ -539,6 +623,13 @@ const HomePage = () => {
 
   const whatsappMessage = encodeURIComponent('Hello, I would like to inquire about the industrial sheds.');
 
+  const [activeQuote, setActiveQuote] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setActiveQuote(q => (q + 1) % bigQuotes.length), 4500);
+    return () => clearInterval(t);
+  }, []);
+
   useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => {
     if (localStorage.getItem('reviewPromptDismissed') === 'true') setPromptDismissed(true);
@@ -549,7 +640,6 @@ const HomePage = () => {
       rafRef.current = requestAnimationFrame(() => {
         const y   = window.scrollY;
         const pct = (y / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-        if (y > 80) setShowScrollCue(false);
         if (pct > 40 && !promptDismissed) setShowReviewPrompt(true);
         rafRef.current = null;
       });
@@ -570,7 +660,7 @@ const HomePage = () => {
         description="Industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad. 4,000 to 50,000 sq.ft units with 60 ft roads, CCTV, water supply, and fast possession."
         keywords="industrial shed moraiya, industrial shed changodar, industrial shed ahmedabad, warehouse for lease moraiya, warehouse for rent changodar, factory shed ahmedabad, industrial property near sarkhej bavla highway"
         canonical="/"
-        ogImage="/images/metro-industrial-park-site-map-moraiya-gujarat.jpg"
+        ogImage="/images/metro-industrial-park-entrance-dawn.jpg"
         ogImageAlt="Industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad"
         structuredData={[propertySchema, faqSchema, imageObjectSchema, websiteSchema]}
       />
@@ -584,117 +674,157 @@ const HomePage = () => {
           style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
         <h1 className="sr-only">Industrial Sheds & Warehouses for Sale & Lease in Moraiya, Changodar, Ahmedabad</h1>
 
-        {/* ════════ HERO ════════ */}
-        <section className="relative h-screen flex flex-col overflow-hidden">
-          <div className="relative overflow-hidden" style={{ height: '90vh' }}>
-            <SlideshowPoster slides={heroSlides} />
+{/* ════════ HERO ════════ */}
+<section className="relative pt-16">
+<div className="relative h-[35svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
+  <img
+    src={heroImage}
+    alt={heroAlt}
+    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+    loading="eager"
+    fetchpriority="high"
+  />
 
-            <motion.img src="/MDLogoBG.png" alt="Metro Enterprise - Industrial Shed Developer Ahmedabad"
-              width={288} height={288}
-              initial={{ opacity: 1, scale: 1.6 }} animate={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
-              style={{ x: '-50%', y: '-50%' }}
-              className="absolute top-1/2 left-1/2 w-36 sm:w-52 md:w-64 lg:w-72 z-10 pointer-events-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] select-none"
-            />
+  {/* Global dark gradient bottom */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
 
-            <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 sm:pb-10 pointer-events-none px-4">
-              <div className="flex flex-col items-center gap-3 w-full pointer-events-auto">
-                <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45, duration: 0.6 }}
-                  className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-brand-red/60 bg-black/35 backdrop-blur-lg">
-                  <Sparkles className="text-brand-red w-3.5 h-3.5 animate-pulse" />
-                  <span className="text-[10px] sm:text-xs font-bold tracking-[0.14em] text-white uppercase">
-                    #1 Industrial Park in Ahmedabad
-                  </span>
-                </motion.div>
+  {/* Left dark overlay — always on, stronger on mobile */}
+  <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" />
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.75, duration: 0.6 }}
-                  className="grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-lg">
-                  {[
-                    { icon: <TrendingUp size={16} />,     value: '6-8%', label: 'Rental Yield',     color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
-                    { icon: <LucideFactory size={16} />,  value: '63',    label: 'Industrial Units', color: 'text-white',     border: 'border-white/20 hover:border-brand-red/60'  },
-                    { icon: <LucideLandPlot size={16} />, value: '54K+',  label: 'Sq.yards Area',    color: 'text-white',     border: 'border-white/20 hover:border-brand-red/60'  },
-                  ].map(({ icon, value, label, color, border }) => (
-                    <motion.div key={label} whileHover={{ scale: 1.06, y: -5 }}
-                      className={`p-3 sm:p-4 rounded-xl bg-black/50 backdrop-blur-md border ${border} transition-all duration-300 text-center shadow-lg cursor-default`}>
-                      <span className={`${color} flex justify-center mb-1`}>{icon}</span>
-                      <div className={`text-lg sm:text-2xl font-black ${color}`}
-                        style={{ fontFamily: '"Bebas Neue", sans-serif' }}>{value}</div>
-                      <div className="text-[9px] sm:text-[11px] text-white/70 font-semibold">{label}</div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
+  {/* Badge — center bottom */}
+  <div className="absolute inset-0 flex items-end justify-center pb-3 sm:pb-6 px-4">
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25, duration: 0.5 }}
+      className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-brand-red/60 bg-black/45"
+    >
+      <Sparkles className="text-brand-red w-3.5 h-3.5 animate-pulse" />
+      <span className="text-[10px] sm:text-xs font-bold tracking-[0.14em] text-white uppercase">
+        #1 Industrial Park in Ahmedabad
+      </span>
+    </motion.div>
+  </div>
+
+  {/* ── Text overlay — on image at ALL screen sizes ── */}
+  <motion.div
+    initial={{ opacity: 0, x: -18 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: 0.35, duration: 0.6 }}
+    className="absolute bottom-8 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[52%] sm:max-w-[44%] lg:max-w-[340px]"
+  >
+    {/* Eyebrow */}
+    <span className="hidden sm:inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-red mb-1.5">
+      <span className="w-3 sm:w-5 h-[1.5px] bg-brand-red rounded-full" />
+      Industrial Opportunity
+    </span>
+
+    {/* Dual-color heading */}
+    <h1
+      style={{
+        fontFamily: '"Bebas Neue", sans-serif',
+        lineHeight: 1.05,
+        letterSpacing: '0.02em',
+      }}
+      className="text-[1.5rem] sm:text-[2rem] lg:text-[3rem]"
+    >
+      <span className="block text-white">A Space Built for</span>
+      <span
+        className="block"
+        style={{ color: 'transparent', WebkitTextStroke: '1px #ffffff' }}
+      >
+        Manufacturing
+      </span>
+      <span
+        className="block"
+        style={{ color: 'transparent', WebkitTextStroke: '1px #ef4444' }}
+      >
+        Growth
+      </span>
+    </h1>
+
+    {/* Subheading — hidden on mobile, shown sm+ */}
+    <p className="hidden sm:block text-gray-300 text-[10px] sm:text-[11px] lg:text-xs leading-relaxed mt-2 max-w-[240px] lg:max-w-[260px]">
+      From small-scale production to expanding industrial operations, the right
+      facility creates the environment for efficiency, quality, and long-term
+      business growth.
+    </p>
+  </motion.div>
+</div>
+
+
+  {/* ── Below-hero stats + CTA panel ── */}
+<div className={`${isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'}`}>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className="flex flex-col items-center gap-4">
+
+      {/* Stats — fixed max width so cards don't stretch too wide */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-lg">
+        {[
+          { icon: <TrendingUp size={16} />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
+          { icon: <LucideFactory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+          { icon: <LucideLandPlot size={16} />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+        ].map(({ icon, value, label, color, border }) => (
+          <motion.div
+            key={label}
+            whileHover={{ scale: 1.04, y: -3 }}
+            className={`p-3 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
+              isDark ? 'bg-gray-900/70' : 'bg-gray-50'
+            }`}
+          >
+            <span className={`${color} flex justify-center mb-1`}>{icon}</span>
+            <div className={`text-lg sm:text-2xl font-black ${color}`} style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
+              {value}
             </div>
-          </div>
+            <div className={`text-[9px] sm:text-[11px] font-semibold ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+              {label}
+            </div>
+          </motion.div>
+        ))}
+      </div>
 
-          {/* Button strip */}
-          <div className={`flex-1 flex flex-col items-center justify-center gap-3 px-4 py-4 ${
-            isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'
-          }`}>
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.55 }} className="w-full max-w-xs sm:max-w-sm">
-              <Link to="/metro-industrial-park" className="w-full block">
-                <motion.button whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
-                  className="relative overflow-hidden w-full px-8 py-3.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-2xl text-sm tracking-wide shadow-xl shadow-red-500/30">
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <Factory size={16} />
-                    <span>Explore More</span>
-                    <motion.span animate={{ x: [0, 3, 0] }}
-                      transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 2.0, ease: 'easeInOut' }}
-                      className="flex items-center">
-                      <ArrowRight size={16} />
-                    </motion.span>
-                  </span>
-                </motion.button>
-              </Link>
-            </motion.div>
+      {/* Buttons — centered */}
+      <div className="flex flex-wrap justify-center gap-2.5">
+        <Link
+          to="/metro-industrial-park"
+          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-xs sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
+        >
+          <Factory size={15} />
+          Explore More
+          <ArrowRight size={15} />
+        </Link>
 
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1, duration: 0.5 }}
-              className="flex flex-col sm:flex-row gap-2.5 items-center justify-center w-full max-w-xs sm:max-w-sm">
-              <Link to="/site-map" className="w-full sm:w-auto">
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className={`group w-full sm:w-auto px-6 py-2.5 font-semibold rounded-xl border-2 text-xs sm:text-sm transition-all duration-300 ${
-                    isDark ? 'border-brand-red/60 text-red-400 hover:border-brand-red hover:bg-brand-red/10'
-                           : 'border-brand-red/50 text-brand-red hover:border-brand-red hover:bg-red-50'
-                  }`}>
-                  <span className="flex items-center justify-center gap-2">
-                    <MapPin size={14} />
-                    Check Availability
-                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </motion.button>
-              </Link>
+        <Link
+          to="/site-map"
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
+            isDark
+              ? 'border-brand-red/50 bg-gray-900/70 text-red-300 hover:border-brand-red hover:text-red-200'
+              : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
+          }`}
+        >
+          <MapPin size={14} />
+          Check Availability
+        </Link>
 
-              <a href={`https://wa.me/919824235642?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className={`group w-full sm:w-auto px-6 py-2.5 font-semibold rounded-xl border text-xs sm:text-sm transition-all duration-300 ${
-                    isDark ? 'border-white/15 text-gray-400 hover:border-green-400/50 hover:text-green-400'
-                           : 'border-gray-300 text-gray-500 hover:border-green-500/50 hover:text-green-600 hover:bg-green-50/60'
-                  }`}>
-                  <span className="flex items-center justify-center gap-2">
-                    <FaWhatsapp size={14} className="text-green-500" />
-                    WhatsApp
-                  </span>
-                </motion.button>
-              </a>
-            </motion.div>
+        <a
+          href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
+            isDark
+              ? 'border-white/25 bg-gray-900/70 text-white hover:border-green-400/60 hover:text-green-300'
+              : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
+          }`}
+        >
+          <FaWhatsapp size={14} className="text-green-500" />
+          WhatsApp
+        </a>
+      </div>
 
-            {showScrollCue && (
-              <button
-                className={`flex flex-col items-center gap-0.5 cursor-pointer border-0 bg-transparent mt-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
-                onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-                aria-label="Scroll down">
-                <span className="text-[8px] font-bold tracking-widest uppercase">scroll</span>
-                <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}>
-                  <ChevronDown size={14} />
-                </motion.div>
-              </button>
-            )}
-          </div>
-        </section>
+    </div>
+  </div>
+</div>
+</section>
 
         {/* ════════ FEATURES ════════ */}
         <section ref={featuresRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>

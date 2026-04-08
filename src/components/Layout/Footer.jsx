@@ -67,6 +67,8 @@ const Footer = () => {
   const isDark = theme === 'dark';
   const currentYear = new Date().getFullYear();
   const [faqOpen, setFaqOpen] = useState(false); // ✅ inside component
+  const mapsUrl = 'https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad';
+  const mapsQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(mapsUrl)}`;
 
   const pill = isDark
     ? 'bg-gray-800/70 hover:bg-brand-red text-gray-300'
@@ -223,7 +225,7 @@ const Footer = () => {
               <li className="flex items-start gap-2.5">
                 <MapPin className="text-brand-red flex-shrink-0 mt-0.5" size={14} />
                 <a
-                  href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
+                  href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="theme-text-secondary hover:text-brand-red transition-colors text-xs leading-relaxed"
@@ -253,6 +255,34 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
+
+            <div className={`hidden lg:flex mt-5 items-center gap-3 rounded-xl border p-3 ${
+              isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white'
+            }`}>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block flex-shrink-0"
+                aria-label="Open Google Maps location"
+                title="Open Google Maps"
+              >
+                <img
+                  src={mapsQrUrl}
+                  alt="Scan QR code to open Metro Industrial Park in Google Maps"
+                  width="92"
+                  height="92"
+                  loading="lazy"
+                  className={`w-[92px] h-[92px] rounded-md border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}
+                />
+              </a>
+              <div>
+                <p className="theme-text-primary text-xs font-semibold mb-1">Scan For Directions</p>
+                <p className="theme-text-secondary text-[11px] leading-relaxed">
+                  Open Google Maps on your mobile phone by scanning this QR code.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

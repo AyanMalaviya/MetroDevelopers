@@ -56,6 +56,18 @@
   --overlay-dark: rgba(0, 0, 0, 0.7);
 }
 
+@media (max-width: 640px) {
+  :root {
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+  }
+
+  [data-theme="dark"] {
+    --text-secondary: #e5e7eb;
+    --text-tertiary: #cbd5e1;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
