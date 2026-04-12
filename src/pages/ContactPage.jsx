@@ -11,7 +11,7 @@ import { useTheme } from '../context/ThemeContext';
 import SEO from '../components/SEO/SEO';
 
 // ✅ Import your global property schema
-import { propertySchema } from '../utils/schemas.js';
+import { createBreadcrumbSchema, propertySchema } from '../utils/schemas.js';
 
 /* ─── Motion variants ─── */
 const fadeUp = {
@@ -68,7 +68,13 @@ const ContactPage = () => {
     "name": "Contact Metro Enterprise",
     "description": "Get in touch for industrial sheds and warehouses in Moraiya, Ahmedabad.",
     "url": "https://www.metrodevelopers.co.in/contact",
+    "mainEntity": { "@id": "https://www.metrodevelopers.co.in/#metro-enterprise" },
   };
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Contact Metro Enterprise', path: '/contact' },
+  ]);
 
   const partners = [
   {
@@ -106,7 +112,7 @@ const ContactPage = () => {
         canonical="/contact"
         ogImage="/images/metro-industrial-park-office-changodar.jpg" 
         ogImageAlt="Industrial shed enquiry office in Moraiya Changodar Ahmedabad"
-        structuredData={[propertySchema, contactPageSchema]}
+        structuredData={[propertySchema, contactPageSchema, breadcrumbSchema]}
       />
       <h1 className="sr-only">Contact Metro Enterprise — Industrial Park Moraiya Ahmedabad</h1>
 

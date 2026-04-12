@@ -12,7 +12,14 @@ import { FaRoad, FaTrash, FaWhatsapp } from 'react-icons/fa';
 import SEO from '../components/SEO/SEO.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
-import { propertySchema, faqSchema, imageObjectSchema, websiteSchema } from '../utils/schemas.js';
+import {
+  propertySchema,
+  faqSchema,
+  imageObjectSchema,
+  websiteSchema,
+  realEstateListingSchema,
+} from '../utils/schemas.js';
+import { GUIDE_PAGES, LOCAL_MARKET_PAGES } from '../data/seoRoutes.js';
 
 
 /* ─── Hero images — light vs dark ─── */
@@ -662,7 +669,7 @@ const HomePage = () => {
         canonical="/"
         ogImage="/images/metro-industrial-park-entrance-dawn.jpg"
         ogImageAlt="Industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad"
-        structuredData={[propertySchema, faqSchema, imageObjectSchema, websiteSchema]}
+        structuredData={[propertySchema, realEstateListingSchema, faqSchema, imageObjectSchema, websiteSchema]}
       />
 
       <style>{`
@@ -898,6 +905,77 @@ const HomePage = () => {
 
         {/* ════════ INVESTMENT — passes isDark ════════ */}
         <InvestmentSection isDark={isDark} />
+
+        {/* ════════ LOCAL + GUIDE CLUSTERS ════════ */}
+        <section className={`py-20 sm:py-24 ${isDark ? 'bg-black' : 'bg-white'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-10">
+              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 ${
+                isDark ? 'bg-gray-900 border-gray-700 text-red-300' : 'bg-red-50 border-red-200 text-brand-red'
+              }`}>
+                <MapPin size={12} /> Hyper-local SEO Cluster
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-black theme-text-primary">
+                Explore By <span className="text-brand-red">Micro-Market</span>
+              </h2>
+              <p className={`mt-3 text-sm sm:text-base max-w-3xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Dedicated pages for Changodar and Sarkhej Bavla Highway help capture location-intent searches with lower competition and stronger conversion intent.
+              </p>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-2">
+              <article className={`rounded-2xl border p-5 sm:p-6 ${isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-200 bg-gray-50'}`}>
+                <h3 className="text-2xl font-extrabold theme-text-primary mb-4">Location-specific pages</h3>
+                <div className="space-y-3">
+                  {LOCAL_MARKET_PAGES.filter((page) => page.showInPrimaryNavigation !== false).map((page) => (
+                    <Link
+                      key={page.path}
+                      to={page.path}
+                      className={`group flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
+                        isDark
+                          ? 'border-gray-700 bg-gray-800/70 text-gray-100 hover:border-brand-red'
+                          : 'border-gray-200 bg-white text-gray-800 hover:border-brand-red'
+                      }`}
+                    >
+                      {page.breadcrumb}
+                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  ))}
+                </div>
+              </article>
+
+              <article className={`rounded-2xl border p-5 sm:p-6 ${isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-200 bg-gray-50'}`}>
+                <h3 className="text-2xl font-extrabold theme-text-primary mb-1">Investor intent guides</h3>
+                <p className={`text-sm mb-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Publish educational content that ranks before bottom-funnel "for sale" queries.
+                </p>
+                <div className="space-y-3">
+                  {GUIDE_PAGES.map((guide) => (
+                    <Link
+                      key={guide.path}
+                      to={guide.path}
+                      className={`group flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
+                        isDark
+                          ? 'border-gray-700 bg-gray-800/70 text-gray-100 hover:border-brand-red'
+                          : 'border-gray-200 bg-white text-gray-800 hover:border-brand-red'
+                      }`}
+                    >
+                      {guide.breadcrumb}
+                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  ))}
+                </div>
+
+                <Link
+                  to="/calculator"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-700"
+                >
+                  <TrendingUp size={14} /> Check ROI Potential
+                </Link>
+              </article>
+            </div>
+          </div>
+        </section>
 
         {/* ════════ CTA ════════ */}
         <section ref={ctaRef} className={`py-20 sm:py-32 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>

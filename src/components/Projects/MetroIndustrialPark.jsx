@@ -25,7 +25,7 @@ import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
 
 // ✅ Import your schemas from the new utils file
-import { propertySchema, faqSchema, imageObjectSchema } from '../../utils/schemas';
+import { propertySchema, faqSchema, imageObjectSchema, realEstateListingSchema } from '../../utils/schemas';
 
 /* ── Motion variants ── */
 const containerVariants = {
@@ -241,7 +241,7 @@ const MetroIndustrialPark = () => {
         canonical="/metro-industrial-park"
         ogImage="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
         ogImageAlt="Industrial park project in Moraiya Changodar Ahmedabad"
-        structuredData={[propertySchema, faqSchema, imageObjectSchema]}
+        structuredData={[propertySchema, realEstateListingSchema, faqSchema, imageObjectSchema]}
       />
 
       <h1 className="sr-only">Industrial Sheds for Sale/Lease in Moraiya, Changodar, Ahmedabad</h1>

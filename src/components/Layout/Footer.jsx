@@ -189,8 +189,10 @@ const Footer = () => {
                 { to: '/',                         label: 'Home'                   },
                 { to: '/metro-industrial-park',    label: 'Metro Industrial Park'  },
                 { to: '/metro-arcade',             label: 'Metro Arcade'           },
+                { to: '/warehouses-in-changodar', label: 'Warehouses in Changodar' },
                 { to: '/site-map',                 label: 'Site Map'               },
                 { to: '/calculator',               label: 'ROI Calculator'         },
+                { to: '/guides/gst-input-credit-industrial-tenants-gujarat', label: 'GST Input Credit Guide' },
                 { to: '/contact',                  label: 'Contact Us'             },
                 { href: 'https://g.page/r/CfbFhZSjMaH1EBI/review', label: 'Write a Review', external: true },
               ].map(({ to, href, label, external }) =>

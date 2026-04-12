@@ -7,6 +7,8 @@ import MetroIndustrialPark from './components/Projects/MetroIndustrialPark';
 import ContactPage from './pages/ContactPage';
 import Calculator from './pages/CalculatorPage';
 import SiteMapPage from './pages/SiteMapPage';
+import LocalMarketPage from './pages/LocalMarketPage';
+import InsightGuidePage from './pages/InsightGuidePage';
 import RecordsPage from './pages/RecordsPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import FloatingActionMenu from './components/FloatingActionMenu'; // Updated import
@@ -32,6 +34,12 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
+              <Route path="/industrial-sheds-in-moraiya" element={<Navigate to="/metro-industrial-park" replace />} />
+              <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
+              <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
+              <Route path="/industrial-sheds-in-ahmedabad" element={<LocalMarketPage />} />
+              <Route path="/guides/gst-input-credit-industrial-tenants-gujarat" element={<InsightGuidePage />} />
+              <Route path="/guides/warehousing-yield-cagr-gujarat" element={<InsightGuidePage />} />
               <Route path="/records" element={<Navigate to="/calculator" replace />} />
               <Route
                 path="/records/:slug"
