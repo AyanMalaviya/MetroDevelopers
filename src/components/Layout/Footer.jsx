@@ -1,12 +1,13 @@
 // src/components/Footer/Footer.jsx
 import { useState } from 'react';
-import { MapPin, Phone, Mail, MessageCircle, ChevronDown, HelpCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, ChevronDown, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 
-// ── FAQ sub-component (inline accordion row) ──
+
+// ── FAQ sub-component ──────────────────────────────────────────────────────────
 const FaqRow = ({ item, isDark }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -51,23 +52,69 @@ const FaqRow = ({ item, isDark }) => {
   );
 };
 
+
+// ── FAQ data — numbers aligned with schemas.js ─────────────────────────────────
 const FAQ_ITEMS = [
-  { q: 'What sizes are available?',         a: 'Units range from 4,000 to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park.' },
-  { q: 'What is the expected ROI?',          a: 'Rental yield is 6–8%, yearly appreciation can add up to 6–8%, and combined potential is 12–16% for industrial sheds at Metro Industrial Park.' },
-  { q: 'How long does possession take?',     a: 'Possession is available within 90 days of booking.' },
-  { q: 'Is RCC construction available?',     a: 'Available on request with additional charges.' },
-  { q: 'What amenities are included?',       a: '24x7 water, CCTV, security, weigh bridge, 60ft roads, 30–35ft ceilings.' },
-  { q: 'Where is the park located?',         a: 'Moraiya, Changodar — near Sarkhej Bavla Highway, opposite Suvas Industrial Estate.' },
-  { q: 'What is the pricing?',               a: 'Contact us at +91 98242 35642 for current sale and lease pricing.' },
+  {
+    q: 'What sizes are available?',
+    a: 'Units range from 4,000 to 50,000 sq.ft across 63 sheds in a 54,000 sq.yard park.',
+  },
+  {
+    q: 'What is the expected ROI?',
+    a: 'Rental yield is 6–8%, yearly appreciation can add up to 10–12%, and the combined potential is 16–20% for industrial sheds at Metro Industrial Park.',
+  },
+  {
+    q: 'How long does possession take?',
+    a: 'Possession is available within 90 days of booking.',
+  },
+  {
+    q: 'Is RCC construction available?',
+    a: 'Available on request with additional charges.',
+  },
+  {
+    q: 'What amenities are included?',
+    a: '24×7 water, CCTV, security guards, weigh bridge, 60 ft RCC roads, 30–35 ft ceiling clearance.',
+  },
+  {
+    q: 'Where is the park located?',
+    a: 'Moraiya, Changodar — near Sarkhej Bavla Highway, opposite Suvas Industrial Estate, behind Siya Logistics Park.',
+  },
+  {
+    q: 'What is the pricing?',
+    a: 'Contact us at +91 98242 35642 or WhatsApp for current sale and lease pricing.',
+  },
 ];
 
-// ── Main Footer ──
+
+// ── Quick links ────────────────────────────────────────────────────────────────
+const QUICK_LINKS = [
+  { to: '/',                                                           label: 'Home'                           },
+  { to: '/metro-industrial-park',                                      label: 'Metro Industrial Park'          },
+  { to: '/metro-arcade',                                               label: 'Metro Arcade'                   },
+  { to: '/warehouses-in-changodar',                                    label: 'Warehouses in Changodar'        },
+  { to: '/industrial-sheds-near-sarkhej-bavla-highway',               label: 'Sheds Near Bavla Highway'       },
+  { to: '/industrial-sheds-in-ahmedabad',                              label: 'Industrial Sheds in Ahmedabad'  },
+  { to: '/guides/gst-input-credit-industrial-tenants-gujarat',         label: 'GST Input Credit Guide'         },
+  { to: '/guides/warehousing-yield-cagr-gujarat',                      label: 'Warehousing Yield Guide'        },
+  { to: '/site-map',                                                   label: 'Site Map'                       },
+  { to: '/calculator',                                                 label: 'ROI Calculator'                 },
+  { to: '/contact',                                                    label: 'Contact Us'                     },
+  {
+    href: 'https://g.page/r/CfbFhZSjMaH1EBI/review',
+    label: 'Write a Review',
+    external: true,
+  },
+];
+
+
+// ── Main Footer ────────────────────────────────────────────────────────────────
 const Footer = () => {
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark     = theme === 'dark';
   const currentYear = new Date().getFullYear();
-  const [faqOpen, setFaqOpen] = useState(false); // ✅ inside component
-  const mapsUrl = 'https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad';
+  const [faqOpen, setFaqOpen] = useState(false);
+
+  const mapsUrl   = 'https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad';
   const mapsQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(mapsUrl)}`;
 
   const pill = isDark
@@ -81,13 +128,16 @@ const Footer = () => {
         : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200'
     }`}>
 
-      {/* ── Collapsible FAQ Bar ── */}
+      {/* ── Collapsible FAQ bar ── */}
       <div className={`mt-6 border-y ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-          {/* Toggle Header */}
+          {/* Toggle header */}
           <button
+            type="button"
             onClick={() => setFaqOpen(!faqOpen)}
+            aria-expanded={faqOpen}
+            aria-controls="footer-faq-panel"
             className={`w-full flex items-center justify-between py-4 text-left transition-colors ${
               isDark ? 'hover:bg-gray-900/40' : 'hover:bg-gray-50/60'
             }`}
@@ -98,21 +148,19 @@ const Footer = () => {
                 Frequently Asked Questions
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-red/10 text-brand-red border border-brand-red/20">
-                7 Questions
+                {FAQ_ITEMS.length} Questions
               </span>
             </div>
-            <motion.div
-              animate={{ rotate: faqOpen ? 180 : 0 }}
-              transition={{ duration: 0.25 }}
-            >
+            <motion.div animate={{ rotate: faqOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
               <ChevronDown size={16} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
             </motion.div>
           </button>
 
-          {/* Dropdown Panel */}
+          {/* Dropdown panel */}
           <AnimatePresence initial={false}>
             {faqOpen && (
               <motion.div
+                id="footer-faq-panel"
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
@@ -135,7 +183,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="grid sm:grid-cols-3 gap-8">
 
-          {/* Col 1: Brand + socials */}
+          {/* Col 1 — Brand + socials */}
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden flex-shrink-0 ${
@@ -144,15 +192,15 @@ const Footer = () => {
                 <img
                   src="/MDLogo.png"
                   alt="Metro Developers logo"
-                  className="w-10 h-10 object-contain"
+                  width={40}
+                  height={40}
                   loading="lazy"
+                  className="w-10 h-10 object-contain"
                 />
               </div>
               <div className="leading-tight">
                 <span className="block text-base font-bold theme-text-primary font-display">Metro Enterprise</span>
-                <span className="block text-[11px] theme-text-secondary">
-                  Metro Industrial Park · Ahmedabad
-                </span>
+                <span className="block text-[11px] theme-text-secondary">Metro Industrial Park · Ahmedabad</span>
               </div>
             </div>
             <p className="theme-text-secondary text-xs leading-relaxed mb-4">
@@ -160,9 +208,9 @@ const Footer = () => {
             </p>
             <div className="flex gap-2">
               {[
-                { href: 'https://wa.me/919824235642',                        icon: <FaWhatsapp size={17} />,  label: 'WhatsApp'  },
-                { href: 'https://www.instagram.com/metro.industrialpark/',    icon: <FaInstagram size={17} />, label: 'Instagram' },
-                { href: 'https://www.facebook.com/metroindustrialpark1',      icon: <FaFacebook size={17} />,  label: 'Facebook'  },
+                { href: 'https://wa.me/919824235642',                       icon: <FaWhatsapp size={17} />,  label: 'WhatsApp'  },
+                { href: 'https://www.instagram.com/metro.industrialpark/',   icon: <FaInstagram size={17} />, label: 'Instagram' },
+                { href: 'https://www.facebook.com/metroindustrialpark1',     icon: <FaFacebook size={17} />,  label: 'Facebook'  },
               ].map(({ href, icon, label }) => (
                 <a
                   key={label}
@@ -179,23 +227,13 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Col 2: Quick links */}
-          <nav aria-label="Quick links">
+          {/* Col 2 — Quick links */}
+          <nav aria-label="Footer quick links">
             <h3 className="theme-text-primary font-bold text-sm uppercase tracking-widest mb-4">
               Quick Links
             </h3>
             <ul className="space-y-2.5">
-              {[
-                { to: '/',                         label: 'Home'                   },
-                { to: '/metro-industrial-park',    label: 'Metro Industrial Park'  },
-                { to: '/metro-arcade',             label: 'Metro Arcade'           },
-                { to: '/warehouses-in-changodar', label: 'Warehouses in Changodar' },
-                { to: '/site-map',                 label: 'Site Map'               },
-                { to: '/calculator',               label: 'ROI Calculator'         },
-                { to: '/guides/gst-input-credit-industrial-tenants-gujarat', label: 'GST Input Credit Guide' },
-                { to: '/contact',                  label: 'Contact Us'             },
-                { href: 'https://g.page/r/CfbFhZSjMaH1EBI/review', label: 'Write a Review', external: true },
-              ].map(({ to, href, label, external }) =>
+              {QUICK_LINKS.map(({ to, href, label, external }) =>
                 external ? (
                   <li key={label}>
                     <a
@@ -209,7 +247,10 @@ const Footer = () => {
                   </li>
                 ) : (
                   <li key={label}>
-                    <Link to={to} className="theme-text-secondary hover:text-brand-red transition-colors text-xs">
+                    <Link
+                      to={to}
+                      className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
+                    >
                       {label}
                     </Link>
                   </li>
@@ -218,14 +259,14 @@ const Footer = () => {
             </ul>
           </nav>
 
-          {/* Col 3: Contact */}
+          {/* Col 3 — Contact */}
           <div>
             <h3 className="theme-text-primary font-bold text-sm uppercase tracking-widest mb-4">
               Contact Us
             </h3>
             <ul className="space-y-2.5">
               <li className="flex items-start gap-2.5">
-                <MapPin className="text-brand-red flex-shrink-0 mt-0.5" size={14} />
+                <MapPin className="text-brand-red flex-shrink-0 mt-0.5" size={14} aria-hidden="true" />
                 <a
                   href={mapsUrl}
                   target="_blank"
@@ -241,14 +282,14 @@ const Footer = () => {
                 { href: 'tel:+916356766767', label: '+91 63567 66767' },
               ].map(({ href, label }) => (
                 <li key={href} className="flex items-center gap-2.5">
-                  <Phone className="text-brand-red flex-shrink-0" size={14} />
+                  <Phone className="text-brand-red flex-shrink-0" size={14} aria-hidden="true" />
                   <a href={href} className="theme-text-secondary hover:text-brand-red transition-colors text-xs">
                     {label}
                   </a>
                 </li>
               ))}
               <li className="flex items-center gap-2.5">
-                <Mail className="text-brand-red flex-shrink-0" size={14} />
+                <Mail className="text-brand-red flex-shrink-0" size={14} aria-hidden="true" />
                 <a
                   href="mailto:metrodevelopers26@gmail.com"
                   className="theme-text-secondary hover:text-brand-red transition-colors text-xs break-all"
@@ -258,6 +299,7 @@ const Footer = () => {
               </li>
             </ul>
 
+            {/* QR card — desktop only */}
             <div className={`hidden lg:flex mt-5 items-center gap-3 rounded-xl border p-3 ${
               isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white'
             }`}>
@@ -266,14 +308,13 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block flex-shrink-0"
-                aria-label="Open Google Maps location"
-                title="Open Google Maps"
+                aria-label="Open Metro Industrial Park in Google Maps"
               >
                 <img
                   src={mapsQrUrl}
                   alt="Scan QR code to open Metro Industrial Park in Google Maps"
-                  width="92"
-                  height="92"
+                  width={92}
+                  height={92}
                   loading="lazy"
                   className={`w-[92px] h-[92px] rounded-md border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}
                 />
@@ -281,11 +322,12 @@ const Footer = () => {
               <div>
                 <p className="theme-text-primary text-xs font-semibold mb-1">Scan For Directions</p>
                 <p className="theme-text-secondary text-[11px] leading-relaxed">
-                  Open Google Maps on your mobile phone by scanning this QR code.
+                  Open Google Maps on your phone by scanning this QR code.
                 </p>
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
