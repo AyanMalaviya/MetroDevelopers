@@ -54,7 +54,7 @@ const InsightGuidePage = () => {
         <main className="max-w-5xl mx-auto px-4 sm:px-6">
           <section
             className={`rounded-3xl border p-7 sm:p-10 ${
-              isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60'
+              isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60'
             }`}
           >
             <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/30 bg-brand-red/10 px-3 py-1 text-[11px] font-bold tracking-widest uppercase text-brand-red">
@@ -76,7 +76,7 @@ const InsightGuidePage = () => {
               <article
                 key={section.title}
                 className={`rounded-2xl border p-6 ${
-                  isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white shadow-sm'
+                  isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
                 }`}
               >
                 <h2 className="text-2xl font-extrabold theme-text-primary">{section.title}</h2>
@@ -104,7 +104,7 @@ const InsightGuidePage = () => {
           <section className="mt-8 grid gap-6 lg:grid-cols-2">
             <article
               className={`rounded-2xl border p-6 ${
-                isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white shadow-sm'
+                isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
               }`}
             >
               <h2 className="text-xl font-extrabold theme-text-primary">Move from research to action</h2>
@@ -136,7 +136,7 @@ const InsightGuidePage = () => {
 
             <article
               className={`rounded-2xl border p-6 ${
-                isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white shadow-sm'
+                isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
               }`}
             >
               <h2 className="text-xl font-extrabold theme-text-primary">Location-specific pages</h2>

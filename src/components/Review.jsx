@@ -47,7 +47,7 @@ const ReviewPrompt = () => {
           <div
             className={`rounded-2xl shadow-2xl p-4 sm:p-6 relative border backdrop-blur-xl ${
               isDark
-                ? 'bg-gray-950/85 border-white/15 shadow-black/60'
+                ? 'bg-black border-white/15 shadow-black/60'
                 : 'bg-white/90 border-gray-200/85 shadow-gray-300/70'
             }`}
           >

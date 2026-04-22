@@ -96,7 +96,7 @@ function FaqItem({ faq, isDark, text, textMd }) {
     <div
       className={`rounded-xl border transition-colors duration-200 overflow-hidden ${
         isDark
-          ? open ? 'border-brand-red/40 bg-gray-900' : 'border-gray-800 bg-gray-900/60 hover:border-gray-700'
+          ? open ? 'border-brand-red/40 bg-gray-900' : 'border-gray-800 bg-black hover:border-gray-700'
           : open ? 'border-brand-red/30 bg-white shadow-md' : 'border-gray-200 bg-white shadow-sm hover:border-gray-300'
       }`}
     >
@@ -187,7 +187,7 @@ export default function LocalMarketPage() {
   const text   = isDark ? 'text-white'    : 'text-gray-900'
   const textMd = isDark ? 'text-gray-300' : 'text-gray-600'
   const textSm = isDark ? 'text-gray-400' : 'text-gray-500'
-  const card   = isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-200 bg-white shadow-sm'
+  const card   = isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
   const pill   = isDark ? 'bg-red-500/10 border-red-400/30 text-red-400' : 'bg-red-50 border-red-200 text-brand-red'
 
   const structuredData = [propertySchema, listingSchema, locationPageSchema, breadcrumbSchema]
@@ -321,7 +321,7 @@ export default function LocalMarketPage() {
                 <div
                   key={label}
                   className={`rounded-xl border px-4 py-3 text-center ${
-                    isDark ? 'bg-gray-900/70 border-gray-800' : 'bg-white border-gray-200 shadow-sm'
+                    isDark ? 'bg-black border-gray-800' : 'bg-white border-gray-200 shadow-sm'
                   }`}
                 >
                   <div className="text-brand-red flex justify-center mb-1"><Icon size={17} /></div>
@@ -885,7 +885,7 @@ export default function LocalMarketPage() {
               animate={ctaInView ? 'visible' : 'hidden'}
               className={`p-8 sm:p-14 rounded-3xl border shadow-2xl transition-colors duration-500 ${
                 isDark
-                  ? 'bg-gray-900/80 border-gray-800 hover:border-brand-red/30'
+                  ? 'bg-black border-gray-800 hover:border-brand-red/30'
                   : 'bg-white/90 border-gray-200 hover:border-brand-red/30'
               }`}
             >
@@ -931,7 +931,7 @@ export default function LocalMarketPage() {
                   rel="noopener noreferrer"
                   className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold border-2 transition-all hover:scale-105 active:scale-95 text-sm ${
                     isDark
-                      ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-gray-900/50'
+                      ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
                       : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
                   }`}
                 >

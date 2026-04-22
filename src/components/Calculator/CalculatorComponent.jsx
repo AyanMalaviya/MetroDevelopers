@@ -39,7 +39,7 @@ const InputField = memo(({
     : highlighted
       ? 'border-brand-red/40 focus:border-brand-red focus:ring-brand-red/15 bg-brand-red/5'
       : isDark
-        ? 'border-gray-700 focus:border-brand-red focus:ring-brand-red/15 bg-gray-800/50'
+        ? 'border-gray-700 focus:border-brand-red focus:ring-brand-red/15 bg-black'
         : 'border-gray-200 focus:border-brand-red focus:ring-brand-red/15 bg-white';
 
   return (
@@ -586,7 +586,7 @@ export default function CalculatorComponent() {
                         View plot breakdown
                       </summary>
                       <div className={`mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs p-3 rounded-xl ${
-                        isDark ? 'bg-gray-800/50' : 'bg-white'
+                        isDark ? 'bg-black' : 'bg-white'
                       }`}>
                         {plotResult.validPlots.map(plot => (
                           <div key={plot.id} className={`flex justify-between ${
@@ -641,7 +641,7 @@ export default function CalculatorComponent() {
                   <div
                     key={label}
                     className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs ${
-                      isDark ? 'bg-gray-800/60 text-gray-300' : 'bg-white text-gray-700 border border-amber-100'
+                      isDark ? 'bg-black text-gray-300' : 'bg-white text-gray-700 border border-amber-100'
                     }`}
                   >
                     <span className="font-bold">{label}</span>

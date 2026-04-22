@@ -171,12 +171,12 @@ const Navbar = () => {
                     transition={{ duration: 0.2 }}
                     className={`absolute right-0 top-full mt-2 w-64 rounded-2xl border shadow-2xl overflow-hidden z-50 ${
                       isDark
-                        ? 'bg-gray-900 border-gray-800 shadow-black/60'
+                        ? 'bg-black border-gray-800 shadow-black/70'
                         : 'bg-white border-gray-200 shadow-gray-200/80'
                     }`}
                   >
                     {/* Header */}
-                    <div className={`px-4 py-3 border-b ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
+                    <div className={`px-4 py-3 border-b ${isDark ? 'border-gray-800 bg-black' : 'border-gray-100 bg-white'}`}>
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -193,7 +193,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Action buttons */}
-                    <div className="p-3 flex flex-col gap-2">
+                    <div className={`p-3 flex flex-col gap-2 ${isDark ? 'bg-black' : 'bg-white'}`}>
                       <a
                         href="tel:+919824235642"
                         onClick={() => setContactOpen(false)}
@@ -231,7 +231,7 @@ const Navbar = () => {
                         onClick={() => setContactOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border text-xs font-semibold active:scale-95 transition-all ${
                           isDark
-                            ? 'border-gray-700 text-gray-300 hover:bg-gray-900'
+                            ? 'border-gray-700 bg-black text-gray-300 hover:bg-gray-900'
                             : 'border-gray-200 text-gray-700 hover:bg-gray-50'
                         }`}
                       >

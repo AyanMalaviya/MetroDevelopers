@@ -19,7 +19,6 @@ import {
   websiteSchema,
   realEstateListingSchema,
 } from '../utils/schemas.js';
-import { GUIDE_PAGES, LOCAL_MARKET_PAGES } from '../data/seoRoutes.js';
 
 
 /* ─── Hero images — light vs dark ─── */
@@ -218,10 +217,10 @@ const QuoteCarousel = ({ quotes, isDark }) => {
               className={`rounded-2xl border p-3 sm:p-5 transition-all ${
                 isCenter
                   ? isDark
-                    ? 'bg-gray-900 border-gray-700 shadow-xl shadow-black/40'
+                    ? 'bg-black border-gray-700 shadow-xl shadow-black/50'
                     : 'bg-white border-gray-300 shadow-xl shadow-gray-200/80'
                   : isDark
-                    ? 'bg-gray-900/60 border-gray-800 opacity-85'
+                    ? 'bg-black border-gray-800 opacity-90'
                     : 'bg-gray-50 border-gray-200 opacity-85'
               }`}
             >
@@ -287,75 +286,79 @@ const QuoteCarousel = ({ quotes, isDark }) => {
 
 
 /* ════════════════════════════════════════════════
-   FEATURE ROW
+   FEATURE CARD
    ════════════════════════════════════════════════ */
 const FeatureRow = ({ feat, index, isDark }) => {
   const rowRef = useRef(null);
-  const inView  = useInView(rowRef, { once: true, margin: '-80px' });
-  const isEven  = index % 2 === 0;
-  const color   = featureColors[index];
+  const inView = useInView(rowRef, { once: true, margin: '-80px' });
+  const color = featureColors[index];
 
   return (
-    <motion.div
+    <motion.article
       ref={rowRef}
-      initial={{ opacity: 0, x: isEven ? -56 : 56 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 items-center`}
+      initial={{ opacity: 0, y: 22 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className={`rounded-2xl border p-4 sm:p-6 transition-colors ${
+        isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
+      }`}
     >
-      {/* Image */}
-      <div className="w-full lg:w-[46%] flex-shrink-0">
-        <div className="relative">
-          <div className={`p-[3px] rounded-3xl bg-gradient-to-br ${color.gradient} shadow-2xl ${color.shadow}`}>
-            <div className={`rounded-[calc(1.5rem-3px)] overflow-hidden aspect-[4/3] relative ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
-              <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} flex items-center justify-center`}>
-                <div className="opacity-[0.12] scale-[4] text-white pointer-events-none select-none">{feat.icon}</div>
-              </div>
-              <img src={feat.image} alt={feat.alt} width={800} height={600}
-                className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async"
-                onError={e => { e.currentTarget.style.opacity = '0'; }} />
+      <div className="relative mb-5">
+        <div className={`p-[2px] rounded-2xl bg-gradient-to-br ${color.gradient}`}>
+          <div className={`rounded-[calc(1rem-2px)] overflow-hidden aspect-[16/9] relative ${isDark ? 'bg-black' : 'bg-gray-100'}`}>
+            <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} flex items-center justify-center`}>
+              <div className="opacity-[0.12] scale-[3.2] text-white pointer-events-none select-none">{feat.icon}</div>
             </div>
+            <img
+              src={feat.image}
+              alt={feat.alt}
+              width={800}
+              height={600}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              onError={(e) => {
+                e.currentTarget.style.opacity = '0';
+              }}
+            />
           </div>
-          <div className={`absolute -bottom-4 ${isEven ? 'right-5' : 'left-5'} z-10`}>
-            <div className={`px-5 py-2 rounded-2xl bg-gradient-to-r ${color.gradient} text-white font-extrabold text-xl shadow-xl font-display`}>
-              0{index + 1} / 06
-            </div>
+        </div>
+        <div className="absolute top-3 right-3 z-10">
+          <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${color.gradient} text-white font-extrabold text-xs shadow-md font-display`}>
+            Feature {String(index + 1).padStart(2, '0')}
           </div>
-          <div className={`absolute ${isEven ? '-top-5 -left-5' : '-top-5 -right-5'} w-20 h-20 rounded-full bg-gradient-to-br ${color.gradient} opacity-25 blur-2xl pointer-events-none`} />
         </div>
       </div>
 
-      {/* Content */}
-      <div className="w-full lg:w-[54%] pt-6 lg:pt-0">
-        <div className="flex items-center gap-4 mb-5">
-          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-lg`}>
-            {feat.icon}
-          </div>
-          <span className={`text-[10px] font-black tracking-[0.22em] uppercase ${color.text}`}>
-            Feature {String(index + 1).padStart(2, '0')}
-          </span>
+      <div className="flex items-center gap-3 mb-3">
+        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-md`}>
+          {feat.icon}
         </div>
-        <h3 className="text-2xl sm:text-3xl font-extrabold mb-4 leading-tight font-display">
-          <span className={`bg-gradient-to-r ${color.gradient} bg-clip-text text-transparent`}>{feat.title}</span>
-        </h3>
-        <p className={`text-sm sm:text-base leading-relaxed mb-7 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-          {feat.description}
-        </p>
-        <ul className="space-y-3 mb-7">
-          {feat.details.map((detail, di) => (
-            <li key={di} className="flex items-center gap-3">
-              <div className={`w-5 h-5 rounded-full flex-shrink-0 bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-sm`}>
-                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                  <path d="M1.5 4L3.5 6.5L8.5 1.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <span className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{detail}</span>
-            </li>
-          ))}
-        </ul>
-        <div className={`h-[3px] w-16 rounded-full bg-gradient-to-r ${color.gradient}`} />
+        <span className={`text-[10px] font-black tracking-[0.18em] uppercase ${color.text}`}>
+          Premium Infrastructure
+        </span>
       </div>
-    </motion.div>
+
+      <h3 className="text-xl sm:text-2xl font-extrabold mb-3 leading-tight font-display">
+        <span className={`bg-gradient-to-r ${color.gradient} bg-clip-text text-transparent`}>{feat.title}</span>
+      </h3>
+      <p className={`text-sm leading-relaxed mb-5 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+        {feat.description}
+      </p>
+      <ul className="space-y-2.5">
+        {feat.details.map((detail, di) => (
+          <li key={di} className="flex items-center gap-3">
+            <div className={`w-[18px] h-[18px] rounded-full flex-shrink-0 bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-sm`}>
+              <svg width="9" height="7" viewBox="0 0 10 8" fill="none">
+                <path d="M1.5 4L3.5 6.5L8.5 1.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{detail}</span>
+          </li>
+        ))}
+      </ul>
+      <div className={`h-[3px] w-14 rounded-full bg-gradient-to-r ${color.gradient} mt-5`} />
+    </motion.article>
   );
 };
 
@@ -364,65 +367,71 @@ const FeatureRow = ({ feat, index, isDark }) => {
    INVESTMENT SECTION  — full light + dark support
    ════════════════════════════════════════════════ */
 const InvestmentSection = ({ isDark }) => {
-  const sectionRef  = useRef(null);
-  const inView      = useInView(sectionRef, { once: true, margin: '-80px' });
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
   const [activeQ, setActiveQ] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setActiveQ(p => (p + 1) % bigQuotes.length), 5000);
+    const id = setInterval(() => setActiveQ((p) => (p + 1) % bigQuotes.length), 5000);
     return () => clearInterval(id);
   }, []);
 
-  /* ── Shared semantic classes ── */
-  const sectionBg    = isDark ? 'bg-[#080810]'                            : 'bg-gradient-to-b from-slate-50 via-white to-gray-50';
-  const headingColor = isDark ? 'text-white'                               : 'text-gray-900';
-  const bodyColor    = isDark ? 'text-gray-400'                            : 'text-gray-600';
-  const mutedColor   = isDark ? 'text-gray-500'                            : 'text-gray-500';
-  const tagBg        = isDark ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'   : 'bg-orange-50 border-orange-300/70 text-orange-600';
-  const quoteWrap    = isDark ? 'border-white/8 bg-white/[0.03]'           : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60';
-  const quoteText    = isDark ? 'text-white/90'                            : 'text-gray-800';
-  const quoteIconCls = isDark ? 'opacity-[0.08] text-white'                : 'opacity-[0.06] text-gray-900';
-  const dotInactive  = isDark ? 'bg-white/20 hover:bg-white/40'            : 'bg-gray-300 hover:bg-gray-400';
-  const cardBase     = isDark ? 'border-white/8 bg-white/[0.03]'           : 'border-gray-200/80 bg-white shadow-sm';
-  const cardFeat     = isDark
+  const sectionBg = isDark ? 'bg-[#080810]' : 'bg-gradient-to-b from-slate-50 via-white to-gray-50';
+  const headingColor = isDark ? 'text-white' : 'text-gray-900';
+  const bodyColor = isDark ? 'text-gray-400' : 'text-gray-600';
+  const mutedColor = isDark ? 'text-gray-500' : 'text-gray-500';
+  const tagBg = isDark ? 'bg-orange-500/10 border-orange-500/30 text-orange-400' : 'bg-orange-50 border-orange-300/70 text-orange-600';
+  const quoteWrap = isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60';
+  const quoteText = isDark ? 'text-white/90' : 'text-gray-800';
+  const quoteIconCls = isDark ? 'opacity-[0.08] text-white' : 'opacity-[0.06] text-gray-900';
+  const dotInactive = isDark ? 'bg-white/20 hover:bg-white/40' : 'bg-gray-300 hover:bg-gray-400';
+  const cardBase = isDark ? 'border-gray-800 bg-black' : 'border-gray-200/80 bg-white shadow-sm';
+  const cardFeat = isDark
     ? 'border-red-500/50 bg-gradient-to-b from-red-950/80 to-orange-950/60 shadow-2xl shadow-red-500/20'
     : 'border-red-300 bg-gradient-to-b from-red-50 to-orange-50 shadow-xl shadow-red-200/40';
-  const cardName     = isDark ? 'text-white'                               : 'text-gray-900';
-  const cardYieldN   = isDark ? 'text-gray-500'                            : 'text-gray-400';
-  const cardCons     = isDark ? 'text-gray-500'                            : 'text-gray-500';
-  const cardConsIcon = isDark ? 'text-gray-600'                            : 'text-gray-400';
-  const cardPros     = isDark ? 'text-gray-300'                            : 'text-gray-700';
-  const reasonCard   = isDark ? 'border-white/8 bg-white/[0.03] hover:border-white/15'        : 'border-gray-200 bg-white shadow-sm hover:border-gray-300 hover:shadow-md';
-  const reasonTitle  = isDark ? 'text-white'                               : 'text-gray-900';
-  const reasonDesc   = isDark ? 'text-gray-500 group-hover:text-gray-400'  : 'text-gray-500 group-hover:text-gray-700';
-  const subHeading   = isDark ? 'text-white'                               : 'text-gray-900';
-  const bottomText   = isDark ? 'text-gray-500'                            : 'text-gray-600';
-  const gridTexture  = isDark
-    ? { backgroundImage: 'linear-gradient(rgba(255,255,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.07) 1px,transparent 1px)', backgroundSize: '64px 64px', opacity: 0.025 }
-    : { backgroundImage: 'linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px)',           backgroundSize: '64px 64px', opacity: 1 };
+  const cardName = isDark ? 'text-white' : 'text-gray-900';
+  const cardYieldN = isDark ? 'text-gray-500' : 'text-gray-400';
+  const cardCons = isDark ? 'text-gray-500' : 'text-gray-500';
+  const cardConsIcon = isDark ? 'text-gray-600' : 'text-gray-400';
+  const cardPros = isDark ? 'text-gray-300' : 'text-gray-700';
+  const reasonCard = isDark ? 'border-gray-800 bg-black hover:border-gray-700' : 'border-gray-200 bg-white shadow-sm hover:border-gray-300 hover:shadow-md';
+  const reasonTitle = isDark ? 'text-white' : 'text-gray-900';
+  const reasonDesc = isDark ? 'text-gray-500 group-hover:text-gray-400' : 'text-gray-500 group-hover:text-gray-700';
+  const subHeading = isDark ? 'text-white' : 'text-gray-900';
+  const bottomText = isDark ? 'text-gray-500' : 'text-gray-600';
+  const gridTexture = isDark
+    ? {
+        backgroundImage:
+          'linear-gradient(rgba(255,255,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.07) 1px,transparent 1px)',
+        backgroundSize: '64px 64px',
+        opacity: 0.025,
+      }
+    : {
+        backgroundImage:
+          'linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px)',
+        backgroundSize: '64px 64px',
+        opacity: 1,
+      };
 
   return (
-    <section ref={sectionRef} className={`relative py-24 sm:py-36 overflow-hidden ${sectionBg}`}>
-
-      {/* Ambient glows */}
+    <section ref={sectionRef} className={`relative py-16 sm:py-36 overflow-hidden ${sectionBg}`}>
       <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} />
       <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/10'}`} />
       <div className={`absolute top-1/2 left-0 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-violet-600/6' : 'bg-violet-300/8'}`} />
 
-      {/* Grid texture */}
       <div className="absolute inset-0 pointer-events-none" style={gridTexture} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-
-        {/* ── Header ── */}
         <motion.div
-          initial={{ opacity: 0, y: 28 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }} className="text-center mb-20"
+          initial={{ opacity: 0, y: 28 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
           <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-5 ${tagBg}`}>
             <TrendingUp size={11} className="animate-pulse" /> Smarter Investment
           </span>
-          <h2 className="text-4xl sm:text-6xl font-black leading-tight mb-5 font-display">
+          <h2 className="text-3xl sm:text-6xl font-black leading-tight mb-5 font-display">
             <span className={headingColor}>Industrial Sheds </span>
             <span className="block sm:inline bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
               vs. Everything Else
@@ -435,26 +444,27 @@ const InvestmentSection = ({ isDark }) => {
           </p>
         </motion.div>
 
-        {/* ── Quote Banner ── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className={`relative mb-20 rounded-3xl border overflow-hidden p-8 sm:p-12 transition-colors duration-300 ${quoteWrap}`}
+          className={`relative mb-12 rounded-3xl border overflow-hidden p-6 sm:p-12 transition-colors duration-300 ${quoteWrap}`}
         >
-          {/* top shimmer line */}
           <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/20' : 'via-gray-300/60'}`} />
           <QuoteIcon className={`absolute top-6 left-6 ${quoteIconCls}`} size={64} />
 
           <div className="relative min-h-[260px] sm:min-h-[280px]">
             {bigQuotes.map((q, i) => (
-              <motion.div key={i} initial={false}
+              <motion.div
+                key={i}
+                initial={false}
                 animate={{ opacity: i === activeQ ? 1 : 0, y: i === activeQ ? 0 : 10 }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="absolute inset-0 flex items-center justify-center px-4 text-center pointer-events-none"
                 aria-hidden={i !== activeQ}
               >
                 <div className="max-w-4xl mx-auto">
-                  <p className={`text-xl sm:text-3xl font-light italic leading-relaxed mb-6 ${quoteText} font-accent`}>
+                  <p className={`text-lg sm:text-3xl font-light italic leading-relaxed mb-6 ${quoteText} font-accent`}>
                     "{q.text}"
                   </p>
                   <div className="flex flex-col items-center gap-1">
@@ -468,23 +478,28 @@ const InvestmentSection = ({ isDark }) => {
             ))}
           </div>
 
-          {/* Dot nav */}
           <div className="flex justify-center gap-2 mt-6">
             {bigQuotes.map((_, i) => (
-              <button key={i} onClick={() => setActiveQ(i)}
-                className={`rounded-full transition-all duration-300 ${i === activeQ ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${dotInactive}`}`} />
+              <button
+                key={i}
+                onClick={() => setActiveQ(i)}
+                className={`rounded-full transition-all duration-300 ${
+                  i === activeQ ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${dotInactive}`
+                }`}
+              />
             ))}
           </div>
           <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/10' : 'via-gray-200'}`} />
         </motion.div>
 
-        {/* ── Comparison Cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
           {investments.map((inv, i) => {
             const Icon = inv.icon;
             return (
-              <motion.div key={inv.name}
-                initial={{ opacity: 0, y: 36 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+              <motion.div
+                key={inv.name}
+                initial={{ opacity: 0, y: 36 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.1 + i * 0.1, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                 className={`relative rounded-2xl border p-6 flex flex-col gap-4 overflow-hidden transition-all duration-300 ${inv.isUs ? cardFeat : cardBase}`}
               >
@@ -499,17 +514,13 @@ const InvestmentSection = ({ isDark }) => {
                   </>
                 )}
 
-                {/* Icon + Name */}
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${inv.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-lg`}>
                     <Icon size={18} />
                   </div>
-                  <p className={`font-bold text-sm ${cardName} font-body`}>
-                    {inv.name}
-                  </p>
+                  <p className={`font-bold text-sm ${cardName} font-body`}>{inv.name}</p>
                 </div>
 
-                {/* Yield */}
                 <div>
                   <div className={`text-3xl font-black bg-gradient-to-r ${inv.gradient} bg-clip-text text-transparent font-display`}>
                     {inv.yield}
@@ -517,7 +528,6 @@ const InvestmentSection = ({ isDark }) => {
                   <div className={`text-[11px] mt-0.5 ${cardYieldN}`}>{inv.yieldNote}</div>
                 </div>
 
-                {/* Pros / Cons */}
                 <ul className="space-y-2 flex-1">
                   {inv.isUs
                     ? inv.pros.map((p, j) => (
@@ -538,16 +548,15 @@ const InvestmentSection = ({ isDark }) => {
           })}
         </div>
 
-        {/* ── Why It Matters ── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5, duration: 0.7 }} className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.5, duration: 0.7 }}
+          className="text-center mb-10"
         >
-          <h3 className={`text-2xl sm:text-4xl font-black mb-3 ${subHeading} font-display`}>
+          <h3 className={`text-xl sm:text-4xl font-black mb-3 ${subHeading} font-display`}>
             Beyond Returns:{' '}
-            <span className="bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">
-              The Bigger Picture
-            </span>
+            <span className="bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">The Bigger Picture</span>
           </h3>
           <p className={`text-sm max-w-xl mx-auto ${bodyColor}`}>
             Industrial investment isn't just financially superior — it builds real communities, real jobs and real India.
@@ -558,8 +567,10 @@ const InvestmentSection = ({ isDark }) => {
           {investReasons.map((r, i) => {
             const Icon = r.icon;
             return (
-              <motion.div key={r.title}
-                initial={{ opacity: 0, y: 28 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+              <motion.div
+                key={r.title}
+                initial={{ opacity: 0, y: 28 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.55 + i * 0.08, duration: 0.6 }}
                 whileHover={{ y: -6, scale: 1.02 }}
                 className={`group relative rounded-2xl border p-6 overflow-hidden transition-all duration-300 cursor-default shadow-lg ${reasonCard} ${r.glow}`}
@@ -568,34 +579,35 @@ const InvestmentSection = ({ isDark }) => {
                 <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center text-white mb-4 shadow-lg`}>
                   <Icon size={20} />
                 </div>
-                <h4 className={`font-bold text-base mb-2 ${reasonTitle} font-body`}>
-                  {r.title}
-                </h4>
+                <h4 className={`font-bold text-base mb-2 ${reasonTitle} font-body`}>{r.title}</h4>
                 <p className={`text-sm leading-relaxed transition-colors ${reasonDesc}`}>{r.desc}</p>
               </motion.div>
             );
           })}
         </div>
 
-        {/* ── Bottom CTA strip ── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.9, duration: 0.7 }} className="mt-16 text-center"
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.9, duration: 0.7 }}
+          className="mt-12 text-center"
         >
           <p className={`text-sm mb-4 ${bottomText}`}>
             Industrial & warehousing leasing hit a{' '}
             <span className="text-orange-500 font-semibold">record 37 million sq ft in 2025</span> — a 28% surge across India's top cities.
           </p>
           <Link to="/metro-industrial-park">
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white font-bold text-sm shadow-xl shadow-red-500/30 hover:shadow-red-500/50 transition-shadow">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white font-bold text-sm shadow-xl shadow-red-500/30 hover:shadow-red-500/50 transition-shadow"
+            >
               <Factory size={16} />
               Start Your Investment — Explore Units
               <ArrowRight size={15} />
             </motion.button>
           </Link>
         </motion.div>
-
       </div>
     </section>
   );
@@ -683,7 +695,7 @@ const HomePage = () => {
 
 {/* ════════ HERO ════════ */}
 <section className="relative pt-16">
-<div className="relative h-[35svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
+  <div className="relative h-[26svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
   <img
     src={heroImage}
     alt={heroAlt}
@@ -699,7 +711,7 @@ const HomePage = () => {
   <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" />
 
   {/* Badge — center bottom */}
-  <div className="absolute inset-0 flex items-end justify-center pb-3 sm:pb-6 px-4">
+  <div className="absolute inset-0 flex items-end justify-center pb-2 sm:pb-6 px-4">
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
@@ -718,7 +730,7 @@ const HomePage = () => {
     initial={{ opacity: 0, x: -18 }}
     animate={{ opacity: 1, x: 0 }}
     transition={{ delay: 0.35, duration: 0.6 }}
-    className="absolute bottom-8 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[52%] sm:max-w-[44%] lg:max-w-[340px]"
+    className="absolute bottom-5 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[58%] sm:max-w-[44%] lg:max-w-[340px]"
   >
     {/* Eyebrow */}
     <span className="hidden sm:inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-red mb-1.5">
@@ -733,7 +745,7 @@ const HomePage = () => {
         lineHeight: 1.05,
         letterSpacing: '0.02em',
       }}
-      className="text-[1.5rem] sm:text-[2rem] lg:text-[3rem]"
+      className="text-[1.2rem] sm:text-[2rem] lg:text-[3rem]"
     >
       <span className="block text-white">A Space Built for</span>
       <span
@@ -761,12 +773,12 @@ const HomePage = () => {
 
 
   {/* ── Below-hero stats + CTA panel ── */}
-<div className={`${isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'}`}>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+  <div className={`${isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'}`}>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
     <div className="flex flex-col items-center gap-4">
 
       {/* Stats — fixed max width so cards don't stretch too wide */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-lg">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg">
         {[
           { icon: <TrendingUp size={16} />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
           { icon: <LucideFactory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
@@ -775,15 +787,15 @@ const HomePage = () => {
           <motion.div
             key={label}
             whileHover={{ scale: 1.04, y: -3 }}
-            className={`p-3 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
-              isDark ? 'bg-gray-900/70' : 'bg-gray-50'
+            className={`p-2.5 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
+              isDark ? 'bg-black' : 'bg-gray-50'
             }`}
           >
             <span className={`${color} flex justify-center mb-1`}>{icon}</span>
-            <div className={`text-lg sm:text-2xl font-black ${color}`} style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
+            <div className={`text-base sm:text-2xl font-black ${color}`} style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
               {value}
             </div>
-            <div className={`text-[9px] sm:text-[11px] font-semibold ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+            <div className={`text-[8px] sm:text-[11px] font-semibold ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
               {label}
             </div>
           </motion.div>
@@ -805,7 +817,7 @@ const HomePage = () => {
           to="/site-map"
           className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
             isDark
-              ? 'border-brand-red/50 bg-gray-900/70 text-red-300 hover:border-brand-red hover:text-red-200'
+              ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
               : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
           }`}
         >
@@ -819,7 +831,7 @@ const HomePage = () => {
           rel="noopener noreferrer"
           className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
             isDark
-              ? 'border-white/25 bg-gray-900/70 text-white hover:border-green-400/60 hover:text-green-300'
+              ? 'border-white/25 bg-black text-white hover:border-green-400/60 hover:text-green-300'
               : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
           }`}
         >
@@ -834,19 +846,19 @@ const HomePage = () => {
 </section>
 
         {/* ════════ FEATURES ════════ */}
-        <section ref={featuresRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        <section ref={featuresRef} className={`py-14 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" />
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7 }} className="text-center mb-20">
+              transition={{ duration: 0.7 }} className="text-center mb-14 sm:mb-20">
               <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 ${
                 isDark ? 'bg-white/10 text-red-300 border-red-400/40' : 'bg-brand-red/10 text-brand-red border-brand-red/30'
               }`}>
                 <Sparkles size={11} className="animate-pulse" /> Why Choose Us
               </span>
-              <h2 className="text-3xl sm:text-5xl font-black mt-3 mb-4 leading-tight"
+              <h2 className="text-2xl sm:text-5xl font-black mt-3 mb-4 leading-tight"
                 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                 <span className={isDark ? 'text-white' : 'text-gray-900'}>Everything Your Business </span>
                 <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">Needs</span>
@@ -854,7 +866,7 @@ const HomePage = () => {
               <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" />
             </motion.div>
 
-            <div className="space-y-24 sm:space-y-32">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
               {features.map((feat, i) => (
                 <FeatureRow key={i} feat={feat} index={i} isDark={isDark} />
               ))}
@@ -863,12 +875,12 @@ const HomePage = () => {
         </section>
 
         {/* ════════ STATS ════════ */}
-        <section ref={statsRef} className={`py-20 sm:py-28 relative overflow-hidden ${isDark ? 'bg-black' : 'bg-white'}`}>
+        <section ref={statsRef} className={`py-14 sm:py-28 relative overflow-hidden ${isDark ? 'bg-black' : 'bg-white'}`}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }} className="text-center mb-14">
-              <h2 className="text-3xl sm:text-5xl font-black mb-4"
+              <h2 className="text-2xl sm:text-5xl font-black mb-4"
                 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                 <span className={isDark ? 'text-white' : 'text-gray-900'}>Experience by </span>
                 <span className="bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">Numbers</span>
@@ -906,85 +918,14 @@ const HomePage = () => {
         {/* ════════ INVESTMENT — passes isDark ════════ */}
         <InvestmentSection isDark={isDark} />
 
-        {/* ════════ LOCAL + GUIDE CLUSTERS ════════ */}
-        <section className={`py-20 sm:py-24 ${isDark ? 'bg-black' : 'bg-white'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-10">
-              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 ${
-                isDark ? 'bg-gray-900 border-gray-700 text-red-300' : 'bg-red-50 border-red-200 text-brand-red'
-              }`}>
-                <MapPin size={12} /> Hyper-local SEO Cluster
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-black theme-text-primary">
-                Explore By <span className="text-brand-red">Micro-Market</span>
-              </h2>
-              <p className={`mt-3 text-sm sm:text-base max-w-3xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Dedicated pages for Changodar and Sarkhej Bavla Highway help capture location-intent searches with lower competition and stronger conversion intent.
-              </p>
-            </div>
-
-            <div className="grid gap-5 lg:grid-cols-2">
-              <article className={`rounded-2xl border p-5 sm:p-6 ${isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-200 bg-gray-50'}`}>
-                <h3 className="text-2xl font-extrabold theme-text-primary mb-4">Location-specific pages</h3>
-                <div className="space-y-3">
-                  {LOCAL_MARKET_PAGES.filter((page) => page.showInPrimaryNavigation !== false).map((page) => (
-                    <Link
-                      key={page.path}
-                      to={page.path}
-                      className={`group flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
-                        isDark
-                          ? 'border-gray-700 bg-gray-800/70 text-gray-100 hover:border-brand-red'
-                          : 'border-gray-200 bg-white text-gray-800 hover:border-brand-red'
-                      }`}
-                    >
-                      {page.breadcrumb}
-                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  ))}
-                </div>
-              </article>
-
-              <article className={`rounded-2xl border p-5 sm:p-6 ${isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-200 bg-gray-50'}`}>
-                <h3 className="text-2xl font-extrabold theme-text-primary mb-1">Investor intent guides</h3>
-                <p className={`text-sm mb-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Publish educational content that ranks before bottom-funnel "for sale" queries.
-                </p>
-                <div className="space-y-3">
-                  {GUIDE_PAGES.map((guide) => (
-                    <Link
-                      key={guide.path}
-                      to={guide.path}
-                      className={`group flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
-                        isDark
-                          ? 'border-gray-700 bg-gray-800/70 text-gray-100 hover:border-brand-red'
-                          : 'border-gray-200 bg-white text-gray-800 hover:border-brand-red'
-                      }`}
-                    >
-                      {guide.breadcrumb}
-                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  ))}
-                </div>
-
-                <Link
-                  to="/calculator"
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-700"
-                >
-                  <TrendingUp size={14} /> Check ROI Potential
-                </Link>
-              </article>
-            </div>
-          </div>
-        </section>
-
         {/* ════════ CTA ════════ */}
-        <section ref={ctaRef} className={`py-20 sm:py-32 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        <section ref={ctaRef} className={`py-14 sm:py-32 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" />
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 32 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }}
               className={`p-10 sm:p-16 rounded-3xl border shadow-2xl transition-colors duration-500 ${
-                isDark ? 'bg-gray-900/80 border-gray-800 hover:border-brand-red/30' : 'bg-white/90 border-gray-200 hover:border-brand-red/30'
+                isDark ? 'bg-black border-gray-800 hover:border-brand-red/30' : 'bg-white/90 border-gray-200 hover:border-brand-red/30'
               }`}>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2 }}
@@ -995,7 +936,7 @@ const HomePage = () => {
 
               <motion.h2 initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.3 }}
-                className="text-3xl sm:text-5xl font-black mb-5 leading-tight"
+                className="text-2xl sm:text-5xl font-black mb-5 leading-tight"
                 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                 <span className={isDark ? 'text-white' : 'text-gray-900'}>Ready to Find Your </span>
                 <br className="hidden sm:block" />
@@ -1022,7 +963,7 @@ const HomePage = () => {
                 </a>
                 <a href="tel:+919824235642"
                   className={`group inline-flex items-center justify-center gap-3 px-9 py-4 border-2 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg ${
-                    isDark ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-gray-900/50'
+                    isDark ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
                            : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
                   }`}>
                   <Phone size={18} className="group-hover:scale-110 transition-transform" />

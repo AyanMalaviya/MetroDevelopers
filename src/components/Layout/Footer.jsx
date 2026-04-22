@@ -187,7 +187,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden flex-shrink-0 ${
-                isDark ? 'border-gray-800 bg-gray-900/30' : 'border-gray-200 bg-white'
+                isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'
               }`}>
                 <img
                   src="/MDLogo.png"
@@ -301,7 +301,7 @@ const Footer = () => {
 
             {/* QR card — desktop only */}
             <div className={`hidden lg:flex mt-5 items-center gap-3 rounded-xl border p-3 ${
-              isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-white'
+              isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'
             }`}>
               <a
                 href={mapsUrl}

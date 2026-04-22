@@ -282,7 +282,7 @@ const RecordsPage = () => {
                     key={stat.label}
                     className={`rounded-2xl border px-4 py-3 ${
                       isDark
-                        ? 'border-gray-800 bg-gray-900/70'
+                        ? 'border-gray-800 bg-black'
                         : 'border-gray-200 bg-white'
                     }`}
                   >
@@ -334,7 +334,7 @@ const RecordsPage = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.05 }}
-              className={`rounded-[28px] border p-5 shadow-xl ${isDark ? 'border-gray-800 bg-black/80' : 'border-gray-200 bg-white'}`}
+              className={`rounded-[28px] border p-5 shadow-xl ${isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'}`}
             >
               <div className="mb-5 flex items-start justify-between gap-3">
                 <div>
@@ -455,7 +455,7 @@ const RecordsPage = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className={`rounded-[28px] border p-5 shadow-xl ${isDark ? 'border-gray-800 bg-black/80' : 'border-gray-200 bg-white'}`}
+              className={`rounded-[28px] border p-5 shadow-xl ${isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'}`}
             >
               <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
@@ -510,7 +510,7 @@ const RecordsPage = () => {
                         ))}
                       </tr>
                     </thead>
-                    <tbody className={`divide-y ${isDark ? 'divide-gray-800 bg-black/70' : 'divide-gray-100 bg-white'}`}>
+                    <tbody className={`divide-y ${isDark ? 'divide-gray-800 bg-black' : 'divide-gray-100 bg-white'}`}>
                       {!isLoading && filteredRecords.length === 0 && (
                         <tr>
                           <td colSpan="8" className={`px-4 py-12 text-center text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>

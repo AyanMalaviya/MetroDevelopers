@@ -46,7 +46,7 @@ const RecordsAccessGate = ({ children }) => {
       }`}>
         <div className={`w-full max-w-md rounded-3xl border px-6 py-8 text-center shadow-2xl ${
           isDark
-            ? 'bg-black/80 border-gray-800 text-white'
+            ? 'bg-black border-gray-800 text-white'
             : 'bg-white border-gray-200 text-gray-900'
         }`}>
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-red/10 text-brand-red">

@@ -389,7 +389,7 @@ const MetroIndustrialPark = () => {
                       key={i}
                       className={`text-center px-5 py-3 rounded-xl border transition-all duration-200 hover:border-brand-red/50 hover:scale-105 ${
                         isDark
-                          ? 'bg-gray-900/80 border-gray-800 hover:bg-gray-800'
+                          ? 'bg-black border-gray-800 hover:bg-gray-800'
                           : 'bg-white border-gray-100 shadow-sm hover:shadow-md'
                       }`}
                     >
