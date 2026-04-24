@@ -110,7 +110,7 @@ const MetroArcade = () => {
         structuredData={metroArcadePageSchema}
       />
 
-      <div className="min-h-screen theme-bg-primary">
+      <div className="relative min-h-screen theme-bg-primary">
       {/* ===== Hero Section with Slideshow ===== */}
       <section className="relative h-[54vh] sm:h-[62vh] lg:h-[70vh] overflow-hidden pt-16">
         <div className="relative w-full h-full">

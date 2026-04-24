@@ -218,16 +218,6 @@ export default function LocalMarketPage() {
           }`}
         >
           {/* grid texture */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: isDark
-                ? 'linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px)'
-                : 'linear-gradient(rgba(0,0,0,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.035) 1px,transparent 1px)',
-              backgroundSize: '48px 48px',
-            }}
-          />
           <div aria-hidden="true" className={`absolute -top-10 left-1/4 w-[28rem] h-[28rem] rounded-full blur-3xl pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} />
           <div aria-hidden="true" className={`absolute top-10 right-1/4 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/8'}`} />
 

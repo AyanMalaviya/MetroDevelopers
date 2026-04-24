@@ -109,7 +109,7 @@ const Calculator = () => {
         structuredData={[propertySchema, calculatorSchema]}
       />
 
-      <div className={`min-h-screen theme-bg-primary ${
+      <div className={`relative overflow-hidden min-h-screen theme-bg-primary ${
         isDark
           ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'

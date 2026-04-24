@@ -322,8 +322,8 @@ const MetroIndustrialPark = () => {
           {/* CONTENT ZONE */}
           <div className={`flex-1 flex items-center px-4 sm:px-6 py-5 ${
             isDark
-              ? 'bg-gray-950 border-t border-gray-800/60'
-              : 'bg-gradient-to-b from-white to-gray-50/80 border-t border-gray-100'
+              ? 'bg-gradient-to-b from-zinc-950 via-slate-950 to-black border-t border-slate-800/70'
+              : 'bg-gradient-to-b from-white via-rose-50/40 to-amber-50/30 border-t border-rose-100/70'
           }`}>
             <div className="max-w-7xl mx-auto w-full">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
@@ -407,8 +407,8 @@ const MetroIndustrialPark = () => {
         {/* ════════ QUICK STATS BAR ════════ */}
         <section className={`border-y ${
           isDark
-            ? 'bg-gradient-to-r from-gray-900 to-black border-gray-800'
-            : 'bg-gradient-to-r from-gray-100 to-white border-gray-200'
+            ? 'bg-gradient-to-r from-slate-950 via-zinc-900 to-black border-slate-800/80'
+            : 'bg-gradient-to-r from-slate-50 via-white to-rose-50 border-slate-200/80'
         }`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 divide-x divide-dashed divide-gray-500/20">
@@ -434,7 +434,11 @@ const MetroIndustrialPark = () => {
         </section>
 
         {/* ════════ MAIN CONTENT ════════ */}
-        <section className={`py-12 sm:py-16 lg:py-20 ${isDark ? 'bg-black' : 'bg-white'}`}>
+        <section className={`py-12 sm:py-16 lg:py-20 ${
+          isDark
+            ? 'bg-gradient-to-b from-black via-slate-950/90 to-black'
+            : 'bg-gradient-to-b from-white via-slate-50/40 to-rose-50/40'
+        }`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
 
@@ -578,8 +582,8 @@ const MetroIndustrialPark = () => {
                   {/* ROI */}
                   <div className={`rounded-2xl p-6 border ${
                     isDark
-                      ? 'bg-gradient-to-br from-green-900/30 to-transparent border-green-700/30'
-                      : 'bg-gradient-to-br from-green-50 to-white border-green-200'
+                      ? 'bg-gradient-to-br from-emerald-900/35 via-emerald-700/10 to-transparent border-emerald-500/30'
+                      : 'bg-gradient-to-br from-emerald-50 via-lime-50 to-white border-emerald-200'
                   }`}>
                     <div className="flex items-center gap-3 mb-2">
                       <TrendingUp className="text-green-500" size={22} />

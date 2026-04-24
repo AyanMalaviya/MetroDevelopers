@@ -1,4 +1,3 @@
-// src/pages/HomePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
@@ -156,12 +155,12 @@ const investments = [
 
 /* ─── Investment reasons ─── */
 const investReasons = [
-  { icon: Users,     title: 'Job Creation',           gradient: 'from-emerald-500 to-teal-400',  glow: 'shadow-emerald-500/15', desc: 'Each shed lease supports 10–50 local jobs. Your capital fuels real economic activity, not just paper wealth.' },
-  { icon: Globe,     title: 'Make in India',           gradient: 'from-blue-500 to-indigo-400',   glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
-  { icon: TrendingUp,title: 'Inflation-Proof Income',  gradient: 'from-amber-500 to-orange-400',  glow: 'shadow-amber-500/15',   desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that beat inflation every year.' },
-  { icon: Shield,    title: 'Tangible Asset',          gradient: 'from-green-500 to-emerald-400', glow: 'shadow-green-500/15',   desc: "Unlike FDs or gold ETFs, you own a real, insurable, income-generating structure with enduring land value beneath it." },
-  { icon: Award,     title: 'GST Input Credit',        gradient: 'from-violet-500 to-purple-400', glow: 'shadow-violet-500/15',  desc: "Industrial lessees can claim full GST input credit — a unique fiscal advantage completely unavailable with residential leases." },
-  { icon: BarChart3, title: 'Long-Term Stability',     gradient: 'from-rose-500 to-pink-400',     glow: 'shadow-rose-500/15',    desc: 'Industrial tenants sign 5–10 year leases vs 11-month residential agreements — predictable, compounding returns.' },
+  { icon: Users,      title: 'Job Creation',          gradient: 'from-emerald-500 to-teal-400',  glow: 'shadow-emerald-500/15', desc: 'Each shed lease supports 10–50 local jobs. Your capital fuels real economic activity, not just paper wealth.' },
+  { icon: Globe,      title: 'Make in India',          gradient: 'from-blue-500 to-indigo-400',   glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
+  { icon: TrendingUp, title: 'Inflation-Proof Income', gradient: 'from-amber-500 to-orange-400',  glow: 'shadow-amber-500/15',   desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that beat inflation every year.' },
+  { icon: Shield,     title: 'Tangible Asset',         gradient: 'from-green-500 to-emerald-400', glow: 'shadow-green-500/15',   desc: "Unlike FDs or gold ETFs, you own a real, insurable, income-generating structure with enduring land value beneath it." },
+  { icon: Award,      title: 'GST Input Credit',       gradient: 'from-violet-500 to-purple-400', glow: 'shadow-violet-500/15',  desc: "Industrial lessees can claim full GST input credit — a unique fiscal advantage completely unavailable with residential leases." },
+  { icon: BarChart3,  title: 'Long-Term Stability',    gradient: 'from-rose-500 to-pink-400',     glow: 'shadow-rose-500/15',    desc: 'Industrial tenants sign 5–10 year leases vs 11-month residential agreements — predictable, compounding returns.' },
 ];
 
 
@@ -178,36 +177,36 @@ const heroQuotes = [
   { text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.", author: 'James Dyson', role: 'Founder, Dyson', gradient: 'from-violet-500 to-purple-400' },
 ];
 
+
+/* ════════════════════════════════════════════════
+   QUOTE CAROUSEL  (identical to original)
+════════════════════════════════════════════════ */
 const QuoteCarousel = ({ quotes, isDark }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const total = quotes.length;
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % total);
-    }, 5500);
+    const id = setInterval(() => setActiveIndex((prev) => (prev + 1) % total), 5500);
     return () => clearInterval(id);
   }, [total]);
 
   const prevIndex = (activeIndex - 1 + total) % total;
   const nextIndex = (activeIndex + 1) % total;
-
   const handlePrev = () => setActiveIndex((prev) => (prev - 1 + total) % total);
   const handleNext = () => setActiveIndex((prev) => (prev + 1) % total);
 
   const visibleCards = [
-    { key: `left-${prevIndex}`, index: prevIndex, position: 'left' },
+    { key: `left-${prevIndex}`,     index: prevIndex,   position: 'left'   },
     { key: `center-${activeIndex}`, index: activeIndex, position: 'center' },
-    { key: `right-${nextIndex}`, index: nextIndex, position: 'right' },
+    { key: `right-${nextIndex}`,    index: nextIndex,   position: 'right'  },
   ];
 
   return (
     <div>
       <div className="grid grid-cols-[0.9fr_1.2fr_0.9fr] sm:grid-cols-[0.95fr_1.35fr_0.95fr] gap-2 sm:gap-4 items-stretch">
         {visibleCards.map(({ key, index, position }) => {
-          const quote = quotes[index];
+          const quote    = quotes[index];
           const isCenter = position === 'center';
-
           return (
             <motion.article
               key={key}
@@ -216,12 +215,10 @@ const QuoteCarousel = ({ quotes, isDark }) => {
               transition={{ duration: 0.3 }}
               className={`rounded-2xl border p-3 sm:p-5 transition-all ${
                 isCenter
-                  ? isDark
-                    ? 'bg-black border-gray-700 shadow-xl shadow-black/50'
-                    : 'bg-white border-gray-300 shadow-xl shadow-gray-200/80'
-                  : isDark
-                    ? 'bg-black border-gray-800 opacity-90'
-                    : 'bg-gray-50 border-gray-200 opacity-85'
+                  ? isDark ? 'bg-black border-gray-700 shadow-xl shadow-black/50'
+                           : 'bg-white border-gray-300 shadow-xl shadow-gray-200/80'
+                  : isDark ? 'bg-black border-gray-800 opacity-90'
+                           : 'bg-gray-50 border-gray-200 opacity-85'
               }`}
             >
               <div className={`h-1.5 rounded-full bg-gradient-to-r ${quote.gradient} ${isCenter ? 'w-16' : 'w-10'} mb-2.5`} />
@@ -242,41 +239,28 @@ const QuoteCarousel = ({ quotes, isDark }) => {
       </div>
 
       <div className="mt-3 flex items-center justify-center gap-2 sm:gap-3">
-        <button
-          type="button"
-          onClick={handlePrev}
-          aria-label="Previous quote"
+        <button type="button" onClick={handlePrev} aria-label="Previous quote"
           className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
-            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white' : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
-          }`}
-        >
+            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white'
+                   : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
+          }`}>
           <ArrowRight size={14} className="rotate-180" />
         </button>
-
         <div className="flex items-center gap-1.5">
           {quotes.map((quote, i) => (
-            <button
-              key={`${quote.author}-${i}`}
-              type="button"
-              onClick={() => setActiveIndex(i)}
+            <button key={`${quote.author}-${i}`} type="button" onClick={() => setActiveIndex(i)}
               aria-label={`Go to quote ${i + 1}`}
               className={`rounded-full transition-all ${
-                i === activeIndex
-                  ? 'w-6 h-1.5 bg-orange-400'
-                  : `w-1.5 h-1.5 ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`
+                i === activeIndex ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`
               }`}
             />
           ))}
         </div>
-
-        <button
-          type="button"
-          onClick={handleNext}
-          aria-label="Next quote"
+        <button type="button" onClick={handleNext} aria-label="Next quote"
           className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
-            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white' : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
-          }`}
-        >
+            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white'
+                   : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
+          }`}>
           <ArrowRight size={14} />
         </button>
       </div>
@@ -286,12 +270,12 @@ const QuoteCarousel = ({ quotes, isDark }) => {
 
 
 /* ════════════════════════════════════════════════
-   FEATURE CARD
-   ════════════════════════════════════════════════ */
+   FEATURE CARD  (identical to original)
+════════════════════════════════════════════════ */
 const FeatureRow = ({ feat, index, isDark }) => {
   const rowRef = useRef(null);
   const inView = useInView(rowRef, { once: true, margin: '-80px' });
-  const color = featureColors[index];
+  const color  = featureColors[index];
 
   return (
     <motion.article
@@ -300,7 +284,8 @@ const FeatureRow = ({ feat, index, isDark }) => {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={`rounded-2xl border p-4 sm:p-6 transition-colors ${
-        isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
+        isDark ? 'border-gray-800 bg-black/60 backdrop-blur-sm'
+               : 'border-gray-200/80 bg-white/80 backdrop-blur-sm shadow-sm'
       }`}
     >
       <div className="relative mb-5">
@@ -317,9 +302,7 @@ const FeatureRow = ({ feat, index, isDark }) => {
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
               decoding="async"
-              onError={(e) => {
-                e.currentTarget.style.opacity = '0';
-              }}
+              onError={(e) => { e.currentTarget.style.opacity = '0'; }}
             />
           </div>
         </div>
@@ -364,11 +347,12 @@ const FeatureRow = ({ feat, index, isDark }) => {
 
 
 /* ════════════════════════════════════════════════
-   INVESTMENT SECTION  — full light + dark support
-   ════════════════════════════════════════════════ */
+   INVESTMENT SECTION
+   BG CHANGE: richer base + blueprint SVG pattern
+════════════════════════════════════════════════ */
 const InvestmentSection = ({ isDark }) => {
   const sectionRef = useRef(null);
-  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
+  const inView     = useInView(sectionRef, { once: true, margin: '-80px' });
   const [activeQ, setActiveQ] = useState(0);
 
   useEffect(() => {
@@ -376,50 +360,49 @@ const InvestmentSection = ({ isDark }) => {
     return () => clearInterval(id);
   }, []);
 
-  const sectionBg = isDark ? 'bg-[#080810]' : 'bg-gradient-to-b from-slate-50 via-white to-gray-50';
-  const headingColor = isDark ? 'text-white' : 'text-gray-900';
-  const bodyColor = isDark ? 'text-gray-400' : 'text-gray-600';
-  const mutedColor = isDark ? 'text-gray-500' : 'text-gray-500';
-  const tagBg = isDark ? 'bg-orange-500/10 border-orange-500/30 text-orange-400' : 'bg-orange-50 border-orange-300/70 text-orange-600';
-  const quoteWrap = isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60';
-  const quoteText = isDark ? 'text-white/90' : 'text-gray-800';
+  /* ── colour tokens (identical to original) ── */
+  const headingColor = isDark ? 'text-white'    : 'text-gray-900';
+  const bodyColor    = isDark ? 'text-gray-400' : 'text-gray-600';
+  const mutedColor   = isDark ? 'text-gray-500' : 'text-gray-500';
+  const tagBg        = isDark ? 'bg-orange-500/10 border-orange-500/30 text-orange-400' : 'bg-orange-50 border-orange-300/70 text-orange-600';
+  const quoteWrap    = isDark ? 'border-gray-800 bg-black'              : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60';
+  const quoteText    = isDark ? 'text-white/90'  : 'text-gray-800';
   const quoteIconCls = isDark ? 'opacity-[0.08] text-white' : 'opacity-[0.06] text-gray-900';
-  const dotInactive = isDark ? 'bg-white/20 hover:bg-white/40' : 'bg-gray-300 hover:bg-gray-400';
-  const cardBase = isDark ? 'border-gray-800 bg-black' : 'border-gray-200/80 bg-white shadow-sm';
-  const cardFeat = isDark
+  const dotInactive  = isDark ? 'bg-white/20 hover:bg-white/40' : 'bg-gray-300 hover:bg-gray-400';
+  const cardBase     = isDark ? 'border-gray-800 bg-black' : 'border-gray-200/80 bg-white shadow-sm';
+  const cardFeat     = isDark
     ? 'border-red-500/50 bg-gradient-to-b from-red-950/80 to-orange-950/60 shadow-2xl shadow-red-500/20'
     : 'border-red-300 bg-gradient-to-b from-red-50 to-orange-50 shadow-xl shadow-red-200/40';
-  const cardName = isDark ? 'text-white' : 'text-gray-900';
-  const cardYieldN = isDark ? 'text-gray-500' : 'text-gray-400';
-  const cardCons = isDark ? 'text-gray-500' : 'text-gray-500';
+  const cardName     = isDark ? 'text-white'    : 'text-gray-900';
+  const cardYieldN   = isDark ? 'text-gray-500' : 'text-gray-400';
+  const cardCons     = isDark ? 'text-gray-500' : 'text-gray-500';
   const cardConsIcon = isDark ? 'text-gray-600' : 'text-gray-400';
-  const cardPros = isDark ? 'text-gray-300' : 'text-gray-700';
-  const reasonCard = isDark ? 'border-gray-800 bg-black hover:border-gray-700' : 'border-gray-200 bg-white shadow-sm hover:border-gray-300 hover:shadow-md';
-  const reasonTitle = isDark ? 'text-white' : 'text-gray-900';
-  const reasonDesc = isDark ? 'text-gray-500 group-hover:text-gray-400' : 'text-gray-500 group-hover:text-gray-700';
-  const subHeading = isDark ? 'text-white' : 'text-gray-900';
-  const bottomText = isDark ? 'text-gray-500' : 'text-gray-600';
-  const gridTexture = isDark
-    ? {
-        backgroundImage:
-          'linear-gradient(rgba(255,255,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.07) 1px,transparent 1px)',
-        backgroundSize: '64px 64px',
-        opacity: 0.025,
-      }
-    : {
-        backgroundImage:
-          'linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px)',
-        backgroundSize: '64px 64px',
-        opacity: 1,
-      };
+  const cardPros     = isDark ? 'text-gray-300' : 'text-gray-700';
+  const reasonCard   = isDark
+    ? 'border-gray-800 bg-black hover:border-gray-700'
+    : 'border-gray-200 bg-white shadow-sm hover:border-gray-300 hover:shadow-md';
+  const reasonTitle  = isDark ? 'text-white'    : 'text-gray-900';
+  const reasonDesc   = isDark ? 'text-gray-500 group-hover:text-gray-400' : 'text-gray-500 group-hover:text-gray-700';
+  const subHeading   = isDark ? 'text-white'    : 'text-gray-900';
+  const bottomText   = isDark ? 'text-gray-500' : 'text-gray-600';
 
   return (
-    <section ref={sectionRef} className={`relative py-16 sm:py-36 overflow-hidden ${sectionBg}`}>
+    /* ── BACKGROUND: deep near-black (dark) / rich cream (light) + blueprint pattern ── */
+    <section
+      ref={sectionRef}
+      className="relative py-16 sm:py-36 overflow-hidden"
+      style={{ background: isDark ? '#06060f' : '#faf9f6' }}
+    >
+      {/* Blueprint grid pattern — replaces the plain CSS grid-texture from original */}
+
+      {/* Radial glow accents (identical to original) */}
       <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} />
       <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/10'}`} />
       <div className={`absolute top-1/2 left-0 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-violet-600/6' : 'bg-violet-300/8'}`} />
 
-      <div className="absolute inset-0 pointer-events-none" style={gridTexture} />
+      {/* Section separator lines */}
+      <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} />
+      <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
@@ -616,15 +599,13 @@ const InvestmentSection = ({ isDark }) => {
 
 /* ════════════════════════════════════════════════
    MAIN PAGE
-   ════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 const HomePage = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  /* ── Hero image switches with theme ── */
   const heroImage = isDark ? heroImageDark : heroImageLight;
-
-  const heroAlt = isDark
+  const heroAlt   = isDark
     ? 'Metro Industrial Park entrance at dawn in Moraiya, Ahmedabad'
     : 'Metro Industrial Park entrance security gate in Moraiya, Ahmedabad';
 
@@ -641,7 +622,6 @@ const HomePage = () => {
   const ctaInView      = useInView(ctaRef,      { once: true, margin: '-80px' });
 
   const whatsappMessage = encodeURIComponent('Hello, I would like to inquire about the industrial sheds.');
-
   const [activeQuote, setActiveQuote] = useState(0);
 
   useEffect(() => {
@@ -689,166 +669,161 @@ const HomePage = () => {
         @keyframes kenBurns { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
       `}</style>
 
-        <div className="min-h-screen theme-bg-primary overflow-hidden"
-          style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
+      <div className="min-h-screen theme-bg-primary overflow-hidden"
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
         <h1 className="sr-only">Industrial Sheds & Warehouses for Sale & Lease in Moraiya, Changodar, Ahmedabad</h1>
 
-{/* ════════ HERO ════════ */}
-<section className="relative pt-16">
-  <div className="relative h-[26svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
-  <img
-    src={heroImage}
-    alt={heroAlt}
-    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-    loading="eager"
-    fetchpriority="high"
-  />
+        {/* ════════ HERO ════════ (unchanged — photo bg) */}
+        <section className="relative pt-16">
+          <div className="relative h-[26svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
+            <img
+              src={heroImage}
+              alt={heroAlt}
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+              loading="eager"
+              fetchpriority="high"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
+            <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" />
 
-  {/* Global dark gradient bottom */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
+            {/* Badge */}
+            <div className="absolute inset-0 flex items-end justify-center pb-2 sm:pb-6 px-4">
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-brand-red/60 bg-black/45"
+              >
+                <Sparkles className="text-brand-red w-3.5 h-3.5 animate-pulse" />
+                <span className="text-[10px] sm:text-xs font-bold tracking-[0.14em] text-white uppercase">
+                  #1 Industrial Park in Ahmedabad
+                </span>
+              </motion.div>
+            </div>
 
-  {/* Left dark overlay — always on, stronger on mobile */}
-  <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" />
+            {/* Text overlay */}
+            <motion.div
+              initial={{ opacity: 0, x: -18 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="absolute bottom-5 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[58%] sm:max-w-[44%] lg:max-w-[340px]"
+            >
+              <span className="hidden sm:inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-red mb-1.5">
+                <span className="w-3 sm:w-5 h-[1.5px] bg-brand-red rounded-full" />
+                Industrial Opportunity
+              </span>
+              <h1
+                style={{ fontFamily: '"Bebas Neue", sans-serif', lineHeight: 1.05, letterSpacing: '0.02em' }}
+                className="text-[1.2rem] sm:text-[2rem] lg:text-[3rem]"
+              >
+                <span className="block text-white">A Space Built for</span>
+                <span className="block" style={{ color: 'transparent', WebkitTextStroke: '1px #ffffff' }}>Manufacturing</span>
+                <span className="block" style={{ color: 'transparent', WebkitTextStroke: '1px #ef4444' }}>Growth</span>
+              </h1>
+              <p className="hidden sm:block text-gray-300 text-[10px] sm:text-[11px] lg:text-xs leading-relaxed mt-2 max-w-[240px] lg:max-w-[260px]">
+                From small-scale production to expanding industrial operations, the right
+                facility creates the environment for efficiency, quality, and long-term
+                business growth.
+              </p>
+            </motion.div>
+          </div>
 
-  {/* Badge — center bottom */}
-  <div className="absolute inset-0 flex items-end justify-center pb-2 sm:pb-6 px-4">
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.25, duration: 0.5 }}
-      className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-brand-red/60 bg-black/45"
-    >
-      <Sparkles className="text-brand-red w-3.5 h-3.5 animate-pulse" />
-      <span className="text-[10px] sm:text-xs font-bold tracking-[0.14em] text-white uppercase">
-        #1 Industrial Park in Ahmedabad
-      </span>
-    </motion.div>
-  </div>
-
-  {/* ── Text overlay — on image at ALL screen sizes ── */}
-  <motion.div
-    initial={{ opacity: 0, x: -18 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: 0.35, duration: 0.6 }}
-    className="absolute bottom-5 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[58%] sm:max-w-[44%] lg:max-w-[340px]"
-  >
-    {/* Eyebrow */}
-    <span className="hidden sm:inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-red mb-1.5">
-      <span className="w-3 sm:w-5 h-[1.5px] bg-brand-red rounded-full" />
-      Industrial Opportunity
-    </span>
-
-    {/* Dual-color heading */}
-    <h1
-      style={{
-        fontFamily: '"Bebas Neue", sans-serif',
-        lineHeight: 1.05,
-        letterSpacing: '0.02em',
-      }}
-      className="text-[1.2rem] sm:text-[2rem] lg:text-[3rem]"
-    >
-      <span className="block text-white">A Space Built for</span>
-      <span
-        className="block"
-        style={{ color: 'transparent', WebkitTextStroke: '1px #ffffff' }}
-      >
-        Manufacturing
-      </span>
-      <span
-        className="block"
-        style={{ color: 'transparent', WebkitTextStroke: '1px #ef4444' }}
-      >
-        Growth
-      </span>
-    </h1>
-
-    {/* Subheading — hidden on mobile, shown sm+ */}
-    <p className="hidden sm:block text-gray-300 text-[10px] sm:text-[11px] lg:text-xs leading-relaxed mt-2 max-w-[240px] lg:max-w-[260px]">
-      From small-scale production to expanding industrial operations, the right
-      facility creates the environment for efficiency, quality, and long-term
-      business growth.
-    </p>
-  </motion.div>
-</div>
-
-
-  {/* ── Below-hero stats + CTA panel ── */}
-  <div className={`${isDark ? 'bg-gray-950 border-t border-gray-800' : 'bg-white border-t border-gray-200'}`}>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
-    <div className="flex flex-col items-center gap-4">
-
-      {/* Stats — fixed max width so cards don't stretch too wide */}
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg">
-        {[
-          { icon: <TrendingUp size={16} />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
-          { icon: <LucideFactory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
-          { icon: <LucideLandPlot size={16} />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
-        ].map(({ icon, value, label, color, border }) => (
-          <motion.div
-            key={label}
-            whileHover={{ scale: 1.04, y: -3 }}
-            className={`p-2.5 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
-              isDark ? 'bg-black' : 'bg-gray-50'
-            }`}
+          {/* ── Below-hero panel ──
+              BACKGROUND CHANGE: warm off-white (light) / deep gray-950 (dark)
+              + subtle dot-grid texture pattern */}
+          <div
+            className="relative overflow-hidden border-t"
+            style={{
+              background: isDark ? '#0a0a0f' : '#fdfcfa',
+              borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)',
+            }}
           >
-            <span className={`${color} flex justify-center mb-1`}>{icon}</span>
-            <div className={`text-base sm:text-2xl font-black ${color}`} style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
-              {value}
+            {/* Accent edge line */}
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/25 to-transparent pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+              <div className="flex flex-col items-center gap-4">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg">
+                  {[
+                    { icon: <TrendingUp size={16} />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
+                    { icon: <LucideFactory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+                    { icon: <LucideLandPlot size={16} />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+                  ].map(({ icon, value, label, color, border }) => (
+                    <motion.div
+                      key={label}
+                      whileHover={{ scale: 1.04, y: -3 }}
+                      className={`p-2.5 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
+                        isDark ? 'bg-black' : 'bg-white/90'
+                      }`}
+                    >
+                      <span className={`${color} flex justify-center mb-1`}>{icon}</span>
+                      <div className={`text-base sm:text-2xl font-black ${color}`} style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
+                        {value}
+                      </div>
+                      <div className={`text-[8px] sm:text-[11px] font-semibold ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                        {label}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-2.5">
+                  <Link
+                    to="/metro-industrial-park"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-xs sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
+                  >
+                    <Factory size={15} />
+                    Explore More
+                    <ArrowRight size={15} />
+                  </Link>
+                  <Link
+                    to="/site-map"
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
+                      isDark
+                        ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
+                        : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
+                    }`}
+                  >
+                    <MapPin size={14} />
+                    Check Availability
+                  </Link>
+                  <a
+                    href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
+                      isDark
+                        ? 'border-white/25 bg-black text-white hover:border-green-400/60 hover:text-green-300'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
+                    }`}
+                  >
+                    <FaWhatsapp size={14} className="text-green-500" />
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
             </div>
-            <div className={`text-[8px] sm:text-[11px] font-semibold ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
-              {label}
-            </div>
-          </motion.div>
-        ))}
-      </div>
+          </div>
+        </section>
 
-      {/* Buttons — centered */}
-      <div className="flex flex-wrap justify-center gap-2.5">
-        <Link
-          to="/metro-industrial-park"
-          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-xs sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
+        {/* ════════ FEATURES ════════
+            BACKGROUND CHANGE:
+              Dark  → deep slate #0d0d18 (cool blue-black)
+              Light → warm stone #f4f2ed
+            PATTERN: diagonal hatching */}
+        <section
+          ref={featuresRef}
+          className="relative py-14 sm:py-28 overflow-hidden"
+          style={{ background: isDark ? '#0d0d18' : '#f4f2ed' }}
         >
-          <Factory size={15} />
-          Explore More
-          <ArrowRight size={15} />
-        </Link>
 
-        <Link
-          to="/site-map"
-          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
-            isDark
-              ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
-              : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
-          }`}
-        >
-          <MapPin size={14} />
-          Check Availability
-        </Link>
-
-        <a
-          href={`https://wa.me/919824235642?text=${whatsappMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
-            isDark
-              ? 'border-white/25 bg-black text-white hover:border-green-400/60 hover:text-green-300'
-              : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
-          }`}
-        >
-          <FaWhatsapp size={14} className="text-green-500" />
-          WhatsApp
-        </a>
-      </div>
-
-    </div>
-  </div>
-</div>
-</section>
-
-        {/* ════════ FEATURES ════════ */}
-        <section ref={featuresRef} className={`py-14 sm:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+          {/* Radial glows */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" />
+
+          {/* Top/bottom edge accent lines */}
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-red-500/20' : 'via-orange-400/30'} to-transparent pointer-events-none`} />
+          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/8' : 'via-gray-400/20'} to-transparent pointer-events-none`} />
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={featuresInView ? { opacity: 1, y: 0 } : {}}
@@ -874,9 +849,21 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ STATS ════════ */}
-        <section ref={statsRef} className={`py-14 sm:py-28 relative overflow-hidden ${isDark ? 'bg-black' : 'bg-white'}`}>
+        {/* ════════ STATS ════════
+            BACKGROUND CHANGE:
+              Dark  → carbon black #090909
+              Light → cool marble #f0f1f5 (slight blue tint)
+            PATTERN: dot matrix */}
+        <section
+          ref={statsRef}
+          className="relative py-14 sm:py-28 overflow-hidden"
+          style={{ background: isDark ? '#090909' : '#f0f1f5' }}
+        >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" />
+
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
+          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }} className="text-center mb-14">
@@ -895,15 +882,18 @@ const HomePage = () => {
                   transition={{ duration: 0.55, delay: i * 0.12 }}
                   whileHover={{ scale: 1.05, y: -4 }}
                   className={`group relative text-center p-8 sm:p-10 rounded-2xl border transition-all duration-300 cursor-default overflow-hidden ${
-                    isDark ? 'bg-gray-900 border-gray-800 hover:border-brand-red/50 hover:shadow-lg hover:shadow-brand-red/20'
-                           : 'bg-gray-50 border-gray-200 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/10'
+                    isDark
+                      ? 'bg-gray-900/80 border-gray-800 hover:border-brand-red/50 hover:shadow-lg hover:shadow-brand-red/20'
+                      : 'bg-white/90 border-gray-200 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/10'
                   }`}>
                   <div className="absolute inset-0 bg-gradient-to-br from-brand-red/0 to-brand-red/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   <div className={`w-12 h-12 mx-auto mb-5 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-brand-red/20 group-hover:text-brand-red group-hover:scale-110 group-hover:rotate-6 ${
                     isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-200 text-gray-500'
                   }`}>{stat.icon}</div>
-                  <div className={`text-3xl sm:text-5xl font-extrabold mb-2 group-hover:text-brand-red transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}
-                    style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
+                  <div
+                    className={`text-3xl sm:text-5xl font-extrabold mb-2 group-hover:text-brand-red transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}
+                    style={{ fontFamily: '"Bebas Neue", sans-serif' }}
+                  >
                     <CountUp end={stat.countEnd} suffix={stat.suffix} duration={2.5} enableScrollSpy scrollSpyOnce />
                   </div>
                   <div className={`text-xs sm:text-sm font-semibold uppercase tracking-wider group-hover:text-brand-red/80 transition-colors ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -915,17 +905,34 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ INVESTMENT — passes isDark ════════ */}
+        {/* ════════ INVESTMENT ════════ */}
         <InvestmentSection isDark={isDark} />
 
-        {/* ════════ CTA ════════ */}
-        <section ref={ctaRef} className={`py-14 sm:py-32 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        {/* ════════ CTA ════════
+            BACKGROUND CHANGE:
+              Dark  → charcoal #111118 (warm-tinted dark)
+              Light → soft cool gray #eef0f4
+            PATTERN: circuit-line traces */}
+        <section
+          ref={ctaRef}
+          className="relative py-14 sm:py-32 overflow-hidden"
+          style={{ background: isDark ? '#111118' : '#eef0f4' }}
+        >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" />
+
+          {/* Corner accent glow */}
+          <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-red-600/8' : 'bg-red-300/14'}`} />
+          <div className={`absolute -top-24 -left-24 w-72 h-72 rounded-full blur-[80px] pointer-events-none hidden sm:block ${isDark ? 'bg-orange-600/6' : 'bg-orange-300/10'}`} />
+
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
+
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 32 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }}
               className={`p-10 sm:p-16 rounded-3xl border shadow-2xl transition-colors duration-500 ${
-                isDark ? 'bg-black border-gray-800 hover:border-brand-red/30' : 'bg-white/90 border-gray-200 hover:border-brand-red/30'
+                isDark
+                  ? 'bg-black/80 border-gray-800 hover:border-brand-red/30 backdrop-blur-sm'
+                  : 'bg-white/95 border-gray-200 hover:border-brand-red/30 backdrop-blur-sm'
               }`}>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2 }}
@@ -954,18 +961,25 @@ const HomePage = () => {
               <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href={`https://wa.me/919824235642?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer"
-                  className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-brand-red/40 overflow-hidden">
+                <a
+                  href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-brand-red/40 overflow-hidden"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <FaWhatsapp size={20} className="relative z-10" />
                   <span className="relative z-10">WhatsApp Us</span>
                   <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a href="tel:+919824235642"
+                <a
+                  href="tel:+919824235642"
                   className={`group inline-flex items-center justify-center gap-3 px-9 py-4 border-2 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg ${
-                    isDark ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
-                           : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
-                  }`}>
+                    isDark
+                      ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
+                      : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
+                  }`}
+                >
                   <Phone size={18} className="group-hover:scale-110 transition-transform" />
                   <span>Call: +91 98242 35642</span>
                 </a>

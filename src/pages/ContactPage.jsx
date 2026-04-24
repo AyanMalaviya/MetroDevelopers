@@ -116,7 +116,7 @@ const ContactPage = () => {
       />
       <h1 className="sr-only">Contact Metro Enterprise — Industrial Park Moraiya Ahmedabad</h1>
 
-      <div className="min-h-screen theme-bg-primary">
+      <div className="relative overflow-hidden min-h-screen theme-bg-primary">
 
         {/* ══════════════════════════════════
             HERO

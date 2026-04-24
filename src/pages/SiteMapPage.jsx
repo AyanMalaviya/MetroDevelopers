@@ -48,7 +48,7 @@ const SiteMapPage = () => {
       <h1 className="sr-only">Metro Industrial Park Site Map — Check Unit Availability</h1>
 
 
-      <div className={`min-h-screen pt-20 pb-12 ${
+      <div className={`relative overflow-hidden min-h-screen pt-20 pb-12 ${
         isDark
           ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'

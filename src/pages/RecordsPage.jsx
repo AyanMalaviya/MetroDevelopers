@@ -221,12 +221,12 @@ const RecordsPage = () => {
         noindex={true}
       />
 
-      <div className={`min-h-screen pt-24 pb-12 ${
+      <div className={`relative overflow-hidden min-h-screen pt-24 pb-12 ${
         isDark
           ? 'bg-gradient-to-br from-gray-950 via-black to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
       }`}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <button
               type="button"

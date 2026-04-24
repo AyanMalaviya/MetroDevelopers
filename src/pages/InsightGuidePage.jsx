@@ -45,13 +45,14 @@ const InsightGuidePage = () => {
       />
 
       <div
-        className={`min-h-screen pt-24 pb-16 ${
+        className={`relative overflow-hidden min-h-screen pt-24 pb-16 ${
           isDark
             ? 'bg-gradient-to-b from-black via-gray-950 to-black'
             : 'bg-gradient-to-b from-white via-gray-50 to-white'
         }`}
       >
-        <main className="max-w-5xl mx-auto px-4 sm:px-6">
+
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <section
             className={`rounded-3xl border p-7 sm:p-10 ${
               isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60'
