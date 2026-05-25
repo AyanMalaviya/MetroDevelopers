@@ -382,3 +382,40 @@ export const createLocationPageSchema = ({ pageTitle, pageDescription, path, loc
     ],
   },
 });
+
+// ─── Helper: Article / BlogPosting Schema (used by InsightGuidePage) ──────────
+export const createArticleSchema = ({ headline, description, path, keywords = [] }) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': `${SITE_URL}${path}#article`,
+  headline,
+  description,
+  url: `${SITE_URL}${path}`,
+  inLanguage: 'en-IN',
+  keywords: Array.isArray(keywords) ? keywords.join(', ') : keywords,
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  publisher: {
+    '@id': `${SITE_URL}/#metro-enterprise`,
+  },
+  author: {
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#metro-enterprise`,
+    name: 'Metro Industrial Park',
+    url: SITE_URL,
+  },
+  image: {
+    '@type': 'ImageObject',
+    url: `${SITE_URL}/images/metro-industrial-park-site-map-moraiya-gujarat.jpg`,
+    width: 1200,
+    height: 800,
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `${SITE_URL}${path}`,
+  },
+  about: {
+    '@type': 'Thing',
+    name: 'Industrial Real Estate in Ahmedabad',
+    description: 'Industrial sheds, warehouses, and investment property in Moraiya, Changodar, Ahmedabad, Gujarat.',
+  },
+});
