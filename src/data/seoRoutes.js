@@ -1,6 +1,111 @@
 export const SITE_BASE_URL = 'https://www.metrodevelopers.co.in';
 
 export const LOCAL_MARKET_PAGES = [
+  // ─── PRIORITY 1: #1 target — "industrial sheds in Moraiya" ─────────────────
+  {
+    path: '/industrial-sheds-in-moraiya',
+    breadcrumb: 'Industrial Sheds in Moraiya',
+    title: 'Industrial Sheds in Moraiya | Sale & Lease | Metro Industrial Park',
+    description:
+      'Industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad. Metro Industrial Park offers 4,000–50,000 sq.ft units with 30–35 ft height, 60 ft roads, CCTV, 90-day possession.',
+    keywords:
+      'industrial sheds in moraiya, industrial shed moraiya, shed for sale moraiya, industrial space moraiya, moraiya industrial park, industrial shed moraiya changodar',
+    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    ogImageAlt: 'Industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad',
+    heading: 'Industrial Sheds in Moraiya for Sale and Lease',
+    summary:
+      'Metro Industrial Park is Moraiya\'s most strategically placed industrial development — 63 units on a 54,000 sq.yard campus, directly accessible from Sarkhej–Bavla National Highway. Available for sale and lease with 90-day possession.',
+    focusKeyword: 'Industrial sheds in Moraiya',
+    locationName: 'Moraiya, Changodar',
+    schemaName: 'Industrial Sheds in Moraiya, Changodar, Ahmedabad',
+    showInPrimaryNavigation: true,
+    localPitch:
+      'Moraiya has emerged as one of Ahmedabad\'s most active industrial micro-markets, driven by direct access to the Sarkhej–Bavla Highway and proximity to GIDC clusters. Industrial sheds here attract consistent demand from logistics operators, manufacturers, and investors seeking stable lease income in a growth corridor.',
+    demandDrivers: [
+      'Direct Sarkhej–Bavla Highway access for faster truck turnaround',
+      'Growing manufacturing and warehousing cluster in Moraiya–Changodar belt',
+      'Strong rental demand from FMCG, pharma, auto-ancillary, and e-commerce sectors',
+      'Proximity to Ahmedabad airport and major industrial hubs',
+    ],
+    bestFor: [
+      'Manufacturers needing highway-accessible production space in Moraiya',
+      'Logistics operators requiring large-format warehouse units',
+      'Investors targeting 6–8% rental yield with long-term lease agreements',
+    ],
+    faqs: [
+      {
+        q: 'Where exactly are the industrial sheds in Moraiya located?',
+        a: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near the Sarkhej–Bavla National Highway. GPS coordinates: 22.914°N, 72.417°E.',
+      },
+      {
+        q: 'What are the sizes of industrial sheds available in Moraiya?',
+        a: 'Metro Industrial Park in Moraiya offers 63 industrial units ranging from 4,000 sq.ft to 50,000 sq.ft on a 54,000 sq.yard campus — suitable for small manufacturing units to large warehousing operations.',
+      },
+      {
+        q: 'What is the price of industrial sheds in Moraiya?',
+        a: 'Industrial shed pricing in Moraiya depends on unit size, type (sale or lease), and construction specifications. Contact Metro Industrial Park at +91 98242 35642 or WhatsApp for a current price list.',
+      },
+      {
+        q: 'How quickly can I get possession of an industrial shed in Moraiya?',
+        a: 'Metro Industrial Park offers possession within 90 days of agreement execution — one of the fastest timelines for industrial sheds in Moraiya and the wider Changodar corridor.',
+      },
+      {
+        q: 'Is Metro Industrial Park on Instagram?',
+        a: 'Yes. Follow @metro.industrialpark on Instagram for the latest unit availability, site progress photos, and property updates from Metro Industrial Park, Moraiya.',
+      },
+    ],
+  },
+  // ─── PRIORITY 2: top-3 Changodar target ────────────────────────────────────
+  {
+    path: '/industrial-sheds-in-changodar',
+    breadcrumb: 'Industrial Sheds in Changodar',
+    title: 'Industrial Sheds in Changodar | Sale & Lease | Moraiya, Ahmedabad',
+    description:
+      'Premium industrial sheds in Changodar, Ahmedabad for sale and lease. Metro Industrial Park offers units from 4,000–50,000 sq.ft near Sarkhej Bavla Highway with fast possession.',
+    keywords:
+      'industrial sheds in changodar, industrial shed changodar, shed for sale changodar, industrial space changodar ahmedabad, changodar industrial park, warehouse changodar',
+    image: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
+    ogImageAlt: 'Industrial sheds in Changodar Ahmedabad near Sarkhej Bavla Highway',
+    heading: 'Industrial Sheds in Changodar Built for Modern Business',
+    summary:
+      'Changodar is one of Ahmedabad\'s fastest-growing industrial corridors. Metro Industrial Park sits at its heart — with 63 ready-to-occupy units, 60 ft RCC roads, and a location minutes from the Sarkhej–Bavla National Highway.',
+    focusKeyword: 'Industrial sheds in Changodar',
+    locationName: 'Changodar, Ahmedabad',
+    schemaName: 'Industrial Sheds in Changodar, Moraiya, Ahmedabad',
+    showInPrimaryNavigation: true,
+    localPitch:
+      'Changodar consistently attracts industrial demand from manufacturers, traders, and logistics operators because of its NH adjacency, deep labour pool, and proximity to Sanand and Bavla industrial zones. Metro Industrial Park is positioned at the Moraiya–Changodar intersection — maximising connectivity for tenants and investors alike.',
+    demandDrivers: [
+      'NH-adjacent location reduces fleet operating costs',
+      'Dense industrial ecosystem of FMCG, pharma, and auto-ancillary firms',
+      'Strong lease demand from multi-city distribution operators',
+      'Growing proximity to Sanand EV and manufacturing cluster',
+    ],
+    bestFor: [
+      'Businesses scaling up from smaller GIDC units in Changodar',
+      'Distribution-first businesses needing highway-linked storage',
+      'Investors targeting stable 6–8% rental yield in Changodar',
+    ],
+    faqs: [
+      {
+        q: 'Where are the industrial sheds in Changodar?',
+        a: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opp. Suvas Industrial Estate, near Sarkhej–Bavla National Highway. It is one of the largest industrial parks in the Changodar belt.',
+      },
+      {
+        q: 'What unit sizes are available for industrial sheds in Changodar?',
+        a: 'Units at Metro Industrial Park in the Changodar corridor range from 4,000 sq.ft to 50,000 sq.ft. The 63-unit park sits on 54,000 sq.yards with 30–35 ft ceiling clearance.',
+      },
+      {
+        q: 'Can I lease an industrial shed in Changodar for long-term use?',
+        a: 'Yes. Metro Industrial Park offers 5–10 year lease agreements with 5–10% annual escalation clauses, providing stable income for investors and predictable costs for tenants in Changodar.',
+      },
+      {
+        q: 'What is the rental yield for industrial sheds in Changodar?',
+        a: 'Metro Industrial Park delivers 6–8% annual rental yield on shed units in Changodar, with up to 10–12% yearly appreciation in the Moraiya–Changodar industrial corridor.',
+      },
+    ],
+  },
+  // ─── Warehouses in Changodar ────────────────────────────────────────────────
   {
     path: '/warehouses-in-changodar',
     breadcrumb: 'Warehouses in Changodar',
@@ -41,7 +146,7 @@ export const LOCAL_MARKET_PAGES = [
       },
       {
         q: 'How close is Changodar to Sarkhej Bavla Highway?',
-        a: 'Changodar sits directly on the Sarkhej–Bavla National Highway corridor, giving warehouses here immediate access to Ahmedabad\'s primary westbound freight route and onward to national expressways.',
+        a: "Changodar sits directly on the Sarkhej–Bavla National Highway corridor, giving warehouses here immediate access to Ahmedabad's primary westbound freight route and onward to national expressways.",
       },
       {
         q: 'What is the rental yield for warehouses in Changodar?',
@@ -49,6 +154,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+  // ─── Industrial sheds near Sarkhej Bavla Highway ───────────────────────────
   {
     path: '/industrial-sheds-near-sarkhej-bavla-highway',
     breadcrumb: 'Industrial Sheds Near Sarkhej Bavla Highway',
@@ -97,6 +203,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+  // ─── Industrial sheds in Ahmedabad ─────────────────────────────────────────
   {
     path: '/industrial-sheds-in-ahmedabad',
     breadcrumb: 'Industrial Sheds in Ahmedabad',
@@ -146,6 +253,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+  // ─── Investment in real estate in Ahmedabad ─────────────────────────────────
   {
     path: '/investment-in-real-estate-in-ahmedabad',
     breadcrumb: 'Investment in Real Estate in Ahmedabad',
@@ -352,7 +460,9 @@ export const SEO_ROUTES = [
   ...LOCAL_MARKET_PAGES.map((page) => ({
     path: page.path,
     changefreq: 'weekly',
-    priority: 0.75,
+    priority: page.path === '/industrial-sheds-in-moraiya' || page.path === '/industrial-sheds-in-changodar'
+      ? 0.90  // boost priority for top-target pages
+      : 0.75,
     images: [{ loc: page.image, title: page.breadcrumb }],
   })),
   ...GUIDE_PAGES.map((page) => ({

@@ -2,7 +2,12 @@ import { useEffect } from 'react';
 
 import { SITE_BASE_URL } from '../../data/seoRoutes';
 
-const SITE_NAME = 'Metro Enterprise';
+const SITE_NAME = 'Metro Industrial Park';
+const INSTAGRAM_URL = 'https://www.instagram.com/metro.industrialpark/';
+const GEO_REGION = 'IN-GJ';
+const GEO_PLACENAME = 'Moraiya, Changodar, Ahmedabad, Gujarat';
+const GEO_POSITION = '22.914141879249897;72.41748307531053';
+const GEO_ICBM = '22.914141879249897, 72.41748307531053';
 
 const resolveUrl = (value, baseUrl) => {
   if (!value) {
@@ -34,6 +39,11 @@ const SEO = ({
   alt,
   structuredData,
   noindex = false,
+  // Optional per-page overrides for geo (default to park coords)
+  geoRegion = GEO_REGION,
+  geoPlacename = GEO_PLACENAME,
+  geoPosition = GEO_POSITION,
+  geoIcbm = GEO_ICBM,
 }) => {
   const siteUrl = SITE_BASE_URL;
   const fullCanonical = canonical ? resolveUrl(canonical, siteUrl) : siteUrl;
@@ -100,7 +110,7 @@ const SEO = ({
       });
     };
 
-    const upsertLink = (rel, href) => {
+    const upsertLink = (rel, href, extra = {}) => {
       const selector = `link[rel="${rel}"]`;
       let tag = head.querySelector(selector);
       const existed = Boolean(tag);
@@ -115,6 +125,7 @@ const SEO = ({
 
       tag.setAttribute('rel', rel);
       tag.setAttribute('href', href);
+      Object.entries(extra).forEach(([k, v]) => tag.setAttribute(k, v));
 
       cleanupTasks.push(() => {
         if (!tag.isConnected) {
@@ -148,30 +159,48 @@ const SEO = ({
       });
     };
 
+    // ── Core meta ──────────────────────────────────────────────────────────────
     upsertMeta({ name: 'description', content: description });
 
     if (keywords) {
       upsertMeta({ name: 'keywords', content: keywords });
     }
 
-    upsertLink('canonical', fullCanonical);
-    upsertMeta({ property: 'og:site_name', content: SITE_NAME });
-    upsertMeta({ property: 'og:locale', content: 'en_IN' });
     upsertMeta({ name: 'robots', content: robotsContent });
-    upsertMeta({ property: 'og:type', content: 'website' });
-    upsertMeta({ property: 'og:url', content: fullCanonical });
-    upsertMeta({ property: 'og:title', content: title });
-    upsertMeta({ property: 'og:description', content: description });
-    upsertMeta({ property: 'og:image', content: fullOgImage });
-    upsertMeta({ property: 'og:image:width', content: '1200' });
-    upsertMeta({ property: 'og:image:height', content: '630' });
-    upsertMeta({ property: 'og:image:alt', content: resolvedOgImageAlt });
-    upsertMeta({ name: 'twitter:card', content: 'summary_large_image' });
-    upsertMeta({ name: 'twitter:url', content: fullCanonical });
-    upsertMeta({ name: 'twitter:title', content: title });
-    upsertMeta({ name: 'twitter:description', content: description });
-    upsertMeta({ name: 'twitter:image', content: fullOgImage });
-    upsertMeta({ name: 'twitter:image:alt', content: resolvedOgImageAlt });
+    upsertLink('canonical', fullCanonical);
+
+    // ── Geo meta — critical for local Google rankings ──────────────────────────
+    upsertMeta({ name: 'geo.region',    content: geoRegion    });
+    upsertMeta({ name: 'geo.placename', content: geoPlacename });
+    upsertMeta({ name: 'geo.position',  content: geoPosition  });
+    upsertMeta({ name: 'ICBM',          content: geoIcbm      });
+
+    // ── Open Graph ─────────────────────────────────────────────────────────────
+    upsertMeta({ property: 'og:site_name',   content: SITE_NAME      });
+    upsertMeta({ property: 'og:locale',      content: 'en_IN'        });
+    upsertMeta({ property: 'og:type',        content: 'website'      });
+    upsertMeta({ property: 'og:url',         content: fullCanonical  });
+    upsertMeta({ property: 'og:title',       content: title          });
+    upsertMeta({ property: 'og:description', content: description    });
+    upsertMeta({ property: 'og:image',       content: fullOgImage    });
+    upsertMeta({ property: 'og:image:width',  content: '1200'        });
+    upsertMeta({ property: 'og:image:height', content: '630'         });
+    upsertMeta({ property: 'og:image:type',   content: 'image/jpeg'  });
+    upsertMeta({ property: 'og:image:alt',    content: resolvedOgImageAlt });
+
+    // ── Instagram / social profile link ───────────────────────────────────────
+    // og:see_also signals related social profiles to crawlers
+    upsertMeta({ property: 'og:see_also', content: INSTAGRAM_URL });
+    upsertLink('me', INSTAGRAM_URL, { type: 'text/html' });
+
+    // ── Twitter / X Card ───────────────────────────────────────────────────────
+    upsertMeta({ name: 'twitter:card',        content: 'summary_large_image' });
+    upsertMeta({ name: 'twitter:site',        content: '@metroindustrial'     });
+    upsertMeta({ name: 'twitter:url',         content: fullCanonical         });
+    upsertMeta({ name: 'twitter:title',       content: title                 });
+    upsertMeta({ name: 'twitter:description', content: description           });
+    upsertMeta({ name: 'twitter:image',       content: fullOgImage           });
+    upsertMeta({ name: 'twitter:image:alt',   content: resolvedOgImageAlt    });
 
     if (structuredData) {
       syncStructuredData(structuredData);
@@ -181,7 +210,10 @@ const SEO = ({
       document.title = previousTitle;
       cleanupTasks.reverse().forEach((cleanup) => cleanup());
     };
-  }, [title, description, keywords, fullCanonical, fullOgImage, resolvedOgImageAlt, robotsContent, structuredData]);
+  }, [
+    title, description, keywords, fullCanonical, fullOgImage, resolvedOgImageAlt,
+    robotsContent, structuredData, geoRegion, geoPlacename, geoPosition, geoIcbm,
+  ]);
 
   return null;
 };

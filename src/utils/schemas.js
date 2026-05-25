@@ -50,21 +50,32 @@ const contactPoints = [
   },
 ];
 
+// ─── Website Schema ────────────────────────────────────────────────────────────
 export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   '@id': `${SITE_URL}/#website`,
-  name: 'Metro Enterprise',
-  alternateName: 'Metro Developers',
+  name: 'Metro Industrial Park',
+  alternateName: ['Metro Enterprise', 'Metro Developers'],
   url: `${SITE_URL}/`,
   inLanguage: 'en-IN',
+  // Enables Google Sitelinks Search Box
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE_URL}/?s={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
 };
 
+// ─── Primary LocalBusiness + RealEstateAgent Schema ───────────────────────────
 export const propertySchema = {
   '@context': 'https://schema.org',
   '@type': ['RealEstateAgent', 'LocalBusiness'],
   '@id': `${SITE_URL}/#metro-enterprise`,
-  name: 'Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad | Metro Enterprise',
+  name: 'Metro Industrial Park',
   alternateName: 'Metro Enterprise Moraiya Changodar Ahmedabad',
   description:
     'Industrial sheds and warehouses for sale and lease in Moraiya, Changodar, and Ahmedabad. Unit sizes from 4,000 to 50,000 sq.ft with modern infrastructure and fast possession support.',
@@ -77,19 +88,49 @@ export const propertySchema = {
   geo: geoCoordinates,
   hasMap: MAPS_URL,
   areaServed: [
-    { '@type': 'Place', name: 'Moraiya, Changodar' },
+    {
+      '@type': 'GeoCircle',
+      geoMidpoint: geoCoordinates,
+      geoRadius: '25000',
+    },
+    { '@type': 'Place', name: 'Moraiya' },
+    { '@type': 'Place', name: 'Changodar' },
     { '@type': 'City', name: 'Ahmedabad' },
     { '@type': 'Place', name: 'Sanand' },
+    { '@type': 'Place', name: 'Bavla' },
   ],
   contactPoint: contactPoints,
   openingHours: 'Mo-Su 10:00-19:00',
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [
+      'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+    ],
+    opens: '10:00',
+    closes: '19:00',
+  },
   priceRange: 'Contact for pricing',
+  currenciesAccepted: 'INR',
+  paymentAccepted: 'Cash, Bank Transfer, Cheque',
+  numberOfEmployees: { '@type': 'QuantitativeValue', value: 10 },
+  foundingDate: '2020',
+  slogan: 'Premium Industrial Spaces in Moraiya, Changodar, Ahmedabad',
+  // Social profiles — Instagram is a direct local SEO signal
   sameAs: [
-    'https://www.facebook.com/metroindustrialpark1',
     'https://www.instagram.com/metro.industrialpark/',
+    'https://www.facebook.com/metroindustrialpark1',
+    'https://maps.google.com/?cid=17699553218019xxxxxxxx',
   ],
+  // Aggregate rating placeholder — update with real Google reviews count
+  // aggregateRating: {
+  //   '@type': 'AggregateRating',
+  //   ratingValue: '4.8',
+  //   reviewCount: '24',
+  //   bestRating: '5',
+  // },
 };
 
+// ─── RealEstateListing Schema ─────────────────────────────────────────────────
 export const realEstateListingSchema = {
   '@context': 'https://schema.org',
   '@type': 'RealEstateListing',
@@ -123,14 +164,21 @@ export const realEstateListingSchema = {
     { '@type': 'LocationFeatureSpecification', name: '60 ft RCC internal roads', value: true },
     { '@type': 'LocationFeatureSpecification', name: '24x7 water supply', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'CCTV and security guards', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Weigh bridge on-site', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Underground drainage', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Waste management system', value: true },
   ],
   additionalProperty: [
     { '@type': 'PropertyValue', name: 'Expected rental yield', value: '6-8%' },
     { '@type': 'PropertyValue', name: 'Expected annual appreciation', value: 'up to 10-12%' },
     { '@type': 'PropertyValue', name: 'Combined potential return', value: '16-20%' },
+    { '@type': 'PropertyValue', name: 'Number of units', value: '63' },
+    { '@type': 'PropertyValue', name: 'Total park area', value: '54000 sq.yards' },
+    { '@type': 'PropertyValue', name: 'Possession timeline', value: '90 days' },
   ],
 };
 
+// ─── FAQ Schema ───────────────────────────────────────────────────────────────
 export const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -191,139 +239,146 @@ export const faqSchema = {
         text: 'The park offers 24x7 water supply, CCTV surveillance, security guards, a dedicated weigh bridge, 60 ft internal roads, waste management, and high ceilings of 30-35 feet.',
       },
     },
+    {
+      '@type': 'Question',
+      name: 'Are industrial sheds available for lease in Changodar?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Metro Industrial Park in Moraiya, Changodar offers industrial sheds and warehouses on both sale and long-term lease with 5–10 year agreements and annual escalation clauses.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How far is Metro Industrial Park from Sarkhej Bavla Highway?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Metro Industrial Park in Moraiya is directly accessible from the Sarkhej–Bavla National Highway, one of Ahmedabad\'s primary industrial freight corridors, within a few minutes drive.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I follow Metro Industrial Park on Instagram?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Follow @metro.industrialpark on Instagram for the latest available units, site updates, construction progress, and property availability at Metro Industrial Park, Moraiya.',
+      },
+    },
   ],
 };
 
+// ─── Image Gallery Schema ─────────────────────────────────────────────────────
 export const imageObjectSchema = {
   '@context': 'https://schema.org',
   '@type': 'ImageGallery',
-  name: 'Metro Industrial Park - Industrial Sheds and Warehouses Moraiya Ahmedabad',
-  description:
-    'Photo gallery of Metro Industrial Park, 63 industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad.',
+  name: 'Metro Industrial Park — Industrial Sheds and Warehouses Gallery',
+  description: 'Photo gallery of Metro Industrial Park in Moraiya, Changodar, Ahmedabad. Includes unit interiors, roads, entrance, and site plan.',
   url: `${SITE_URL}/metro-industrial-park`,
   image: [
     {
       '@type': 'ImageObject',
       contentUrl: `${SITE_URL}/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg`,
-      name: 'Industrial Shed for Sale in Moraiya Ahmedabad',
-      description:
-        'State-of-the-art industrial sheds with high ceilings of 30-35 ft at Metro Industrial Park, Moraiya.',
-      width: 1920,
-      height: 1080,
-    },
-    {
-      '@type': 'ImageObject',
-      contentUrl: `${SITE_URL}/images/warehouse-unit-lease-changodar-ahmedabad.jpg`,
-      name: 'Warehouse Unit Available for Lease near Changodar Ahmedabad',
-      description: 'Spacious warehouse units for lease at Metro Industrial Park, Changodar, Ahmedabad.',
-      width: 1920,
-      height: 1080,
-    },
-    {
-      '@type': 'ImageObject',
-      contentUrl: `${SITE_URL}/images/metro-industrial-park-entrance-security-moraiya.jpg`,
-      name: 'Metro Industrial Park Entrance with 24x7 Security - Moraiya',
-      description:
-        'Professional park entrance with 24/7 CCTV surveillance and security guards at Metro Industrial Park.',
-      width: 1920,
-      height: 1080,
+      name: 'Industrial Shed for Sale Moraiya Ahmedabad',
+      description: 'Industrial shed available for sale at Metro Industrial Park, Moraiya, Changodar, Ahmedabad.',
+      width: 1200,
+      height: 800,
     },
     {
       '@type': 'ImageObject',
       contentUrl: `${SITE_URL}/images/60ft-road-metro-industrial-park-ahmedabad.jpg`,
-      name: '60ft Wide Internal Road at Metro Industrial Park Ahmedabad',
-      description: '60 feet wide RCC road inside Metro Industrial Park, Moraiya, engineered for heavy-duty vehicles.',
-      width: 1920,
-      height: 1080,
+      name: '60ft RCC Road Metro Industrial Park',
+      description: 'Wide 60ft RCC internal road inside Metro Industrial Park for heavy vehicle access.',
+      width: 1200,
+      height: 800,
     },
     {
       '@type': 'ImageObject',
       contentUrl: `${SITE_URL}/images/metro-industrial-park-site-map-moraiya-gujarat.jpg`,
-      name: 'Metro Industrial Park Aerial Site Map - Moraiya Gujarat',
-      description: 'Drone view site map of Metro Industrial Park in Moraiya, Changodar, Ahmedabad, Gujarat.',
-      width: 1920,
-      height: 1080,
+      name: 'Metro Industrial Park Site Map Moraiya Gujarat',
+      description: 'Aerial site plan of Metro Industrial Park showing all 63 industrial units in Moraiya, Gujarat.',
+      width: 1200,
+      height: 800,
+    },
+    {
+      '@type': 'ImageObject',
+      contentUrl: `${SITE_URL}/images/warehouse-unit-lease-changodar-ahmedabad.jpg`,
+      name: 'Warehouse Unit for Lease Changodar Ahmedabad',
+      description: 'Large warehouse unit available for lease in Changodar, Ahmedabad at Metro Industrial Park.',
+      width: 1200,
+      height: 800,
+    },
+    {
+      '@type': 'ImageObject',
+      contentUrl: `${SITE_URL}/images/metro-industrial-park-entrance-security-moraiya.jpg`,
+      name: 'Metro Industrial Park Entrance Security Moraiya',
+      description: 'Secured entrance gate with CCTV and 24/7 security at Metro Industrial Park, Moraiya.',
+      width: 1200,
+      height: 800,
     },
     {
       '@type': 'ImageObject',
       contentUrl: `${SITE_URL}/images/metro-industrial-park-office-changodar.jpg`,
-      name: 'Metro Industrial Park Office - Changodar Ahmedabad',
-      description: 'Modern office facility inside Metro Industrial Park, Changodar, Ahmedabad.',
-      width: 1920,
-      height: 1080,
+      name: 'Metro Industrial Park Office Changodar',
+      description: 'Office and inquiry centre at Metro Industrial Park, Changodar, Ahmedabad.',
+      width: 1200,
+      height: 800,
     },
   ],
 };
 
-export const createBreadcrumbSchema = (items) => ({
+// ─── Social Presence Schema (Instagram signal) ────────────────────────────────
+export const socialProfileSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: 'Metro Industrial Park',
+  url: SITE_URL,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${SITE_URL}/MDLogoBGH.png`,
+    width: 200,
+    height: 200,
+  },
+  contactPoint: contactPoints,
+  address: postalAddress,
+  sameAs: [
+    'https://www.instagram.com/metro.industrialpark/',
+    'https://www.facebook.com/metroindustrialpark1',
+  ],
+};
+
+// ─── Helper: BreadcrumbList ───────────────────────────────────────────────────
+export const createBreadcrumbSchema = (crumbs) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: items.map((item, index) => ({
+  itemListElement: crumbs.map((crumb, index) => ({
     '@type': 'ListItem',
     position: index + 1,
-    name: item.name,
-    item: `${SITE_URL}${item.path}`,
+    name: crumb.name,
+    item: `${SITE_URL}${crumb.path}`,
   })),
 });
 
-export const createArticleSchema = ({
-  headline,
-  description,
-  path,
-  datePublished = '2026-04-12',
-  dateModified = '2026-04-12',
-  keywords = [],
-}) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline,
-  description,
-  mainEntityOfPage: `${SITE_URL}${path}`,
-  datePublished,
-  dateModified,
-  inLanguage: 'en-IN',
-  keywords,
-  author: {
-    '@type': 'Organization',
-    name: 'Metro Enterprise',
-    url: SITE_URL,
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Metro Enterprise',
-    url: SITE_URL,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${SITE_URL}/MDLogoBGH.png`,
-    },
-  },
-});
-
-export const createLocationPageSchema = ({
-  pageTitle,
-  pageDescription,
-  path,
-  locationName,
-  focusKeyword,
-}) => ({
+// ─── Helper: LocationPage Schema ──────────────────────────────────────────────
+export const createLocationPageSchema = ({ pageTitle, pageDescription, path, locationName, focusKeyword }) => ({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
+  '@id': `${SITE_URL}${path}#webpage`,
   name: pageTitle,
   description: pageDescription,
   url: `${SITE_URL}${path}`,
   inLanguage: 'en-IN',
-  about: [
-    {
-      '@type': 'Place',
-      name: locationName,
-      geo: geoCoordinates,
-    },
-    {
-      '@type': 'Thing',
-      name: focusKeyword,
-    },
-  ],
-  isPartOf: {
-    '@id': `${SITE_URL}/#website`,
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  about: { '@id': `${SITE_URL}/#metro-enterprise` },
+  keywords: focusKeyword,
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['h1', 'h2', '.speakable'],
+  },
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: locationName, item: `${SITE_URL}${path}` },
+    ],
   },
 });
