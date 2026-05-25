@@ -94,6 +94,7 @@ const QUICK_LINKS = [
   { to: '/warehouses-in-changodar',                                    label: 'Warehouses in Changodar'        },
   { to: '/industrial-sheds-near-sarkhej-bavla-highway',               label: 'Sheds Near Bavla Highway'       },
   { to: '/industrial-sheds-in-ahmedabad',                              label: 'Industrial Sheds in Ahmedabad'  },
+  { to: '/investment-in-real-estate-in-ahmedabad',                     label: 'Investment in Real Estate in Ahmedabad' },
   { to: '/guides/gst-input-credit-industrial-tenants-gujarat',         label: 'GST Input Credit Guide'         },
   { to: '/guides/warehousing-yield-cagr-gujarat',                      label: 'Warehousing Yield Guide'        },
   { to: '/site-map',                                                   label: 'Site Map'                       },

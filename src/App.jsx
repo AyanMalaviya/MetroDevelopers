@@ -38,6 +38,7 @@ function App() {
               <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-in-ahmedabad" element={<LocalMarketPage />} />
+              <Route path="/investment-in-real-estate-in-ahmedabad" element={<LocalMarketPage />} />
               <Route path="/guides/gst-input-credit-industrial-tenants-gujarat" element={<InsightGuidePage />} />
               <Route path="/guides/warehousing-yield-cagr-gujarat" element={<InsightGuidePage />} />
               <Route path="/records" element={<Navigate to="/calculator" replace />} />
