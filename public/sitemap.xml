@@ -1,126 +1,209 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- ── PRIORITY 1: Homepage ─────────────────────────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
-      <image:title>Metro Industrial Park Aerial Site View</image:title>
-      <image:caption>Aerial view of Metro Industrial Park in Moraiya, Ahmedabad.</image:caption>
+      <image:title>Metro Industrial Park Aerial Site View — Moraiya, Gujarat</image:title>
+      <image:caption>Aerial view of Metro Industrial Park showing all 63 industrial units in Moraiya, Changodar, Ahmedabad.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
-      <image:title>Industrial Sheds in Moraiya</image:title>
-      <image:caption>Industrial sheds for sale and lease in Moraiya, Ahmedabad.</image:caption>
+      <image:title>Industrial Sheds for Sale in Moraiya Ahmedabad</image:title>
+      <image:caption>Industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad at Metro Industrial Park.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── PRIORITY 1: Industrial Sheds in Moraiya (primary local target) ───── -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/industrial-sheds-in-moraiya</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
+      <image:title>Industrial Sheds for Sale and Lease in Moraiya</image:title>
+      <image:caption>Premium industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad. 4,000–50,000 sq.ft units. Metro Industrial Park.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
+    </image:image>
+  </url>
+
+  <!-- ── PRIORITY 2: Metro Industrial Park detail page ───────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/metro-industrial-park</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
-      <image:title>Warehouse Units in Changodar</image:title>
-      <image:caption>Warehouse and industrial units in Changodar, Ahmedabad.</image:caption>
+      <image:title>Warehouse and Industrial Units in Changodar Ahmedabad</image:title>
+      <image:caption>Warehouse and industrial shed units available for lease and sale in Changodar, Ahmedabad at Metro Industrial Park.</image:caption>
+      <image:geo_location>Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
-  </url>
-  <url>
-    <loc>https://www.metrodevelopers.co.in/metro-arcade</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
     <image:image>
-      <image:loc>https://www.metrodevelopers.co.in/images/arcade-top.jpeg</image:loc>
-      <image:title>Metro Arcade Commercial Project</image:title>
+      <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
+      <image:title>60ft RCC Internal Road at Metro Industrial Park</image:title>
+      <image:caption>60ft wide RCC internal road inside Metro Industrial Park, Moraiya, designed for heavy vehicle access.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
-  </url>
-  <url>
-    <loc>https://www.metrodevelopers.co.in/contact</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
     <image:image>
-      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-office-changodar.jpg</image:loc>
-      <image:title>Metro Enterprise Contact Office</image:title>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-entrance-security-moraiya.jpg</image:loc>
+      <image:title>Metro Industrial Park Secured Entrance — Moraiya</image:title>
+      <image:caption>Secured entrance gate with CCTV and 24/7 security at Metro Industrial Park, Moraiya, Changodar.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── PRIORITY 2: Industrial Sheds in Changodar (top-3 target) ─────────── -->
   <url>
-    <loc>https://www.metrodevelopers.co.in/calculator</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.metrodevelopers.co.in/site-map</loc>
-    <lastmod>2026-05-25</lastmod>
+    <loc>https://www.metrodevelopers.co.in/industrial-sheds-in-changodar</loc>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.9</priority>
     <image:image>
-      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-plan-moraiya.jpg</image:loc>
-      <image:title>Industrial Shed Site Plan</image:title>
+      <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
+      <image:title>Industrial Sheds in Changodar near Sarkhej Bavla Highway</image:title>
+      <image:caption>Industrial sheds in Changodar, Ahmedabad with 60ft RCC roads and direct highway access. Metro Industrial Park.</image:caption>
+      <image:geo_location>Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── Warehouses in Changodar ──────────────────────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/warehouses-in-changodar</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
-      <image:title>Warehouses in Changodar</image:title>
+      <image:title>Warehouses for Lease in Changodar Ahmedabad</image:title>
+      <image:caption>Large-format warehouse units for lease and sale in Changodar, Ahmedabad. Modern infra with CCTV, 60ft roads.</image:caption>
+      <image:geo_location>Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── Industrial Sheds near Sarkhej Bavla Highway ─────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-near-sarkhej-bavla-highway</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
-      <image:title>Industrial Sheds Near Sarkhej Bavla Highway</image:title>
+      <image:title>Industrial Sheds near Sarkhej Bavla Highway Ahmedabad</image:title>
+      <image:caption>Highway-adjacent industrial sheds near Sarkhej Bavla Highway with 60ft internal roads and 90-day possession.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── Industrial Sheds in Ahmedabad ────────────────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-in-ahmedabad</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
-      <image:title>Industrial Sheds in Ahmedabad</image:title>
+      <image:title>Industrial Sheds in Ahmedabad — Metro Industrial Park</image:title>
+      <image:caption>Industrial sheds and warehouses in Ahmedabad near Changodar corridor. 63 units, 4,000–50,000 sq.ft.</image:caption>
+      <image:geo_location>Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── Investment in Real Estate in Ahmedabad ───────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/investment-in-real-estate-in-ahmedabad</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
-      <image:title>Investment in Real Estate in Ahmedabad</image:title>
+      <image:title>Industrial Real Estate Investment in Ahmedabad</image:title>
+      <image:caption>Invest in warehouses, godowns, and industrial sheds in Ahmedabad. Metro Industrial Park, Moraiya — 6–8% rental yield.</image:caption>
+      <image:geo_location>Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>
+
+  <!-- ── Metro Arcade ──────────────────────────────────────────────────────── -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/metro-arcade</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/arcade-top.jpeg</image:loc>
+      <image:title>Metro Arcade — Commercial Project by Metro Developers</image:title>
+      <image:caption>Metro Arcade commercial development by Metro Developers, Ahmedabad.</image:caption>
+    </image:image>
+  </url>
+
+  <!-- ── Site Map page ─────────────────────────────────────────────────────── -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/site-map</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-plan-moraiya.jpg</image:loc>
+      <image:title>Metro Industrial Park Site Plan — Moraiya Changodar</image:title>
+      <image:caption>Interactive site plan showing all 63 units at Metro Industrial Park, Moraiya, Changodar, Ahmedabad.</image:caption>
+      <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
+    </image:image>
+  </url>
+
+  <!-- ── Contact ───────────────────────────────────────────────────────────── -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/contact</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-office-changodar.jpg</image:loc>
+      <image:title>Metro Industrial Park Office — Changodar Ahmedabad</image:title>
+      <image:caption>Inquiry and office centre at Metro Industrial Park, Changodar, Moraiya, Ahmedabad. Call or visit us.</image:caption>
+      <image:geo_location>Changodar, Ahmedabad, Gujarat, India</image:geo_location>
+    </image:image>
+  </url>
+
+  <!-- ── Calculator ───────────────────────────────────────────────────────── -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/calculator</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- ── Guide: GST Input Credit ──────────────────────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/guides/gst-input-credit-industrial-tenants-gujarat</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-office-changodar.jpg</image:loc>
-      <image:title>GST Input Credit Guide</image:title>
+      <image:title>GST Input Credit Guide for Industrial Tenants Gujarat</image:title>
+      <image:caption>Practical guide to GST input credit for industrial shed and warehouse tenants in Gujarat.</image:caption>
     </image:image>
   </url>
+
+  <!-- ── Guide: Warehousing Yield CAGR ────────────────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/guides/warehousing-yield-cagr-gujarat</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
-      <image:title>Warehousing Yield CAGR Guide</image:title>
+      <image:title>Warehousing CAGR and Rental Yield Guide — Gujarat</image:title>
+      <image:caption>Understanding 16–20% warehousing return potential from rental yield and appreciation in Gujarat industrial zones.</image:caption>
     </image:image>
   </url>
+
 </urlset>
