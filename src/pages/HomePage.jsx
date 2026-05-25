@@ -681,7 +681,7 @@ const HomePage = () => {
               alt={heroAlt}
               className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
               loading="eager"
-              fetchpriority="high"
+              fetchPriority="high"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
             <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" />
