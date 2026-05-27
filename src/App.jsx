@@ -10,8 +10,9 @@ import SiteMapPage from './pages/SiteMapPage';
 import LocalMarketPage from './pages/LocalMarketPage';
 import InsightGuidePage from './pages/InsightGuidePage';
 import RecordsPage from './pages/RecordsPage';
+import SheetChangelogPage from './pages/SheetChangelogPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-import FloatingActionMenu from './components/FloatingActionMenu'; // Updated import
+import FloatingActionMenu from './components/FloatingActionMenu';
 import ScrollToTop from './components/ScrollToTop';
 import MetroArcade from './components/Projects/MetroArcade';
 import NotFound from './pages/NotFound';
@@ -34,6 +35,7 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
+              <Route path="/sheet-changelog" element={<SheetChangelogPage />} />
               <Route path="/industrial-sheds-in-moraiya" element={<Navigate to="/metro-industrial-park" replace />} />
               <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
@@ -55,7 +57,7 @@ function App() {
           </main>
           <Footer />
           <ReviewPrompt />
-          <FloatingActionMenu /> {/* Replaced ThemeToggle */}
+          <FloatingActionMenu />
         </div>
       </Router>
     </ThemeProvider>
