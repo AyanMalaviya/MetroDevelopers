@@ -69,7 +69,7 @@
     <priority>0.9</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
-      <image:title>Industrial Sheds in Changodar near Sarkhej Bavla Highway</image:title>
+      <image:title>Industrial Sheds in Changodar near NH 47</image:title>
       <image:caption>Industrial sheds in Changodar, Ahmedabad with 60ft RCC roads and direct highway access. Metro Industrial Park.</image:caption>
       <image:geo_location>Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
@@ -89,7 +89,7 @@
     </image:image>
   </url>
 
-  <!-- ── Industrial Sheds near Sarkhej Bavla Highway ─────────────────────── -->
+  <!-- ── Industrial Sheds near NH 47 ─────────────────────────────────────── -->
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-near-sarkhej-bavla-highway</loc>
     <lastmod>2026-05-26</lastmod>
@@ -97,8 +97,8 @@
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
-      <image:title>Industrial Sheds near Sarkhej Bavla Highway Ahmedabad</image:title>
-      <image:caption>Highway-adjacent industrial sheds near Sarkhej Bavla Highway with 60ft internal roads and 90-day possession.</image:caption>
+      <image:title>Industrial Sheds near NH 47 Ahmedabad</image:title>
+      <image:caption>Highway-adjacent industrial sheds near NH 47 with 60ft internal roads and 90-day possession.</image:caption>
       <image:geo_location>Moraiya, Changodar, Ahmedabad, Gujarat, India</image:geo_location>
     </image:image>
   </url>

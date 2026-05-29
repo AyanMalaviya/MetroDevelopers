@@ -237,7 +237,7 @@ const MetroIndustrialPark = () => {
       <SEO
         title="Industrial Sheds in Moraiya, Changodar, Ahmedabad for Sale and Lease"
         description="Find industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad with 4,000 to 50,000 sq.ft units, 60 ft internal roads, CCTV security, and quick possession timelines."
-        keywords="industrial shed in moraiya, industrial shed in changodar, warehouse in ahmedabad, factory shed near changodar, industrial property near sarkhej bavla highway"
+        keywords="industrial shed in moraiya, industrial shed in changodar, warehouse in ahmedabad, factory shed near changodar, industrial property near nh 47, industrial property near sarkhej bavla highway"
         canonical="/metro-industrial-park"
         ogImage="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
         ogImageAlt="Industrial park project in Moraiya Changodar Ahmedabad"

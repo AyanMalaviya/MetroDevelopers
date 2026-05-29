@@ -57,7 +57,7 @@ const FEATURES = [
   {
     icon: Truck,
     title: 'Highway Connectivity',
-    desc:  'Direct access to Sarkhej–Bavla NH, major logistics corridors, GIDC zones, and Ahmedabad airport.',
+    desc:  'Direct access to NH 47 (Sarkhej–Bavla Highway), major logistics corridors, GIDC zones, and Ahmedabad airport.',
     img:   '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
     imgAlt:'Location map showing highway connectivity of Metro Industrial Park Moraiya',
   },
@@ -243,7 +243,7 @@ export default function LocalMarketPage() {
                   <MapPin size={10} className="animate-pulse" />
                   {page.locationName}
                 </span>
-                <span className={`text-xs font-semibold ${textSm}`}>Near Sarkhej–Bavla National Highway</span>
+                <span className={`text-xs font-semibold ${textSm}`}>Near NH 47 (Sarkhej–Bavla National Highway)</span>
               </div>
 
               {/* H1 */}
@@ -372,13 +372,13 @@ export default function LocalMarketPage() {
                 >
                   Premier Industrial Space{' '}
                   <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
-                    Near Bavla Highway
+                    Near NH 47
                   </span>
                 </h2>
                 <p className={`text-sm sm:text-base leading-relaxed mb-4 ${textMd}`}>
                   Metro Industrial Park is a modern, fully-serviced industrial development spread across{' '}
                   <strong className={text}>54,000 sq.yards</strong> in Moraiya, Changodar — just minutes from the
-                  Sarkhej–Bavla National Highway. It hosts <strong className={text}>63 industrial units</strong> ranging
+                  NH 47 / Sarkhej–Bavla National Highway. It hosts <strong className={text}>63 industrial units</strong> ranging
                   from 4,000 to 50,000 sq.ft, designed for manufacturing, logistics, and warehousing at every scale.
                 </p>
                 <p className={`text-sm sm:text-base leading-relaxed mb-4 ${textMd}`}>
@@ -724,7 +724,7 @@ export default function LocalMarketPage() {
               <motion.article variants={fadeUp} className={`overflow-hidden rounded-2xl border ${card}`}>
                 <div className={`border-b px-5 py-4 ${isDark ? 'border-gray-800/50' : 'border-gray-100'}`}>
                   <h2 className={`text-lg font-extrabold ${text}`}>Location & Directions</h2>
-                  <p className={`mt-1 text-sm ${textSm}`}>Moraiya, Changodar · Near Sarkhej–Bavla NH · Ahmedabad</p>
+                  <p className={`mt-1 text-sm ${textSm}`}>Moraiya, Changodar · Near NH 47 · Ahmedabad</p>
                 </div>
                 <div className="h-72 sm:h-80">
                   <iframe
@@ -902,7 +902,7 @@ export default function LocalMarketPage() {
 
               <motion.p variants={fadeUp} className={`text-sm sm:text-base mb-10 max-w-xl mx-auto leading-relaxed ${textMd}`}>
                 Browse unit listings, check the interactive site map, and schedule a free site visit at
-                Metro Industrial Park — Moraiya's premier industrial address on the Sarkhej–Bavla Highway.
+                Metro Industrial Park — Moraiya's premier industrial address on the Sarkhej–Bavla Highway (NH 47).
               </motion.p>
 
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">

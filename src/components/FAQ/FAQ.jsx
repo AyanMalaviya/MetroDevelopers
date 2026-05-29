@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     question: 'Where is Metro Industrial Park located?',
-    answer: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near Sarkhej Bavla Highway.',
+    answer: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near NH 47 (Sarkhej Bavla Highway).',
   },
   {
     question: 'What amenities are available?',

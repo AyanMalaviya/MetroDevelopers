@@ -50,9 +50,9 @@ const features = [
     icon: <Truck size={26} />,
     title: 'Strategic Location',
     description: 'Prime connectivity to national highways, logistics hubs, and major ports for seamless supply chain operations.',
-    details: ['Near Sarkhej Bavla National Highway', 'Easy access to GIDC industrial areas', 'Close to Ahmedabad city & airport'],
+    details: ['Near NH 47 (Sarkhej Bavla National Highway)', 'Easy access to GIDC industrial areas', 'Close to Ahmedabad city & airport'],
     image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-    alt: 'Strategic location map of Metro Industrial Park near Sarkhej Bavla Highway Moraiya',
+    alt: 'Strategic location map of Metro Industrial Park near NH 47 (Sarkhej Bavla Highway) Moraiya',
   },
   {
     icon: <LucideCctv size={26} />,
@@ -657,7 +657,7 @@ const HomePage = () => {
       <SEO
         title="Industrial Sheds for Sale/Lease in Moraiya, Changodar, Ahmedabad at Metro Industrial Park"
         description="Industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad. 4,000 to 50,000 sq.ft units with 60 ft roads, CCTV, water supply, and fast possession."
-        keywords="industrial shed moraiya, industrial shed changodar, industrial shed ahmedabad, warehouse for lease moraiya, warehouse for rent changodar, factory shed ahmedabad, industrial property near sarkhej bavla highway"
+        keywords="industrial shed moraiya, industrial shed changodar, industrial shed ahmedabad, warehouse for lease moraiya, warehouse for rent changodar, factory shed ahmedabad, industrial property near nh 47, industrial property near sarkhej bavla highway"
         canonical="/"
         ogImage="/images/metro-industrial-park-entrance-dawn.jpg"
         ogImageAlt="Industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad"

@@ -137,7 +137,7 @@ export const realEstateListingSchema = {
   '@id': `${SITE_URL}/#primary-listing`,
   name: 'Industrial Sheds and Warehouses for Sale and Lease in Moraiya, Changodar, Ahmedabad',
   description:
-    'Industrial sheds and warehouses near Sarkhej Bavla Highway with 30 to 35 ft clear height, 60 ft RCC roads, and rental yield potential of 6 to 8%.',
+    'Industrial sheds and warehouses near NH 47 (Sarkhej Bavla Highway) with 30 to 35 ft clear height, 60 ft RCC roads, and rental yield potential of 6 to 8%.',
   url: SITE_URL,
   provider: { '@id': `${SITE_URL}/#metro-enterprise` },
   address: postalAddress,
@@ -228,7 +228,7 @@ export const faqSchema = {
       name: 'Where is Metro Industrial Park located?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad, Gujarat - opposite Suvas Industrial Estate, behind Siya Logistics Park, near the Sarkhej Bavla Highway.',
+        text: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad, Gujarat - opposite Suvas Industrial Estate, behind Siya Logistics Park, near NH 47 (Sarkhej Bavla Highway).',
       },
     },
     {
@@ -249,10 +249,10 @@ export const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'How far is Metro Industrial Park from Sarkhej Bavla Highway?',
+      name: 'How far is Metro Industrial Park from NH 47?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Metro Industrial Park in Moraiya is directly accessible from the Sarkhej–Bavla National Highway, one of Ahmedabad\'s primary industrial freight corridors, within a few minutes drive.',
+        text: 'Metro Industrial Park in Moraiya is directly accessible from the Sarkhej–Bavla National Highway (NH 47), one of Ahmedabad\'s primary industrial freight corridors, within a few minutes drive.',
       },
     },
     {

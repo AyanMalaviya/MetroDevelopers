@@ -38,6 +38,7 @@ function App() {
               <Route path="/sheet-changelog" element={<SheetChangelogPage />} />
               <Route path="/industrial-sheds-in-moraiya" element={<Navigate to="/metro-industrial-park" replace />} />
               <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
+              <Route path="/industrial-sheds-in-changodar" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-in-ahmedabad" element={<LocalMarketPage />} />
               <Route path="/investment-in-real-estate-in-ahmedabad" element={<LocalMarketPage />} />

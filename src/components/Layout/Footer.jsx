@@ -77,7 +77,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Where is the park located?',
-    a: 'Moraiya, Changodar — near Sarkhej Bavla Highway, opposite Suvas Industrial Estate, behind Siya Logistics Park.',
+    a: 'Moraiya, Changodar — near NH 47 (Sarkhej Bavla Highway), opposite Suvas Industrial Estate, behind Siya Logistics Park.',
   },
   {
     q: 'What is the pricing?',
@@ -92,7 +92,8 @@ const QUICK_LINKS = [
   { to: '/metro-industrial-park',                                      label: 'Metro Industrial Park'          },
   { to: '/metro-arcade',                                               label: 'Metro Arcade'                   },
   { to: '/warehouses-in-changodar',                                    label: 'Warehouses in Changodar'        },
-  { to: '/industrial-sheds-near-sarkhej-bavla-highway',               label: 'Sheds Near Bavla Highway'       },
+  { to: '/industrial-sheds-in-changodar',                              label: 'Industrial Sheds in Changodar'  },
+  { to: '/industrial-sheds-near-sarkhej-bavla-highway',               label: 'Sheds Near NH 47'               },
   { to: '/industrial-sheds-in-ahmedabad',                              label: 'Industrial Sheds in Ahmedabad'  },
   { to: '/investment-in-real-estate-in-ahmedabad',                     label: 'Investment in Real Estate in Ahmedabad' },
   { to: '/guides/gst-input-credit-industrial-tenants-gujarat',         label: 'GST Input Credit Guide'         },

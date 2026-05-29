@@ -142,7 +142,7 @@ const InsightGuidePage = () => {
             >
               <h2 className="text-xl font-extrabold theme-text-primary">Location-specific pages</h2>
               <p className={`mt-2 text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                Compare demand pockets in Moraiya, Changodar, and the Sarkhej Bavla Highway corridor.
+                Compare demand pockets in Moraiya, Changodar, and the NH 47 (Sarkhej Bavla Highway) corridor.
               </p>
 
               <div className="mt-4 space-y-3">
