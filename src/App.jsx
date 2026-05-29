@@ -29,6 +29,7 @@ function App() {
           <Navbar />
           <main className="flex-grow">
             <Routes>
+              {/* ── Core pages ── */}
               <Route path="/" element={<HomePage />} />
               <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
               <Route path="/metro-arcade" element={<MetroArcade />} />
@@ -36,14 +37,27 @@ function App() {
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
               <Route path="/sheet-changelog" element={<SheetChangelogPage />} />
+
+              {/* ── Local Market / SEO pages ── */}
               <Route path="/industrial-sheds-in-moraiya" element={<Navigate to="/metro-industrial-park" replace />} />
+              <Route path="/industrial-sheds-in-changodar" element={<LocalMarketPage />} />
               <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-in-changodar" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-in-ahmedabad" element={<LocalMarketPage />} />
               <Route path="/investment-in-real-estate-in-ahmedabad" element={<LocalMarketPage />} />
+              <Route path="/industrial-shed-for-rent-changodar" element={<LocalMarketPage />} />
+              <Route path="/industrial-shed-for-sale-changodar" element={<LocalMarketPage />} />
+              <Route path="/godown-for-rent-changodar" element={<LocalMarketPage />} />
+              <Route path="/industrial-park-near-sanand" element={<LocalMarketPage />} />
+
+              {/* ── Insight / Guide pages ── */}
               <Route path="/guides/gst-input-credit-industrial-tenants-gujarat" element={<InsightGuidePage />} />
               <Route path="/guides/warehousing-yield-cagr-gujarat" element={<InsightGuidePage />} />
+              <Route path="/guides/industrial-property-due-diligence-ahmedabad" element={<InsightGuidePage />} />
+              <Route path="/guides/how-to-choose-industrial-shed-gujarat" element={<InsightGuidePage />} />
+
+              {/* ── Protected Records ── */}
               <Route path="/records" element={<Navigate to="/calculator" replace />} />
               <Route
                 path="/records/:slug"
@@ -53,6 +67,8 @@ function App() {
                   </RecordsAccessGate>
                 )}
               />
+
+              {/* ── 404 catch-all ── */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
