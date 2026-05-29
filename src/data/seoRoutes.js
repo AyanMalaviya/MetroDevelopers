@@ -1,7 +1,18 @@
 export const SITE_BASE_URL = 'https://www.metrodevelopers.co.in';
 
+// ─── LOCAL MARKET PAGES ────────────────────────────────────────────────────────
+// Strategy:
+//   • /industrial-sheds-in-moraiya → let /metro-industrial-park own Moraiya (no new Moraiya pages)
+//   • Changodar, Sarkhej-Bavla, Ahmedabad, Warehouses → support pages
+//   • NEW: for-sale / for-rent / godown intent pages → higher conversion keywords
+//   • NEW: Sanand + Bavla corridor → capture expanding industrial belt
+//   • Investment & Guide pages → trust + TOFU traffic
+//   • All pages brand-aware: Metro Developers (not just Metro Industrial Park)
+
 export const LOCAL_MARKET_PAGES = [
   // ─── PRIORITY 1: #1 target — "industrial sheds in Moraiya" ─────────────────
+  // NOTE: /metro-industrial-park is the primary Moraiya page.
+  // This page acts as a supporting funnel, not a duplicate.
   {
     path: '/industrial-sheds-in-moraiya',
     breadcrumb: 'Industrial Sheds in Moraiya',
@@ -55,6 +66,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+
   // ─── PRIORITY 2: top-3 Changodar target ────────────────────────────────────
   {
     path: '/industrial-sheds-in-changodar',
@@ -105,6 +117,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+
   // ─── Warehouses in Changodar ────────────────────────────────────────────────
   {
     path: '/warehouses-in-changodar',
@@ -154,6 +167,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+
   // ─── Industrial sheds near Sarkhej Bavla Highway ───────────────────────────
   {
     path: '/industrial-sheds-near-sarkhej-bavla-highway',
@@ -203,6 +217,7 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+
   // ─── Industrial sheds in Ahmedabad ─────────────────────────────────────────
   {
     path: '/industrial-sheds-in-ahmedabad',
@@ -253,6 +268,211 @@ export const LOCAL_MARKET_PAGES = [
       },
     ],
   },
+
+  // ─── NEW: Industrial Shed for Rent in Changodar (high buying-intent) ────────
+  {
+    path: '/industrial-shed-for-rent-changodar',
+    breadcrumb: 'Industrial Shed for Rent in Changodar',
+    title: 'Industrial Shed for Rent in Changodar | Warehouse on Lease Ahmedabad',
+    description:
+      'Industrial sheds for rent in Changodar, Moraiya. Metro Industrial Park offers warehouse and factory units on long-term lease — 4,000 to 50,000 sq.ft, 90-day possession, 6–8% yield. Call now.',
+    keywords:
+      'industrial shed for rent changodar, shed for rent changodar, warehouse for lease changodar, factory for rent changodar ahmedabad, industrial unit rent moraiya changodar',
+    image: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
+    ogImageAlt: 'Industrial shed for rent in Changodar near Sarkhej Bavla Highway',
+    heading: 'Industrial Shed for Rent in Changodar — Ready-to-Lease Units',
+    summary:
+      'Need an industrial shed for rent in Changodar? Metro Industrial Park offers flexible lease units from 4,000 sq.ft in the heart of the Moraiya–Changodar industrial corridor — with 60 ft RCC roads, 24/7 security, and transparent 5–10 year agreements.',
+    focusKeyword: 'Industrial shed for rent in Changodar',
+    locationName: 'Changodar, Moraiya, Ahmedabad',
+    schemaName: 'Industrial shed for rent in Changodar, Ahmedabad',
+    showInPrimaryNavigation: false,
+    localPitch:
+      'Changodar is one of the most in-demand industrial rental markets in Gujarat. With highway access and proximity to GIDC zones, lease demand from manufacturers and distributors remains consistently high — making it equally attractive for owner-investors seeking stable, long-term tenants.',
+    demandDrivers: [
+      'Strong renter base from FMCG, pharma, auto-ancillary, and e-commerce sectors',
+      'Highway-adjacent location suits logistics-heavy tenants',
+      'Lease agreement structures protect investor income through escalation clauses',
+      'Consistent occupancy driven by Changodar industrial ecosystem depth',
+    ],
+    bestFor: [
+      'Businesses seeking ready industrial space on flexible lease in Changodar',
+      'Manufacturers looking for highway-linked production space',
+      'Investors buying to lease — targeting 6–8% annual rental yield',
+    ],
+    faqs: [
+      {
+        q: 'What is the rent for an industrial shed in Changodar?',
+        a: 'Lease pricing at Metro Industrial Park in Changodar varies by unit size, lease term, and specifications. Call +91 98242 35642 or WhatsApp for a current lease rate sheet and available inventory.',
+      },
+      {
+        q: 'What lease terms are available for industrial sheds in Changodar?',
+        a: 'Metro Industrial Park offers structured 5–10 year lease agreements with annual escalation clauses of 5–10%, giving both tenants and investors clear, long-term financial visibility.',
+      },
+      {
+        q: 'Can I view the shed before signing a lease in Changodar?',
+        a: 'Yes. Metro Industrial Park offers site visits by appointment. Call or WhatsApp +91 98242 35642 to schedule a free visit to Moraiya, Changodar.',
+      },
+      {
+        q: 'Is GST applicable on industrial shed rent in Changodar?',
+        a: 'Yes. GST at the applicable commercial rate applies to lease payments. However, most registered businesses can offset this as input tax credit, effectively reducing net lease cost.',
+      },
+    ],
+  },
+
+  // ─── NEW: Industrial Shed for Sale Changodar (for-sale intent) ──────────────
+  {
+    path: '/industrial-shed-for-sale-changodar',
+    breadcrumb: 'Industrial Shed for Sale in Changodar',
+    title: 'Industrial Shed for Sale in Changodar Ahmedabad | Metro Industrial Park',
+    description:
+      'Industrial sheds for sale in Changodar, Moraiya. Metro Industrial Park offers freehold units from 4,000–50,000 sq.ft with 90-day possession and 16–20% combined return potential.',
+    keywords:
+      'industrial shed for sale changodar, shed for sale changodar ahmedabad, buy industrial shed changodar, industrial plot for sale changodar, factory shed sale moraiya changodar',
+    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    ogImageAlt: 'Industrial shed for sale in Changodar Ahmedabad at Metro Industrial Park',
+    heading: 'Industrial Shed for Sale in Changodar — Own Your Industrial Space',
+    summary:
+      'Metro Industrial Park in Moraiya, Changodar offers industrial sheds for outright sale. Units from 4,000 sq.ft to 50,000 sq.ft with strong investment fundamentals — 6–8% rental yield from day one and up to 10–12% annual appreciation in the Changodar corridor.',
+    focusKeyword: 'Industrial shed for sale in Changodar',
+    locationName: 'Changodar, Moraiya, Ahmedabad',
+    schemaName: 'Industrial shed for sale in Changodar, Ahmedabad',
+    showInPrimaryNavigation: false,
+    localPitch:
+      'Buying industrial property in Changodar gives you long-term control over costs — no rent escalation, full asset appreciation, and the ability to lease the unit out for consistent income. The Moraiya–Changodar corridor has seen 10–12% annual appreciation, making this one of Ahmedabad\'s most resilient industrial investment zones.',
+    demandDrivers: [
+      'Freehold ownership eliminates long-term rent exposure',
+      'Asset appreciates with corridor infrastructure growth',
+      'Lease-back to tenants enables dual income from ownership',
+      'Exit liquidity strong — active buyer market in Changodar industrial belt',
+    ],
+    bestFor: [
+      'Business owners looking to own production or warehousing space in Changodar',
+      'Investors seeking buy-and-lease industrial assets',
+      'HNIs building a portfolio of industrial property in Ahmedabad',
+    ],
+    faqs: [
+      {
+        q: 'What is the price of an industrial shed for sale in Changodar?',
+        a: 'Industrial shed pricing at Metro Industrial Park depends on unit size, floor count, construction type, and current availability. Contact the sales team at +91 98242 35642 for an updated price list.',
+      },
+      {
+        q: 'What is the expected return on buying an industrial shed in Changodar?',
+        a: 'Industrial sheds at Metro Industrial Park in Changodar deliver 6–8% annual rental yield combined with up to 10–12% annual capital appreciation — a total return potential of 16–20% in the Moraiya–Changodar corridor.',
+      },
+      {
+        q: 'How long does possession take after purchasing a shed in Changodar?',
+        a: 'Metro Industrial Park guarantees possession within 90 days of agreement execution — one of the fastest industrial possession timelines in the Changodar market.',
+      },
+      {
+        q: 'Can I buy an industrial shed in Changodar and lease it out?',
+        a: 'Yes. Many buyers at Metro Industrial Park purchase units as investment assets and lease them to manufacturing or logistics tenants on 5–10 year agreements with annual rent escalation clauses.',
+      },
+    ],
+  },
+
+  // ─── NEW: Godown for Rent Changodar (storage/godown specific intent) ─────────
+  {
+    path: '/godown-for-rent-changodar',
+    breadcrumb: 'Godown for Rent in Changodar',
+    title: 'Godown for Rent in Changodar Ahmedabad | Warehouse & Storage Space',
+    description:
+      'Godown and storage space for rent in Changodar, Moraiya, Ahmedabad. Metro Industrial Park offers industrial godown units on lease — CCTV, 24/7 water, 60ft roads, quick possession.',
+    keywords:
+      'godown for rent changodar, godown changodar ahmedabad, storage space for rent changodar, godown lease moraiya, warehouse godown changodar',
+    image: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
+    ogImageAlt: 'Godown and storage units for rent in Changodar Ahmedabad',
+    heading: 'Godown for Rent in Changodar — Industrial Storage with Modern Infrastructure',
+    summary:
+      'Looking for a godown for rent in Changodar? Metro Industrial Park provides secure, highway-connected industrial storage and godown units in Moraiya — with 30–35 ft clear height, wide internal roads, and flexible lease terms suited for trading and distribution businesses.',
+    focusKeyword: 'Godown for rent in Changodar',
+    locationName: 'Changodar, Moraiya, Ahmedabad',
+    schemaName: 'Godown for rent in Changodar, Ahmedabad',
+    showInPrimaryNavigation: false,
+    localPitch:
+      'Changodar is the primary storage and distribution hub for western Ahmedabad. Its highway access and dense industrial ecosystem mean godown units here are rarely vacant — making it a reliable market for both operators needing storage and investors seeking occupancy-backed lease income.',
+    demandDrivers: [
+      'Strong godown demand from FMCG, pharma, and trading firms in Changodar',
+      'Highway connectivity reduces in-bound and out-bound logistics time',
+      'Clear-height units suited for stacked storage and pallet racking systems',
+      '24/7 security ensures inventory protection at all times',
+    ],
+    bestFor: [
+      'Trading and distribution businesses needing dedicated storage in Changodar',
+      'E-commerce and FMCG firms requiring scalable inventory space',
+      'Investors seeking fully-occupied godown assets for lease income',
+    ],
+    faqs: [
+      {
+        q: 'What is the rent for a godown in Changodar?',
+        a: 'Godown lease pricing at Metro Industrial Park in Changodar varies by unit size and lease term. Call +91 98242 35642 or WhatsApp for current godown rental rates and available units.',
+      },
+      {
+        q: 'What is the minimum size for a godown for rent in Changodar?',
+        a: 'Metro Industrial Park offers godown and storage units from 4,000 sq.ft, with options up to 50,000 sq.ft for large-format warehouse and godown requirements in the Changodar corridor.',
+      },
+      {
+        q: 'Are the godowns in Changodar suitable for FMCG storage?',
+        a: 'Yes. Metro Industrial Park godowns in Changodar have 30–35 ft ceiling clearance, ground-level loading access, and 24/7 water supply and CCTV — making them well-suited for FMCG, pharma, and general trade storage.',
+      },
+      {
+        q: 'How quickly can I get a godown in Changodar?',
+        a: 'Metro Industrial Park offers possession of industrial godown and storage units within 90 days. Contact the sales team to check currently available units in Changodar.',
+      },
+    ],
+  },
+
+  // ─── NEW: Industrial Park near Sanand (corridor expansion) ──────────────────
+  {
+    path: '/industrial-park-near-sanand',
+    breadcrumb: 'Industrial Park Near Sanand',
+    title: 'Industrial Park Near Sanand Ahmedabad | Sheds & Warehouse — Metro Developers',
+    description:
+      'Industrial park near Sanand, Ahmedabad. Metro Industrial Park in Moraiya, Changodar is 15–20 min from Sanand — modern sheds, warehouses, and plots for sale and lease. Metro Developers.',
+    keywords:
+      'industrial park near sanand, industrial shed near sanand ahmedabad, warehouse near sanand gujarat, industrial property sanand corridor, shed for sale near sanand',
+    image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+    ogImageAlt: 'Industrial park near Sanand Ahmedabad — Metro Developers',
+    heading: 'Industrial Park Near Sanand — Metro Industrial Park, Changodar',
+    summary:
+      'Metro Industrial Park by Metro Developers is located in Moraiya, Changodar — 15–20 minutes from the Sanand industrial cluster. With direct access to the Sarkhej–Bavla Highway and proximity to Sanand\'s EV and automotive manufacturing zones, it is one of the most well-connected industrial destinations in western Ahmedabad.',
+    focusKeyword: 'Industrial park near Sanand',
+    locationName: 'Near Sanand, Changodar, Ahmedabad',
+    schemaName: 'Industrial park near Sanand, Changodar, Ahmedabad',
+    showInPrimaryNavigation: false,
+    localPitch:
+      'Sanand has attracted large-scale manufacturing investments from Tata, Suzuki, and other automotive giants. The supply chain ecosystem growing around Sanand creates strong demand for ancillary industrial space in nearby corridors like Moraiya–Changodar — where Metro Industrial Park sits.',
+    demandDrivers: [
+      'Overflow demand from Sanand's automotive and EV supply chain ecosystem',
+      'Lower land cost versus core Sanand GIDC with equivalent highway access',
+      'Shared logistics network with Sanand, Bavla, and Ahmedabad western zones',
+      'Growing demand from Tier-2 auto-ancillary and component manufacturers',
+    ],
+    bestFor: [
+      'Auto-ancillary and component suppliers serving Sanand manufacturers',
+      'Businesses priced out of Sanand GIDC looking for adjacent corridors',
+      'Investors tracking industrial appreciation tied to Sanand growth',
+    ],
+    faqs: [
+      {
+        q: 'How far is Metro Industrial Park from Sanand?',
+        a: 'Metro Industrial Park in Moraiya, Changodar is approximately 15–20 minutes from the Sanand GIDC industrial zone via the Sarkhej–Bavla National Highway.',
+      },
+      {
+        q: 'Is industrial property near Sanand a good investment?',
+        a: 'Yes. Sanand's rapid manufacturing growth has driven demand spillover into the adjacent Moraiya–Changodar corridor, supporting strong occupancy and 10–12% annual appreciation at Metro Industrial Park.',
+      },
+      {
+        q: 'What types of businesses work best near the Sanand corridor?',
+        a: 'Auto-ancillary suppliers, EV component manufacturers, logistics providers, and FMCG distributors serving the Sanand cluster are ideal tenants for industrial sheds in the Changodar–Moraiya belt.',
+      },
+      {
+        q: 'Does Metro Developers have projects near Sanand?',
+        a: 'Metro Industrial Park by Metro Developers in Moraiya, Changodar is the current flagship project serving the Sanand corridor. Future projects by Metro Developers will be announced at metrodevelopers.co.in.',
+      },
+    ],
+  },
+
   // ─── Investment in real estate in Ahmedabad ─────────────────────────────────
   {
     path: '/investment-in-real-estate-in-ahmedabad',
@@ -286,7 +506,7 @@ export const LOCAL_MARKET_PAGES = [
     faqs: [
       {
         q: 'Why invest in real estate in Ahmedabad?',
-        a: 'Ahmedabad combines industrial demand, logistics access, and a deep base of manufacturers and traders. That mix creates practical long-term utility for warehouses, godowns, and industrial sheds.',
+        a: "Ahmedabad combines industrial demand, logistics access, and a deep base of manufacturers and traders. That mix creates practical long-term utility for warehouses, godowns, and industrial sheds.",
       },
       {
         q: 'Are warehouses and godowns a good option for business owners?',
@@ -308,6 +528,7 @@ export const LOCAL_MARKET_PAGES = [
   },
 ];
 
+// ─── GUIDE / INSIGHT PAGES ────────────────────────────────────────────────────
 export const GUIDE_PAGES = [
   {
     path: '/guides/gst-input-credit-industrial-tenants-gujarat',
@@ -387,7 +608,93 @@ export const GUIDE_PAGES = [
       },
     ],
   },
+  // ─── NEW: Industrial Property Due Diligence Guide ────────────────────────────
+  {
+    path: '/guides/industrial-property-due-diligence-ahmedabad',
+    breadcrumb: 'Industrial Property Due Diligence',
+    title: 'Industrial Property Due Diligence Checklist | Ahmedabad Buyers & Investors',
+    description:
+      'A practical due diligence checklist for buying or leasing industrial property in Ahmedabad — covering title, infrastructure, zoning, and lease terms.',
+    keywords:
+      'industrial property due diligence ahmedabad, buy industrial shed checklist gujarat, industrial real estate legal check, shed purchase checklist ahmedabad',
+    image: '/images/metro-industrial-park-office-changodar.jpg',
+    ogImageAlt: 'Industrial property due diligence guide for Ahmedabad buyers',
+    heading: 'Industrial Property Due Diligence — What to Check Before Buying or Leasing in Ahmedabad',
+    intro:
+      'Buying or leasing industrial property in Ahmedabad involves more than price negotiation. A structured due diligence process protects your investment and ensures the asset performs as expected from day one.',
+    sections: [
+      {
+        title: 'Title and legal checks',
+        body: [
+          'Verify clear title with no encumbrances. Confirm the land use classification permits industrial activity and that no acquisition or dispute notice has been registered against the plot.',
+          'For new developments, check the developer\'s RERA registration and confirm all approvals (factory plan, fire NOC, environmental clearance) are in place before agreement.',
+        ],
+        points: [
+          'Clear title deed with no mortgage or lien',
+          'Industrial land use classification confirmed',
+          'All statutory approvals obtained by developer',
+        ],
+      },
+      {
+        title: 'Infrastructure and operational readiness',
+        body: [
+          'Inspect road access for heavy vehicle movement, power load availability, water connection, and drainage. These directly affect operational costs and future lease demand.',
+          'At Metro Industrial Park, all infrastructure is in place — 60 ft RCC roads, UGVCL power, 24/7 water supply, underground drainage, and a dedicated weigh bridge.',
+        ],
+        points: [
+          'Road width adequate for trucks and trailers (min. 40 ft)',
+          'Power load sanctioned and transformer on-site',
+          'Water, drainage, and waste management confirmed',
+        ],
+      },
+    ],
+  },
+  // ─── NEW: How to Choose an Industrial Shed in Gujarat ───────────────────────
+  {
+    path: '/guides/how-to-choose-industrial-shed-gujarat',
+    breadcrumb: 'How to Choose an Industrial Shed',
+    title: 'How to Choose an Industrial Shed in Gujarat | Buyer & Tenant Guide',
+    description:
+      'Step-by-step guide to choosing the right industrial shed in Gujarat — covering size, height, road access, location, lease terms, and investment fundamentals.',
+    keywords:
+      'how to choose industrial shed gujarat, industrial shed buying guide ahmedabad, industrial shed checklist gujarat, best industrial shed changodar moraiya',
+    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    ogImageAlt: 'How to choose an industrial shed in Gujarat — buyer guide',
+    heading: 'How to Choose the Right Industrial Shed in Gujarat',
+    intro:
+      'The right industrial shed is one that fits your operation today and scales with your business over the next 5–10 years. This guide covers the key decision variables for buyers and tenants in Gujarat\'s industrial market.',
+    sections: [
+      {
+        title: 'Start with operational requirements',
+        body: [
+          'Define the minimum floor area, ceiling height, floor load capacity, and number of loading bays you need before evaluating any property. Changing these after signing is expensive.',
+          'At Metro Industrial Park, units offer 30–35 ft ceiling clearance and ground-level truck access — supporting most manufacturing, warehousing, and distribution configurations.',
+        ],
+        points: [
+          'Floor area: current need + 30% expansion buffer',
+          'Ceiling height: min. 24 ft for pallet racking, 30+ ft for automated storage',
+          'Floor load: check slab rating for heavy machinery or loaded vehicles',
+        ],
+      },
+      {
+        title: 'Evaluate location against your logistics model',
+        body: [
+          'A highway-adjacent location reduces truck turnaround time and freight costs. For most manufacturing and distribution businesses in Gujarat, Changodar and Moraiya offer the best balance of highway access, land cost, and labour availability.',
+        ],
+        points: [
+          'Distance from national highway and freight corridor',
+          'Internal road width for truck circulation',
+          'Access to labour, vendors, and client clusters',
+        ],
+      },
+    ],
+  },
 ];
+
+// ─── SITEMAP ROUTES ───────────────────────────────────────────────────────────
+// Used by the sitemap generator — covers all indexable pages.
+// Future Metro Developers projects: add entries here with priority 0.85–0.90
+// and update propertySchema / GUIDE_PAGES as projects launch.
 
 export const SEO_ROUTES = [
   {
@@ -410,7 +717,7 @@ export const SEO_ROUTES = [
   {
     path: '/metro-industrial-park',
     changefreq: 'weekly',
-    priority: 0.9,
+    priority: 0.95, // bumped — primary money page
     images: [
       {
         loc: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
@@ -460,9 +767,13 @@ export const SEO_ROUTES = [
   ...LOCAL_MARKET_PAGES.map((page) => ({
     path: page.path,
     changefreq: 'weekly',
-    priority: page.path === '/industrial-sheds-in-moraiya' || page.path === '/industrial-sheds-in-changodar'
-      ? 0.90  // boost priority for top-target pages
-      : 0.75,
+    priority:
+      page.path === '/industrial-sheds-in-moraiya' ||
+      page.path === '/industrial-sheds-in-changodar' ||
+      page.path === '/industrial-shed-for-rent-changodar' ||
+      page.path === '/industrial-shed-for-sale-changodar'
+        ? 0.88
+        : 0.75,
     images: [{ loc: page.image, title: page.breadcrumb }],
   })),
   ...GUIDE_PAGES.map((page) => ({
