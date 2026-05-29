@@ -1,15 +1,21 @@
 // src/pages/NotFound.jsx
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home, ArrowLeft, MapPin, Calculator, Factory } from 'lucide-react';
+import { Home, MapPin, Calculator, Factory, Phone } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import SEO from '../components/SEO/SEO';
 
+const WHATSAPP_URL =
+  'https://wa.me/919824235642?text=Hello%2C%20I%20want%20details%20for%20industrial%20space%20availability.';
+
 const QUICK_LINKS = [
-  { to: '/',                      label: 'Home',             icon: Home       },
-  { to: '/metro-industrial-park', label: 'Industrial Park',  icon: Factory    },
-  { to: '/calculator',            label: 'ROI Calculator',   icon: Calculator },
-  { to: '/site-map',              label: 'Site Map',         icon: MapPin     },
+  { to: '/',                                    label: 'Home',                     icon: Home       },
+  { to: '/metro-industrial-park',               label: 'Industrial Park',           icon: Factory    },
+  { to: '/industrial-sheds-in-changodar',       label: 'Sheds in Changodar',        icon: MapPin     },
+  { to: '/industrial-shed-for-sale-changodar',  label: 'Sheds for Sale',            icon: MapPin     },
+  { to: '/industrial-shed-for-rent-changodar',  label: 'Sheds for Rent',            icon: MapPin     },
+  { to: '/calculator',                          label: 'ROI Calculator',            icon: Calculator },
 ];
 
 export default function NotFound() {
@@ -21,21 +27,27 @@ export default function NotFound() {
     <>
       <SEO
         title="Page Not Found (404) – Metro Enterprise"
-        description="The page you're looking for doesn't exist. Browse Metro Industrial Park's available sheds, ROI calculator, and contact information."
+        description="The page you're looking for doesn't exist. Browse Metro Industrial Park's available industrial sheds in Changodar, Moraiya, and near Sarkhej–Bavla Highway (NH 947), Ahmedabad."
         canonical="/404"
         noindex={true}
-        />
+      />
 
       <div className={`relative overflow-hidden min-h-screen flex items-center justify-center pt-24 pb-20 px-4 ${
         isDark
           ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
       }`}>
+
+        {/* Ambient glow */}
+        <div aria-hidden="true" className={`absolute top-1/4 left-1/3 w-96 h-96 rounded-full blur-3xl pointer-events-none ${
+          isDark ? 'bg-red-600/8' : 'bg-red-400/6'
+        }`} />
+
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-lg w-full text-center"
+          className="max-w-lg w-full text-center relative z-10"
         >
           {/* 404 number */}
           <motion.div
@@ -72,7 +84,7 @@ export default function NotFound() {
             }`}>
               {pathname}
             </code>{' '}
-            doesn't exist or has been moved.
+            doesn&apos;t exist or has been moved.
           </motion.p>
 
           <motion.p
@@ -107,20 +119,62 @@ export default function NotFound() {
             ))}
           </motion.div>
 
-          {/* Back button */}
+          {/* CTA row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center"
           >
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-brand-red/25 hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-brand-red/25 hover:scale-105"
             >
               <Home className="w-4 h-4" />
               Back to Home
             </Link>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold border-2 text-sm transition-all hover:scale-105 ${
+                isDark
+                  ? 'border-green-500/40 bg-green-500/10 text-green-400 hover:border-green-400'
+                  : 'border-green-300 bg-green-50 text-green-700 hover:border-green-500'
+              }`}
+            >
+              <FaWhatsapp className="w-4 h-4" />
+              WhatsApp Inquiry
+            </a>
+            <a
+              href="tel:919824235642"
+              className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold border-2 text-sm transition-all hover:scale-105 ${
+                isDark
+                  ? 'border-gray-700 text-gray-200 hover:border-brand-red'
+                  : 'border-gray-200 text-gray-700 hover:border-brand-red'
+              }`}
+            >
+              <Phone className="w-4 h-4" />
+              Call Sales Team
+            </a>
           </motion.div>
+
+          {/* SEO micro-copy — adds keyword context even on 404 */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.65 }}
+            className={`mt-10 text-xs leading-relaxed max-w-sm mx-auto ${
+              isDark ? 'text-gray-700' : 'text-gray-400'
+            }`}
+          >
+            Looking for industrial sheds in Changodar or Moraiya near the
+            Sarkhej–Bavla Highway (NH&nbsp;947), Ahmedabad?{' '}
+            <Link to="/metro-industrial-park" className="underline hover:text-brand-red transition-colors">
+              Explore Metro Industrial Park
+            </Link>
+            .
+          </motion.p>
         </motion.div>
       </div>
     </>

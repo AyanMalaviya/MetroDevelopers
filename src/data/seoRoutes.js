@@ -8,6 +8,14 @@ export const SITE_BASE_URL = 'https://www.metrodevelopers.co.in';
 //   • NEW: Sanand + Bavla corridor → capture expanding industrial belt
 //   • Investment & Guide pages → trust + TOFU traffic
 //   • All pages brand-aware: Metro Developers (not just Metro Industrial Park)
+//
+// HIGHWAY NAMING:
+//   Always reference the road as: Sarkhej–Bavla Highway (NH 947)
+//   Alternate names used for SEO breadth:
+//     • NH 947 (official NHAI designation)
+//     • Sarkhej–Bavla Highway
+//     • Rajkot–Ahmedabad Expressway (SH 17 connector)
+//     • Bavla–Sarkhej Road
 
 export const LOCAL_MARKET_PAGES = [
   // ─── PRIORITY 1: #1 target — "industrial sheds in Moraiya" ─────────────────
@@ -25,15 +33,15 @@ export const LOCAL_MARKET_PAGES = [
     ogImageAlt: 'Industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad',
     heading: 'Industrial Sheds in Moraiya for Sale and Lease',
     summary:
-      'Metro Industrial Park is Moraiya\'s most strategically placed industrial development — 63 units on a 54,000 sq.yard campus, directly accessible from Sarkhej–Bavla National Highway. Available for sale and lease with 90-day possession.',
+      'Metro Industrial Park is Moraiya\'s most strategically placed industrial development — 63 units on a 54,000 sq.yard campus, directly accessible from the Sarkhej–Bavla Highway (NH 947). Available for sale and lease with 90-day possession.',
     focusKeyword: 'Industrial sheds in Moraiya',
     locationName: 'Moraiya, Changodar',
     schemaName: 'Industrial Sheds in Moraiya, Changodar, Ahmedabad',
     showInPrimaryNavigation: true,
     localPitch:
-      'Moraiya has emerged as one of Ahmedabad\'s most active industrial micro-markets, driven by direct access to the Sarkhej–Bavla Highway and proximity to GIDC clusters. Industrial sheds here attract consistent demand from logistics operators, manufacturers, and investors seeking stable lease income in a growth corridor.',
+      'Moraiya has emerged as one of Ahmedabad\'s most active industrial micro-markets, driven by direct access to the Sarkhej–Bavla Highway (NH 947) — also known locally as the Bavla–Sarkhej Road — and proximity to GIDC clusters. Industrial sheds here attract consistent demand from logistics operators, manufacturers, and investors seeking stable lease income in a growth corridor.',
     demandDrivers: [
-      'Direct Sarkhej–Bavla Highway access for faster truck turnaround',
+      'Direct Sarkhej–Bavla Highway (NH 947) access for faster truck turnaround',
       'Growing manufacturing and warehousing cluster in Moraiya–Changodar belt',
       'Strong rental demand from FMCG, pharma, auto-ancillary, and e-commerce sectors',
       'Proximity to Ahmedabad airport and major industrial hubs',
@@ -46,7 +54,7 @@ export const LOCAL_MARKET_PAGES = [
     faqs: [
       {
         q: 'Where exactly are the industrial sheds in Moraiya located?',
-        a: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near the Sarkhej–Bavla National Highway. GPS coordinates: 22.914°N, 72.417°E.',
+        a: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opposite Suvas Industrial Estate, behind Siya Logistics Park, near the Sarkhej–Bavla Highway (NH 947). GPS coordinates: 22.914°N, 72.417°E.',
       },
       {
         q: 'What are the sizes of industrial sheds available in Moraiya?',
@@ -73,22 +81,22 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Industrial Sheds in Changodar',
     title: 'Industrial Sheds in Changodar | Sale & Lease | Moraiya, Ahmedabad',
     description:
-      'Premium industrial sheds in Changodar, Ahmedabad for sale and lease. Metro Industrial Park offers units from 4,000–50,000 sq.ft near Sarkhej Bavla Highway with fast possession.',
+      'Premium industrial sheds in Changodar, Ahmedabad for sale and lease. Metro Industrial Park offers units from 4,000–50,000 sq.ft near Sarkhej–Bavla Highway (NH 947) with fast possession.',
     keywords:
-      'industrial sheds in changodar, industrial shed changodar, shed for sale changodar, industrial space changodar ahmedabad, changodar industrial park, warehouse changodar',
+      'industrial sheds in changodar, industrial shed changodar, shed for sale changodar, industrial space changodar ahmedabad, changodar industrial park, warehouse changodar, nh 947 changodar',
     image: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
-    ogImageAlt: 'Industrial sheds in Changodar Ahmedabad near Sarkhej Bavla Highway',
+    ogImageAlt: 'Industrial sheds in Changodar Ahmedabad near Sarkhej–Bavla Highway NH 947',
     heading: 'Industrial Sheds in Changodar Built for Modern Business',
     summary:
-      'Changodar is one of Ahmedabad\'s fastest-growing industrial corridors. Metro Industrial Park sits at its heart — with 63 ready-to-occupy units, 60 ft RCC roads, and a location minutes from the Sarkhej–Bavla National Highway.',
+      'Changodar is one of Ahmedabad\'s fastest-growing industrial corridors. Metro Industrial Park sits at its heart — with 63 ready-to-occupy units, 60 ft RCC roads, and a location minutes from the Sarkhej–Bavla Highway (NH 947), also known as the Rajkot–Ahmedabad Expressway corridor.',
     focusKeyword: 'Industrial sheds in Changodar',
     locationName: 'Changodar, Ahmedabad',
     schemaName: 'Industrial Sheds in Changodar, Moraiya, Ahmedabad',
     showInPrimaryNavigation: true,
     localPitch:
-      'Changodar consistently attracts industrial demand from manufacturers, traders, and logistics operators because of its NH adjacency, deep labour pool, and proximity to Sanand and Bavla industrial zones. Metro Industrial Park is positioned at the Moraiya–Changodar intersection — maximising connectivity for tenants and investors alike.',
+      'Changodar consistently attracts industrial demand from manufacturers, traders, and logistics operators because of its NH 947 (Sarkhej–Bavla Highway) adjacency, deep labour pool, and proximity to Sanand and Bavla industrial zones. Metro Industrial Park is positioned at the Moraiya–Changodar intersection — maximising connectivity for tenants and investors alike.',
     demandDrivers: [
-      'NH-adjacent location reduces fleet operating costs',
+      'NH 947 (Sarkhej–Bavla Highway) adjacent location reduces fleet operating costs',
       'Dense industrial ecosystem of FMCG, pharma, and auto-ancillary firms',
       'Strong lease demand from multi-city distribution operators',
       'Growing proximity to Sanand EV and manufacturing cluster',
@@ -101,7 +109,7 @@ export const LOCAL_MARKET_PAGES = [
     faqs: [
       {
         q: 'Where are the industrial sheds in Changodar?',
-        a: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opp. Suvas Industrial Estate, near Sarkhej–Bavla National Highway. It is one of the largest industrial parks in the Changodar belt.',
+        a: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad — opp. Suvas Industrial Estate, near the Sarkhej–Bavla Highway (NH 947). It is one of the largest industrial parks in the Changodar belt.',
       },
       {
         q: 'What unit sizes are available for industrial sheds in Changodar?',
@@ -124,21 +132,21 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Warehouses in Changodar',
     title: 'Warehouses in Changodar Ahmedabad | Industrial Lease and Sale',
     description:
-      'Explore warehouses in Changodar with modern infra, CCTV security, and strategic connectivity to Ahmedabad and Sarkhej Bavla Highway.',
+      'Explore warehouses in Changodar with modern infra, CCTV security, and strategic connectivity to Ahmedabad and the Sarkhej–Bavla Highway (NH 947).',
     keywords:
-      'warehouses in changodar, warehouse for lease changodar, industrial warehouse ahmedabad, changodar storage space',
+      'warehouses in changodar, warehouse for lease changodar, industrial warehouse ahmedabad, changodar storage space, warehouse near nh 947 ahmedabad',
     image: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-    ogImageAlt: 'Warehouse units in Changodar Ahmedabad for lease and sale',
+    ogImageAlt: 'Warehouse units in Changodar Ahmedabad for lease and sale near NH 947',
     heading: 'Warehouses in Changodar Built for Scalable Logistics',
     summary:
-      'Changodar attracts consistent warehousing demand because it balances highway accessibility with proximity to production zones. Metro Industrial Park is positioned at the heart of this corridor — with ready-to-lease units and fast possession.',
+      'Changodar attracts consistent warehousing demand because it balances highway accessibility with proximity to production zones. Metro Industrial Park is positioned at the heart of this corridor — with ready-to-lease units and fast possession, just minutes from NH 947 (Sarkhej–Bavla Highway).',
     focusKeyword: 'Warehouses in Changodar',
     locationName: 'Changodar, Ahmedabad',
     schemaName: 'Warehouses in Changodar, Ahmedabad',
     localPitch:
-      "Changodar's density of FMCG, pharma, and e-commerce support chains makes it one of Ahmedabad's most consistently occupied warehousing corridors. Metro Industrial Park sees strong repeat-lease demand from distribution-heavy operators specifically because of this micro-market's logistical depth.",
+      "Changodar's density of FMCG, pharma, and e-commerce support chains makes it one of Ahmedabad's most consistently occupied warehousing corridors. The direct connection to NH 947 — the Sarkhej–Bavla Highway linking western Ahmedabad to Rajkot — means warehouses here see metro industrial Park sees strong repeat-lease demand from distribution-heavy operators.",
     demandDrivers: [
-      'Reliable access to highway-led freight corridors',
+      'Reliable access to NH 947 (Sarkhej–Bavla Highway) freight corridors',
       'Lower downtime from smoother in-out truck circulation',
       'Growing demand from FMCG, pharma, and e-commerce support chains',
       'Future-ready fit for long-term lease agreements',
@@ -158,8 +166,8 @@ export const LOCAL_MARKET_PAGES = [
         a: 'Yes. Industrial lessees in Changodar operating as registered businesses can claim full GST input credit on lease payments — a significant advantage over residential or retail leasing.',
       },
       {
-        q: 'How close is Changodar to Sarkhej Bavla Highway?',
-        a: "Changodar sits directly on the Sarkhej–Bavla National Highway corridor, giving warehouses here immediate access to Ahmedabad's primary westbound freight route and onward to national expressways.",
+        q: 'How close is Changodar to the Sarkhej–Bavla Highway (NH 947)?',
+        a: 'Changodar sits directly on the NH 947 (Sarkhej–Bavla Highway) corridor, giving warehouses here immediate access to Ahmedabad\'s primary westbound freight route — onward to Bavla, Rajkot, and national expressways.',
       },
       {
         q: 'What is the rental yield for warehouses in Changodar?',
@@ -172,23 +180,23 @@ export const LOCAL_MARKET_PAGES = [
   {
     path: '/industrial-sheds-near-sarkhej-bavla-highway',
     breadcrumb: 'Industrial Sheds Near Sarkhej Bavla Highway',
-    title: 'Industrial Sheds Near Sarkhej Bavla Highway Ahmedabad',
+    title: 'Industrial Sheds Near Sarkhej Bavla Highway (NH 947) Ahmedabad',
     description:
-      'Discover industrial sheds near Sarkhej Bavla Highway for faster logistics, better movement efficiency, and durable industrial infrastructure.',
+      'Discover industrial sheds near the Sarkhej–Bavla Highway (NH 947) for faster logistics, better movement efficiency, and durable industrial infrastructure in Changodar and Moraiya, Ahmedabad.',
     keywords:
-      'industrial sheds near sarkhej bavla highway, industrial property near sarkhej bavla, warehouse near sarkhej bavla road, factory shed ahmedabad highway',
+      'industrial sheds near sarkhej bavla highway, industrial sheds near nh 947, industrial property near sarkhej bavla, warehouse near nh 947 ahmedabad, factory shed ahmedabad highway, bavla sarkhej road industrial shed',
     image: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
-    ogImageAlt: 'Industrial sheds near Sarkhej Bavla Highway Ahmedabad',
-    heading: 'Industrial Sheds Near Sarkhej Bavla Highway for Faster Turnaround',
+    ogImageAlt: 'Industrial sheds near Sarkhej Bavla Highway NH 947 Ahmedabad Changodar',
+    heading: 'Industrial Sheds Near Sarkhej Bavla Highway (NH 947) for Faster Turnaround',
     summary:
-      'If your operation depends on truck turnaround time and corridor access, the Sarkhej–Bavla Highway micro-market is one of the strongest in Ahmedabad. Metro Industrial Park delivers highway-adjacent sheds with 60 ft internal roads and 90-day possession.',
+      'If your operation depends on truck turnaround time and corridor access, the Sarkhej–Bavla Highway (NH 947) micro-market is one of the strongest in Ahmedabad. NH 947 — also called the Bavla–Sarkhej Road — connects western Ahmedabad directly to the Rajkot Expressway network. Metro Industrial Park delivers highway-adjacent sheds with 60 ft internal roads and 90-day possession.',
     focusKeyword: 'Industrial sheds near Sarkhej Bavla Highway',
-    locationName: 'Sarkhej Bavla Highway, Ahmedabad',
-    schemaName: 'Industrial sheds near Sarkhej Bavla Highway, Ahmedabad',
+    locationName: 'Sarkhej Bavla Highway (NH 947), Ahmedabad',
+    schemaName: 'Industrial sheds near Sarkhej Bavla Highway (NH 947), Ahmedabad',
     localPitch:
-      "The Sarkhej–Bavla Highway is Ahmedabad's busiest industrial freight axis, connecting the western GIDC clusters to the city core and the national expressway network. Sheds along this corridor consistently attract logistics-first tenants with multi-city movement requirements — driving stable occupancy and strong lease renewal rates.",
+      "The Sarkhej–Bavla Highway (NH 947) is Ahmedabad's busiest industrial freight axis, connecting the western GIDC clusters to the city core and the national expressway network toward Rajkot. Locally also known as the Bavla–Sarkhej Road, NH 947 carries consistent heavy freight traffic. Sheds along this corridor attract logistics-first tenants with multi-city movement requirements — driving stable occupancy and strong lease renewal rates.",
     demandDrivers: [
-      'Highway adjacency for time-sensitive dispatch cycles',
+      'NH 947 (Sarkhej–Bavla Highway) adjacency for time-sensitive dispatch cycles',
       'Reduced routing complexity for incoming and outgoing freight',
       'Easy access for clients, vendors, and field teams',
       'Strong fit for companies with multi-city movement requirements',
@@ -200,19 +208,19 @@ export const LOCAL_MARKET_PAGES = [
     ],
     faqs: [
       {
-        q: 'Why choose industrial sheds near Sarkhej Bavla Highway over other Ahmedabad zones?',
-        a: 'Highway-adjacent sheds dramatically reduce truck turnaround time. Businesses with time-sensitive dispatch cycles or fleet-heavy operations see measurable logistics cost savings compared to interior industrial zones.',
+        q: 'What is the highway number for the Sarkhej Bavla Highway?',
+        a: 'The Sarkhej–Bavla Highway is officially designated as NH 947 by NHAI. It is also known locally as the Bavla–Sarkhej Road and forms part of the broader Rajkot–Ahmedabad corridor via State Highway 17.',
       },
       {
-        q: 'What infrastructure do sheds near Sarkhej Bavla Highway offer?',
-        a: 'Metro Industrial Park provides 60 ft RCC internal roads designed for heavy vehicles, 24/7 CCTV security, round-the-clock water supply, and underground drainage — all within minutes of the national highway.',
+        q: 'Why choose industrial sheds near Sarkhej Bavla Highway (NH 947) over other Ahmedabad zones?',
+        a: 'NH 947-adjacent sheds dramatically reduce truck turnaround time. Businesses with time-sensitive dispatch cycles or fleet-heavy operations see measurable logistics cost savings compared to interior industrial zones.',
       },
       {
-        q: 'What is the rental yield for sheds near the Bavla Highway?',
-        a: 'Metro Industrial Park delivers 6–8% annual rental yield with lease agreements typically structured for 5–10 years, including built-in 5–10% annual escalation clauses for consistent income growth.',
+        q: 'What infrastructure do sheds near NH 947 (Sarkhej Bavla Highway) offer?',
+        a: 'Metro Industrial Park provides 60 ft RCC internal roads designed for heavy vehicles, 24/7 CCTV security, round-the-clock water supply, and underground drainage — all within minutes of NH 947.',
       },
       {
-        q: 'How quickly can I take possession of a shed near Sarkhej Bavla Highway?',
+        q: 'How quickly can I take possession of a shed near Sarkhej Bavla Highway (NH 947)?',
         a: 'Metro Industrial Park offers possession within 90 days of agreement execution — one of the fastest timelines in the Ahmedabad industrial market.',
       },
     ],
@@ -224,23 +232,23 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Industrial Sheds in Ahmedabad',
     title: 'Industrial Sheds in Ahmedabad | Sale and Lease Near Changodar Corridor',
     description:
-      'Explore industrial sheds in Ahmedabad with strong access to Changodar and Sarkhej Bavla Highway through Metro Industrial Park.',
+      'Explore industrial sheds in Ahmedabad with strong access to Changodar and the Sarkhej–Bavla Highway (NH 947) through Metro Industrial Park, Moraiya.',
     keywords:
-      'industrial sheds in ahmedabad, industrial property ahmedabad, warehouse in ahmedabad for lease, factory shed ahmedabad',
+      'industrial sheds in ahmedabad, industrial property ahmedabad, warehouse in ahmedabad for lease, factory shed ahmedabad, industrial shed near nh 947 ahmedabad',
     image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-    ogImageAlt: 'Industrial sheds and warehouse options in Ahmedabad',
+    ogImageAlt: 'Industrial sheds and warehouse options in Ahmedabad near NH 947',
     heading: 'Industrial Sheds in Ahmedabad with Corridor-Level Access',
     summary:
-      "Ahmedabad's industrial market is expanding rapidly, anchored by the Moraiya–Changodar–Bavla corridor. Metro Industrial Park puts your business at the centre of this growth — with scalable units, highway connectivity, and investor-grade yields.",
+      "Ahmedabad's industrial market is expanding rapidly, anchored by the Moraiya–Changodar–Bavla corridor along NH 947 (Sarkhej–Bavla Highway). Metro Industrial Park puts your business at the centre of this growth — with scalable units, highway connectivity, and investor-grade yields.",
     focusKeyword: 'Industrial sheds in Ahmedabad',
     locationName: 'Ahmedabad',
     schemaName: 'Industrial sheds in Ahmedabad',
     showInPrimaryNavigation: false,
     localPitch:
-      "Ahmedabad's industrial demand is anchored by the Changodar–Moraiya–Bavla corridor, which has emerged as the city's primary logistics and manufacturing spine. Metro Industrial Park is positioned at its centre, giving tenants simultaneous access to highway freight movement and Ahmedabad's urban supply chains.",
+      "Ahmedabad's industrial demand is anchored by the Changodar–Moraiya–Bavla corridor along NH 947, which has emerged as the city's primary logistics and manufacturing spine. Metro Industrial Park is positioned at its centre, giving tenants simultaneous access to NH 947 freight movement and Ahmedabad's urban supply chains.",
     demandDrivers: [
-      'Ahmedabad industrial demand anchored by Changodar and nearby logistics clusters',
-      'Access to highway corridors improves dispatch speed and fleet efficiency',
+      'Ahmedabad industrial demand anchored by Changodar and NH 947 logistics clusters',
+      'NH 947 (Sarkhej–Bavla Highway) access improves dispatch speed and fleet efficiency',
       'Suitable for both owner-users and yield-seeking industrial investors',
       'Search intent aligned for buyers evaluating city-level options first',
     ],
@@ -252,7 +260,7 @@ export const LOCAL_MARKET_PAGES = [
     faqs: [
       {
         q: 'Which area of Ahmedabad is best for industrial sheds?',
-        a: "The Moraiya–Changodar corridor near the Sarkhej–Bavla Highway is Ahmedabad's most logistics-efficient industrial micro-market, combining highway access with proximity to GIDC zones and the international airport.",
+        a: "The Moraiya–Changodar corridor near the Sarkhej–Bavla Highway (NH 947) is Ahmedabad's most logistics-efficient industrial micro-market, combining highway access with proximity to GIDC zones and the international airport.",
       },
       {
         q: 'What sizes of industrial sheds are available in Ahmedabad?',
@@ -275,23 +283,23 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Industrial Shed for Rent in Changodar',
     title: 'Industrial Shed for Rent in Changodar | Warehouse on Lease Ahmedabad',
     description:
-      'Industrial sheds for rent in Changodar, Moraiya. Metro Industrial Park offers warehouse and factory units on long-term lease — 4,000 to 50,000 sq.ft, 90-day possession, 6–8% yield. Call now.',
+      'Industrial sheds for rent in Changodar, Moraiya. Metro Industrial Park offers warehouse and factory units on long-term lease — 4,000 to 50,000 sq.ft, 90-day possession, 6–8% yield. Near NH 947 (Sarkhej–Bavla Highway). Call now.',
     keywords:
-      'industrial shed for rent changodar, shed for rent changodar, warehouse for lease changodar, factory for rent changodar ahmedabad, industrial unit rent moraiya changodar',
+      'industrial shed for rent changodar, shed for rent changodar, warehouse for lease changodar, factory for rent changodar ahmedabad, industrial unit rent moraiya changodar, shed for rent near nh 947',
     image: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-    ogImageAlt: 'Industrial shed for rent in Changodar near Sarkhej Bavla Highway',
+    ogImageAlt: 'Industrial shed for rent in Changodar near Sarkhej–Bavla Highway NH 947',
     heading: 'Industrial Shed for Rent in Changodar — Ready-to-Lease Units',
     summary:
-      'Need an industrial shed for rent in Changodar? Metro Industrial Park offers flexible lease units from 4,000 sq.ft in the heart of the Moraiya–Changodar industrial corridor — with 60 ft RCC roads, 24/7 security, and transparent 5–10 year agreements.',
+      'Need an industrial shed for rent in Changodar? Metro Industrial Park offers flexible lease units from 4,000 sq.ft in the heart of the Moraiya–Changodar industrial corridor — with 60 ft RCC roads, 24/7 security, and transparent 5–10 year agreements. Located minutes from the Sarkhej–Bavla Highway (NH 947).',
     focusKeyword: 'Industrial shed for rent in Changodar',
     locationName: 'Changodar, Moraiya, Ahmedabad',
     schemaName: 'Industrial shed for rent in Changodar, Ahmedabad',
     showInPrimaryNavigation: false,
     localPitch:
-      'Changodar is one of the most in-demand industrial rental markets in Gujarat. With highway access and proximity to GIDC zones, lease demand from manufacturers and distributors remains consistently high — making it equally attractive for owner-investors seeking stable, long-term tenants.',
+      'Changodar is one of the most in-demand industrial rental markets in Gujarat. Its direct access to NH 947 (Sarkhej–Bavla Highway) and proximity to GIDC zones means lease demand from manufacturers and distributors remains consistently high — making it equally attractive for owner-investors seeking stable, long-term tenants.',
     demandDrivers: [
       'Strong renter base from FMCG, pharma, auto-ancillary, and e-commerce sectors',
-      'Highway-adjacent location suits logistics-heavy tenants',
+      'NH 947 (Sarkhej–Bavla Highway) adjacent location suits logistics-heavy tenants',
       'Lease agreement structures protect investor income through escalation clauses',
       'Consistent occupancy driven by Changodar industrial ecosystem depth',
     ],
@@ -326,23 +334,23 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Industrial Shed for Sale in Changodar',
     title: 'Industrial Shed for Sale in Changodar Ahmedabad | Metro Industrial Park',
     description:
-      'Industrial sheds for sale in Changodar, Moraiya. Metro Industrial Park offers freehold units from 4,000–50,000 sq.ft with 90-day possession and 16–20% combined return potential.',
+      'Industrial sheds for sale in Changodar, Moraiya. Metro Industrial Park offers freehold units from 4,000–50,000 sq.ft with 90-day possession and 16–20% combined return potential. Near NH 947 (Sarkhej–Bavla Highway), Ahmedabad.',
     keywords:
-      'industrial shed for sale changodar, shed for sale changodar ahmedabad, buy industrial shed changodar, industrial plot for sale changodar, factory shed sale moraiya changodar',
+      'industrial shed for sale changodar, shed for sale changodar ahmedabad, buy industrial shed changodar, industrial plot for sale changodar, factory shed sale moraiya changodar, shed for sale near nh 947',
     image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-    ogImageAlt: 'Industrial shed for sale in Changodar Ahmedabad at Metro Industrial Park',
+    ogImageAlt: 'Industrial shed for sale in Changodar Ahmedabad at Metro Industrial Park near NH 947',
     heading: 'Industrial Shed for Sale in Changodar — Own Your Industrial Space',
     summary:
-      'Metro Industrial Park in Moraiya, Changodar offers industrial sheds for outright sale. Units from 4,000 sq.ft to 50,000 sq.ft with strong investment fundamentals — 6–8% rental yield from day one and up to 10–12% annual appreciation in the Changodar corridor.',
+      'Metro Industrial Park in Moraiya, Changodar offers industrial sheds for outright sale. Units from 4,000 sq.ft to 50,000 sq.ft with strong investment fundamentals — 6–8% rental yield from day one and up to 10–12% annual appreciation in the Changodar corridor. Located on the Sarkhej–Bavla Highway (NH 947).',
     focusKeyword: 'Industrial shed for sale in Changodar',
     locationName: 'Changodar, Moraiya, Ahmedabad',
     schemaName: 'Industrial shed for sale in Changodar, Ahmedabad',
     showInPrimaryNavigation: false,
     localPitch:
-      'Buying industrial property in Changodar gives you long-term control over costs — no rent escalation, full asset appreciation, and the ability to lease the unit out for consistent income. The Moraiya–Changodar corridor has seen 10–12% annual appreciation, making this one of Ahmedabad\'s most resilient industrial investment zones.',
+      'Buying industrial property in Changodar gives you long-term control over costs — no rent escalation, full asset appreciation, and the ability to lease the unit out for consistent income. The Moraiya–Changodar corridor along NH 947 (Sarkhej–Bavla Highway) has seen 10–12% annual appreciation, making this one of Ahmedabad\'s most resilient industrial investment zones.',
     demandDrivers: [
       'Freehold ownership eliminates long-term rent exposure',
-      'Asset appreciates with corridor infrastructure growth',
+      'Asset appreciates with NH 947 corridor infrastructure growth',
       'Lease-back to tenants enables dual income from ownership',
       'Exit liquidity strong — active buyer market in Changodar industrial belt',
     ],
@@ -377,23 +385,23 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Godown for Rent in Changodar',
     title: 'Godown for Rent in Changodar Ahmedabad | Warehouse & Storage Space',
     description:
-      'Godown and storage space for rent in Changodar, Moraiya, Ahmedabad. Metro Industrial Park offers industrial godown units on lease — CCTV, 24/7 water, 60ft roads, quick possession.',
+      'Godown and storage space for rent in Changodar, Moraiya, Ahmedabad. Metro Industrial Park offers industrial godown units on lease near NH 947 (Sarkhej–Bavla Highway) — CCTV, 24/7 water, 60ft roads, quick possession.',
     keywords:
-      'godown for rent changodar, godown changodar ahmedabad, storage space for rent changodar, godown lease moraiya, warehouse godown changodar',
+      'godown for rent changodar, godown changodar ahmedabad, storage space for rent changodar, godown lease moraiya, warehouse godown changodar, godown near nh 947 ahmedabad',
     image: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-    ogImageAlt: 'Godown and storage units for rent in Changodar Ahmedabad',
+    ogImageAlt: 'Godown and storage units for rent in Changodar Ahmedabad near NH 947',
     heading: 'Godown for Rent in Changodar — Industrial Storage with Modern Infrastructure',
     summary:
-      'Looking for a godown for rent in Changodar? Metro Industrial Park provides secure, highway-connected industrial storage and godown units in Moraiya — with 30–35 ft clear height, wide internal roads, and flexible lease terms suited for trading and distribution businesses.',
+      'Looking for a godown for rent in Changodar? Metro Industrial Park provides secure, highway-connected industrial storage and godown units in Moraiya — with 30–35 ft clear height, wide internal roads, and flexible lease terms. Conveniently located near the Sarkhej–Bavla Highway (NH 947).',
     focusKeyword: 'Godown for rent in Changodar',
     locationName: 'Changodar, Moraiya, Ahmedabad',
     schemaName: 'Godown for rent in Changodar, Ahmedabad',
     showInPrimaryNavigation: false,
     localPitch:
-      'Changodar is the primary storage and distribution hub for western Ahmedabad. Its highway access and dense industrial ecosystem mean godown units here are rarely vacant — making it a reliable market for both operators needing storage and investors seeking occupancy-backed lease income.',
+      'Changodar is the primary storage and distribution hub for western Ahmedabad, anchored by NH 947 (Sarkhej–Bavla Highway). Its highway access and dense industrial ecosystem mean godown units here are rarely vacant — making it a reliable market for both operators needing storage and investors seeking occupancy-backed lease income.',
     demandDrivers: [
       'Strong godown demand from FMCG, pharma, and trading firms in Changodar',
-      'Highway connectivity reduces in-bound and out-bound logistics time',
+      'NH 947 (Sarkhej–Bavla Highway) connectivity reduces in-bound and out-bound logistics time',
       'Clear-height units suited for stacked storage and pallet racking systems',
       '24/7 security ensures inventory protection at all times',
     ],
@@ -428,43 +436,43 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Industrial Park Near Sanand',
     title: 'Industrial Park Near Sanand Ahmedabad | Sheds & Warehouse — Metro Developers',
     description:
-      'Industrial park near Sanand, Ahmedabad. Metro Industrial Park in Moraiya, Changodar is 15–20 min from Sanand — modern sheds, warehouses, and plots for sale and lease. Metro Developers.',
+      'Industrial park near Sanand, Ahmedabad. Metro Industrial Park in Moraiya, Changodar is 15–20 min from Sanand via NH 947 (Sarkhej–Bavla Highway) — modern sheds, warehouses, and plots for sale and lease. Metro Developers.',
     keywords:
-      'industrial park near sanand, industrial shed near sanand ahmedabad, warehouse near sanand gujarat, industrial property sanand corridor, shed for sale near sanand',
+      'industrial park near sanand, industrial shed near sanand ahmedabad, warehouse near sanand gujarat, industrial property sanand corridor, shed for sale near sanand, industrial park nh 947 sanand',
     image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-    ogImageAlt: 'Industrial park near Sanand Ahmedabad — Metro Developers',
+    ogImageAlt: 'Industrial park near Sanand Ahmedabad on NH 947 — Metro Developers',
     heading: 'Industrial Park Near Sanand — Metro Industrial Park, Changodar',
     summary:
-      'Metro Industrial Park by Metro Developers is located in Moraiya, Changodar — 15–20 minutes from the Sanand industrial cluster. With direct access to the Sarkhej–Bavla Highway and proximity to Sanand\'s EV and automotive manufacturing zones, it is one of the most well-connected industrial destinations in western Ahmedabad.',
+      'Metro Industrial Park by Metro Developers is located in Moraiya, Changodar — 15–20 minutes from the Sanand industrial cluster via the Sarkhej–Bavla Highway (NH 947). With direct access to NH 947 and proximity to Sanand\'s EV and automotive manufacturing zones, it is one of the most well-connected industrial destinations in western Ahmedabad.',
     focusKeyword: 'Industrial park near Sanand',
     locationName: 'Near Sanand, Changodar, Ahmedabad',
     schemaName: 'Industrial park near Sanand, Changodar, Ahmedabad',
     showInPrimaryNavigation: false,
     localPitch:
-      'Sanand has attracted large-scale manufacturing investments from Tata, Suzuki, and other automotive giants. The supply chain ecosystem growing around Sanand creates strong demand for ancillary industrial space in nearby corridors like Moraiya–Changodar — where Metro Industrial Park sits.',
+      'Sanand has attracted large-scale manufacturing investments from Tata, Suzuki, and other automotive giants. The supply chain ecosystem growing around Sanand creates strong demand for ancillary industrial space in nearby corridors like Moraiya–Changodar — where Metro Industrial Park sits just off NH 947 (Sarkhej–Bavla Highway), providing equivalent highway connectivity at competitive pricing.',
     demandDrivers: [
-      'Overflow demand from Sanand's automotive and EV supply chain ecosystem',
-      'Lower land cost versus core Sanand GIDC with equivalent highway access',
+      'Overflow demand from Sanand automotive and EV supply chain ecosystem',
+      'Lower land cost versus core Sanand GIDC with equivalent NH 947 highway access',
       'Shared logistics network with Sanand, Bavla, and Ahmedabad western zones',
       'Growing demand from Tier-2 auto-ancillary and component manufacturers',
     ],
     bestFor: [
       'Auto-ancillary and component suppliers serving Sanand manufacturers',
-      'Businesses priced out of Sanand GIDC looking for adjacent corridors',
+      'Businesses priced out of Sanand GIDC looking for adjacent corridors on NH 947',
       'Investors tracking industrial appreciation tied to Sanand growth',
     ],
     faqs: [
       {
         q: 'How far is Metro Industrial Park from Sanand?',
-        a: 'Metro Industrial Park in Moraiya, Changodar is approximately 15–20 minutes from the Sanand GIDC industrial zone via the Sarkhej–Bavla National Highway.',
+        a: 'Metro Industrial Park in Moraiya, Changodar is approximately 15–20 minutes from the Sanand GIDC industrial zone via the Sarkhej–Bavla Highway (NH 947).',
       },
       {
         q: 'Is industrial property near Sanand a good investment?',
-        a: 'Yes. Sanand's rapid manufacturing growth has driven demand spillover into the adjacent Moraiya–Changodar corridor, supporting strong occupancy and 10–12% annual appreciation at Metro Industrial Park.',
+        a: 'Yes. Sanand\'s rapid manufacturing growth has driven demand spillover into the adjacent Moraiya–Changodar corridor along NH 947, supporting strong occupancy and 10–12% annual appreciation at Metro Industrial Park.',
       },
       {
         q: 'What types of businesses work best near the Sanand corridor?',
-        a: 'Auto-ancillary suppliers, EV component manufacturers, logistics providers, and FMCG distributors serving the Sanand cluster are ideal tenants for industrial sheds in the Changodar–Moraiya belt.',
+        a: 'Auto-ancillary suppliers, EV component manufacturers, logistics providers, and FMCG distributors serving the Sanand cluster are ideal tenants for industrial sheds in the Changodar–Moraiya belt along NH 947.',
       },
       {
         q: 'Does Metro Developers have projects near Sanand?',
@@ -479,11 +487,11 @@ export const LOCAL_MARKET_PAGES = [
     breadcrumb: 'Investment in Real Estate in Ahmedabad',
     title: 'Investment in Real Estate in Ahmedabad | Warehouses, Godowns & Industrial Sheds',
     description:
-      'Explore investment in real estate in Ahmedabad with warehouses, godowns, and industrial sheds that support manufacturing, storage, and practical business growth.',
+      'Explore investment in real estate in Ahmedabad with warehouses, godowns, and industrial sheds near NH 947 (Sarkhej–Bavla Highway) that support manufacturing, storage, and practical business growth.',
     keywords:
-      'investment in real estate in ahmedabad, invest in warehouses, invest in godowns, industrial sheds in ahmedabad, industrial property investment ahmedabad, build your own business in manufacturing',
+      'investment in real estate in ahmedabad, invest in warehouses, invest in godowns, industrial sheds in ahmedabad, industrial property investment ahmedabad, build your own business in manufacturing, invest near nh 947 ahmedabad',
     image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-    ogImageAlt: 'Industrial sheds, warehouses, and manufacturing space in Ahmedabad',
+    ogImageAlt: 'Industrial sheds, warehouses, and manufacturing space in Ahmedabad near NH 947',
     heading: 'Investment in Real Estate in Ahmedabad for Warehouses, Godowns and Industrial Sheds',
     summary:
       'For business owners and investors, industrial real estate in Ahmedabad can be a practical way to build capacity, support manufacturing, and create space for storage or distribution. When real assets are put to work by real businesses, they help strengthen local employment and contribute steadily to India\'s economy.',
@@ -491,12 +499,12 @@ export const LOCAL_MARKET_PAGES = [
     locationName: 'Ahmedabad',
     schemaName: 'Investment in real estate in Ahmedabad',
     localPitch:
-      'Ahmedabad rewards asset choices that serve actual business use. Warehouses, godowns, and industrial sheds give manufacturers room to grow, help distributors manage inventory, and create durable industrial capacity that supports the city\'s economy in a practical way.',
+      'Ahmedabad rewards asset choices that serve actual business use. Warehouses, godowns, and industrial sheds along the NH 947 (Sarkhej–Bavla Highway) corridor give manufacturers room to grow, help distributors manage inventory, and create durable industrial capacity that supports the city\'s economy in a practical way.',
     demandDrivers: [
       'Demand from manufacturers, distributors, and trading businesses',
       'Flexible use for storage, production, or business expansion',
       'A tangible asset class that supports operations, not just speculation',
-      'Long-term relevance in Ahmedabad\'s industrial ecosystem',
+      'Long-term relevance in Ahmedabad\'s industrial ecosystem along NH 947',
     ],
     bestFor: [
       'Investors seeking industrial real estate exposure in Ahmedabad',
@@ -506,7 +514,7 @@ export const LOCAL_MARKET_PAGES = [
     faqs: [
       {
         q: 'Why invest in real estate in Ahmedabad?',
-        a: "Ahmedabad combines industrial demand, logistics access, and a deep base of manufacturers and traders. That mix creates practical long-term utility for warehouses, godowns, and industrial sheds.",
+        a: "Ahmedabad combines industrial demand, logistics access via NH 947 (Sarkhej–Bavla Highway), and a deep base of manufacturers and traders. That mix creates practical long-term utility for warehouses, godowns, and industrial sheds.",
       },
       {
         q: 'Are warehouses and godowns a good option for business owners?',
@@ -535,7 +543,7 @@ export const GUIDE_PAGES = [
     breadcrumb: 'GST Input Credit Guide',
     title: 'GST Input Credit for Industrial Tenants in Gujarat | Practical Guide',
     description:
-      'Understand how industrial tenants in Gujarat use GST input credit and why this increases lease attractiveness for warehouse and shed investors.',
+      'Understand how industrial tenants in Gujarat use GST input credit and why this increases lease attractiveness for warehouse and shed investors near NH 947 (Sarkhej–Bavla Highway), Changodar, Ahmedabad.',
     keywords:
       'gst input credit industrial tenants gujarat, industrial lease gst benefit, warehouse gst input credit, commercial lease tax benefit gujarat',
     image: '/images/metro-industrial-park-office-changodar.jpg',
@@ -574,7 +582,7 @@ export const GUIDE_PAGES = [
     breadcrumb: 'Warehousing Yield CAGR Guide',
     title: 'Why Warehousing Can Deliver 16-20% CAGR Potential in Gujarat',
     description:
-      'A practical overview of how rental yield and appreciation combine to create strong warehousing CAGR potential in Ahmedabad and Gujarat industrial zones.',
+      'A practical overview of how rental yield and appreciation combine to create strong warehousing CAGR potential in Ahmedabad and Gujarat industrial zones along the NH 947 (Sarkhej–Bavla Highway) corridor.',
     keywords:
       'warehousing cagr gujarat, industrial shed rental yield ahmedabad, warehouse appreciation gujarat, industrial real estate return analysis',
     image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
@@ -608,13 +616,13 @@ export const GUIDE_PAGES = [
       },
     ],
   },
-  // ─── NEW: Industrial Property Due Diligence Guide ────────────────────────────
+  // ─── Industrial Property Due Diligence Guide ────────────────────────────────
   {
     path: '/guides/industrial-property-due-diligence-ahmedabad',
     breadcrumb: 'Industrial Property Due Diligence',
     title: 'Industrial Property Due Diligence Checklist | Ahmedabad Buyers & Investors',
     description:
-      'A practical due diligence checklist for buying or leasing industrial property in Ahmedabad — covering title, infrastructure, zoning, and lease terms.',
+      'A practical due diligence checklist for buying or leasing industrial property in Ahmedabad — covering title, infrastructure, zoning, and lease terms. Applies to sheds near NH 947 (Sarkhej–Bavla Highway), Changodar, and Moraiya.',
     keywords:
       'industrial property due diligence ahmedabad, buy industrial shed checklist gujarat, industrial real estate legal check, shed purchase checklist ahmedabad',
     image: '/images/metro-industrial-park-office-changodar.jpg',
@@ -649,13 +657,13 @@ export const GUIDE_PAGES = [
       },
     ],
   },
-  // ─── NEW: How to Choose an Industrial Shed in Gujarat ───────────────────────
+  // ─── How to Choose an Industrial Shed in Gujarat ───────────────────────────
   {
     path: '/guides/how-to-choose-industrial-shed-gujarat',
     breadcrumb: 'How to Choose an Industrial Shed',
     title: 'How to Choose an Industrial Shed in Gujarat | Buyer & Tenant Guide',
     description:
-      'Step-by-step guide to choosing the right industrial shed in Gujarat — covering size, height, road access, location, lease terms, and investment fundamentals.',
+      'Step-by-step guide to choosing the right industrial shed in Gujarat — covering size, height, road access, location near NH 947 (Sarkhej–Bavla Highway), lease terms, and investment fundamentals for Changodar and Moraiya.',
     keywords:
       'how to choose industrial shed gujarat, industrial shed buying guide ahmedabad, industrial shed checklist gujarat, best industrial shed changodar moraiya',
     image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
@@ -679,10 +687,11 @@ export const GUIDE_PAGES = [
       {
         title: 'Evaluate location against your logistics model',
         body: [
-          'A highway-adjacent location reduces truck turnaround time and freight costs. For most manufacturing and distribution businesses in Gujarat, Changodar and Moraiya offer the best balance of highway access, land cost, and labour availability.',
+          'A highway-adjacent location reduces truck turnaround time and freight costs. For most manufacturing and distribution businesses in Gujarat, Changodar and Moraiya offer the best balance of highway access along NH 947 (Sarkhej–Bavla Highway), land cost, and labour availability.',
+          'NH 947 connects Ahmedabad westward through Changodar, Bavla, and onward toward Rajkot — making it a critical freight artery for Gujarat\'s industrial network.',
         ],
         points: [
-          'Distance from national highway and freight corridor',
+          'Distance from NH 947 (Sarkhej–Bavla Highway) and freight corridor',
           'Internal road width for truck circulation',
           'Access to labour, vendors, and client clusters',
         ],
