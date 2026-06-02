@@ -5,14 +5,14 @@ import { useTheme } from '../../context/ThemeContext';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
-  content: `👋 Hi! I'm the **Metro Industrial Park** AI assistant.\n\nI can help you with:\n- 🏭 Shed availability & unit sizes\n- 📍 Location & connectivity\n- 💰 Pricing & investment returns\n- 📋 Amenities & specifications\n- 📞 How to book a site visit\n\nWhat would you like to know?`,
+  content: `👋 Hi! I'm the **Metro Industrial Park** AI assistant.\n\nI can help you with:\n- 🏭 Shed availability & unit sizes\n- 📍 Location & connectivity\n- 📋 Amenities & specifications\n- 📞 How to book a site visit\n\nWhat would you like to know?`,
   id: 'welcome',
 };
 
 const SUGGESTED_QUESTIONS = [
   'What shed sizes are available?',
   'How is the location connected?',
-  'What is the rental price range?',
+  'Which shed suits 1200–1500 yd²?',
   'What amenities are included?',
 ];
 
@@ -110,7 +110,6 @@ const ChatBot = () => {
   useEffect(() => {
     if (isOpen) {
       scrollToBottom();
-      // Small delay so keyboard doesn't fight with focus on mobile
       setTimeout(() => inputRef.current?.focus(), 400);
     }
   }, [isOpen, scrollToBottom]);
@@ -153,8 +152,18 @@ const ChatBot = () => {
     }
   }, [input, isLoading, messages]);
 
+  // ── Key handler: stop ALL keydown events from bubbling out of the chat window
+  // This prevents global shortcuts (F = fullscreen, etc.) from firing while typing
+  const handleWindowKeyDown = (e) => {
+    e.stopPropagation();
+  };
+
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    e.stopPropagation(); // prevent global key listeners always
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
   const resetChat = () => {
@@ -166,7 +175,7 @@ const ChatBot = () => {
 
   const hasSuggestions = messages.length === 1;
 
-  // ── Chat window surface & text colours (explicit, never transparent) ──
+  // Surface colours — always explicit, never transparent
   const surfaceBg    = isDark ? 'bg-[#0a0a0a]'   : 'bg-white';
   const surfaceBorder= isDark ? 'border-gray-800' : 'border-gray-200';
   const msgsBg       = isDark ? 'bg-[#0d0d0d]'   : 'bg-gray-50';
@@ -208,10 +217,7 @@ const ChatBot = () => {
         )}
       </motion.button>
 
-      {/* ─── Chat Window ───
-          Desktop : floating card anchored bottom-right
-          Mobile  : bottom sheet anchored to viewport bottom,
-                    height shrinks when keyboard opens (100dvh handles this) */}
+      {/* ─── Chat Window ─── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -220,26 +226,21 @@ const ChatBot = () => {
             animate={{ opacity: 1, y: 0,  scale: 1    }}
             exit={{    opacity: 0, y: 16, scale: 0.97 }}
             transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+            // Capture ALL keydown events inside the window so they don't reach global listeners
+            onKeyDown={handleWindowKeyDown}
             className={`
               fixed z-50 flex flex-col overflow-hidden border
               ${surfaceBg} ${surfaceBorder}
-
-              /* ─ mobile: full-width bottom sheet, keyboard-aware height ─ */
               bottom-0 left-0 right-0 rounded-t-2xl rounded-b-none
-              /* height = available viewport minus safe areas; dvh shrinks when keyboard opens */
               max-h-[82dvh]
-
-              /* ─ sm+: floating card ─ */
               sm:bottom-[5.5rem] sm:right-6 sm:left-auto
               sm:w-[26rem] sm:rounded-2xl sm:rounded-b-2xl
               sm:max-h-[calc(100dvh-8rem)] sm:min-h-[400px]
-
               shadow-2xl
             `}
           >
-            {/* ─ Header ─ */}
-            <div className="flex items-center gap-3 px-4 py-3 bg-red-600 text-white flex-shrink-0">
-              {/* drag handle on mobile */}
+            {/* Header */}
+            <div className="flex items-center gap-3 px-4 py-3 bg-red-600 text-white flex-shrink-0 relative">
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-white/30 sm:hidden" />
               <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                 <Bot size={15} />
@@ -262,7 +263,7 @@ const ChatBot = () => {
               </div>
             </div>
 
-            {/* ─ Messages ─ */}
+            {/* Messages */}
             <div
               ref={messagesContainerRef}
               onScroll={handleScroll}
@@ -311,7 +312,7 @@ const ChatBot = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* ─ Scroll-down button ─ */}
+            {/* Scroll-down button */}
             <AnimatePresence>
               {showScrollDown && (
                 <motion.button
@@ -326,10 +327,9 @@ const ChatBot = () => {
               )}
             </AnimatePresence>
 
-            {/* ─ Input Area ─ */}
-            <div className={`px-3 py-2.5 border-t flex-shrink-0 ${inputAreaBg} ${inputBorder}
-              /* iOS safe-area so input isn't behind home indicator */
-              pb-[max(0.625rem,env(safe-area-inset-bottom)]`}
+            {/* Input Area */}
+            <div className={`px-3 py-2.5 border-t flex-shrink-0 ${inputAreaBg} border-${isDark ? 'gray-800' : 'gray-100'}
+              pb-[max(0.625rem,env(safe-area-inset-bottom))]`}
             >
               <div className={`flex items-end gap-2 rounded-xl border px-3 py-2
                 transition-colors focus-within:border-red-500 ${inputFieldBg} ${inputBorder}`}
@@ -339,7 +339,7 @@ const ChatBot = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about sheds, pricing, location…"
+                  placeholder="Ask about sheds, availability, location…"
                   rows={1}
                   disabled={isLoading}
                   className={`flex-1 resize-none bg-transparent outline-none text-[13px] leading-relaxed

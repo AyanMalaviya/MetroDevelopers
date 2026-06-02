@@ -1,5 +1,4 @@
-// api/chat.js — Metro Developers AI Chatbot (Gemini 1.5 Flash + Google Sheets RAG)
-// Free tier: 15 RPM, 1M tokens/day
+// api/chat.js — Metro Developers AI Chatbot (Gemini + Google Sheets RAG)
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL =
@@ -8,7 +7,7 @@ const GEMINI_API_URL =
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
 
-// ─── CSV Parser ──────────────────────────────────────────────────────────────
+// ─── CSV Parser ───────────────────────────────────────────────────────────────
 function parseCsv(text) {
   const lines = text.trim().split(/\r?\n/);
   if (lines.length < 2) return [];
@@ -29,7 +28,6 @@ function parseCsv(text) {
   }).filter((r) => r.id && r.id.trim());
 }
 
-// ─── Parse area to number (sq yd) ────────────────────────────────────────────
 function parseAreaNum(str = '') {
   return parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
 }
@@ -61,13 +59,11 @@ async function getLiveShedContext() {
     const preLeased = plots.filter((p) => p.status === 'pre-leased');
     const sold      = plots.filter((p) => p.status === 'sold');
 
-    // Full table of available + for-lease plots, sorted by area
     const actionable = [...available, ...forLease].sort((a, b) => a.areaNum - b.areaNum);
     const availableTable = actionable.map((p) =>
       `  Plot ${p.id}: ${p.area} sq yd | ${p.status}${p.monthlyRent ? ` | ₹${p.monthlyRent}/mo` : ''}`
     ).join('\n');
 
-    // Full database for context (all plots)
     const fullTable = plots.map((p) =>
       `  Plot ${p.id}: ${p.area} sq yd | ${p.status}${p.owner ? ` | Owner: ${p.owner}` : ''}${p.lessee ? ` | Lessee: ${p.lessee}` : ''}${p.monthlyRent ? ` | ₹${p.monthlyRent}/mo` : ''}`
     ).join('\n');
@@ -83,23 +79,23 @@ Summary:
 - Pre-Leased (occupied): ${preLeased.length}
 - Sold: ${sold.length}
 
-### All Plots (sorted by area ascending):
+### All Plots:
 ${fullTable || '  (No data)'}
 
 ### Available & For-Lease Units (sorted by area):
 ${availableTable || '  (No plots currently available — direct users to contact page)'}
 
-### RECOMMENDATION LOGIC (CRITICAL — follow this when user asks which shed to choose):
+### RECOMMENDATION LOGIC (follow when user asks which shed to choose):
 When a user asks which shed suits their requirement (e.g., "I need 1200-1500 sq yd"):
 1. Filter plots where status is 'available' OR 'for-lease'
-2. From those, find plots where areaNum falls within or close to their range (within ±15% tolerance)
+2. Match plots where areaNum falls within or close to their range (within ±15% tolerance)
 3. If exact match exists, recommend those first
 4. If no exact match, recommend the closest available options above their minimum
-5. List each match with: Plot ID, area, status, rent if available
+5. List each match with: Plot ID, area, status
 6. If requirement is for purchase → prioritise 'available'; if for lease/rent → prioritise 'for-lease'
-7. Always end with a call to action to contact Metro Developers or visit the site map
+7. Always end with a CTA to contact Metro Developers for pricing and to visit the site map
 
-IMPORTANT: Always tell users to visit /site-map for the visual map and /contact to enquire.
+IMPORTANT: Always tell users to visit /site-map for the visual map and /contact to enquire about pricing.
 `;
   } catch (err) {
     console.error('Sheet fetch error:', err.message);
@@ -126,7 +122,7 @@ specialising in industrial infrastructure. The flagship project is Metro Industr
 - **Connectivity**: Excellent highway access via SH-17; close to NH-47 / NH-464
 - **Shed Types**: Ready-to-move industrial sheds, warehouses, godowns
   - Small units: ~300–700 sq yd
-  - Medium units: ~700–1500 sq yd  
+  - Medium units: ~700–1500 sq yd
   - Large units: 1500+ sq yd
   - Custom/BTS (Build-to-Suit) options available
 - **Area Units**: All plot areas are measured in square yards (sq yd / yd²). 1 sq yd = 9 sq ft.
@@ -146,34 +142,40 @@ specialising in industrial infrastructure. The flagship project is Metro Industr
   - Strong rental yield: 7–10% annual yield in the Ahmedabad region
   - Capital appreciation: ~8–12% CAGR historically in this micro-market
   - GST Input Tax Credit (ITC) eligible for commercial/industrial tenants
-- **Pricing (indicative)**:
-  - Sale: ~₹2,500–₹4,500/sq ft depending on unit size (confirm with team)
-  - Rent: ₹18–₹35/sq ft/month depending on unit and term
-  - Negotiable for long-term leases (3+ years)
+
+## PRICING POLICY — CRITICAL RULE
+NEVER quote, estimate, or discuss any specific price, rate, rent amount, or cost figure.
+This includes: per sq ft rates, monthly rent, total price, EMI, deposit, any ₹ amounts.
+When ANY pricing question is asked, respond EXACTLY like this pattern:
+  "For accurate and up-to-date pricing, please contact our team directly — they will
+   provide you with the best available rates tailored to your requirement.
+   👉 Visit our Contact page: [metrodevelopers.in/contact]"
+You may acknowledge that pricing varies by plot size, lease term, and availability,
+but DO NOT give any numbers whatsoever. Redirect warmly and immediately.
 
 ## Website Pages
-- **/** – Homepage: overview of Metro Developers and key project highlights
-- **/metro-industrial-park** – Detailed project page: location, amenities, unit types, gallery
-- **/site-map** – Interactive visual map of all plots with real-time status (available/sold/leased)
-- **/calculator** – EMI / yield / ROI calculator for investors
-- **/contact** – Enquiry form, WhatsApp, office address, Google Maps
-- **/metro-arcade** – Metro Arcade: another commercial project by Metro Developers
-- **Guides**: GST ITC for industrial tenants, warehousing yield & CAGR in Gujarat, due diligence checklist, how to choose an industrial shed in Gujarat
+- **/** – Homepage
+- **/metro-industrial-park** – Detailed project page
+- **/site-map** – Interactive visual map of all plots with real-time status
+- **/calculator** – EMI / yield / ROI calculator
+- **/contact** – Enquiry form, WhatsApp, office address
+- **/metro-arcade** – Metro Arcade: another commercial project
 
 ## Response Guidelines
 1. Be helpful, professional, and warm — like a knowledgeable sales advisor
 2. ALWAYS use live shed data to answer availability and recommendation questions
-3. When user asks for shed recommendation by size/area — follow the RECOMMENDATION LOGIC above
-4. For pricing/availability always recommend contacting the team to confirm current figures
-5. For investment queries, provide factual Gujarat/Changodar industrial market context
+3. When user asks for shed recommendation by size — follow the RECOMMENDATION LOGIC above
+4. NEVER discuss pricing — always redirect to /contact (see PRICING POLICY above)
+5. For investment queries, provide factual Gujarat/Changodar industrial market context without figures
 6. Keep responses concise (4–8 sentences) unless detail is needed
 7. End enquiry/recommendation responses with a CTA to WhatsApp or the Contact page
-8. Use ₹ symbol for Indian Rupee amounts
+8. Use ₹ symbol only if referring to pricing — which you must redirect, not answer
 9. Respond in the same language the user writes in (English, Gujarati, or Hindi)
-10. If asked about a specific plot number, look it up in the live data above and report its status/area
-11. When recommending sheds, format as a clear list with Plot #, area, status, rent (if available)
+10. If asked about a specific plot number, look it up in the live data and report its status/area only
+11. When recommending sheds, format as a clear list with Plot #, area, status (NO prices)
 
 ## Do NOT
+- Quote any price, rate, rent, cost, or ₹ amount
 - Make up specific plot availability not in the live data
 - Make legal or regulatory promises
 - Discuss competitor projects negatively
@@ -211,7 +213,7 @@ export default async function handler(req, res) {
     },
     {
       role: 'model',
-      parts: [{ text: 'Ready! I am the Metro Industrial Park AI assistant with access to live shed availability and area data. I can recommend specific plots based on your size requirements. How can I help you?' }],
+      parts: [{ text: 'Ready! I am the Metro Industrial Park AI assistant. I can help with shed availability, recommendations by size, location details, and amenities. For pricing I will always redirect to the contact page. How can I help you?' }],
     },
     ...history.slice(-10).map((t) => ({
       role: t.role === 'user' ? 'user' : 'model',
@@ -226,7 +228,7 @@ export default async function handler(req, res) {
   const requestBody = {
     contents,
     generationConfig: {
-      temperature: 0.60,
+      temperature: 0.55,
       topK: 40,
       topP: 0.92,
       maxOutputTokens: 900,
