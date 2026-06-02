@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, ExternalLink, RotateCcw, Maximize2, User } from 'lucide-react';
+import { X, RefreshCw, ExternalLink, RotateCcw, Maximize2, User, MapPin, TrendingUp, Building2 } from 'lucide-react';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { getPlotData } from '../../services/dataService';
 
@@ -13,6 +13,26 @@ const ADMIN_SHEET_URL = 'https://docs.google.com/spreadsheets/d/100fiyz86pBVkMlU
 const parseArea  = (str = '') => parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
 const areaUnit   = (str = '') => String(str).replace(/[0-9.,\s]/g, '').trim() || 'sq yd';
 
+/* ── Area with superscript yd² ── */
+function AreaDisplay({ value, className = '', numClass = '', unitClass = '' }) {
+  const raw = String(value || 'N/A');
+  // extract number and unit portions
+  const num = raw.replace(/[^0-9.,]/g, '').trim();
+  const unit = raw.replace(/[0-9.,\s]/g, '').trim();
+  if (!num || raw === 'N/A') return <span className={className}>N/A</span>;
+  const isYd = /yd|yard/i.test(unit) || unit === '';
+  return (
+    <span className={className}>
+      <span className={numClass}>{num}</span>
+      {' '}
+      {isYd
+        ? <span className={unitClass}>yd<sup style={{ fontSize: '0.6em', verticalAlign: 'super', lineHeight: 0 }}>2</sup></span>
+        : <span className={unitClass}>{unit}</span>
+      }
+    </span>
+  );
+}
+
 const LesseeIcon = ({ size = 13, className = '' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2"
@@ -21,28 +41,6 @@ const LesseeIcon = ({ size = 13, className = '' }) => (
     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
   </svg>
 );
-
-/* ── Reusable stat cell ── */
-function StatCell({ dark, value, label, small = false, accent = false }) {
-  return (
-    <div className={`p-2.5 rounded-lg text-center border ${
-      dark ? 'bg-gray-900 border-gray-600' : 'bg-white border-gray-200'
-    }`}>
-      <p className={`font-black leading-none mb-0.5 ${small ? 'text-sm' : 'text-lg'} ${
-        accent
-          ? (dark ? 'text-emerald-400' : 'text-emerald-700')
-          : (dark ? 'text-white' : 'text-gray-900')
-      }`}>
-        {value}
-      </p>
-      <p className={`text-[9px] font-bold uppercase tracking-wide ${
-        dark ? 'text-gray-400' : 'text-gray-500'
-      }`}>
-        {label}
-      </p>
-    </div>
-  );
-}
 
 /* ── Clickable shed chips ── */
 function ShedChips({ sheds, selected, plotData, getStatusColor, onSelect, dark }) {
@@ -90,15 +88,11 @@ export default function InteractiveSiteMap() {
   const lastPos      = useRef({ x: 0, y: 0 });
   const pinchDist    = useRef(null);
 
-  /* ── Body scroll lock when fullscreen ── */
   useEffect(() => {
     document.body.style.overflow = isFullscreen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isFullscreen]);
 
-  /* ════════════════════════════════════════
-     DATA
-  ════════════════════════════════════════ */
   useEffect(() => {
     loadData();
     const id = setInterval(() => loadData(true), 30000);
@@ -126,9 +120,6 @@ export default function InteractiveSiteMap() {
     }
   };
 
-  /* ════════════════════════════════════════
-     OWNER / LESSEE HELPERS
-  ════════════════════════════════════════ */
   const getOwnerSheds = useCallback((ownerName) => {
     if (!ownerName) return [];
     return Object.entries(plotData)
@@ -147,7 +138,6 @@ export default function InteractiveSiteMap() {
       .sort((a, b) => Number(a) - Number(b));
   }, [plotData]);
 
-  /* Shared area-sum helper — works for both owner & lessee shed lists */
   const getTotalArea = useCallback((shedIds) => {
     if (!shedIds.length) return null;
     const entries = shedIds.map(id => ({
@@ -160,7 +150,6 @@ export default function InteractiveSiteMap() {
     return `${total.toLocaleString('en-IN')} ${areaUnit(firstRaw)}`.trim();
   }, [plotData]);
 
-  /* ── Derived values for the selected-plot modal ── */
   const selectedPlotData = selectedPlot ? plotData[selectedPlot] : null;
 
   const rawOwnerSheds  = getOwnerSheds(selectedPlotData?.owner);
@@ -177,13 +166,8 @@ export default function InteractiveSiteMap() {
 
   const hasOwner  = !!(selectedPlotData?.owner);
   const hasLessee = !!(selectedPlotData?.lessee);
-
-  /* Rent is stored raw — shown exactly as entered in the sheet */
   const monthlyRentRaw = selectedPlotData?.monthlyRent?.trim() || null;
 
-  /* ════════════════════════════════════════
-     AUTO-FIT
-  ════════════════════════════════════════ */
   const fitToContainer = useCallback(() => {
     setTimeout(() => {
       if (containerRef.current) {
@@ -198,9 +182,6 @@ export default function InteractiveSiteMap() {
 
   useEffect(() => { if (isFullscreen) fitToContainer(); }, [isFullscreen, fitToContainer]);
 
-  /* ════════════════════════════════════════
-     ZOOM
-  ════════════════════════════════════════ */
   const zoomAt = useCallback((cx, cy, factor) => {
     setTfm(t => {
       const s = Math.min(Math.max(t.scale * factor, 0.6), 4);
@@ -252,9 +233,6 @@ export default function InteractiveSiteMap() {
     return () => el.removeEventListener('touchmove', handleTouchMove);
   }, [handleTouchMove, isFullscreen]);
 
-  /* ════════════════════════════════════════
-     MOUSE / TOUCH EVENTS
-  ════════════════════════════════════════ */
   const onMouseDown = useCallback((e) => {
     if (e.button !== 0) return;
     dragging.current = true; moved.current = false;
@@ -298,9 +276,6 @@ export default function InteractiveSiteMap() {
     y: svgY * tfm.scale + tfm.y,
   });
 
-  /* ════════════════════════════════════════
-     STATUS HELPERS
-  ════════════════════════════════════════ */
   const getStatusColor = (status) => {
     switch (status) {
       case 'sold':       return isDark ? '#9CA3AF' : '#6B7280';
@@ -313,8 +288,8 @@ export default function InteractiveSiteMap() {
   const getStatusLabel = (status) => {
     switch (status) {
       case 'sold':       return 'Sold';
-      case 'for-lease':  return 'Sold - Available for Lease';
-      case 'pre-leased': return 'Pre Leased - Available';
+      case 'for-lease':  return 'Sold — Available for Lease';
+      case 'pre-leased': return 'Pre-Leased — Available';
       default:           return 'Available';
     }
   };
@@ -324,7 +299,17 @@ export default function InteractiveSiteMap() {
       case 'sold':       return 'text-gray-500';
       case 'for-lease':  return 'text-red-500';
       case 'pre-leased': return 'text-blue-500';
-      default:           return 'text-green-500';
+      default:           return 'text-emerald-500';
+    }
+  };
+
+  /* Gradient per status */
+  const getStatusGradient = (status) => {
+    switch (status) {
+      case 'sold':       return isDark ? 'from-gray-700 to-gray-800'     : 'from-gray-100 to-gray-200';
+      case 'for-lease':  return isDark ? 'from-red-900/60 to-red-950/80' : 'from-red-50 to-red-100';
+      case 'pre-leased': return isDark ? 'from-blue-900/60 to-blue-950/80' : 'from-blue-50 to-blue-100';
+      default:           return isDark ? 'from-emerald-900/50 to-emerald-950/80' : 'from-emerald-50 to-emerald-100';
     }
   };
 
@@ -349,9 +334,6 @@ export default function InteractiveSiteMap() {
     sold:      Object.keys(plotCoordinates).filter(p => plotData[p]?.status === 'sold').length,
   };
 
-  /* ════════════════════════════════════════
-     DOT RENDERER
-  ════════════════════════════════════════ */
   const renderDots = () =>
     Object.entries(plotCoordinates).map(([plotNumber]) => {
       const center    = getPlotCenter(plotNumber);
@@ -360,14 +342,12 @@ export default function InteractiveSiteMap() {
       const isHov     = hoveredPlot  === plotNumber;
       const isSel     = selectedPlot === plotNumber;
 
-      /* Highlight sibling owner sheds */
       const thisOwner = plotData[plotNumber]?.owner;
       const selOwner  = selectedPlotData?.owner;
       const isOwnerSibling = !!(thisOwner && selOwner &&
         thisOwner.trim().toLowerCase() === selOwner.trim().toLowerCase() &&
         plotNumber !== selectedPlot);
 
-      /* Highlight sibling lessee sheds */
       const thisLessee = plotData[plotNumber]?.lessee;
       const selLessee  = selectedPlotData?.lessee;
       const isLesseeSibling = !!(thisLessee && selLessee &&
@@ -413,112 +393,118 @@ export default function InteractiveSiteMap() {
     });
 
   /* ════════════════════════════════════════
-     OWNER + LESSEE BLOCK
-     Rules:
-     • Owner  → blue card (sheds, total area, raw rent)
-     • Lessee → amber card (sheds, total area, raw rent only if no owner card)
-     • Both   → both cards; rent lives in owner card
+     OWNER / LESSEE CARDS (redesigned)
   ════════════════════════════════════════ */
   const renderOwnerLesseeBlock = () => {
     if (!hasOwner && !hasLessee) return null;
 
-    const ownerStatCount = [
-      ownerSheds.length > 0,
-      ownerTotalArea !== null,
-      !!(hasOwner && monthlyRentRaw),
-    ].filter(Boolean).length || 1;
-
-    const lesseeStatCount = [
-      lesseeSheds.length > 0,
-      lesseeTotalArea !== null,
-      !!(hasLessee && !hasOwner && monthlyRentRaw),
-    ].filter(Boolean).length || 1;
-
     return (
-      <div className="space-y-3 mb-4">
-
-        {/* ── Owner card ── */}
+      <div className="space-y-2.5 mb-4">
         {hasOwner && (
-          <div className={`p-4 rounded-xl border ${
-            isDark ? 'bg-blue-950/60 border-blue-700' : 'bg-blue-50 border-blue-300'
+          <div className={`rounded-xl overflow-hidden border ${
+            isDark ? 'border-blue-800/60' : 'border-blue-200'
           }`}>
-            <div className="flex items-center gap-2 mb-3">
-              <User size={13} className={isDark ? 'text-blue-300' : 'text-blue-700'} />
-              <span className={`text-[10px] font-black uppercase tracking-widest ${
-                isDark ? 'text-blue-300' : 'text-blue-700'
-              }`}>Owner Portfolio</span>
+            <div className={`px-3.5 py-2.5 flex items-center gap-2 ${
+              isDark ? 'bg-blue-900/40' : 'bg-blue-600'
+            }`}>
+              <User size={11} className="text-white opacity-80" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white">Owner Portfolio</span>
             </div>
-
-            <p className={`font-bold text-base mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              {selectedPlotData.owner}
-            </p>
-
-            <div className="grid gap-2 mb-3"
-              style={{ gridTemplateColumns: `repeat(${ownerStatCount}, 1fr)` }}>
-              {ownerSheds.length > 0 && (
-                <StatCell dark={isDark} value={ownerSheds.length} label="Sheds" />
-              )}
-              {ownerTotalArea !== null && (
-                <StatCell dark={isDark} value={ownerTotalArea} label="Total Area" small />
-              )}
-              {monthlyRentRaw && (
-                <StatCell dark={isDark} value={monthlyRentRaw} label="/month" small accent />
+            <div className={`px-3.5 py-3 ${ isDark ? 'bg-blue-950/30' : 'bg-blue-50' }`}>
+              <p className={`font-bold text-sm mb-2.5 ${ isDark ? 'text-white' : 'text-gray-900' }`}>
+                {selectedPlotData.owner}
+              </p>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {ownerSheds.length > 0 && (
+                  <div className={`px-2.5 py-1.5 rounded-lg ${
+                    isDark ? 'bg-blue-900/60 text-blue-200' : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    <span className="font-black">{ownerSheds.length}</span>
+                    <span className="opacity-70 ml-1">shed{ownerSheds.length > 1 ? 's' : ''}</span>
+                  </div>
+                )}
+                {ownerTotalArea && (
+                  <div className={`px-2.5 py-1.5 rounded-lg ${
+                    isDark ? 'bg-blue-900/60 text-blue-200' : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    <AreaDisplay value={ownerTotalArea}
+                      numClass="font-black"
+                      unitClass="opacity-70"
+                    />
+                  </div>
+                )}
+                {monthlyRentRaw && (
+                  <div className={`px-2.5 py-1.5 rounded-lg font-black ${
+                    isDark ? 'bg-emerald-900/60 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
+                  }`}>
+                    ₹{monthlyRentRaw}<span className="font-normal opacity-70">/mo</span>
+                  </div>
+                )}
+              </div>
+              {ownerSheds.length > 1 && (
+                <div className="mt-2.5">
+                  <ShedChips
+                    sheds={ownerSheds} selected={selectedPlot}
+                    plotData={plotData} getStatusColor={getStatusColor}
+                    onSelect={setSelectedPlot} dark={isDark}
+                  />
+                </div>
               )}
             </div>
-
-            {ownerSheds.length > 1 && (
-              <ShedChips
-                sheds={ownerSheds}
-                selected={selectedPlot}
-                plotData={plotData}
-                getStatusColor={getStatusColor}
-                onSelect={setSelectedPlot}
-                dark={isDark}
-              />
-            )}
           </div>
         )}
 
-        {/* ── Lessee card ── */}
         {hasLessee && (
-          <div className={`p-4 rounded-xl border ${
-            isDark ? 'bg-amber-950/50 border-amber-700' : 'bg-amber-50 border-amber-200'
+          <div className={`rounded-xl overflow-hidden border ${
+            isDark ? 'border-amber-800/60' : 'border-amber-200'
           }`}>
-            <div className="flex items-center gap-2 mb-3">
-              <LesseeIcon size={13} className={isDark ? 'text-amber-300' : 'text-amber-700'} />
-              <span className={`text-[10px] font-black uppercase tracking-widest ${
-                isDark ? 'text-amber-300' : 'text-amber-700'
-              }`}>Lessee</span>
+            <div className={`px-3.5 py-2.5 flex items-center gap-2 ${
+              isDark ? 'bg-amber-900/50' : 'bg-amber-500'
+            }`}>
+              <LesseeIcon size={11} className="text-white opacity-80" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white">Lessee</span>
             </div>
-
-            <p className={`font-bold text-base mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              {selectedPlotData.lessee}
-            </p>
-
-            <div className="grid gap-2 mb-3"
-              style={{ gridTemplateColumns: `repeat(${lesseeStatCount}, 1fr)` }}>
-              {lesseeSheds.length > 0 && (
-                <StatCell dark={isDark} value={lesseeSheds.length} label="Sheds" />
-              )}
-              {lesseeTotalArea !== null && (
-                <StatCell dark={isDark} value={lesseeTotalArea} label="Total Area" small />
-              )}
-              {/* Rent only appears here when there is no owner card */}
-              {!hasOwner && monthlyRentRaw && (
-                <StatCell dark={isDark} value={monthlyRentRaw} label="/month" small accent />
+            <div className={`px-3.5 py-3 ${ isDark ? 'bg-amber-950/30' : 'bg-amber-50' }`}>
+              <p className={`font-bold text-sm mb-2.5 ${ isDark ? 'text-white' : 'text-gray-900' }`}>
+                {selectedPlotData.lessee}
+              </p>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {lesseeSheds.length > 0 && (
+                  <div className={`px-2.5 py-1.5 rounded-lg ${
+                    isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    <span className="font-black">{lesseeSheds.length}</span>
+                    <span className="opacity-70 ml-1">shed{lesseeSheds.length > 1 ? 's' : ''}</span>
+                  </div>
+                )}
+                {lesseeTotalArea && (
+                  <div className={`px-2.5 py-1.5 rounded-lg ${
+                    isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    <AreaDisplay value={lesseeTotalArea}
+                      numClass="font-black"
+                      unitClass="opacity-70"
+                    />
+                  </div>
+                )}
+                {!hasOwner && monthlyRentRaw && (
+                  <div className={`px-2.5 py-1.5 rounded-lg font-black ${
+                    isDark ? 'bg-emerald-900/60 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
+                  }`}>
+                    ₹{monthlyRentRaw}<span className="font-normal opacity-70">/mo</span>
+                  </div>
+                )}
+              </div>
+              {lesseeSheds.length > 1 && (
+                <div className="mt-2.5">
+                  <ShedChips
+                    sheds={lesseeSheds} selected={selectedPlot}
+                    plotData={plotData} getStatusColor={getStatusColor}
+                    onSelect={setSelectedPlot} dark={isDark}
+                  />
+                </div>
               )}
             </div>
-
-            {lesseeSheds.length > 1 && (
-              <ShedChips
-                sheds={lesseeSheds}
-                selected={selectedPlot}
-                plotData={plotData}
-                getStatusColor={getStatusColor}
-                onSelect={setSelectedPlot}
-                dark={isDark}
-              />
-            )}
           </div>
         )}
       </div>
@@ -526,8 +512,7 @@ export default function InteractiveSiteMap() {
   };
 
   /* ════════════════════════════════════════
-     FULLSCREEN — createPortal to document.body
-     Bypasses ALL parent stacking contexts.
+     FULLSCREEN PORTAL
   ════════════════════════════════════════ */
   const fullscreenPortal = createPortal(
     <AnimatePresence>
@@ -538,7 +523,6 @@ export default function InteractiveSiteMap() {
           className="fixed inset-0 flex flex-col bg-black"
           style={{ zIndex: 99999 }}
         >
-          {/* Top bar */}
           <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black">
             <div className="flex items-center gap-3">
               <span className="text-white font-bold text-sm hidden sm:block">
@@ -557,7 +541,6 @@ export default function InteractiveSiteMap() {
                 ))}
               </div>
             </div>
-
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-400 hidden sm:inline">
                 {Math.round(tfm.scale * 100)}%
@@ -579,7 +562,6 @@ export default function InteractiveSiteMap() {
             </div>
           </div>
 
-          {/* Map canvas */}
           <div
             ref={containerRef}
             className="flex-1 relative overflow-hidden bg-black"
@@ -588,7 +570,6 @@ export default function InteractiveSiteMap() {
             onMouseUp={onMouseUp}    onMouseLeave={onMouseUp}
             onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
           >
-            {/* Transformed layer */}
             <div style={{
               position: 'absolute', top: 0, left: 0,
               transform: `translate(${tfm.x}px, ${tfm.y}px) scale(${tfm.scale})`,
@@ -610,21 +591,23 @@ export default function InteractiveSiteMap() {
               </div>
             </div>
 
-            {/* Hover tooltip */}
             {hoveredPlot && (() => {
               const center = getPlotCenter(hoveredPlot);
               const pos    = toScreen(center.x, center.y);
               const owner  = plotData[hoveredPlot]?.owner;
               const lessee = plotData[hoveredPlot]?.lessee;
+              const area   = plotData[hoveredPlot]?.area || plotCoordinates[hoveredPlot]?.area;
               return (
                 <div
                   className="absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl bg-gray-900 border border-white/10 text-white"
                   style={{ top: pos.y - 90, left: pos.x + 16, zIndex: 100000, maxWidth: '220px', minWidth: '150px' }}
                 >
                   <p className="font-bold text-sm mb-0.5">Shed {hoveredPlot}</p>
-                  <p className="text-xs opacity-70 mb-1.5">
-                    {plotData[hoveredPlot]?.area || plotCoordinates[hoveredPlot]?.area || 'N/A'}
-                  </p>
+                  {area && (
+                    <p className="text-xs opacity-70 mb-1.5">
+                      <AreaDisplay value={area} />
+                    </p>
+                  )}
                   {owner && (
                     <p className="text-[11px] text-blue-300 mb-0.5 flex items-center gap-1">
                       <User size={9} className="flex-shrink-0" /> {owner}
@@ -654,73 +637,133 @@ export default function InteractiveSiteMap() {
   );
 
   /* ════════════════════════════════════════
-     MODAL — createPortal, renders above fullscreen
+     MODAL — fully redesigned
   ════════════════════════════════════════ */
+  const statusColor   = getStatusColor(selectedPlotData?.status || 'available');
+  const statusGrad    = getStatusGradient(selectedPlotData?.status || 'available');
+  const areaValue     = selectedPlotData?.area || plotCoordinates[selectedPlot]?.area;
+  const areaNum       = parseArea(areaValue);
+
   const modalPortal = createPortal(
     <AnimatePresence>
       {selectedPlot && plotCoordinates[selectedPlot] && (
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-          style={{ zIndex: 100001 }}
+          transition={{ duration: 0.18 }}
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ zIndex: 100001, backdropFilter: 'blur(8px)', background: isDark ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.55)' }}
           onClick={() => setSelectedPlot(null)}
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1,   opacity: 1, y: 0  }}
-            exit={{    scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+            initial={{ scale: 0.88, opacity: 0, y: 24 }}
+            animate={{ scale: 1,    opacity: 1, y: 0  }}
+            exit={{    scale: 0.88, opacity: 0, y: 24 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative max-w-sm w-full rounded-2xl shadow-2xl overflow-hidden ${
-              isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white'
+            className={`relative w-full max-w-[360px] rounded-2xl overflow-hidden shadow-2xl ${
+              isDark ? 'bg-gray-900 ring-1 ring-white/10' : 'bg-white ring-1 ring-black/8'
             }`}
           >
-            {/* Status colour strip */}
-            <div className="h-1.5 w-full"
-              style={{ background: getStatusColor(selectedPlotData?.status || 'available') }} />
-
-            <div className="p-6">
+            {/* ── Hero header with gradient ── */}
+            <div className={`relative bg-gradient-to-br ${statusGrad} px-5 pt-6 pb-5`}>
+              {/* Close button */}
               <button
                 onClick={() => setSelectedPlot(null)}
-                className={`absolute top-5 right-5 p-2 rounded-lg transition-colors ${
-                  isDark ? 'hover:bg-gray-700 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-600'
+                className={`absolute top-4 right-4 p-1.5 rounded-lg transition-colors ${
+                  isDark ? 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'
+                          : 'bg-black/8 hover:bg-black/15 text-black/50 hover:text-black'
                 }`}
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
 
-              {/* Shed avatar + title */}
-              <div className="text-center mb-6">
+              {/* Status pill */}
+              <div className="flex items-center gap-2 mb-4">
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white"
+                  style={{ background: statusColor }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
+                  {getStatusLabel(selectedPlotData?.status)}
+                </span>
+              </div>
+
+              {/* Shed number hero */}
+              <div className="flex items-end gap-4">
                 <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-3xl shadow-2xl mx-auto mb-4"
-                  style={{ backgroundColor: getStatusColor(selectedPlotData?.status || 'available') }}
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl flex-shrink-0"
+                  style={{ background: statusColor, boxShadow: `0 8px 24px ${statusColor}55` }}
                 >
                   {selectedPlot}
                 </div>
-                <h3 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  Shed {selectedPlot}
-                </h3>
-                <p className={`text-sm font-semibold ${getStatusColorClass(selectedPlotData?.status)}`}>
-                  {getStatusLabel(selectedPlotData?.status)}
-                </p>
+                <div>
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-0.5 ${
+                    isDark ? 'text-white/50' : 'text-black/40'
+                  }`}>Metro Industrial Park</p>
+                  <h3 className={`text-xl font-black leading-tight ${ isDark ? 'text-white' : 'text-gray-900' }`}>
+                    Shed {selectedPlot}
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Body ── */}
+            <div className="px-5 py-4">
+
+              {/* Area card — hero stat */}
+              <div className={`rounded-xl p-4 mb-4 flex items-center gap-4 ${
+                isDark ? 'bg-white/5 ring-1 ring-white/8' : 'bg-gray-50 ring-1 ring-black/5'
+              }`}>
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: `${statusColor}22` }}
+                >
+                  <Building2 size={18} style={{ color: statusColor }} />
+                </div>
+                <div>
+                  <p className={`text-[10px] font-bold uppercase tracking-widest mb-0.5 ${
+                    isDark ? 'text-white/40' : 'text-gray-400'
+                  }`}>Shed Area</p>
+                  {areaValue && areaValue !== 'N/A' ? (
+                    <p className={`text-2xl font-black leading-none ${ isDark ? 'text-white' : 'text-gray-900' }`}>
+                      <AreaDisplay
+                        value={areaValue}
+                        numClass=""
+                        unitClass={`text-sm font-bold ${ isDark ? 'text-white/50' : 'text-gray-400' }`}
+                      />
+                    </p>
+                  ) : (
+                    <p className={`text-lg font-bold ${ isDark ? 'text-white/50' : 'text-gray-400' }`}>N/A</p>
+                  )}
+                  {areaNum > 0 && (
+                    <p className={`text-[10px] mt-0.5 ${ isDark ? 'text-white/30' : 'text-gray-400' }`}>
+                      ≈ {(areaNum * 9).toLocaleString('en-IN')} sq ft
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* Shed area */}
-              <div className={`p-4 rounded-xl text-center mb-4 ${isDark ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <p className={`text-xs font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Shed Area
-                </p>
-                <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {selectedPlotData?.area || plotCoordinates[selectedPlot]?.area || 'N/A'}
-                </p>
+              {/* Location pill */}
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg mb-4 ${
+                isDark ? 'bg-white/4' : 'bg-gray-50'
+              }`}>
+                <MapPin size={12} className={isDark ? 'text-white/40' : 'text-gray-400'} />
+                <span className={`text-xs ${ isDark ? 'text-white/50' : 'text-gray-500' }`}>
+                  Changodar, Ahmedabad, Gujarat
+                </span>
               </div>
 
-              {/* Owner + Lessee block */}
+              {/* Owner + Lessee */}
               {renderOwnerLesseeBlock()}
 
+              {/* CTA */}
               <button
                 onClick={() => setSelectedPlot(null)}
-                className="w-full px-6 py-4 rounded-xl font-bold text-md bg-brand-red text-white hover:bg-red-700 transition-all shadow-xl"
+                className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 ${
+                  isDark
+                    ? 'bg-white/8 hover:bg-white/12 text-white ring-1 ring-white/10'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 ring-1 ring-black/5'
+                }`}
               >
                 Close
               </button>
@@ -737,12 +780,8 @@ export default function InteractiveSiteMap() {
   ════════════════════════════════════════ */
   return (
     <>
-      {/* ════ MAIN PREVIEW CARD ════ */}
       <div className={`rounded-2xl shadow-xl overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-
-        {/* Header */}
         <div className={`p-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-
           <div className="flex items-center justify-between mb-3">
             <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
               {lastUpdated ? `Updated ${formatLastUpdated()}` : ''}
@@ -779,7 +818,6 @@ export default function InteractiveSiteMap() {
                 <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
               </div>
             ))}
-
             <div className="flex gap-1.5 ml-auto">
               <a
                 href={ADMIN_SHEET_URL} target="_blank" rel="noopener noreferrer"
@@ -799,7 +837,6 @@ export default function InteractiveSiteMap() {
           </div>
         </div>
 
-        {/* Preview map */}
         <div className={`relative flex justify-center items-center py-4 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
           <div className="relative" style={{ display: 'inline-block' }}>
             <img
@@ -814,24 +851,20 @@ export default function InteractiveSiteMap() {
               {renderDots()}
             </svg>
           </div>
-
           <button
             onClick={() => setIsFullscreen(true)}
             className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-red text-white font-bold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-xl shadow-red-500/25"
           >
             <Maximize2 size={14} /> View Fullscreen
           </button>
-
           <div className={`absolute bottom-4 left-4 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium ${
             isDark ? 'bg-black/60 text-gray-300' : 'bg-black/50 text-white'
           }`}>
             Tap shed for details
           </div>
         </div>
-
       </div>
 
-      {/* Portals — rendered on document.body, above all stacking contexts */}
       {fullscreenPortal}
       {modalPortal}
     </>

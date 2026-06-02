@@ -5,11 +5,10 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL =
   'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-// Public Google Sheet CSV — same sheet used by dataService.js on the frontend
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
 
-// ─── CSV Parser (no deps — simple RFC 4180-compliant) ──────────────────────────────
+// ─── CSV Parser ──────────────────────────────────────────────────────────────
 function parseCsv(text) {
   const lines = text.trim().split(/\r?\n/);
   if (lines.length < 2) return [];
@@ -30,12 +29,17 @@ function parseCsv(text) {
   }).filter((r) => r.id && r.id.trim());
 }
 
-// ─── Fetch & format live shed data from Google Sheets ───────────────────────────
+// ─── Parse area to number (sq yd) ────────────────────────────────────────────
+function parseAreaNum(str = '') {
+  return parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
+}
+
+// ─── Fetch & format live shed data ───────────────────────────────────────────
 async function getLiveShedContext() {
   try {
     const res = await fetch(SHEET_CSV_URL, {
       headers: { 'User-Agent': 'MetroDevelopers-Chatbot/1.0' },
-      signal: AbortSignal.timeout(6000), // 6 s timeout
+      signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status}`);
     const csv = await res.text();
@@ -46,50 +50,67 @@ async function getLiveShedContext() {
       id: r.id,
       status: validStatuses.includes((r.status || '').toLowerCase()) ? r.status.toLowerCase() : 'available',
       area: r.area || 'N/A',
+      areaNum: parseAreaNum(r.area),
       owner: r.owner || '',
       lessee: r.lessee || '',
       monthlyRent: r.monthlyrent || r.monthly_rent || '',
     }));
 
-    // Summarise by status
-    const available  = plots.filter((p) => p.status === 'available');
-    const forLease   = plots.filter((p) => p.status === 'for-lease');
-    const preLeased  = plots.filter((p) => p.status === 'pre-leased');
-    const sold       = plots.filter((p) => p.status === 'sold');
+    const available = plots.filter((p) => p.status === 'available');
+    const forLease  = plots.filter((p) => p.status === 'for-lease');
+    const preLeased = plots.filter((p) => p.status === 'pre-leased');
+    const sold      = plots.filter((p) => p.status === 'sold');
 
-    // Build a compact text table for the available/for-lease plots (most useful to visitors)
-    const availableRows = [...available, ...forLease]
-      .map((p) => `  Plot ${p.id}: ${p.area} sq yd — ${p.status}${p.monthlyRent ? ` (₹${p.monthlyRent}/mo)` : ''}`)
-      .join('\n');
+    // Full table of available + for-lease plots, sorted by area
+    const actionable = [...available, ...forLease].sort((a, b) => a.areaNum - b.areaNum);
+    const availableTable = actionable.map((p) =>
+      `  Plot ${p.id}: ${p.area} sq yd | ${p.status}${p.monthlyRent ? ` | ₹${p.monthlyRent}/mo` : ''}`
+    ).join('\n');
+
+    // Full database for context (all plots)
+    const fullTable = plots.map((p) =>
+      `  Plot ${p.id}: ${p.area} sq yd | ${p.status}${p.owner ? ` | Owner: ${p.owner}` : ''}${p.lessee ? ` | Lessee: ${p.lessee}` : ''}${p.monthlyRent ? ` | ₹${p.monthlyRent}/mo` : ''}`
+    ).join('\n');
 
     return `
-## LIVE SHED AVAILABILITY DATA (fetched in real-time from Google Sheets)
-Data timestamp: ${new Date().toISOString()}
+## LIVE SHED DATABASE (real-time from Google Sheets)
+Timestamp: ${new Date().toISOString()}
 
 Summary:
-- Total plots in database: ${plots.length}
-- Available (for purchase/enquiry): ${available.length}
-- For Lease / Rent: ${forLease.length}
+- Total plots: ${plots.length}
+- Available (can be purchased): ${available.length}
+- For Lease (sold, available to rent): ${forLease.length}
 - Pre-Leased (occupied): ${preLeased.length}
 - Sold: ${sold.length}
 
-Available & For-Lease Units:
-${availableRows || '  (No plots currently listed as available — please contact us directly.)'}
+### All Plots (sorted by area ascending):
+${fullTable || '  (No data)'}
 
-IMPORTANT: Always recommend users visit /site-map for the visual interactive map, and /contact to enquire about specific plots. Prices shown are indicative; direct enquiry is needed for confirmed pricing.
+### Available & For-Lease Units (sorted by area):
+${availableTable || '  (No plots currently available — direct users to contact page)'}
+
+### RECOMMENDATION LOGIC (CRITICAL — follow this when user asks which shed to choose):
+When a user asks which shed suits their requirement (e.g., "I need 1200-1500 sq yd"):
+1. Filter plots where status is 'available' OR 'for-lease'
+2. From those, find plots where areaNum falls within or close to their range (within ±15% tolerance)
+3. If exact match exists, recommend those first
+4. If no exact match, recommend the closest available options above their minimum
+5. List each match with: Plot ID, area, status, rent if available
+6. If requirement is for purchase → prioritise 'available'; if for lease/rent → prioritise 'for-lease'
+7. Always end with a call to action to contact Metro Developers or visit the site map
+
+IMPORTANT: Always tell users to visit /site-map for the visual map and /contact to enquire.
 `;
   } catch (err) {
     console.error('Sheet fetch error:', err.message);
-    // Graceful degradation — return a note so Gemini knows data is unavailable
     return `
-## LIVE SHED AVAILABILITY DATA
-Note: Real-time availability data could not be fetched at this moment (${err.message}).
-Direct users to the /site-map page or /contact page for up-to-date availability.
+## LIVE SHED DATABASE
+Note: Real-time data could not be fetched (${err.message}). Direct users to /site-map or /contact.
 `;
   }
 }
 
-// ─── Static Metro Industrial Park Knowledge Base ─────────────────────────────────
+// ─── Static knowledge base ────────────────────────────────────────────────────
 const STATIC_CONTEXT = `
 You are the official AI assistant for Metro Developers and Metro Industrial Park.
 Your role is to help potential investors, business owners, and tenants learn about
@@ -104,10 +125,11 @@ specialising in industrial infrastructure. The flagship project is Metro Industr
 - **Strategic Position**: ~20 km from Ahmedabad city centre; near Sanand (Gujarat's auto hub)
 - **Connectivity**: Excellent highway access via SH-17; close to NH-47 / NH-464
 - **Shed Types**: Ready-to-move industrial sheds, warehouses, godowns
-  - Small units: ~2,000–5,000 sq ft
-  - Medium units: ~5,000–15,000 sq ft
-  - Large units: 15,000+ sq ft
+  - Small units: ~300–700 sq yd
+  - Medium units: ~700–1500 sq yd  
+  - Large units: 1500+ sq yd
   - Custom/BTS (Build-to-Suit) options available
+- **Area Units**: All plot areas are measured in square yards (sq yd / yd²). 1 sq yd = 9 sq ft.
 - **Usage**: Manufacturing, warehousing, logistics, cold storage, e-commerce fulfilment, light engineering
 - **Amenities**:
   - 24×7 security with CCTV surveillance
@@ -140,14 +162,16 @@ specialising in industrial infrastructure. The flagship project is Metro Industr
 
 ## Response Guidelines
 1. Be helpful, professional, and warm — like a knowledgeable sales advisor
-2. When answering availability questions, USE the live shed data above (plot IDs, areas, status)
-3. For pricing/availability always recommend contacting the team to confirm current figures
-4. For investment queries, provide factual Gujarat/Changodar industrial market context
-5. Keep responses concise (3–6 sentences) unless detail is needed
-6. End enquiry responses with: “Feel free to fill the enquiry form on our Contact page or WhatsApp us for a site visit!”
-7. Use ₹ symbol for Indian Rupee amounts
-8. Respond in the same language the user writes in (English, Gujarati, or Hindi)
-9. If asked about a specific plot number, look it up in the live data above and report its status/area
+2. ALWAYS use live shed data to answer availability and recommendation questions
+3. When user asks for shed recommendation by size/area — follow the RECOMMENDATION LOGIC above
+4. For pricing/availability always recommend contacting the team to confirm current figures
+5. For investment queries, provide factual Gujarat/Changodar industrial market context
+6. Keep responses concise (4–8 sentences) unless detail is needed
+7. End enquiry/recommendation responses with a CTA to WhatsApp or the Contact page
+8. Use ₹ symbol for Indian Rupee amounts
+9. Respond in the same language the user writes in (English, Gujarati, or Hindi)
+10. If asked about a specific plot number, look it up in the live data above and report its status/area
+11. When recommending sheds, format as a clear list with Plot #, area, status, rent (if available)
 
 ## Do NOT
 - Make up specific plot availability not in the live data
@@ -155,7 +179,7 @@ specialising in industrial infrastructure. The flagship project is Metro Industr
 - Discuss competitor projects negatively
 `;
 
-// ─── Main Handler ──────────────────────────────────────────────────────────────
+// ─── Main Handler ─────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -177,13 +201,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message too long (max 2000 chars).' });
   }
 
-  // ── RAG: Fetch live shed data from Google Sheets in parallel with nothing (fast) ──
   const liveContext = await getLiveShedContext();
-
-  // ── Build full system prompt = static knowledge + live RAG data ──
   const fullSystemPrompt = `${STATIC_CONTEXT}\n${liveContext}`;
 
-  // ── Build Gemini conversation contents ──
   const contents = [
     {
       role: 'user',
@@ -191,9 +211,8 @@ export default async function handler(req, res) {
     },
     {
       role: 'model',
-      parts: [{ text: 'Ready! I am the Metro Industrial Park AI assistant with access to live shed availability data. How can I help you today?' }],
+      parts: [{ text: 'Ready! I am the Metro Industrial Park AI assistant with access to live shed availability and area data. I can recommend specific plots based on your size requirements. How can I help you?' }],
     },
-    // Last 10 history turns
     ...history.slice(-10).map((t) => ({
       role: t.role === 'user' ? 'user' : 'model',
       parts: [{ text: t.content }],
@@ -207,10 +226,10 @@ export default async function handler(req, res) {
   const requestBody = {
     contents,
     generationConfig: {
-      temperature: 0.65,
+      temperature: 0.60,
       topK: 40,
-      topP: 0.95,
-      maxOutputTokens: 800,
+      topP: 0.92,
+      maxOutputTokens: 900,
     },
     safetySettings: [
       { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
