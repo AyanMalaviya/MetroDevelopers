@@ -1,5 +1,5 @@
 // api/chat.js — Vercel serverless function
-// Model: gemini-2.5-flash
+// Model: gemini-3.5-flash (latest stable as of June 2026)
 const SYSTEM_PROMPT = `You are Metro AI, an intelligent assistant for Metro Industrial Park by Metro Developers — a premium industrial shed development in Changodar (Moraiya area), Ahmedabad, Gujarat, India.
 
 == ABOUT METRO INDUSTRIAL PARK ==
@@ -103,7 +103,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

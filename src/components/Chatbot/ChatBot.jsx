@@ -1,6 +1,6 @@
 // ChatBot.jsx
 // The chatbot FAB (bottom-6 right-6) replaces the old sparkle FAB.
-// Model: gemini-2.5-flash
+// Model: gemini-3.5-flash (latest stable)
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Bot, User, RotateCcw, ChevronDown } from 'lucide-react';
@@ -183,7 +183,7 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* ─── Chat FAB — replaces the old Sparkles FAB at bottom-6 right-6 ─── */}
+      {/* ─── Chat FAB — at bottom-6 right-6 (replaces old Sparkles FAB) ─── */}
       <motion.button
         onClick={() => setIsOpen((o) => !o)}
         whileHover={{ scale: 1.08 }}
@@ -358,7 +358,7 @@ const ChatBot = () => {
               <p className={`text-[10px] mt-1 px-0.5 ${
                 isDark ? 'text-gray-700' : 'text-gray-400'
               }`}>
-                Powered by Gemini 2.5 Flash · AI may make mistakes
+                Powered by Gemini 3.5 Flash · AI may make mistakes
               </p>
             </div>
           </motion.div>
