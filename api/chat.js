@@ -14,7 +14,7 @@ async function fetchSheetContext() {
     const lines = csv.trim().split('\n');
     if (lines.length < 2) return null;
 
-    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/[\"']/g, ''));
+    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/["']/g, ''));
     const idIdx     = headers.indexOf('id');
     const statusIdx = headers.indexOf('status');
     const areaIdx   = headers.indexOf('area');
@@ -92,6 +92,7 @@ For pricing questions, first say: "Pricing varies by unit — WhatsApp +91 98242
 5. Respond in the user's language (English, Gujarati, or Hindi).
 6. Be concise. No unnecessary filler.
 7. Do not invent facts not listed above.
+8. Always complete your response fully — never stop mid-sentence or mid-list.
 `;
 }
 
@@ -134,7 +135,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           system_instruction: { parts: [{ text: systemPrompt }] },
           contents,
-          generationConfig: { maxOutputTokens: 600, temperature: 0.5, topP: 0.9 },
+          generationConfig: { maxOutputTokens: 2048, temperature: 0.5, topP: 0.9 },
           safetySettings: [
             { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
             { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
