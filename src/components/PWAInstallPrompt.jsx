@@ -9,42 +9,38 @@ const PWAInstallPrompt = () => {
   const isDark = theme === 'dark';
 
   useEffect(() => {
-    const handleBeforeInstall = (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      console.log('PWA: beforeinstallprompt event fired');
-      
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
-      
+    let installPromptTimeout;
+
+    const handleBeforeInstall = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+
       const dismissed = localStorage.getItem('pwaInstallDismissed');
+      const dismissedAt = Number(dismissed);
       const now = Date.now();
       const oneDayInMs = 24 * 60 * 60 * 1000;
       
-      // If not dismissed, or dismissed over a day ago, show after 2.5 seconds
-      if (!dismissed || (now - parseInt(dismissed)) > oneDayInMs) {
-        setTimeout(() => setShowPrompt(true), 2500); // ✅ Changed to 2.5 seconds
+      if (!dismissed || Number.isNaN(dismissedAt) || (now - dismissedAt) > oneDayInMs) {
+        installPromptTimeout = window.setTimeout(() => setShowPrompt(true), 2500);
       }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
 
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      console.log('PWA: App is already installed');
-    }
-
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      if (installPromptTimeout) {
+        window.clearTimeout(installPromptTimeout);
+      }
+    };
   }, []);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
     
-    // Show the native install prompt
     deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`PWA: User response: ${outcome}`);
+    await deferredPrompt.userChoice;
     
-    // We've used the prompt, and can't use it again, discard it
     setDeferredPrompt(null);
     setShowPrompt(false);
   };
