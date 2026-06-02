@@ -1,3 +1,6 @@
+// ChatBot.jsx
+// The chatbot FAB (bottom-6 right-6) replaces the old sparkle FAB.
+// Model: gemini-2.5-flash
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Bot, User, RotateCcw, ChevronDown } from 'lucide-react';
@@ -152,14 +155,10 @@ const ChatBot = () => {
     }
   }, [input, isLoading, messages]);
 
-  // ── Key handler: stop ALL keydown events from bubbling out of the chat window
-  // This prevents global shortcuts (F = fullscreen, etc.) from firing while typing
-  const handleWindowKeyDown = (e) => {
-    e.stopPropagation();
-  };
+  const handleWindowKeyDown = (e) => { e.stopPropagation(); };
 
   const handleKeyDown = (e) => {
-    e.stopPropagation(); // prevent global key listeners always
+    e.stopPropagation();
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -175,7 +174,6 @@ const ChatBot = () => {
 
   const hasSuggestions = messages.length === 1;
 
-  // Surface colours — always explicit, never transparent
   const surfaceBg    = isDark ? 'bg-[#0a0a0a]'   : 'bg-white';
   const surfaceBorder= isDark ? 'border-gray-800' : 'border-gray-200';
   const msgsBg       = isDark ? 'bg-[#0d0d0d]'   : 'bg-gray-50';
@@ -185,12 +183,12 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* ─── Toggle FAB ─── */}
+      {/* ─── Chat FAB — replaces the old Sparkles FAB at bottom-6 right-6 ─── */}
       <motion.button
         onClick={() => setIsOpen((o) => !o)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.93 }}
-        className="fixed bottom-24 right-6 z-50 w-12 h-12 rounded-full bg-red-600 text-white shadow-2xl flex items-center justify-center border border-white/20"
+        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-red-600 text-white shadow-2xl flex items-center justify-center border border-white/20"
         aria-label={isOpen ? 'Close chat' : 'Open Metro AI chat'}
       >
         <AnimatePresence mode="wait">
@@ -226,16 +224,15 @@ const ChatBot = () => {
             animate={{ opacity: 1, y: 0,  scale: 1    }}
             exit={{    opacity: 0, y: 16, scale: 0.97 }}
             transition={{ type: 'spring', stiffness: 320, damping: 30 }}
-            // Capture ALL keydown events inside the window so they don't reach global listeners
             onKeyDown={handleWindowKeyDown}
             className={`
               fixed z-50 flex flex-col overflow-hidden border
               ${surfaceBg} ${surfaceBorder}
               bottom-0 left-0 right-0 rounded-t-2xl rounded-b-none
               max-h-[82dvh]
-              sm:bottom-[5.5rem] sm:right-6 sm:left-auto
+              sm:bottom-[5rem] sm:right-6 sm:left-auto
               sm:w-[26rem] sm:rounded-2xl sm:rounded-b-2xl
-              sm:max-h-[calc(100dvh-8rem)] sm:min-h-[400px]
+              sm:max-h-[calc(100dvh-7rem)] sm:min-h-[400px]
               shadow-2xl
             `}
           >
@@ -361,7 +358,7 @@ const ChatBot = () => {
               <p className={`text-[10px] mt-1 px-0.5 ${
                 isDark ? 'text-gray-700' : 'text-gray-400'
               }`}>
-                Powered by Google Gemini · AI may make mistakes
+                Powered by Gemini 2.5 Flash · AI may make mistakes
               </p>
             </div>
           </motion.div>

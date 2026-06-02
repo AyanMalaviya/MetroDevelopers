@@ -1,35 +1,53 @@
 // src/components/Layout/Navbar.jsx
 import { useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
-  Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown
+  Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
+  Settings2, ArrowUp, Type, Map
 } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
+const FONT_SIZE_STORAGE_KEY = 'metro-font-size';
+const FONT_SIZE_VALUES = { normal: '16px', large: '18px', xlarge: '20px' };
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
+  const navigate = useNavigate();
 
-  const [isMenuOpen,   setIsMenuOpen]   = useState(false);
-  const [isVisible,    setIsVisible]    = useState(true);
-  const [lastScrollY,  setLastScrollY]  = useState(0);
-  const [scrolled,     setScrolled]     = useState(false);
-  const [contactOpen,  setContactOpen]  = useState(false);
+  const [isMenuOpen,    setIsMenuOpen]    = useState(false);
+  const [isVisible,     setIsVisible]     = useState(true);
+  const [lastScrollY,   setLastScrollY]   = useState(0);
+  const [scrolled,      setScrolled]      = useState(false);
+  const [contactOpen,   setContactOpen]   = useState(false);
+  const [settingsOpen,  setSettingsOpen]  = useState(false);
+  const [fontSize,      setFontSize]      = useState('normal');
 
-  const contactRef = useRef(null);
+  const contactRef  = useRef(null);
+  const settingsRef = useRef(null);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+
+  // Restore saved font size on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
+      if (saved && FONT_SIZE_VALUES[saved]) {
+        document.documentElement.style.fontSize = FONT_SIZE_VALUES[saved];
+        setFontSize(saved);
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   useEffect(() => {
     const control = () => {
       const y = window.scrollY;
       setScrolled(y > 50);
       if (y < 10)                           { setIsVisible(true); }
-      else if (y > lastScrollY && y > 100)  { setIsVisible(false); setIsMenuOpen(false); setContactOpen(false); }
+      else if (y > lastScrollY && y > 100)  { setIsVisible(false); setIsMenuOpen(false); setContactOpen(false); setSettingsOpen(false); }
       else if (y < lastScrollY)             { setIsVisible(true); }
       setLastScrollY(y);
     };
@@ -37,11 +55,11 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', control);
   }, [lastScrollY]);
 
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (contactRef.current && !contactRef.current.contains(e.target)) {
-        setContactOpen(false);
-      }
+      if (contactRef.current && !contactRef.current.contains(e.target))  setContactOpen(false);
+      if (settingsRef.current && !settingsRef.current.contains(e.target)) setSettingsOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -55,6 +73,13 @@ const Navbar = () => {
   const closeMenu  = () => setIsMenuOpen(false);
   const toggleMenu = () => setIsMenuOpen(v => !v);
 
+  const toggleFontSize = () => {
+    const next = fontSize === 'normal' ? 'large' : fontSize === 'large' ? 'xlarge' : 'normal';
+    document.documentElement.style.fontSize = FONT_SIZE_VALUES[next];
+    setFontSize(next);
+    try { localStorage.setItem(FONT_SIZE_STORAGE_KEY, next); } catch { /* ignore */ }
+  };
+
   const navItems = [
     { path: '/',                      label: 'Home',            icon: Home       },
     { path: '/metro-industrial-park', label: 'Industrial Park', icon: Factory    },
@@ -62,6 +87,38 @@ const Navbar = () => {
     { path: '/contact',               label: 'Contact',         icon: Mail       },
     { path: '/calculator',            label: 'Calculator',      icon: Calculator },
     { path: '/site-map',              label: 'Site Map',        icon: MapPin     },
+  ];
+
+  // Settings quick-actions (no theme toggle — that's already in the navbar)
+  const settingsItems = [
+    {
+      icon: ArrowUp,
+      label: 'Back to Top',
+      action: () => { window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
+      accent: isDark ? 'text-blue-400' : 'text-blue-600',
+      bg: isDark ? 'hover:bg-blue-950/40' : 'hover:bg-blue-50',
+    },
+    {
+      icon: Type,
+      label: `Font: ${ fontSize === 'normal' ? 'Normal' : fontSize === 'large' ? 'Large' : 'X-Large' }`,
+      action: () => { toggleFontSize(); },
+      accent: isDark ? 'text-green-400' : 'text-green-600',
+      bg: isDark ? 'hover:bg-green-950/40' : 'hover:bg-green-50',
+    },
+    {
+      icon: Factory,
+      label: 'Explore Project',
+      action: () => { navigate('/metro-industrial-park'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
+      accent: isDark ? 'text-orange-400' : 'text-orange-600',
+      bg: isDark ? 'hover:bg-orange-950/40' : 'hover:bg-orange-50',
+    },
+    {
+      icon: Map,
+      label: 'Plan & Availability',
+      action: () => { navigate('/site-map'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
+      accent: isDark ? 'text-teal-400' : 'text-teal-600',
+      bg: isDark ? 'hover:bg-teal-950/40' : 'hover:bg-teal-50',
+    },
   ];
 
   const headerBg = scrolled
@@ -117,7 +174,7 @@ const Navbar = () => {
                       ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
                       : isDark
                         ? 'text-gray-400 hover:text-white hover:bg-gray-900'
-                        : 'text-gray-600 hover:text-brand-red hover:bg-gray-100' 
+                        : 'text-gray-600 hover:text-brand-red hover:bg-gray-100'
                   }`
                 }
               >
@@ -131,11 +188,11 @@ const Navbar = () => {
               </NavLink>
             ))}
 
-            {/* ── Contact Dropdown Button ── */}
+            {/* ── Contact Dropdown ── */}
             <div className="relative ml-1" ref={contactRef}>
               <button
                 type="button"
-                onClick={() => setContactOpen(v => !v)}
+                onClick={() => { setContactOpen(v => !v); setSettingsOpen(false); }}
                 className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl transition-all duration-200 ${
                   contactOpen
                     ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
@@ -153,15 +210,11 @@ const Navbar = () => {
                   }`} />
                 </span>
                 <span className="hidden lg:inline">Reach Us</span>
-                <motion.div
-                  animate={{ rotate: contactOpen ? 180 : 0 }}
-                  transition={{ duration: 0.22 }}
-                >
+                <motion.div animate={{ rotate: contactOpen ? 180 : 0 }} transition={{ duration: 0.22 }}>
                   <ChevronDown size={12} />
                 </motion.div>
               </button>
 
-              {/* ── Dropdown Panel ── */}
               <AnimatePresence>
                 {contactOpen && (
                   <motion.div
@@ -170,82 +223,42 @@ const Navbar = () => {
                     exit={{ opacity: 0, y: -6, scale: 0.97 }}
                     transition={{ duration: 0.2 }}
                     className={`absolute right-0 top-full mt-2 w-64 rounded-2xl border shadow-2xl overflow-hidden z-50 ${
-                      isDark
-                        ? 'bg-black border-gray-800 shadow-black/70'
-                        : 'bg-white border-gray-200 shadow-gray-200/80'
+                      isDark ? 'bg-black border-gray-800 shadow-black/70' : 'bg-white border-gray-200 shadow-gray-200/80'
                     }`}
                   >
-                    {/* Header */}
                     <div className={`px-4 py-3 border-b ${isDark ? 'border-gray-800 bg-black' : 'border-gray-100 bg-white'}`}>
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
                         </span>
-                        <p className={`text-xs font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                          Available for site visits
-                        </p>
+                        <p className={`text-xs font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Available for site visits</p>
                       </div>
-                      {/* FIX 1: gray-400→gray-500 (light) · gray-500→gray-400 (dark) */}
-                      <p className={`text-[10px] mt-0.5 ml-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Mon–Sun · 9 AM to 7 PM
-                      </p>
+                      <p className={`text-[10px] mt-0.5 ml-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Mon–Sun · 9 AM to 7 PM</p>
                     </div>
-
-                    {/* Action buttons */}
                     <div className={`p-3 flex flex-col gap-2 ${isDark ? 'bg-black' : 'bg-white'}`}>
-                      <a
-                        href="tel:+919824235642"
-                        onClick={() => setContactOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-red text-white text-xs font-semibold hover:bg-red-700 active:scale-95 transition-all shadow-sm shadow-red-500/20"
-                      >
-                        <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                          <Phone size={11} />
-                        </div>
-                        <div>
-                          <p className="font-bold text-[11px]">Call Now</p>
-                          <p className="text-[10px] text-red-200">+91 98242 35642</p>
-                        </div>
+                      <a href="tel:+919824235642" onClick={() => setContactOpen(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-red text-white text-xs font-semibold hover:bg-red-700 active:scale-95 transition-all shadow-sm shadow-red-500/20">
+                        <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0"><Phone size={11} /></div>
+                        <div><p className="font-bold text-[11px]">Call Now</p><p className="text-[10px] text-red-200">+91 98242 35642</p></div>
                       </a>
-
-                      <a
-                        href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setContactOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-green-500 text-white text-xs font-semibold hover:bg-green-600 active:scale-95 transition-all shadow-sm shadow-green-500/20"
-                      >
-                        <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                          <MessageCircle size={11} />
-                        </div>
-                        <div>
-                          <p className="font-bold text-[11px]">WhatsApp</p>
-                          <p className="text-[10px] text-green-200">Chat instantly</p>
-                        </div>
+                      <a href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
+                        target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-green-500 text-white text-xs font-semibold hover:bg-green-600 active:scale-95 transition-all shadow-sm shadow-green-500/20">
+                        <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0"><MessageCircle size={11} /></div>
+                        <div><p className="font-bold text-[11px]">WhatsApp</p><p className="text-[10px] text-green-200">Chat instantly</p></div>
                       </a>
-
-                      <a
-                        href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setContactOpen(false)}
+                      <a href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
+                        target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border text-xs font-semibold active:scale-95 transition-all ${
-                          isDark
-                            ? 'border-gray-700 bg-black text-gray-300 hover:bg-gray-900'
-                            : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          isDark ? 'bg-gray-800' : 'bg-gray-100'
+                          isDark ? 'border-gray-700 bg-black text-gray-300 hover:bg-gray-900' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
                         }`}>
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
                           <MapPin size={11} className="text-brand-red" />
                         </div>
                         <div>
                           <p className="font-bold text-[11px]">Get Directions</p>
-                          {/* FIX 2: gray-400→gray-500 (light) · gray-500→gray-400 (dark) */}
-                          <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                            Moraiya, Ahmedabad
-                          </p>
+                          <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Moraiya, Ahmedabad</p>
                         </div>
                       </a>
                     </div>
@@ -254,7 +267,7 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            {/* ── Theme toggle ── */}
+            {/* ── Theme toggle (existing, unchanged) ── */}
             {toggleTheme && (
               <button
                 type="button"
@@ -269,6 +282,63 @@ const Navbar = () => {
                 {isDark ? <Sun size={15} /> : <Moon size={15} />}
               </button>
             )}
+
+            {/* ── Settings / Tuning Dropdown ── */}
+            <div className="relative ml-1" ref={settingsRef}>
+              <button
+                type="button"
+                onClick={() => { setSettingsOpen(v => !v); setContactOpen(false); }}
+                title="Quick settings"
+                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                  settingsOpen
+                    ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
+                    : isDark
+                      ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
+                }`}
+                aria-label="Quick settings"
+                aria-expanded={settingsOpen}
+              >
+                <motion.div animate={{ rotate: settingsOpen ? 60 : 0 }} transition={{ duration: 0.3 }}>
+                  <Settings2 size={15} />
+                </motion.div>
+              </button>
+
+              <AnimatePresence>
+                {settingsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                    transition={{ duration: 0.18 }}
+                    className={`absolute right-0 top-full mt-2 w-52 rounded-2xl border shadow-2xl overflow-hidden z-50 ${
+                      isDark ? 'bg-black border-gray-800 shadow-black/70' : 'bg-white border-gray-200 shadow-gray-200/80'
+                    }`}
+                  >
+                    <div className={`px-4 py-2.5 border-b text-[10px] font-bold uppercase tracking-widest ${
+                      isDark ? 'border-gray-800 text-gray-500' : 'border-gray-100 text-gray-400'
+                    }`}>
+                      Quick Actions
+                    </div>
+                    <div className={`p-2 flex flex-col gap-0.5 ${isDark ? 'bg-black' : 'bg-white'}`}>
+                      {settingsItems.map((item) => (
+                        <button
+                          key={item.label}
+                          type="button"
+                          onClick={item.action}
+                          className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                          } ${item.bg}`}
+                        >
+                          <item.icon size={14} className={item.accent} />
+                          <span>{item.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* ── Mobile right side: theme toggle + hamburger ── */}
@@ -301,11 +371,7 @@ const Navbar = () => {
                     : 'bg-gray-100 text-gray-700 hover:text-brand-red hover:bg-gray-200'
               }`}
             >
-              <motion.div
-                initial={false}
-                animate={{ rotate: isMenuOpen ? 90 : 0 }}
-                transition={{ duration: 0.25 }}
-              >
+              <motion.div initial={false} animate={{ rotate: isMenuOpen ? 90 : 0 }} transition={{ duration: 0.25 }}>
                 {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
               </motion.div>
             </button>
@@ -325,40 +391,26 @@ const Navbar = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               className="fixed inset-0 bg-black/60 z-40 md:hidden"
               onClick={closeMenu}
             />
 
-            {/* Slide-in panel */}
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 220 }}
               className={`fixed top-[61px] sm:top-[65px] right-0 bottom-0 w-[272px] sm:w-[300px] z-40 md:hidden overflow-y-auto ${
-                isDark
-                  ? 'bg-black border-l border-gray-800'
-                  : 'bg-white border-l border-gray-200'
+                isDark ? 'bg-black border-l border-gray-800' : 'bg-white border-l border-gray-200'
               }`}
             >
               <div className="flex flex-col p-4 gap-1">
 
-                {/* Panel header */}
                 <div className={`px-2 pb-4 mb-2 border-b ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
-                  <p className={`text-[10px] font-bold uppercase tracking-widest ${
-                    isDark ? 'text-gray-400' : 'text-gray-600'
-                  }`}>
-                    Navigation
-                  </p>
+                  <p className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Navigation</p>
                 </div>
 
-                {/* Nav items */}
                 {navItems.map((item, i) => (
                   <motion.div
                     key={item.path}
@@ -394,73 +446,72 @@ const Navbar = () => {
                   </motion.div>
                 ))}
 
-                {/* ── Mobile Contact Strip ── */}
+                {/* ── Mobile Quick Actions ── */}
                 <motion.div
                   initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: navItems.length * 0.05 + 0.05, duration: 0.3 }}
                   className={`mt-3 pt-3 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}
                 >
-                  <p className={`text-[10px] font-bold uppercase tracking-widest px-2 mb-3 ${
-                    isDark ? 'text-gray-400' : 'text-gray-600'
-                  }`}>
-                    Reach Us
-                  </p>
+                  <p className={`text-[10px] font-bold uppercase tracking-widest px-2 mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Quick Actions</p>
+                  <div className="flex flex-col gap-1">
+                    {settingsItems.map((item) => (
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => { item.action(); closeMenu(); }}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                          isDark ? 'text-gray-300 hover:bg-gray-900/70' : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                          isDark ? 'bg-gray-900' : 'bg-gray-100'
+                        }`}>
+                          <item.icon size={16} className={item.accent} />
+                        </div>
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* ── Mobile Contact Strip ── */}
+                <motion.div
+                  initial={{ opacity: 0, x: 16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + settingsItems.length) * 0.05 + 0.05, duration: 0.3 }}
+                  className={`mt-3 pt-3 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}
+                >
+                  <p className={`text-[10px] font-bold uppercase tracking-widest px-2 mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Reach Us</p>
                   <div className="flex flex-col gap-2">
-                    <a
-                      href="tel:+919824235642"
-                      onClick={closeMenu}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-red text-white text-sm font-semibold active:scale-95 transition-all"
-                    >
+                    <a href="tel:+919824235642" onClick={closeMenu}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-red text-white text-sm font-semibold active:scale-95 transition-all">
                       <Phone size={15} />
-                      <div>
-                        <p className="text-xs font-bold">Call Now</p>
-                        <p className="text-[10px] text-red-200">+91 98242 35642</p>
-                      </div>
+                      <div><p className="text-xs font-bold">Call Now</p><p className="text-[10px] text-red-200">+91 98242 35642</p></div>
                     </a>
-                    <a
-                      href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={closeMenu}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-green-500 text-white text-sm font-semibold active:scale-95 transition-all"
-                    >
+                    <a href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
+                      target="_blank" rel="noopener noreferrer" onClick={closeMenu}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-green-500 text-white text-sm font-semibold active:scale-95 transition-all">
                       <MessageCircle size={15} />
-                      <div>
-                        <p className="text-xs font-bold">WhatsApp</p>
-                        <p className="text-[10px] text-green-200">Chat instantly</p>
-                      </div>
+                      <div><p className="text-xs font-bold">WhatsApp</p><p className="text-[10px] text-green-200">Chat instantly</p></div>
                     </a>
-                    <a
-                      href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={closeMenu}
+                    <a href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
+                      target="_blank" rel="noopener noreferrer" onClick={closeMenu}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold active:scale-95 transition-all ${
-                        isDark
-                          ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-                          : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        isDark ? 'bg-gray-900' : 'bg-gray-100'
+                        isDark ? 'border-gray-700 text-gray-300 hover:bg-gray-800' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
                       }`}>
+                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
                         <MapPin size={13} className="text-brand-red" />
                       </div>
                       <div>
                         <p className="text-xs font-bold">Get Directions</p>
-                        <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                          Moraiya, Ahmedabad
-                        </p>
+                        <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Moraiya, Ahmedabad</p>
                       </div>
                     </a>
                   </div>
                 </motion.div>
 
-                {/* Panel footer */}
-                <div className={`mt-4 pt-4 border-t text-center ${
-                  isDark ? 'border-gray-800' : 'border-gray-100'
-                }`}>
+                <div className={`mt-4 pt-4 border-t text-center ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
                   <p className={`text-[10px] font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     Metro Industrial Park · Moraiya, Ahmedabad
                   </p>
