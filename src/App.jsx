@@ -18,6 +18,7 @@ import MetroArcade from './components/Projects/MetroArcade';
 import NotFound from './pages/NotFound';
 import ReviewPrompt from './components/Review';
 import RecordsAccessGate from './components/RecordsAccessGate';
+import ChatBot from './components/Chatbot/ChatBot';
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
           <Footer />
           <ReviewPrompt />
           <FloatingActionMenu />
+          <ChatBot />
         </div>
       </Router>
     </ThemeProvider>
