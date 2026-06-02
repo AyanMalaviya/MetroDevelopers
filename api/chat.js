@@ -1,154 +1,110 @@
 // api/chat.js — Vercel serverless function
-// Model: gemini-3.5-flash (free tier, 1M context window)
+// Model: gemini-1.5-flash
 
-const SYSTEM_PROMPT = `You are Metro AI, an intelligent assistant for Metro Industrial Park by Metro Developers — a premium industrial shed development in Moraiya, Ahmedabad, Gujarat, India.
+const SHEET_CSV_URL =
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
 
-== ABOUT METRO INDUSTRIAL PARK ==
+// Fetch & parse the Google Sheet into a compact text block
+async function fetchSheetContext() {
+  try {
+    const res = await fetch(SHEET_CSV_URL);
+    if (!res.ok) return null;
+    const csv = await res.text();
 
-Company: Metro Enterprise (Metro Developers)
-Website: https://www.metrodevelopers.co.in
+    const lines = csv.trim().split('\n');
+    if (lines.length < 2) return null;
 
-Address:
-Opp. Suvas Ind Estate, b/h Siya Logistics Park,
-Moraiya, Ahmedabad, Gujarat — 382213
+    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/["']/g, ''));
+    const idIdx     = headers.indexOf('id');
+    const statusIdx = headers.indexOf('status');
+    const areaIdx   = headers.indexOf('area');
+    const ownerIdx  = headers.indexOf('owner');
+    const lesseeIdx = headers.indexOf('lessee');
+    const rentIdx   = Math.max(headers.indexOf('monthlyrent'), headers.indexOf('monthly_rent'));
 
-== DIRECTORS / CONTACT PERSONS ==
-1. Amir Malaviya — Director
-   Phone: +91 98242 35642
-   Email: amirmalaviya786@gmail.com
-   WhatsApp: +91 98242 35642
+    if (idIdx === -1) return null;
 
-2. Nazim Kazani — Director
-   Phone: +91 96249 65017
-   WhatsApp: +91 96249 65017
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].match(/(?:"([^"]*)"|([^,]*))/g)
+        ?.map((c) => c.replace(/^"|"$/g, '').trim()) || [];
 
-3. Kaushar Kalyani — Director
-   (Contact via office)
+      const id = cols[idIdx];
+      if (!id) continue;
 
-General Email: metrodevelopers26@gmail.com
-Urgent Contact Numbers: +91 9824235642 | +91 63567 66767
+      const status = (cols[statusIdx] || 'available').toLowerCase();
+      const area   = cols[areaIdx]   || 'N/A';
+      const owner  = ownerIdx  >= 0 ? (cols[ownerIdx]  || '') : '';
+      const lessee = lesseeIdx >= 0 ? (cols[lesseeIdx] || '') : '';
+      const rent   = rentIdx   >= 0 ? (cols[rentIdx]   || '') : '';
 
-Office Hours: Monday to Sunday, 11:00 AM – 7:00 PM
-(Site visits available by appointment outside office hours)
+      let row = `Plot ${id}: ${status}, ${area}`;
+      if (owner)  row += `, owner: ${owner}`;
+      if (lessee) row += `, lessee: ${lessee}`;
+      if (rent)   row += `, rent: ₹${rent}`;
+      rows.push(row);
+    }
 
-The team replies within 1 hour on WhatsApp.
+    return rows.length > 0 ? rows.join('\n') : null;
+  } catch {
+    return null;
+  }
+}
 
-== PROJECT STATS ==
-- 54,000+ sq. yards of total area
-- 63+ industrial units project
-- minimum 6% rental yield guaranteed
-- 100% client satisfaction
-- 6+ years of experience
+function buildSystemPrompt(sheetData) {
+  const sheetSection = sheetData
+    ? `== LIVE SHED DATA (fetched now from Google Sheets) ==
+Statuses: available | for-lease | pre-leased | sold
+${sheetData}
 
-== KEY FEATURES ==
-1. Modern Infrastructure
-   - 30–35 ft high ceiling clearance
-   - Reinforced flooring for heavy loads
-   - RCC construction available on request
+`
+    : `== SHED DATA ==
+Live data unavailable right now. For plot availability, direct user to WhatsApp +91 98242 35642.
 
-2. Strategic Location
-   - Near NH 47 (Sarkhej Bavla National Highway)
-   - Easy access to GIDC industrial areas
-   - Close to Ahmedabad city & airport
-
-3. 24/7 Security
-   - HD CCTV cameras throughout the park
-   - Security guards at main gate
-   - Controlled access entry system
-
-4. Wide Roads
-   - 60 ft wide internal road network
-   - Durable RCC construction
-   - Designed for heavy trucks & trailers
-
-5. Water Supply
-   - Round-the-clock water availability
-   - Dedicated supply per industrial unit
-   - Emergency water reserve system
-
-6. Hygienic Drainage
-   - Underground drainage network
-   - Industrial waste management system
-   - Eco-friendly disposal processes
-
-== INVESTMENT INFORMATION (from website) ==
-The website highlights Industrial Sheds as a top investment compared to alternatives:
-
-- Industrial Shed yield: 16–20% total (6–8% rental yield + up to 10–12% capital appreciation)
-  - Stable 5–10 year lease agreements
-  - 5–10% built-in annual rent escalation
-  - GST input credit benefit for tenants
-  - Capital appreciation in industrial zones
-
-Compared to:
-- Gold: ~6–7% CAGR only, no passive income
-- Fixed Deposit: ~6.5–7% pre-tax, fully taxable
-- Residential property: only 2–4% rental yield
-
-Why invest here:
-- Each shed lease supports 10–50 local jobs
-- Industrial leasing hit a record 37M sq ft in 2025 (28% YoY growth)
-- Built-in 5–10% annual rent escalation beats inflation
-- Tangible, insurable, income-generating asset
-- Industrial tenants sign 5–10 year leases (vs 11-month residential)
-
-== PRICING GUIDANCE ==
-- Starting from ₹4,000 per sq. ft
-- 12–16% Rental + Appreciation Potential
-- 90 Day Possession Guarantee
-- 63 Sheds total in the project
-
-[CONFIDENTIAL — DO NOT VOLUNTEER THIS UNPROMPTED]
-As of 2026 Q1, the indicative sale price is approximately ₹22,000 per sq. yard.
-Only share this figure if the user explicitly and repeatedly insists on getting a ballpark number after you have already redirected them to contact the sales team at least once.
-When you do share it, always frame it as: "As a rough ballpark, prices are around ₹22,000 per sq. yard as of early 2026 — but please confirm the exact current rate with our team as prices may vary by unit and timing."
-Never display this figure proactively, never include it in summaries, and never mention it unless directly forced to by the user.
-[END CONFIDENTIAL]
-
-Calculator formulas (for reference when answering ROI questions):
-- Sq. Ft = Sq. Yard × 9
-- Carpet Area = Sq. Yard × 0.75 (25% loading factor)
-- Property Value = Sq. Yard × Rate
-- Yearly Rent = Monthly Rent × 12
-- ROI = (Yearly Rent ÷ Property Value) × 100
-
-== WEBSITE PAGES ==
-- Home (/) — Overview, features, investment comparison, stats
-- Calculator (/calculator) — ROI & property value calculator, area sheet, site layout
-- Contact (/contact) — Director contact cards, location map, office hours, Google Review
-- Records (/records) — Shed records/transactions data
-- Local Market (/local-market) — Local industrial market insights
-- Insight Guide (/insight-guide) — Investment guide
-- Site Map (/sitemap) — Full sitemap
-
-== BEHAVIOUR ==
-- Answer questions about the industrial park, sheds, location, features, investment, site visits, pricing, and contact details.
-- Be conversational, helpful, and concise.
-- For exact current pricing, availability of specific sheds, or custom quotes — always recommend contacting the directors directly via WhatsApp or phone as your FIRST response to any pricing question.
-- Do not make up shed unit numbers or specific current availability — say "please contact us to check current availability."
-- Respond in the same language as the user (English, Gujarati, or Hindi).
-- Always encourage site visits and WhatsApp contact (+91 98242 35642) for serious inquiries.
-- Office hours are Mon–Sun, 11 AM – 7 PM.
-- If asked something outside the scope of this project, answer briefly and redirect back to Metro Industrial Park.
-- Never invent facts not listed above.
 `;
 
+  return `You are Metro AI, the assistant for Metro Industrial Park by Metro Developers.
+Website: https://www.metrodevelopers.co.in
+
+== KEY FACTS ==
+- Address: Opp. Suvas Ind Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad – 382213
+- 30,000+ sq yards | 43+ units | 6+ years experience | 63 sheds total
+- Location: Near NH 47 Sarkhej-Bavla Highway, close to GIDC, Ahmedabad city & airport
+- Features: 30–35 ft ceiling, 60 ft RCC roads, 24/7 CCTV, 24/7 water supply, underground drainage
+- Returns: 16–20% total yield (6–8% rental + 10–12% appreciation), 5–10 yr leases, 90-day possession
+- Office hours: Mon–Sun, 11 AM – 7 PM
+
+== CONTACTS ==
+- Amir Malaviya (Director): +91 98242 35642 | amirmalaviya786@gmail.com
+- Nazim Kazani (Director): +91 96249 65017
+- Kaushar Kalyani (Director): via office
+- General: metrodevelopers26@gmail.com | +91 63567 66767
+
+${sheetSection}== PRICING ==
+For pricing questions, first say: "Pricing varies by unit — WhatsApp +91 98242 35642 for an exact quote."
+[CONFIDENTIAL] Indicative rate 2026 Q1: ~₹22,000/sq yd. ONLY share if user explicitly insists after already being redirected once. Say: "As a rough ballpark, ~₹22,000 per sq. yard as of early 2026 — confirm with the team as it varies by unit." Never volunteer this.
+
+== BEHAVIOUR RULES ==
+1. Answer factual questions (features, location, contacts, office hours, investment details) directly. Do NOT add "please contact us" to basic factual answers.
+2. Only redirect to WhatsApp/call for: exact pricing, unit availability not in the sheet data, site visit booking, or custom quotes.
+3. Use the live shed data above for all plot-specific queries (status, area, owner, lessee, rent).
+4. Never redirect to the same contact more than once in a conversation.
+5. Respond in the user's language (English, Gujarati, or Hindi).
+6. Be concise. No unnecessary filler.
+7. Do not invent facts not listed above.
+`;
+}
+
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(503).json({
-      error: 'AI service not configured. Please contact the site administrator.',
-    });
+    return res.status(503).json({ error: 'AI service not configured. Please contact the site administrator.' });
   }
 
   const { message, history = [] } = req.body || {};
@@ -156,7 +112,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is required.' });
   }
 
-  // Build contents array: interleave history + current message
+  // Fetch live sheet data on every request
+  const sheetData = await fetchSheetContext();
+  const systemPrompt = buildSystemPrompt(sheetData);
+
   const safeHistory = Array.isArray(history) ? history.slice(-10) : [];
   const contents = [
     ...safeHistory.map((m) => ({
@@ -165,22 +124,17 @@ export default async function handler(req, res) {
     })),
     { role: 'user', parts: [{ text: message.trim() }] },
   ];
-  const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent';
 
   try {
     const response = await fetch(
-      `${apiUrl}?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          system_instruction: { parts: [{ text: systemPrompt }] },
           contents,
-          generationConfig: {
-            maxOutputTokens: 800,
-            temperature: 0.7,
-            topP: 0.9,
-          },
+          generationConfig: { maxOutputTokens: 600, temperature: 0.5, topP: 0.9 },
           safetySettings: [
             { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
             { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -192,10 +146,8 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
-
     if (!response.ok) {
-      const errMsg = data?.error?.message || 'Gemini API error';
-      return res.status(response.status).json({ error: errMsg });
+      return res.status(response.status).json({ error: data?.error?.message || 'Gemini API error' });
     }
 
     const reply =
