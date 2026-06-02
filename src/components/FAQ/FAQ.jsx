@@ -32,6 +32,26 @@ const faqs = [
     question: 'What amenities are available?',
     answer: 'The park offers 24x7 water supply, CCTV surveillance, security guards, a dedicated weigh bridge, 60ft internal roads, waste management system, and high ceilings of 30–35 feet.',
   },
+  {
+    question: 'Do you sell plots of land at Metro Industrial Park?',
+    answer: 'No — Metro Industrial Park does not sell bare plots of land. All units are pre-built industrial sheds (PEB/steel or RCC structure) ready for immediate occupation. You purchase or lease a complete, usable shed — not an empty plot.',
+  },
+  {
+    question: 'Can I build my own custom structure on the shed premises?',
+    answer: 'Generally, no. All sheds are delivered as standard, move-in-ready industrial units. Custom structures are not offered for leasees because a bespoke structure can increase costs significantly and reduce the shed\'s usability for future tenants or buyers — which is not in anyone\'s long-term interest. However, early investors purchasing a shed may discuss custom Build-to-Suit (BTS) options with our team on a case-by-case basis.',
+  },
+  {
+    question: 'Why doesn\'t Metro Industrial Park allow custom structures for lease?',
+    answer: 'Custom or highly specialised structures are tailored to one specific use case and can make it very difficult to re-lease or resell the unit in the future. To protect asset value for all stakeholders — investors, future occupants, and the park — we only allow standard, versatile shed configurations that suit a wide range of industrial businesses.',
+  },
+  {
+    question: 'I am an early investor. Can I get a customised shed built?',
+    answer: 'Early investors who purchase a shed (not lease) may be able to discuss Build-to-Suit customisation with the Metro Developers team. This is evaluated on a case-by-case basis, subject to structural feasibility and park guidelines. Contact us at +91 98242 35642 to know more.',
+  },
+  {
+    question: 'What types of businesses can operate in the sheds?',
+    answer: 'Our sheds are designed for a wide range of industries: manufacturing, warehousing, logistics, pharma, food processing, FMCG, auto-ancillary, textiles, light engineering, and e-commerce fulfilment. The standardised design ensures suitability for most common industrial use cases.',
+  },
 ];
 
 const FAQItem = ({ faq, isOpen, onToggle, isDark }) => (
@@ -125,6 +145,7 @@ const FAQ = () => {
         {/* CTA below */}
         <p className={`text-center text-sm mt-8 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
           Still have questions?{' '}
+          <a href="/contact" className="text-brand-red hover:underline font-semibold">Contact our team →</a>
         </p>
       </div>
     </section>
