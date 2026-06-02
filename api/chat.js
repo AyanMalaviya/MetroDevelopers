@@ -25,7 +25,7 @@ Amenities & Infrastructure:
 - Dedicated 3-phase power connection per unit (100–500 kVA as per size)
 - Piped water supply
 - Underground drainage & storm water management
-- Wide 40 ft internal roads for heavy vehicle movement
+- Wide 18-meter internal roads for heavy vehicle movement
 - Truck turnaround yard
 - Common office/admin block
 - Visitor parking
