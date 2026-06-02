@@ -1,5 +1,5 @@
 // api/chat.js — Vercel serverless function
-// Model: gemini-1.5-flash (free tier, 1M context window)
+// Model: gemini-3.5-flash (free tier, 1M context window)
 
 const SYSTEM_PROMPT = `You are Metro AI, an intelligent assistant for Metro Industrial Park by Metro Developers — a premium industrial shed development in Moraiya, Ahmedabad, Gujarat, India.
 
@@ -34,8 +34,9 @@ Office Hours: Monday to Sunday, 11:00 AM – 7:00 PM
 The team replies within 1 hour on WhatsApp.
 
 == PROJECT STATS ==
-- 30,000+ sq. yards of total area
-- 43+ industrial units built
+- 54,000+ sq. yards of total area
+- 63+ industrial units project
+- minimum 6% rental yield guaranteed
 - 100% client satisfaction
 - 6+ years of experience
 
@@ -164,10 +165,11 @@ export default async function handler(req, res) {
     })),
     { role: 'user', parts: [{ text: message.trim() }] },
   ];
+  const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent';
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `${apiUrl}?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
