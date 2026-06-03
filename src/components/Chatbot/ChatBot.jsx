@@ -4,6 +4,59 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Bot, User, RotateCcw, ChevronDown } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
+// ─── Rate limit config ───
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
+const RATE_LIMIT_PER_WINDOW = 3;             // max 3 requests per 5 min
+const RATE_LIMIT_DAILY = 15;                 // max 15 requests per day
+
+function getRateLimitState() {
+  try {
+    const raw = sessionStorage.getItem('metro_ai_rl');
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { windowStart: Date.now(), windowCount: 0, dayKey: todayKey(), dayCount: 0 };
+}
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+function saveRateLimitState(state) {
+  try { sessionStorage.setItem('metro_ai_rl', JSON.stringify(state)); } catch {}
+}
+
+function checkRateLimit() {
+  let state = getRateLimitState();
+  const now = Date.now();
+  const today = todayKey();
+
+  // Reset window if expired
+  if (now - state.windowStart > RATE_LIMIT_WINDOW_MS) {
+    state.windowStart = now;
+    state.windowCount = 0;
+  }
+  // Reset day count if new day
+  if (state.dayKey !== today) {
+    state.dayKey = today;
+    state.dayCount = 0;
+  }
+
+  if (state.dayCount >= RATE_LIMIT_DAILY) {
+    return { allowed: false, reason: 'daily' };
+  }
+  if (state.windowCount >= RATE_LIMIT_PER_WINDOW) {
+    const waitSec = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - state.windowStart)) / 1000);
+    const waitMin = Math.ceil(waitSec / 60);
+    return { allowed: false, reason: 'window', waitMin };
+  }
+
+  // Increment
+  state.windowCount++;
+  state.dayCount++;
+  saveRateLimitState(state);
+  return { allowed: true, remaining: RATE_LIMIT_PER_WINDOW - state.windowCount, dayRemaining: RATE_LIMIT_DAILY - state.dayCount };
+}
+
 const WELCOME_MESSAGE = {
   role: 'assistant',
   content: `👋 Hi! I'm the **Metro Industrial Park** AI assistant.\n\nI can help you with:\n- 🏭 Shed availability & unit sizes\n- 📍 Location & connectivity\n- 📋 Amenities & specifications\n- 📞 How to book a site visit\n\nWhat would you like to know?`,
@@ -96,6 +149,7 @@ const ChatBot = () => {
   const [input, setInput]         = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollDown, setShowScrollDown] = useState(false);
+  const [rateLimitInfo, setRateLimitInfo]   = useState(null); // { remaining, dayRemaining }
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -111,6 +165,17 @@ const ChatBot = () => {
     if (isOpen) {
       scrollToBottom();
       setTimeout(() => inputRef.current?.focus(), 400);
+      // Show current usage on open
+      const state = getRateLimitState();
+      const now = Date.now();
+      const today = todayKey();
+      const windowExpired = now - state.windowStart > RATE_LIMIT_WINDOW_MS;
+      const windowCount = windowExpired ? 0 : state.windowCount;
+      const dayCount = state.dayKey === today ? state.dayCount : 0;
+      setRateLimitInfo({
+        remaining: RATE_LIMIT_PER_WINDOW - windowCount,
+        dayRemaining: RATE_LIMIT_DAILY - dayCount,
+      });
     }
   }, [isOpen, scrollToBottom]);
 
@@ -126,6 +191,21 @@ const ChatBot = () => {
     const trimmed = (text || input).trim();
     if (!trimmed || isLoading) return;
 
+    // ─ Check rate limit before sending ─
+    const limit = checkRateLimit();
+    if (!limit.allowed) {
+      const msg = limit.reason === 'daily'
+        ? `You’ve reached the daily limit of ${RATE_LIMIT_DAILY} messages. The limit resets at midnight. For immediate help, WhatsApp +91 98242 35642 💬`
+        : `You’ve sent ${RATE_LIMIT_PER_WINDOW} messages in the last 5 minutes. Please wait ${limit.waitMin} minute${limit.waitMin > 1 ? 's' : ''} and try again, or WhatsApp +91 98242 35642 💬`;
+      setInput('');
+      setMessages((p) => [...p,
+        { role: 'user', content: trimmed, id: Date.now().toString() },
+        { role: 'assistant', content: msg, id: Date.now() + '_rl' },
+      ]);
+      return;
+    }
+
+    setRateLimitInfo({ remaining: limit.remaining, dayRemaining: limit.dayRemaining });
     setInput('');
     const userMsg = { role: 'user', content: trimmed, id: Date.now().toString() };
     setMessages((p) => [...p, userMsg]);
@@ -142,12 +222,9 @@ const ChatBot = () => {
         body: JSON.stringify({ message: trimmed, history }),
       });
       const data = await res.json();
-
-      // Backend always returns a friendly reply — even on quota/errors
       const replyText = data.reply || 'Something went wrong. Please WhatsApp us at +91 98242 35642';
       setMessages((p) => [...p, { role: 'assistant', content: replyText, id: Date.now() + '_ai' }]);
     } catch {
-      // Network failure — show as a bot message, not a red error banner
       setMessages((p) => [...p, {
         role: 'assistant',
         content: 'Unable to connect right now. Please WhatsApp us at +91 98242 35642 for immediate help.',
@@ -315,8 +392,8 @@ const ChatBot = () => {
             </AnimatePresence>
 
             {/* Input Area */}
-            <div className={`px-3 py-2.5 border-t flex-shrink-0 ${inputAreaBg} border-${isDark ? 'gray-800' : 'gray-100'}
-              pb-[max(0.625rem,env(safe-area-inset-bottom))]`}
+            <div className={`px-3 py-2 border-t flex-shrink-0 ${inputAreaBg} border-${isDark ? 'gray-800' : 'gray-100'}
+              pb-[max(0.5rem,env(safe-area-inset-bottom))]`}
             >
               <div className={`flex items-end gap-2 rounded-xl border px-3 py-2
                 transition-colors focus-within:border-red-500 ${inputFieldBg} ${inputBorder}`}
@@ -345,11 +422,23 @@ const ChatBot = () => {
                   {isLoading ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                 </button>
               </div>
-              <p className={`text-[10px] mt-1 px-0.5 ${
-                isDark ? 'text-gray-700' : 'text-gray-400'
-              }`}>
-                Powered by Gemini AI · Responses may not always be accurate
-              </p>
+              {/* Usage hint */}
+              <div className="flex items-center justify-between mt-1 px-0.5">
+                <p className={`text-[10px] ${
+                  isDark ? 'text-gray-700' : 'text-gray-400'
+                }`}>
+                  Powered by Gemini AI · Responses may not always be accurate
+                </p>
+                {rateLimitInfo && (
+                  <p className={`text-[10px] tabular-nums ${
+                    rateLimitInfo.remaining <= 1
+                      ? 'text-amber-500'
+                      : isDark ? 'text-gray-700' : 'text-gray-400'
+                  }`}>
+                    {rateLimitInfo.remaining}/{RATE_LIMIT_PER_WINDOW} · {rateLimitInfo.dayRemaining} today
+                  </p>
+                )}
+              </div>
             </div>
           </motion.div>
         )}

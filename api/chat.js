@@ -1,5 +1,5 @@
 // api/chat.js — Vercel serverless function
-// Model: gemini-3.5-flash
+// Model: gemini-2.0-flash-lite (higher free-tier RPM: 30/min vs 15/min)
 
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
@@ -89,26 +89,15 @@ For pricing questions, first say: "Pricing varies by unit — WhatsApp +91 98242
 `;
 }
 
-// Friendly messages for known error types — never expose raw API errors to users
 function getFriendlyError(status, rawMessage = '') {
   const msg = rawMessage.toLowerCase();
   if (status === 429 || msg.includes('quota') || msg.includes('rate limit') || msg.includes('resource_exhausted')) {
-    return {
-      friendly: 'Our AI assistant is busy right now. Please try again in a moment, or reach us directly on WhatsApp: +91 98242 35642',
-      status: 200, // return 200 so frontend shows it as a bot message, not an error
-    };
+    return 'Our AI assistant is busy right now. Please try again in a moment, or reach us directly on WhatsApp: +91 98242 35642';
   }
   if (status === 503 || msg.includes('unavailable') || msg.includes('overloaded')) {
-    return {
-      friendly: 'The AI service is temporarily unavailable. For immediate help, WhatsApp us at +91 98242 35642',
-      status: 200,
-    };
+    return 'The AI service is temporarily unavailable. For immediate help, WhatsApp us at +91 98242 35642';
   }
-  // Generic fallback
-  return {
-    friendly: 'Something went wrong on our end. For immediate assistance, please WhatsApp +91 98242 35642',
-    status: 200,
-  };
+  return 'Something went wrong on our end. For immediate assistance, please WhatsApp +91 98242 35642';
 }
 
 export default async function handler(req, res) {
@@ -144,7 +133,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -166,8 +155,7 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const rawMsg = data?.error?.message || '';
-      const { friendly, status } = getFriendlyError(response.status, rawMsg);
-      return res.status(status).json({ reply: friendly });
+      return res.status(200).json({ reply: getFriendlyError(response.status, rawMsg) });
     }
 
     const reply =
