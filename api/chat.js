@@ -47,7 +47,12 @@ async function fetchSheetContext() {
 function buildSystemPrompt(sheetData) {
   const sheetSection = sheetData
     ? `== LIVE SHED DATA (fetched now from Google Sheets) ==
-Statuses: available | for-lease | pre-leased | sold
+STATUS DEFINITIONS — read carefully before answering any availability question:
+- "available"   → Not yet sold. Can be purchased directly. Open for buyers.
+- "for-lease"   → Already SOLD to an owner. The owner is offering it on rent/lease. NOT available to buy — only available to rent/lease from the current owner.
+- "pre-leased"  → Already SOLD and currently occupied by a tenant (lessee). The plot IS available to purchase as an investment — buyer gets a tenant already in place and starts earning rental income immediately.
+- "sold"        → Sold and NOT currently available for purchase or lease.
+
 ${sheetData}
 
 `
@@ -81,11 +86,12 @@ For pricing questions, first say: "Pricing varies by unit — WhatsApp +91 98242
 1. Answer factual questions (features, location, contacts, office hours, investment details) directly. Do NOT add "please contact us" to basic factual answers.
 2. Only redirect to WhatsApp/call for: exact pricing, unit availability not in the sheet data, site visit booking, or custom quotes.
 3. Use the live shed data above for all plot-specific queries (status, area, owner, lessee, rent).
-4. Never redirect to the same contact more than once in a conversation.
-5. Respond in the user's language (English, Gujarati, or Hindi).
-6. Be concise. No unnecessary filler.
-7. Do not invent facts not listed above.
-8. Always complete your response fully — never stop mid-sentence or mid-list.
+4. When answering availability questions, always use the STATUS DEFINITIONS above precisely. Never say a "for-lease" plot is available to buy — it is sold. Never say a "pre-leased" plot is unavailable — it can be purchased as an investment.
+5. Never redirect to the same contact more than once in a conversation.
+6. Respond in the user's language (English, Gujarati, or Hindi).
+7. Be concise. No unnecessary filler.
+8. Do not invent facts not listed above.
+9. Always complete your response fully — never stop mid-sentence or mid-list.
 `;
 }
 
