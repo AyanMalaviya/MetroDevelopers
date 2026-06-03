@@ -92,7 +92,7 @@ const features = [
 /* ─── Stats ─── */
 const stats = [
   { countEnd: 30,  suffix: 'k+', label: 'Sq.yards of Area',      icon: <LucideLandPlot size={24} /> },
-  { countEnd: 43,  suffix: '+',  label: 'Industrial Units Made', icon: <LucideFactory  size={24} /> },
+  { countEnd: 43,  suffix: '+',  label: 'Industrial Units Made', icon: <Factory size={24} /> },
   { countEnd: 100, suffix: '%',  label: 'Client Satisfaction',   icon: <Star           size={24} /> },
   { countEnd: 6,   suffix: '+',  label: 'Years of Experience',   icon: <Clock          size={24} /> },
 ];
@@ -746,7 +746,7 @@ const HomePage = () => {
                 <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg">
                   {[
                     { icon: <TrendingUp size={16} />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
-                    { icon: <LucideFactory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+                    { icon: <Factory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
                     { icon: <LucideLandPlot size={16} />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
                   ].map(({ icon, value, label, color, border }) => (
                     <motion.div
