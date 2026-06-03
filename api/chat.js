@@ -4,13 +4,11 @@
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
 
-// Fetch & parse the Google Sheet into a compact text block
 async function fetchSheetContext() {
   try {
     const res = await fetch(SHEET_CSV_URL);
     if (!res.ok) return null;
     const csv = await res.text();
-
     const lines = csv.trim().split('\n');
     if (lines.length < 2) return null;
 
@@ -21,30 +19,25 @@ async function fetchSheetContext() {
     const ownerIdx  = headers.indexOf('owner');
     const lesseeIdx = headers.indexOf('lessee');
     const rentIdx   = Math.max(headers.indexOf('monthlyrent'), headers.indexOf('monthly_rent'));
-
     if (idIdx === -1) return null;
 
     const rows = [];
     for (let i = 1; i < lines.length; i++) {
       const cols = lines[i].match(/(?:"([^"]*)"|([^,]*))/g)
         ?.map((c) => c.replace(/^"|"$/g, '').trim()) || [];
-
       const id = cols[idIdx];
       if (!id) continue;
-
       const status = (cols[statusIdx] || 'available').toLowerCase();
       const area   = cols[areaIdx]   || 'N/A';
       const owner  = ownerIdx  >= 0 ? (cols[ownerIdx]  || '') : '';
       const lessee = lesseeIdx >= 0 ? (cols[lesseeIdx] || '') : '';
       const rent   = rentIdx   >= 0 ? (cols[rentIdx]   || '') : '';
-
       let row = `Plot ${id}: ${status}, ${area}`;
       if (owner)  row += `, owner: ${owner}`;
       if (lessee) row += `, lessee: ${lessee}`;
       if (rent)   row += `, rent: ₹${rent}`;
       rows.push(row);
     }
-
     return rows.length > 0 ? rows.join('\n') : null;
   } catch {
     return null;
@@ -96,6 +89,28 @@ For pricing questions, first say: "Pricing varies by unit — WhatsApp +91 98242
 `;
 }
 
+// Friendly messages for known error types — never expose raw API errors to users
+function getFriendlyError(status, rawMessage = '') {
+  const msg = rawMessage.toLowerCase();
+  if (status === 429 || msg.includes('quota') || msg.includes('rate limit') || msg.includes('resource_exhausted')) {
+    return {
+      friendly: 'Our AI assistant is busy right now. Please try again in a moment, or reach us directly on WhatsApp: +91 98242 35642',
+      status: 200, // return 200 so frontend shows it as a bot message, not an error
+    };
+  }
+  if (status === 503 || msg.includes('unavailable') || msg.includes('overloaded')) {
+    return {
+      friendly: 'The AI service is temporarily unavailable. For immediate help, WhatsApp us at +91 98242 35642',
+      status: 200,
+    };
+  }
+  // Generic fallback
+  return {
+    friendly: 'Something went wrong on our end. For immediate assistance, please WhatsApp +91 98242 35642',
+    status: 200,
+  };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -105,7 +120,9 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(503).json({ error: 'AI service not configured. Please contact the site administrator.' });
+    return res.status(200).json({
+      reply: 'Our AI assistant is not configured yet. Please contact us on WhatsApp: +91 98242 35642',
+    });
   }
 
   const { message, history = [] } = req.body || {};
@@ -113,7 +130,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is required.' });
   }
 
-  // Fetch live sheet data on every request
   const sheetData = await fetchSheetContext();
   const systemPrompt = buildSystemPrompt(sheetData);
 
@@ -147,17 +163,22 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+
     if (!response.ok) {
-      return res.status(response.status).json({ error: data?.error?.message || 'Gemini API error' });
+      const rawMsg = data?.error?.message || '';
+      const { friendly, status } = getFriendlyError(response.status, rawMsg);
+      return res.status(status).json({ reply: friendly });
     }
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "I'm sorry, I couldn't generate a response. Please try again.";
+      'I was unable to generate a response. Please try again or WhatsApp us at +91 98242 35642';
 
     return res.status(200).json({ reply });
   } catch (err) {
     console.error('Chat API error:', err);
-    return res.status(500).json({ error: 'Internal server error. Please try again.' });
+    return res.status(200).json({
+      reply: 'Something went wrong on our end. For immediate assistance, please WhatsApp +91 98242 35642',
+    });
   }
 }

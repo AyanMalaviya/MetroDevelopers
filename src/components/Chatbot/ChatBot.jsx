@@ -1,6 +1,4 @@
 // ChatBot.jsx
-// The chatbot FAB (bottom-6 right-6) replaces the old sparkle FAB.
-// Model: gemini-3.5-flash (latest stable)
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Bot, User, RotateCcw, ChevronDown } from 'lucide-react';
@@ -97,7 +95,6 @@ const ChatBot = () => {
   const [messages, setMessages]   = useState([WELCOME_MESSAGE]);
   const [input, setInput]         = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError]         = useState(null);
   const [showScrollDown, setShowScrollDown] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -130,7 +127,6 @@ const ChatBot = () => {
     if (!trimmed || isLoading) return;
 
     setInput('');
-    setError(null);
     const userMsg = { role: 'user', content: trimmed, id: Date.now().toString() };
     setMessages((p) => [...p, userMsg]);
     setIsLoading(true);
@@ -146,10 +142,17 @@ const ChatBot = () => {
         body: JSON.stringify({ message: trimmed, history }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to get a response.');
-      setMessages((p) => [...p, { role: 'assistant', content: data.reply, id: Date.now() + '_ai' }]);
-    } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.');
+
+      // Backend always returns a friendly reply — even on quota/errors
+      const replyText = data.reply || 'Something went wrong. Please WhatsApp us at +91 98242 35642';
+      setMessages((p) => [...p, { role: 'assistant', content: replyText, id: Date.now() + '_ai' }]);
+    } catch {
+      // Network failure — show as a bot message, not a red error banner
+      setMessages((p) => [...p, {
+        role: 'assistant',
+        content: 'Unable to connect right now. Please WhatsApp us at +91 98242 35642 for immediate help.',
+        id: Date.now() + '_err',
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -168,7 +171,6 @@ const ChatBot = () => {
   const resetChat = () => {
     setMessages([WELCOME_MESSAGE]);
     setInput('');
-    setError(null);
     setIsLoading(false);
   };
 
@@ -183,7 +185,7 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* ─── Chat FAB — at bottom-6 right-6 (replaces old Sparkles FAB) ─── */}
+      {/* ─── Chat FAB ─── */}
       <motion.button
         onClick={() => setIsOpen((o) => !o)}
         whileHover={{ scale: 1.08 }}
@@ -244,7 +246,7 @@ const ChatBot = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-sm leading-none">Metro AI Assistant</p>
-                <p className="text-[11px] text-red-200 mt-0.5">Metro Industrial Park · Changodar</p>
+                <p className="text-[11px] text-red-200 mt-0.5">Metro Industrial Park · Moraiya</p>
               </div>
               <div className="flex items-center gap-1">
                 <button onClick={resetChat}
@@ -292,18 +294,6 @@ const ChatBot = () => {
 
               <AnimatePresence>
                 {isLoading && <TypingIndicator isDark={isDark} />}
-              </AnimatePresence>
-
-              <AnimatePresence>
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="text-[11px] text-red-500 px-1 flex items-center gap-1.5"
-                  >
-                    <span>⚠️ {error}</span>
-                    <button onClick={() => setError(null)} className="underline">Dismiss</button>
-                  </motion.div>
-                )}
               </AnimatePresence>
 
               <div ref={messagesEndRef} />
@@ -358,7 +348,7 @@ const ChatBot = () => {
               <p className={`text-[10px] mt-1 px-0.5 ${
                 isDark ? 'text-gray-700' : 'text-gray-400'
               }`}>
-                Powered by Gemini 3.5 Flash · AI may make mistakes
+                Powered by Gemini AI · Responses may not always be accurate
               </p>
             </div>
           </motion.div>
