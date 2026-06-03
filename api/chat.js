@@ -1,5 +1,5 @@
 // api/chat.js — Vercel serverless function
-// Model: gemini-2.0-flash-lite (higher free-tier RPM: 30/min vs 15/min)
+// Model: gemini-3.1-flash-lite-preview
 
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
@@ -133,7 +133,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

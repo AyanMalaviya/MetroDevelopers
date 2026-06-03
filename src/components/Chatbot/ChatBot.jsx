@@ -5,9 +5,13 @@ import { MessageCircle, X, Send, Loader2, Bot, User, RotateCcw, ChevronDown } fr
 import { useTheme } from '../../context/ThemeContext';
 
 // ─── Rate limit config ───
-const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
-const RATE_LIMIT_PER_WINDOW = 3;             // max 3 requests per 5 min
-const RATE_LIMIT_DAILY = 15;                 // max 15 requests per day
+const RATE_LIMIT_WINDOW_MS  = 60 * 1000; // 1 minute
+const RATE_LIMIT_PER_WINDOW = 2;         // max 2 requests per minute
+const RATE_LIMIT_DAILY      = 30;        // max 30 requests per day
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function getRateLimitState() {
   try {
@@ -17,27 +21,21 @@ function getRateLimitState() {
   return { windowStart: Date.now(), windowCount: 0, dayKey: todayKey(), dayCount: 0 };
 }
 
-function todayKey() {
-  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-}
-
 function saveRateLimitState(state) {
   try { sessionStorage.setItem('metro_ai_rl', JSON.stringify(state)); } catch {}
 }
 
 function checkRateLimit() {
   let state = getRateLimitState();
-  const now = Date.now();
+  const now   = Date.now();
   const today = todayKey();
 
-  // Reset window if expired
   if (now - state.windowStart > RATE_LIMIT_WINDOW_MS) {
     state.windowStart = now;
     state.windowCount = 0;
   }
-  // Reset day count if new day
   if (state.dayKey !== today) {
-    state.dayKey = today;
+    state.dayKey   = today;
     state.dayCount = 0;
   }
 
@@ -46,15 +44,17 @@ function checkRateLimit() {
   }
   if (state.windowCount >= RATE_LIMIT_PER_WINDOW) {
     const waitSec = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - state.windowStart)) / 1000);
-    const waitMin = Math.ceil(waitSec / 60);
-    return { allowed: false, reason: 'window', waitMin };
+    return { allowed: false, reason: 'window', waitSec };
   }
 
-  // Increment
   state.windowCount++;
   state.dayCount++;
   saveRateLimitState(state);
-  return { allowed: true, remaining: RATE_LIMIT_PER_WINDOW - state.windowCount, dayRemaining: RATE_LIMIT_DAILY - state.dayCount };
+  return {
+    allowed:      true,
+    remaining:    RATE_LIMIT_PER_WINDOW - state.windowCount,
+    dayRemaining: RATE_LIMIT_DAILY      - state.dayCount,
+  };
 }
 
 const WELCOME_MESSAGE = {
@@ -149,7 +149,7 @@ const ChatBot = () => {
   const [input, setInput]         = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollDown, setShowScrollDown] = useState(false);
-  const [rateLimitInfo, setRateLimitInfo]   = useState(null); // { remaining, dayRemaining }
+  const [rateLimitInfo, setRateLimitInfo]   = useState(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -165,16 +165,15 @@ const ChatBot = () => {
     if (isOpen) {
       scrollToBottom();
       setTimeout(() => inputRef.current?.focus(), 400);
-      // Show current usage on open
       const state = getRateLimitState();
-      const now = Date.now();
+      const now   = Date.now();
       const today = todayKey();
       const windowExpired = now - state.windowStart > RATE_LIMIT_WINDOW_MS;
-      const windowCount = windowExpired ? 0 : state.windowCount;
-      const dayCount = state.dayKey === today ? state.dayCount : 0;
+      const windowCount   = windowExpired ? 0 : state.windowCount;
+      const dayCount      = state.dayKey === today ? state.dayCount : 0;
       setRateLimitInfo({
-        remaining: RATE_LIMIT_PER_WINDOW - windowCount,
-        dayRemaining: RATE_LIMIT_DAILY - dayCount,
+        remaining:    RATE_LIMIT_PER_WINDOW - windowCount,
+        dayRemaining: RATE_LIMIT_DAILY      - dayCount,
       });
     }
   }, [isOpen, scrollToBottom]);
@@ -194,21 +193,26 @@ const ChatBot = () => {
     // ─ Check rate limit before sending ─
     const limit = checkRateLimit();
     if (!limit.allowed) {
-      const msg = limit.reason === 'daily'
-        ? `You’ve reached the daily limit of ${RATE_LIMIT_DAILY} messages. The limit resets at midnight. For immediate help, WhatsApp +91 98242 35642 💬`
-        : `You’ve sent ${RATE_LIMIT_PER_WINDOW} messages in the last 5 minutes. Please wait ${limit.waitMin} minute${limit.waitMin > 1 ? 's' : ''} and try again, or WhatsApp +91 98242 35642 💬`;
+      let msg;
+      if (limit.reason === 'daily') {
+        msg = `You've reached the daily limit of ${RATE_LIMIT_DAILY} messages. The limit resets at midnight. For immediate help, WhatsApp +91 98242 35642 💬`;
+      } else {
+        const waitSec = limit.waitSec || 60;
+        msg = waitSec <= 10
+          ? `Please wait a few seconds before sending another message (limit: ${RATE_LIMIT_PER_WINDOW}/min). Or WhatsApp +91 98242 35642 💬`
+          : `You've reached the limit of ${RATE_LIMIT_PER_WINDOW} messages per minute. Please wait ${waitSec} seconds, or WhatsApp +91 98242 35642 💬`;
+      }
       setInput('');
       setMessages((p) => [...p,
-        { role: 'user', content: trimmed, id: Date.now().toString() },
-        { role: 'assistant', content: msg, id: Date.now() + '_rl' },
+        { role: 'user',      content: trimmed, id: Date.now().toString() },
+        { role: 'assistant', content: msg,     id: Date.now() + '_rl'   },
       ]);
       return;
     }
 
     setRateLimitInfo({ remaining: limit.remaining, dayRemaining: limit.dayRemaining });
     setInput('');
-    const userMsg = { role: 'user', content: trimmed, id: Date.now().toString() };
-    setMessages((p) => [...p, userMsg]);
+    setMessages((p) => [...p, { role: 'user', content: trimmed, id: Date.now().toString() }]);
     setIsLoading(true);
 
     const history = messages
@@ -217,9 +221,9 @@ const ChatBot = () => {
 
     try {
       const res  = await fetch('/api/chat', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: trimmed, history }),
+        body:    JSON.stringify({ message: trimmed, history }),
       });
       const data = await res.json();
       const replyText = data.reply || 'Something went wrong. Please WhatsApp us at +91 98242 35642';
@@ -253,12 +257,12 @@ const ChatBot = () => {
 
   const hasSuggestions = messages.length === 1;
 
-  const surfaceBg    = isDark ? 'bg-[#0a0a0a]'   : 'bg-white';
-  const surfaceBorder= isDark ? 'border-gray-800' : 'border-gray-200';
-  const msgsBg       = isDark ? 'bg-[#0d0d0d]'   : 'bg-gray-50';
-  const inputAreaBg  = isDark ? 'bg-[#0a0a0a]'   : 'bg-white';
-  const inputBorder  = isDark ? 'border-gray-700' : 'border-gray-200';
-  const inputFieldBg = isDark ? 'bg-[#111111]'   : 'bg-gray-50';
+  const surfaceBg     = isDark ? 'bg-[#0a0a0a]'   : 'bg-white';
+  const surfaceBorder = isDark ? 'border-gray-800' : 'border-gray-200';
+  const msgsBg        = isDark ? 'bg-[#0d0d0d]'   : 'bg-gray-50';
+  const inputAreaBg   = isDark ? 'bg-[#0a0a0a]'   : 'bg-white';
+  const inputBorder   = isDark ? 'border-gray-700' : 'border-gray-200';
+  const inputFieldBg  = isDark ? 'bg-[#111111]'   : 'bg-gray-50';
 
   return (
     <>
@@ -392,9 +396,9 @@ const ChatBot = () => {
             </AnimatePresence>
 
             {/* Input Area */}
-            <div className={`px-3 py-2 border-t flex-shrink-0 ${inputAreaBg} border-${isDark ? 'gray-800' : 'gray-100'}
-              pb-[max(0.5rem,env(safe-area-inset-bottom))]`}
-            >
+            <div className={`px-3 py-2 border-t flex-shrink-0 ${inputAreaBg} ${
+              isDark ? 'border-gray-800' : 'border-gray-100'
+            } pb-[max(0.5rem,env(safe-area-inset-bottom))]`}>
               <div className={`flex items-end gap-2 rounded-xl border px-3 py-2
                 transition-colors focus-within:border-red-500 ${inputFieldBg} ${inputBorder}`}
               >
@@ -422,20 +426,19 @@ const ChatBot = () => {
                   {isLoading ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                 </button>
               </div>
-              {/* Usage hint */}
+
+              {/* Usage counter */}
               <div className="flex items-center justify-between mt-1 px-0.5">
-                <p className={`text-[10px] ${
-                  isDark ? 'text-gray-700' : 'text-gray-400'
-                }`}>
+                <p className={`text-[10px] ${isDark ? 'text-gray-700' : 'text-gray-400'}`}>
                   Powered by Gemini AI · Responses may not always be accurate
                 </p>
                 {rateLimitInfo && (
                   <p className={`text-[10px] tabular-nums ${
-                    rateLimitInfo.remaining <= 1
+                    rateLimitInfo.remaining === 0 || rateLimitInfo.dayRemaining <= 5
                       ? 'text-amber-500'
                       : isDark ? 'text-gray-700' : 'text-gray-400'
                   }`}>
-                    {rateLimitInfo.remaining}/{RATE_LIMIT_PER_WINDOW} · {rateLimitInfo.dayRemaining} today
+                    {rateLimitInfo.remaining}/{RATE_LIMIT_PER_WINDOW}/min · {rateLimitInfo.dayRemaining} today
                   </p>
                 )}
               </div>
