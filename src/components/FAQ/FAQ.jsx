@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { ChevronDown, MessageCircleQuestion } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 const faqs = [
@@ -119,7 +119,7 @@ const FAQ = () => {
         {/* Header */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase bg-brand-red/10 text-brand-red border border-brand-red/30 mb-4">
-            <HelpCircle size={11} /> Frequently Asked Questions
+            <MessageCircleQuestion size={11} /> Frequently Asked Questions
           </div>
           <h2 className={`text-2xl sm:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
             Got <span className="text-brand-red">Questions?</span>
