@@ -48,9 +48,9 @@ function buildSystemPrompt(sheetData) {
   const sheetSection = sheetData
     ? `== LIVE SHED DATA (fetched now from Google Sheets) ==
 STATUS DEFINITIONS — read carefully before answering any availability question:
-- "available"   → Not yet sold. Can be purchased directly. Open for buyers.
+- "available"   → Not yet sold. Can be PURCHASED or RENTED/LEASED. Open for both buyers and tenants.
 - "for-lease"   → Already SOLD to an owner. The owner is offering it on rent/lease. NOT available to buy — only available to rent/lease from the current owner.
-- "pre-leased"  → Already SOLD and currently occupied by a tenant (lessee). The plot IS available to purchase as an investment — buyer gets a tenant already in place and starts earning rental income immediately.
+- "pre-leased"  → Already SOLD and currently occupied by a tenant (lessee). The plot IS available to purchase as an investment — buyer gets a tenant already in place and starts earning rental income immediately. NOT available to rent (already occupied).
 - "sold"        → Sold and NOT currently available for purchase or lease.
 
 ${sheetData}
@@ -86,7 +86,7 @@ For pricing questions, first say: "Pricing varies by unit — WhatsApp +91 98242
 1. Answer factual questions (features, location, contacts, office hours, investment details) directly. Do NOT add "please contact us" to basic factual answers.
 2. Only redirect to WhatsApp/call for: exact pricing, unit availability not in the sheet data, site visit booking, or custom quotes.
 3. Use the live shed data above for all plot-specific queries (status, area, owner, lessee, rent).
-4. When answering availability questions, always use the STATUS DEFINITIONS above precisely. Never say a "for-lease" plot is available to buy — it is sold. Never say a "pre-leased" plot is unavailable — it can be purchased as an investment.
+4. When answering availability questions, always use the STATUS DEFINITIONS above precisely. Never say a "for-lease" plot is available to buy. Never say a "pre-leased" plot is unavailable — it can be purchased as an investment.
 5. Never redirect to the same contact more than once in a conversation.
 6. Respond in the user's language (English, Gujarati, or Hindi).
 7. Be concise. No unnecessary filler.
