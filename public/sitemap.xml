@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.metrodevelopers.co.in/</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/metro-industrial-park</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -29,7 +29,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/metro-arcade</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -39,7 +39,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/contact</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -49,13 +49,13 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/calculator</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/site-map</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -63,9 +63,11 @@
       <image:title>Industrial Shed Site Plan</image:title>
     </image:image>
   </url>
+
+  <!-- Local Market / SEO Pages -->
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-in-moraiya</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -75,7 +77,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-in-changodar</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -85,7 +87,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/warehouses-in-changodar</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -95,7 +97,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-near-sarkhej-bavla-highway</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -105,7 +107,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-sheds-in-ahmedabad</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -115,7 +117,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-shed-for-rent-changodar</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -125,7 +127,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-shed-for-sale-changodar</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -135,7 +137,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/godown-for-rent-changodar</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -145,7 +147,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/industrial-park-near-sanand</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -155,7 +157,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/investment-in-real-estate-in-ahmedabad</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -163,9 +165,125 @@
       <image:title>Investment in Real Estate in Ahmedabad</image:title>
     </image:image>
   </url>
+
+  <!-- New SEO Pages: Warehouse / Rent / Sale / Godown -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/warehouse-for-rent-ahmedabad</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
+      <image:title>Warehouse for Rent in Ahmedabad</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/warehouse-for-sale-ahmedabad</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
+      <image:title>Warehouse for Sale in Ahmedabad</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/industrial-shed-for-rent-moraiya</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
+      <image:title>Industrial Shed for Rent in Moraiya</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/industrial-shed-for-sale-moraiya</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
+      <image:title>Industrial Shed for Sale in Moraiya</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/godown-for-rent-ahmedabad</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
+      <image:title>Godown for Rent in Ahmedabad</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/factory-shed-for-rent-changodar</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
+      <image:title>Factory Shed for Rent in Changodar</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/industrial-shed-for-rent-gujarat</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
+      <image:title>Industrial Shed for Rent in Gujarat</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/gidc-shed-for-rent-ahmedabad</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
+      <image:title>GIDC Shed for Rent Ahmedabad</image:title>
+    </image:image>
+  </url>
+
+  <!-- New SEO Pages: Investment -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/industrial-property-investment-ahmedabad</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
+      <image:title>Industrial Property Investment Ahmedabad</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/industrial-land-for-sale-moraiya-changodar</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
+      <image:title>Industrial Land for Sale Moraiya Changodar</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/high-return-investment-gujarat</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
+      <image:title>High Return Investment Gujarat</image:title>
+    </image:image>
+  </url>
+
+  <!-- Insight / Guide Pages -->
   <url>
     <loc>https://www.metrodevelopers.co.in/guides/gst-input-credit-industrial-tenants-gujarat</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -175,7 +293,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/guides/warehousing-yield-cagr-gujarat</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -185,7 +303,7 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/guides/industrial-property-due-diligence-ahmedabad</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -195,12 +313,44 @@
   </url>
   <url>
     <loc>https://www.metrodevelopers.co.in/guides/how-to-choose-industrial-shed-gujarat</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
       <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
       <image:title>How to Choose an Industrial Shed</image:title>
+    </image:image>
+  </url>
+
+  <!-- New Guide Pages -->
+  <url>
+    <loc>https://www.metrodevelopers.co.in/guides/industrial-investment-returns-gujarat-2026</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg</image:loc>
+      <image:title>Industrial Investment Returns Gujarat 2026</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/guides/rent-vs-buy-industrial-shed-ahmedabad</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/warehouse-unit-lease-changodar-ahmedabad.jpg</image:loc>
+      <image:title>Rent vs Buy Industrial Shed Ahmedabad</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.metrodevelopers.co.in/guides/gidc-vs-private-industrial-park-gujarat</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/60ft-road-metro-industrial-park-ahmedabad.jpg</image:loc>
+      <image:title>GIDC vs Private Industrial Park Gujarat</image:title>
     </image:image>
   </url>
 </urlset>
