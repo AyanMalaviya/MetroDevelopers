@@ -1,8 +1,8 @@
-# ─── Metro Industrial Park — robots.txt ───────────────────────────────────────
+# ─── Metro Industrial Park — robots.txt ───────────────────────────────────────────────
 # https://www.metrodevelopers.co.in
-# Last updated: 2026-05-26
+# Last updated: 2026-06-10
 
-# ── Primary crawlers: full access ─────────────────────────────────────────────
+# ── Primary crawlers: full access ──────────────────────────────────────────────
 User-agent: Googlebot
 Allow: /
 Disallow: /admin/
@@ -39,5 +39,5 @@ Crawl-delay: 20
 User-agent: DotBot
 Crawl-delay: 20
 
-# ── Sitemap locations ─────────────────────────────────────────────────────────
+# ── Sitemap locations ──────────────────────────────────────────────────────────────
 Sitemap: https://www.metrodevelopers.co.in/sitemap.xml
