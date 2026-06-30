@@ -1,9 +1,7 @@
 import { SITE_BASE_URL } from '../data/seoRoutes';
 import '../index.css';
+import Providers from '../components/Providers';
 
-// Root metadata — these are the STATIC fallback OG tags that appear in the raw HTML
-// response before any JavaScript executes. This is what Googlebot, Facebook, and
-// Twitter scrapers read. Page-level metadata from generateMetadata() overrides these.
 export const metadata = {
   metadataBase: new URL(SITE_BASE_URL),
   title: {
@@ -22,8 +20,6 @@ export const metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  // FIX: Static OG fallback tags — previously these were missing from the raw HTML response.
-  // Now present in every page's <head> before JS executes.
   openGraph: {
     type: 'website',
     locale: 'en_IN',
@@ -48,7 +44,6 @@ export const metadata = {
       '63 industrial sheds and warehouses from 4,000–50,000 sq.ft. 90-day possession. Near NH 947.',
     images: ['/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg'],
   },
-  // Geo meta tags for local SEO — helps Google anchor the entity to Moraiya, Changodar
   other: {
     'geo.region': 'IN-GJ',
     'geo.placename': 'Moraiya, Changodar, Ahmedabad, Gujarat',
@@ -67,14 +62,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-IN">
       <head>
-        {/* Canonical domain signal — always www */}
         <link rel="canonical" href={SITE_BASE_URL} />
-        {/* Favicons */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

@@ -1,6 +1,8 @@
+'use client';
 // src/components/Layout/Navbar.jsx
 import { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
   Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
@@ -15,7 +17,8 @@ const FONT_SIZE_VALUES = { normal: '16px', large: '18px', xlarge: '20px' };
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
-  const navigate = useNavigate();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [isMenuOpen,    setIsMenuOpen]    = useState(false);
   const [isVisible,     setIsVisible]     = useState(true);
@@ -89,7 +92,7 @@ const Navbar = () => {
     { path: '/site-map',              label: 'Site Map',        icon: MapPin     },
   ];
 
-  // Settings quick-actions (no theme toggle — that's already in the navbar)
+  // Settings quick-actions
   const settingsItems = [
     {
       icon: ArrowUp,
@@ -108,14 +111,14 @@ const Navbar = () => {
     {
       icon: Factory,
       label: 'Explore Project',
-      action: () => { navigate('/metro-industrial-park'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
+      action: () => { router.push('/metro-industrial-park'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
       accent: isDark ? 'text-orange-400' : 'text-orange-600',
       bg: isDark ? 'hover:bg-orange-950/40' : 'hover:bg-orange-50',
     },
     {
       icon: Map,
       label: 'Plan & Availability',
-      action: () => { navigate('/site-map'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
+      action: () => { router.push('/site-map'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
       accent: isDark ? 'text-teal-400' : 'text-teal-600',
       bg: isDark ? 'hover:bg-teal-950/40' : 'hover:bg-teal-50',
     },
@@ -139,7 +142,7 @@ const Navbar = () => {
         <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-3.5">
 
           {/* ── Logo ── */}
-          <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
+          <Link href="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
             <div className="relative flex-shrink-0">
               <img
                 src="/icons/icon-96x96.png"
@@ -164,29 +167,26 @@ const Navbar = () => {
 
           {/* ── Desktop nav ── */}
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-3 py-2 text-xs font-bold tracking-wide rounded-xl transition-all duration-200 ${
+            {navItems.map((item) => {
+              const isActive = pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold tracking-wide rounded-xl transition-all duration-200 ${
                     isActive
                       ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
                       : isDark
                         ? 'text-gray-400 hover:text-white hover:bg-gray-900'
                         : 'text-gray-600 hover:text-brand-red hover:bg-gray-100'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />
-                    <span className="hidden lg:inline">{item.label}</span>
-                    <span className="lg:hidden">{item.label.split(' ')[0]}</span>
-                  </>
-                )}
-              </NavLink>
-            ))}
+                  }`}
+                >
+                  <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />
+                  <span className="hidden lg:inline">{item.label}</span>
+                  <span className="lg:hidden">{item.label.split(' ')[0]}</span>
+                </Link>
+              );
+            })}
 
             {/* ── Contact Dropdown ── */}
             <div className="relative ml-1" ref={contactRef}>
@@ -267,7 +267,7 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            {/* ── Theme toggle (existing, unchanged) ── */}
+            {/* ── Theme toggle ── */}
             {toggleTheme && (
               <button
                 type="button"
@@ -283,7 +283,7 @@ const Navbar = () => {
               </button>
             )}
 
-            {/* ── Settings / Tuning Dropdown ── */}
+            {/* ── Settings Dropdown ── */}
             <div className="relative ml-1" ref={settingsRef}>
               <button
                 type="button"
@@ -341,7 +341,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* ── Mobile right side: theme toggle + hamburger ── */}
+          {/* ── Mobile right side ── */}
           <div className="md:hidden flex items-center gap-2">
             {toggleTheme && (
               <button
@@ -411,40 +411,37 @@ const Navbar = () => {
                   <p className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Navigation</p>
                 </div>
 
-                {navItems.map((item, i) => (
-                  <motion.div
-                    key={item.path}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                  >
-                    <NavLink
-                      to={item.path}
-                      onClick={closeMenu}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 ${
+                {navItems.map((item, i) => {
+                  const isActive = pathname === item.path;
+                  return (
+                    <motion.div
+                      key={item.path}
+                      initial={{ opacity: 0, x: 16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05, duration: 0.3 }}
+                    >
+                      <Link
+                        href={item.path}
+                        onClick={closeMenu}
+                        className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 ${
                           isActive
                             ? 'bg-brand-red text-white shadow-md shadow-brand-red/25'
                             : isDark
                               ? 'text-gray-300 hover:text-white hover:bg-gray-900/70'
                               : 'text-gray-700 hover:text-brand-red hover:bg-gray-100'
-                        }`
-                      }
-                    >
-                      {({ isActive }) => (
-                        <>
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
-                            isActive ? 'bg-white/20' : isDark ? 'bg-gray-900' : 'bg-gray-100'
-                          }`}>
-                            <item.icon className="w-4 h-4" />
-                          </div>
-                          <span>{item.label}</span>
-                          {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/70" />}
-                        </>
-                      )}
-                    </NavLink>
-                  </motion.div>
-                ))}
+                        }`}
+                      >
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                          isActive ? 'bg-white/20' : isDark ? 'bg-gray-900' : 'bg-gray-100'
+                        }`}>
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <span>{item.label}</span>
+                        {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/70" />}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
 
                 {/* ── Mobile Quick Actions ── */}
                 <motion.div

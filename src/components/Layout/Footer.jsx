@@ -1,9 +1,10 @@
+'use client';
 // src/components/Footer/Footer.jsx
 import { useState } from 'react';
 import { MapPin, Phone, Mail, ChevronDown, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useTheme } from '../../context/ThemeContext';
 
 
@@ -53,7 +54,7 @@ const FaqRow = ({ item, isDark }) => {
 };
 
 
-// ── FAQ data — numbers aligned with schemas.js ─────────────────────────────────
+// ── FAQ data ────────────────────────────────────────────────────────────────────
 const FAQ_ITEMS = [
   {
     q: 'What sizes are available?',
@@ -250,7 +251,7 @@ const Footer = () => {
                 ) : (
                   <li key={label}>
                     <Link
-                      to={to}
+                      href={to}
                       className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
                     >
                       {label}
