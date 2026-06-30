@@ -43,12 +43,15 @@
     react-helmet-async via SeoHead.jsx — those tags override these.
     DO NOT put route-specific titles or og:url here.
   ════════════════════════════════════════════════════════════════════ -->
-  <title>Metro Industrial Park | Industrial Sheds in Moraiya, Changodar, Ahmedabad</title>
+  <title>Metro Industrial Park | Industrial Sheds &amp; Warehouses in Moraiya, Changodar, Ahmedabad</title>
   <meta name="description" content="Metro Industrial Park offers premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. High rental yields. 60ft roads, CCTV, 24/7 water. 90-day possession. Call +91 98242 35642." />
   <meta name="keywords" content="industrial sheds moraiya, industrial park changodar, warehouse for rent ahmedabad, warehouse for sale ahmedabad, industrial shed for rent changodar, industrial shed for sale changodar, godown for rent ahmedabad, GIDC shed ahmedabad, industrial property investment gujarat, metro industrial park" />
   <meta name="author" content="Metro Industrial Park" />
   <meta name="application-name" content="Metro Industrial Park" />
-  <meta property="og:site_name" content="Metro Industrial Park" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+  <!-- Canonical fallback for the homepage -->
+  <link rel="canonical" href="https://www.metrodevelopers.co.in/" />
 
   <!-- Geo targeting — boosts local pack rankings -->
   <meta name="geo.region"    content="IN-GJ" />
@@ -67,18 +70,76 @@
   ════════════════════════════════════════════════════════════════════ -->
   <meta property="og:type"         content="website" />
   <meta property="og:locale"       content="en_IN" />
+  <meta property="og:site_name"    content="Metro Industrial Park" />
+  <meta property="og:url"          content="https://www.metrodevelopers.co.in/" />
+  <meta property="og:title"        content="Metro Industrial Park | Industrial Sheds &amp; Warehouses in Moraiya, Changodar, Ahmedabad" />
+  <meta property="og:description"  content="Premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. 60ft roads, CCTV, 24/7 water. 90-day possession." />
   <meta property="og:image"        content="https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt"    content="Metro Industrial Park — Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad" />
+  <meta property="og:image:type"   content="image/jpeg" />
 
   <!-- ═══════════════════════════════════════════════════════════════════
     TWITTER CARD — FALLBACK
     Same pattern: react-helmet-async overrides title + description.
     card type and image are safe as static fallback.
   ════════════════════════════════════════════════════════════════════ -->
-  <meta name="twitter:card"  content="summary_large_image" />
-  <meta name="twitter:image" content="https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:site"        content="@MetroIndustrialPark" />
+  <meta name="twitter:title"       content="Metro Industrial Park | Industrial Sheds &amp; Warehouses in Moraiya, Ahmedabad" />
+  <meta name="twitter:description" content="Premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. 4,000–50,000 sq.ft. 90-day possession." />
+  <meta name="twitter:image"       content="https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg" />
+  <meta name="twitter:image:alt"   content="Metro Industrial Park — Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad" />
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+    JSON-LD — HOMEPAGE STRUCTURED DATA (Organization + LocalBusiness)
+    react-helmet-async adds page-specific schemas (BreadcrumbList,
+    RealEstateListing, FAQPage, etc.) per route. This block provides
+    the baseline Organization/LocalBusiness signal for all routes.
+  ════════════════════════════════════════════════════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["RealEstateAgent", "LocalBusiness"],
+    "@id": "https://www.metrodevelopers.co.in/#business",
+    "name": "Metro Industrial Park",
+    "description": "Premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad, Gujarat.",
+    "url": "https://www.metrodevelopers.co.in/",
+    "logo": "https://www.metrodevelopers.co.in/icons/icon-192x192.png",
+    "image": "https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg",
+    "telephone": "+919824235642",
+    "priceRange": "₹₹₹",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Moraiya, Changodar",
+      "addressLocality": "Ahmedabad",
+      "addressRegion": "Gujarat",
+      "postalCode": "382213",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 22.914141879249897,
+      "longitude": 72.41748307531053
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+        "opens": "09:00",
+        "closes": "19:00"
+      }
+    ],
+    "areaServed": {
+      "@type": "City",
+      "name": "Ahmedabad"
+    },
+    "sameAs": [
+      "https://www.instagram.com/metro.industrialpark/"
+    ]
+  }
+  </script>
 
   <!-- ═══════════════════════════════════════════════════════════════════
     FAVICONS
@@ -119,6 +180,8 @@
   ════════════════════════════════════════════════════════════════════ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Preload the primary display font (Anton) to avoid FOUT on hero heading -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bungee+Outline&family=Instrument+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bungee+Outline&family=Instrument+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
 
   <!-- Preload hero image -->
