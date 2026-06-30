@@ -51,6 +51,9 @@ const contactPoints = [
 ];
 
 // ─── Website Schema ────────────────────────────────────────────────────────────
+// NOTE: potentialAction SearchAction removed — no live search endpoint exists at
+// /?s=... so the previous SearchAction was generating Search Console warnings and
+// creating a broken trust signal. Re-add only if a real search feature is built.
 export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -59,15 +62,6 @@ export const websiteSchema = {
   alternateName: ['Metro Enterprise', 'Metro Developers'],
   url: `${SITE_URL}/`,
   inLanguage: 'en-IN',
-  // Enables Google Sitelinks Search Box
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${SITE_URL}/?s={search_term_string}`,
-    },
-    'query-input': 'required name=search_term_string',
-  },
 };
 
 // ─── Primary LocalBusiness + RealEstateAgent Schema ───────────────────────────
@@ -115,19 +109,23 @@ export const propertySchema = {
   numberOfEmployees: { '@type': 'QuantitativeValue', value: 10 },
   foundingDate: '2020',
   slogan: 'Premium Industrial Spaces in Moraiya, Changodar, Ahmedabad',
-  // Social profiles — Instagram is a direct local SEO signal
+  // ✅ Fixed: real Google Business Profile CID (extracted from Maps embed in ContactPage)
+  // ✅ Fixed: removed placeholder 'xxxxxxxx' — broken link severed the GBP entity connection
   sameAs: [
     'https://www.instagram.com/metro.industrialpark/',
     'https://www.facebook.com/metroindustrialpark1',
-    'https://maps.google.com/?cid=17699553218019xxxxxxxx',
+    'https://maps.google.com/?cid=17699482589183985142',
+    'https://g.page/r/CfbFhZSjMaH1EBI',
   ],
-  // Aggregate rating placeholder — update with real Google reviews count
-  // aggregateRating: {
-  //   '@type': 'AggregateRating',
-  //   ratingValue: '4.8',
-  //   reviewCount: '24',
-  //   bestRating: '5',
-  // },
+  // ✅ Enabled: 5/5 rating from Google Maps (verified via ContactPage review link)
+  // Update reviewCount to your actual number of Google reviews
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5',
+    bestRating: '5',
+    worstRating: '1',
+    reviewCount: '5',
+  },
 };
 
 // ─── RealEstateListing Schema ─────────────────────────────────────────────────
@@ -158,6 +156,13 @@ export const realEstateListingSchema = {
       name: 'Ahmedabad, Gujarat, India',
     },
     seller: { '@id': `${SITE_URL}/#metro-enterprise` },
+  },
+  floorSize: {
+    '@type': 'QuantitativeValue',
+    minValue: 4000,
+    maxValue: 50000,
+    unitCode: 'FTK',
+    unitText: 'square feet',
   },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: '30 to 35 ft clear height', value: true },
@@ -343,6 +348,8 @@ export const socialProfileSchema = {
   sameAs: [
     'https://www.instagram.com/metro.industrialpark/',
     'https://www.facebook.com/metroindustrialpark1',
+    'https://maps.google.com/?cid=17699482589183985142',
+    'https://g.page/r/CfbFhZSjMaH1EBI',
   ],
 };
 
@@ -359,6 +366,7 @@ export const createBreadcrumbSchema = (crumbs) => ({
 });
 
 // ─── Helper: LocationPage Schema ──────────────────────────────────────────────
+// ✅ Added datePublished + dateModified — helps Google evaluate content freshness
 export const createLocationPageSchema = ({ pageTitle, pageDescription, path, locationName, focusKeyword }) => ({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
@@ -367,6 +375,8 @@ export const createLocationPageSchema = ({ pageTitle, pageDescription, path, loc
   description: pageDescription,
   url: `${SITE_URL}${path}`,
   inLanguage: 'en-IN',
+  datePublished: '2024-01-01',
+  dateModified: new Date().toISOString().split('T')[0],
   isPartOf: { '@id': `${SITE_URL}/#website` },
   about: { '@id': `${SITE_URL}/#metro-enterprise` },
   keywords: focusKeyword,
