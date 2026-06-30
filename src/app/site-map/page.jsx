@@ -1,33 +1,28 @@
+// src/app/site-map/page.jsx
 import { SITE_BASE_URL } from '../../data/seoRoutes';
-import { propertySchema, createBreadcrumbSchema } from '../../utils/schemas';
 import SiteMapPage from '../../pages/SiteMapPage';
 
 export const metadata = {
-  title: 'Industrial Shed Site Map & Live Availability | Metro Industrial Park',
+  title: 'Interactive Site Map | Metro Industrial Park — Moraiya, Changodar, Ahmedabad',
   description:
-    'Check industrial shed and warehouse unit availability in Moraiya, Changodar, and Ahmedabad with the live interactive site map from Metro Industrial Park.',
+    'Explore the interactive site map of Metro Industrial Park in Moraiya, Changodar, Ahmedabad. View unit layout, available sheds for sale and rent, and campus infrastructure near NH 947 (Sarkhej–Bavla Highway).',
+  keywords:
+    'metro industrial park site map, industrial park layout moraiya, shed layout changodar, available units metro industrial park, industrial campus map ahmedabad',
   alternates: { canonical: `${SITE_BASE_URL}/site-map` },
   openGraph: {
-    title: 'Industrial Shed Site Map & Live Availability | Metro Industrial Park',
-    description: 'Live availability map for industrial sheds and warehouses at Metro Industrial Park, Moraiya.',
+    title: 'Interactive Site Map | Metro Industrial Park — Moraiya, Changodar, Ahmedabad',
+    description: 'View the interactive layout and available units at Metro Industrial Park, Moraiya, Changodar, Ahmedabad.',
     url: `${SITE_BASE_URL}/site-map`,
-    images: [{ url: '/images/metro-industrial-park-site-plan-moraiya.jpg', width: 1200, height: 630 }],
+    images: [{ url: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg', width: 1200, height: 630 }],
+  },
+  other: {
+    'geo.region':    'IN-GJ',
+    'geo.placename': 'Moraiya, Changodar, Ahmedabad, Gujarat',
+    'geo.position':  '22.914141879249897;72.41748307531053',
+    'ICBM':          '22.914141879249897, 72.41748307531053',
   },
 };
 
-const breadcrumb = createBreadcrumbSchema([
-  { name: 'Home', path: '/' },
-  { name: 'Site Map', path: '/site-map' },
-]);
-
 export default function Page() {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([propertySchema, breadcrumb]) }}
-      />
-      <SiteMapPage />
-    </>
-  );
+  return <SiteMapPage />;
 }
