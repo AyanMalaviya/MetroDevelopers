@@ -2,11 +2,11 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import webfontDownload from 'vite-plugin-webfont-dl';
-import vitePrerender from 'vite-plugin-prerender';
-
-const Renderer = vitePrerender.PuppeteerRenderer;
+import prerenderStatic from 'vite-plugin-prerender-static';
 
 // ─── All static routes to pre-render at build time ────────────────────────────
+// Pure ESM, no headless Chrome — just copies dist/index.html into each
+// route folder at build time so crawlers get real HTML, zero serverless.
 const PRERENDER_ROUTES = [
   '/',
   '/metro-industrial-park',
@@ -60,15 +60,12 @@ export default defineConfig({
     ]),
 
     // ── SSG Pre-rendering ──────────────────────────────────────────────────────
-    vitePrerender({
-      staticDir: './dist',
+    // Copies dist/index.html into dist/<route>/index.html at build time.
+    // No Puppeteer, no headless Chrome, fully ESM — fast & Vercel-safe.
+    // react-helmet-async writes <title>/<meta> into the HTML shell before
+    // the copy, so each file gets the right SEO tags baked in.
+    prerenderStatic({
       routes: PRERENDER_ROUTES,
-
-      renderer: new Renderer({
-        headless: true,
-        renderAfterElementExists: '#root',
-        renderAfterTime: 500,
-      }),
     }),
 
     VitePWA({
