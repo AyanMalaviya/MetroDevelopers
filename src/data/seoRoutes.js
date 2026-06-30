@@ -1,6 +1,6 @@
 export const SITE_BASE_URL = 'https://www.metrodevelopers.co.in';
 
-// ─── LOCAL MARKET PAGES ────────────────────────────────────────────────────────
+// ─── LOCAL MARKET PAGES ──────────────────────────────────────────────────────────────────────────────────
 // Strategy:
 //   • /industrial-sheds-in-moraiya → let /metro-industrial-park own Moraiya (no new Moraiya pages)
 //   • Changodar, NH 47 / Sarkhej-Bavla, Ahmedabad, Warehouses → support pages
@@ -18,7 +18,7 @@ export const SITE_BASE_URL = 'https://www.metrodevelopers.co.in';
 //     • Bavla–Sarkhej Road
 
 export const LOCAL_MARKET_PAGES = [
-  // ─── PRIORITY 1: #1 target — "industrial sheds in Moraiya" ─────────────────
+  // ─── PRIORITY 1: #1 target — "industrial sheds in Moraiya" ───────────────────────
   // NOTE: /metro-industrial-park is the primary Moraiya page.
   // This page acts as a supporting funnel, not a duplicate.
   {
@@ -75,7 +75,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── PRIORITY 2: top-3 Changodar target ────────────────────────────────────
+  // ─── PRIORITY 2: top-3 Changodar target ────────────────────────────────────────────
   {
     path: '/industrial-sheds-in-changodar',
     breadcrumb: 'Industrial Sheds in Changodar',
@@ -126,7 +126,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── Warehouses in Changodar ────────────────────────────────────────────────
+  // ─── Warehouses in Changodar ───────────────────────────────────────────────────────────────────
   {
     path: '/warehouses-in-changodar',
     breadcrumb: 'Warehouses in Changodar',
@@ -143,8 +143,9 @@ export const LOCAL_MARKET_PAGES = [
     focusKeyword: 'Warehouses in Changodar',
     locationName: 'Changodar, Ahmedabad',
     schemaName: 'Warehouses in Changodar, Ahmedabad',
+    // FIX: corrected broken sentence in original ("metro industrial Park sees strong..." mid-sentence)
     localPitch:
-      "Changodar's density of FMCG, pharma, and e-commerce support chains makes it one of Ahmedabad's most consistently occupied warehousing corridors. The direct connection to NH 947 — the Sarkhej–Bavla Highway linking western Ahmedabad to Rajkot — means warehouses here see metro industrial Park sees strong repeat-lease demand from distribution-heavy operators.",
+      "Changodar's density of FMCG, pharma, and e-commerce support chains makes it one of Ahmedabad's most consistently occupied warehousing corridors. The direct connection to NH 947 — the Sarkhej–Bavla Highway linking western Ahmedabad to Rajkot — means warehouses here see strong repeat-lease demand from distribution-heavy operators.",
     demandDrivers: [
       'Reliable access to NH 947 (Sarkhej–Bavla Highway) freight corridors',
       'Lower downtime from smoother in-out truck circulation',
@@ -176,7 +177,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── Industrial sheds near NH 47 / Sarkhej Bavla Highway ──────────────────
+  // ─── Industrial sheds near NH 47 / Sarkhej Bavla Highway ──────────────────────────
   {
     path: '/industrial-sheds-near-sarkhej-bavla-highway',
     breadcrumb: 'Industrial Sheds Near NH 47',
@@ -226,7 +227,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── Industrial sheds in Ahmedabad ─────────────────────────────────────────
+  // ─── Industrial sheds in Ahmedabad ───────────────────────────────────────────────────
   {
     path: '/industrial-sheds-in-ahmedabad',
     breadcrumb: 'Industrial Sheds in Ahmedabad',
@@ -277,7 +278,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── NEW: Industrial Shed for Rent in Changodar (high buying-intent) ────────
+  // ─── NEW: Industrial Shed for Rent in Changodar ────────────────────────────────────────
   {
     path: '/industrial-shed-for-rent-changodar',
     breadcrumb: 'Industrial Shed for Rent in Changodar',
@@ -328,7 +329,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── NEW: Industrial Shed for Sale Changodar (for-sale intent) ──────────────
+  // ─── NEW: Industrial Shed for Sale Changodar ────────────────────────────────────────────
   {
     path: '/industrial-shed-for-sale-changodar',
     breadcrumb: 'Industrial Shed for Sale in Changodar',
@@ -379,7 +380,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── NEW: Godown for Rent Changodar (storage/godown specific intent) ─────────
+  // ─── NEW: Godown for Rent Changodar ──────────────────────────────────────────────────────────
   {
     path: '/godown-for-rent-changodar',
     breadcrumb: 'Godown for Rent in Changodar',
@@ -430,7 +431,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── NEW: Industrial Park near Sanand (corridor expansion) ──────────────────
+  // ─── NEW: Industrial Park near Sanand ─────────────────────────────────────────────────────────
   {
     path: '/industrial-park-near-sanand',
     breadcrumb: 'Industrial Park Near Sanand',
@@ -481,7 +482,7 @@ export const LOCAL_MARKET_PAGES = [
     ],
   },
 
-  // ─── Investment in real estate in Ahmedabad ─────────────────────────────────
+  // ─── Investment in real estate in Ahmedabad ─────────────────────────────────────────
   {
     path: '/investment-in-real-estate-in-ahmedabad',
     breadcrumb: 'Investment in Real Estate in Ahmedabad',
@@ -536,7 +537,7 @@ export const LOCAL_MARKET_PAGES = [
   },
 ];
 
-// ─── GUIDE / INSIGHT PAGES ────────────────────────────────────────────────────
+// ─── GUIDE / INSIGHT PAGES ───────────────────────────────────────────────────────────────────────────────
 export const GUIDE_PAGES = [
   {
     path: '/guides/gst-input-credit-industrial-tenants-gujarat',
@@ -616,7 +617,6 @@ export const GUIDE_PAGES = [
       },
     ],
   },
-  // ─── Industrial Property Due Diligence Guide ────────────────────────────────
   {
     path: '/guides/industrial-property-due-diligence-ahmedabad',
     breadcrumb: 'Industrial Property Due Diligence',
@@ -657,184 +657,4 @@ export const GUIDE_PAGES = [
       },
     ],
   },
-  // ─── How to Find the Perfect Industrial Shed in Gujarat, Ahmedabad ──────────
-  {
-    path: '/guides/how-to-find-perfect-industrial-shed-gujarat-ahmedabad',
-    breadcrumb: 'How to Find Perfect Industrial Shed in Gujarat',
-    title: 'How to Find the Perfect Industrial Shed in Gujarat & Ahmedabad | Metro Developers',
-    description:
-      'Complete guide on how to find the perfect industrial shed in Gujarat and Ahmedabad — covering location, size, height, infrastructure, lease vs. buy, and why Moraiya–Changodar on NH 947 (Sarkhej–Bavla Highway) stands out.',
-    keywords:
-      'how to find perfect industrial shed in gujarat, find industrial shed ahmedabad, best industrial shed in gujarat, industrial shed guide ahmedabad gujarat, industrial shed checklist gujarat ahmedabad, perfect industrial shed changodar moraiya, find warehouse gujarat, industrial property search ahmedabad',
-    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-    ogImageAlt: 'How to find the perfect industrial shed in Gujarat and Ahmedabad — Metro Developers guide',
-    heading: 'How to Find the Perfect Industrial Shed in Gujarat and Ahmedabad',
-    intro:
-      'Finding the right industrial shed in Gujarat is more than a property search — it is a business decision that shapes your logistics costs, operational efficiency, and long-term growth for years. This guide walks you through every factor that separates a great fit from a costly mismatch, with specific focus on Ahmedabad\'s top industrial corridors.',
-    sections: [
-      {
-        title: 'Define your operational requirements first',
-        body: [
-          'Before opening a property portal or calling a broker, clearly define your minimum floor area, ceiling height, floor load capacity, number of loading bays, and power requirements. These are non-negotiable — retrofitting a shed after signing an agreement is expensive and often impossible.',
-          'For most manufacturing and warehousing operations in Gujarat, 30–35 ft clear height, reinforced RCC flooring, and ground-level truck docks are the baseline. Metro Industrial Park units are built to these specifications, eliminating costly modifications after possession.',
-        ],
-        points: [
-          'Floor area: current requirement + 25–30% buffer for business growth',
-          'Ceiling height: 24 ft minimum for pallet racking; 30 ft+ for automated storage or tall machinery',
-          'Floor load: verify slab load rating before placing heavy equipment or loaded forklifts',
-          'Power: confirm transformer capacity and UGVCL/DISCOM sanctioned load for your machinery',
-          'Loading docks: number of dock-height doors needed for your dispatch and receiving cycles',
-        ],
-      },
-      {
-        title: 'Choose the right location in Gujarat — Ahmedabad leads',
-        body: [
-          'Gujarat\'s industrial belt stretches across Surat, Rajkot, Vadodara, and Ahmedabad — but Ahmedabad consistently attracts the highest industrial demand due to its international airport, national highway connectivity, and deep GIDC ecosystem. Within Ahmedabad, the Moraiya–Changodar corridor along NH 947 (Sarkhej–Bavla Highway) is the city\'s most active micro-market for industrial sheds.',
-          'NH 947 connects western Ahmedabad directly toward Rajkot and Bavla, creating a logistics spine that reduces fleet operating costs and improves turnaround time. Sheds within 3–5 km of this highway consistently show stronger occupancy rates, faster lease absorption, and higher capital appreciation than interior zones.',
-        ],
-        points: [
-          'Proximity to NH 947 (Sarkhej–Bavla Highway) for truck movement efficiency in Ahmedabad',
-          'Distance to GIDC clusters, labour markets, and vendor hubs in Moraiya–Changodar',
-          'Access to Ahmedabad international airport for time-sensitive or export-linked operations',
-          'Proximity to Sanand EV and automotive manufacturing zone — growing demand driver',
-          'Avoid interior micro-markets with narrow approach roads or restricted HCV movement',
-        ],
-      },
-      {
-        title: 'Evaluate infrastructure quality, not just built area',
-        body: [
-          'The built area of a shed is only one variable. In Gujarat\'s industrial market, infrastructure quality — road width, power reliability, water availability, and security — determines how efficiently your business actually operates day to day.',
-          'Metro Industrial Park in Moraiya, Changodar offers 60 ft RCC internal roads designed for heavy commercial vehicles, 24/7 CCTV surveillance, round-the-clock water supply, underground drainage, and a dedicated weigh bridge — removing common operational pain points from day one.',
-        ],
-        points: [
-          '60 ft internal roads capable of accommodating 12-wheel trucks and trailers',
-          '24/7 CCTV and on-site security for inventory protection and compliance requirements',
-          'UGVCL power connection with transformer on-site and backup provision',
-          'Underground drainage and solid waste management for manufacturing operations',
-          'Dedicated weigh bridge for accurate dispatch and receiving',
-        ],
-      },
-      {
-        title: 'Lease or buy — matching the tenure to your plan',
-        body: [
-          'In Gujarat\'s industrial market, both sale and lease options are widely available. The right choice depends on your business stage, capital requirements, and long-term asset strategy. Buyers gain freehold ownership, full appreciation upside, and the option to lease-back for rental income. Lessees preserve working capital, retain flexibility to upsize, and benefit from GST input credit on lease payments.',
-          'Metro Industrial Park offers both options. Buyers access 16–20% combined return potential (6–8% rental yield + 10–12% appreciation) in the Changodar corridor. Lessees benefit from structured 5–10 year agreements with annual escalation clauses that align with business cost planning.',
-        ],
-        points: [
-          'Buy if you want asset ownership, capital appreciation, and lease-back income potential',
-          'Lease if capital preservation, operational flexibility, or GST input recovery is a priority',
-          '5–10 year lease agreements with 5–10% annual escalation are standard in Changodar',
-          'Possession within 90 days at Metro Industrial Park — one of the fastest in Ahmedabad',
-          'Freehold sale units at Metro Industrial Park carry no recurring ground rent or maintenance ambiguity',
-        ],
-      },
-      {
-        title: 'Verify legal status and developer credibility',
-        body: [
-          'In Gujarat\'s industrial real estate market, title clarity and statutory approvals are critical. Confirm industrial land use classification, clear title with no encumbrance, RERA registration for new developments, fire NOC, factory plan approval, and environmental clearance before signing any agreement.',
-          'Metro Industrial Park in Moraiya, Changodar is a RERA-registered development with all statutory approvals in place — providing buyers and lessees with full legal transparency from the point of inquiry.',
-        ],
-        points: [
-          'Industrial land use classification confirmed — not agricultural or residential conversion',
-          'RERA registration verifiable at RERA Gujarat portal',
-          'Fire NOC, factory plan, and environmental clearance obtained',
-          'No encumbrance or acquisition notice on title',
-          'Developer track record and delivery history verifiable',
-        ],
-      },
-    ],
-  },
-];
-
-// ─── SITEMAP ROUTES ───────────────────────────────────────────────────────────
-// Used by the sitemap generator — covers all indexable pages.
-// Future Metro Developers projects: add entries here with priority 0.85–0.90
-// and update propertySchema / GUIDE_PAGES as projects launch.
-
-export const SEO_ROUTES = [
-  {
-    path: '/',
-    changefreq: 'weekly',
-    priority: 1.0,
-    images: [
-      {
-        loc: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-        title: 'Metro Industrial Park Aerial Site View',
-        caption: 'Aerial view of Metro Industrial Park in Moraiya, Ahmedabad.',
-      },
-      {
-        loc: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-        title: 'Industrial Sheds in Moraiya',
-        caption: 'Industrial sheds for sale and lease in Moraiya, Ahmedabad.',
-      },
-    ],
-  },
-  {
-    path: '/metro-industrial-park',
-    changefreq: 'weekly',
-    priority: 0.95, // bumped — primary money page
-    images: [
-      {
-        loc: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-        title: 'Warehouse Units in Changodar',
-        caption: 'Warehouse and industrial units in Changodar, Ahmedabad.',
-      },
-    ],
-  },
-  {
-    path: '/metro-arcade',
-    changefreq: 'monthly',
-    priority: 0.8,
-    images: [
-      {
-        loc: '/images/arcade-top.jpeg',
-        title: 'Metro Arcade Commercial Project',
-      },
-    ],
-  },
-  {
-    path: '/contact',
-    changefreq: 'monthly',
-    priority: 0.7,
-    images: [
-      {
-        loc: '/images/metro-industrial-park-office-changodar.jpg',
-        title: 'Metro Enterprise Contact Office',
-      },
-    ],
-  },
-  {
-    path: '/calculator',
-    changefreq: 'monthly',
-    priority: 0.6,
-  },
-  {
-    path: '/site-map',
-    changefreq: 'weekly',
-    priority: 0.7,
-    images: [
-      {
-        loc: '/images/metro-industrial-park-site-plan-moraiya.jpg',
-        title: 'Industrial Shed Site Plan',
-      },
-    ],
-  },
-  ...LOCAL_MARKET_PAGES.map((page) => ({
-    path: page.path,
-    changefreq: 'weekly',
-    priority:
-      page.path === '/industrial-sheds-in-moraiya' ||
-      page.path === '/industrial-sheds-in-changodar' ||
-      page.path === '/industrial-shed-for-rent-changodar' ||
-      page.path === '/industrial-shed-for-sale-changodar'
-        ? 0.88
-        : 0.75,
-    images: [{ loc: page.image, title: page.breadcrumb }],
-  })),
-  ...GUIDE_PAGES.map((page) => ({
-    path: page.path,
-    changefreq: 'monthly',
-    priority: 0.64,
-    images: [{ loc: page.image, title: page.breadcrumb }],
-  })),
 ];
