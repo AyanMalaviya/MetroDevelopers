@@ -1,0 +1,43 @@
+# ─── Metro Industrial Park — robots.txt ───────────────────────────────────────────────
+# https://www.metrodevelopers.co.in
+# Last updated: 2026-06-10
+
+# ── Primary crawlers: full access ──────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /records
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /records
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /
+
+# ── All other crawlers: full access, polite crawl rate ────────────────────────
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /records
+
+# ── Heavy SEO crawlers: throttle to reduce server load ────────────────────────
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 20
+
+User-agent: DotBot
+Crawl-delay: 20
+
+# ── Sitemap locations ──────────────────────────────────────────────────────────────
+Sitemap: https://www.metrodevelopers.co.in/sitemap.xml

@@ -1,0 +1,111 @@
+import { useState, useEffect } from 'react';
+import { Download, X } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+
+const PWAInstallPrompt = () => {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  useEffect(() => {
+    let installPromptTimeout;
+
+    const handleBeforeInstall = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+
+      const dismissed = localStorage.getItem('pwaInstallDismissed');
+      const dismissedAt = Number(dismissed);
+      const now = Date.now();
+      const oneDayInMs = 24 * 60 * 60 * 1000;
+      
+      if (!dismissed || Number.isNaN(dismissedAt) || (now - dismissedAt) > oneDayInMs) {
+        installPromptTimeout = window.setTimeout(() => setShowPrompt(true), 2500);
+      }
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      if (installPromptTimeout) {
+        window.clearTimeout(installPromptTimeout);
+      }
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    
+    setDeferredPrompt(null);
+    setShowPrompt(false);
+  };
+
+  const handleDismiss = () => {
+    setShowPrompt(false);
+    localStorage.setItem('pwaInstallDismissed', Date.now().toString());
+  };
+
+  if (!showPrompt) return null;
+
+  return (
+    <div className="fixed bottom-4 left-4 sm:bottom-5 sm:left-5 z-50 animate-slide-up w-[280px] sm:w-[300px]">
+      <div className={`rounded-xl shadow-2xl p-3.5 sm:p-4 relative border backdrop-blur-xl transition-colors duration-300 ${
+        isDark 
+          ? 'bg-black border-gray-800 shadow-black/60' 
+          : 'bg-white/90 border-gray-200/85 shadow-gray-300/70'
+      }`}>
+        <div
+          className={`pointer-events-none absolute inset-0 rounded-xl ${
+            isDark
+              ? 'bg-gradient-to-br from-brand-red/16 via-white/5 to-transparent'
+              : 'bg-gradient-to-br from-brand-red/10 via-white/40 to-transparent'
+          }`}
+          aria-hidden="true"
+        />
+        
+        <button
+          onClick={handleDismiss}
+          className={`absolute top-2 right-2 transition-colors z-20 ${
+            isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
+          }`}
+          aria-label="Close"
+        >
+          <X size={16} />
+        </button>
+        
+        <div className="relative z-10 flex items-center gap-2.5 mb-2.5 pr-4">
+          <div className="w-10 h-10 bg-brand-red/10 border border-brand-red/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Download size={20} className="text-brand-red" />
+          </div>
+          <div className="text-left flex-1">
+            <h4 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              Install Metro App
+            </h4>
+            <p className={`text-[11px] leading-tight ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              Faster access and offline support.
+            </p>
+          </div>
+        </div>
+        
+        <button
+          onClick={handleInstall}
+          className="relative z-10 w-full px-3 py-2 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-md transition-all text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg"
+        >
+          <Download size={14} />
+          <span>Install Now</span>
+        </button>
+        
+        <p className={`relative z-10 text-[10px] text-center mt-1.5 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+          Works offline after install
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default PWAInstallPrompt;
