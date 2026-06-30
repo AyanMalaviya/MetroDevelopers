@@ -1,97 +1,54 @@
-import { Anton, Bebas_Neue, Instrument_Serif, Plus_Jakarta_Sans } from 'next/font/google';
-import { ThemeProvider } from '../context/ThemeContext';
+import { SITE_BASE_URL } from '../data/seoRoutes';
 import '../index.css';
-import '../App.css';
 
-const anton = Anton({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-anton',
-  display: 'swap',
-});
-
-const bebasNeue = Bebas_Neue({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-bebas',
-  display: 'swap',
-});
-
-const instrumentSerif = Instrument_Serif({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-instrument',
-  display: 'swap',
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  weight: ['400', '500', '600', '700', '800'],
-  subsets: ['latin'],
-  variable: '--font-jakarta',
-  display: 'swap',
-});
-
+// Root metadata — these are the STATIC fallback OG tags that appear in the raw HTML
+// response before any JavaScript executes. This is what Googlebot, Facebook, and
+// Twitter scrapers read. Page-level metadata from generateMetadata() overrides these.
 export const metadata = {
-  metadataBase: new URL('https://www.metrodevelopers.co.in'),
+  metadataBase: new URL(SITE_BASE_URL),
   title: {
-    default: 'Industrial Sheds in Moraiya, Changodar, Ahmedabad | Metro Industrial Park',
+    default: 'Metro Industrial Park | Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad',
     template: '%s | Metro Industrial Park',
   },
   description:
-    'Metro Industrial Park offers premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. 90-day possession. Call +91 98242 35642.',
-  keywords: [
-    'industrial sheds moraiya',
-    'industrial park changodar',
-    'warehouse for rent ahmedabad',
-    'warehouse for sale ahmedabad',
-    'industrial shed for rent changodar',
-    'industrial shed for sale moraiya',
-    'godown for rent ahmedabad',
-    'factory shed lease changodar',
-    'industrial property investment gujarat',
-    'metro industrial park',
-  ],
-  authors: [{ name: 'Metro Industrial Park', url: 'https://www.metrodevelopers.co.in' }],
-  creator: 'Metro Industrial Park',
-  publisher: 'Metro Industrial Park',
+    'Metro Industrial Park by Metro Developers — 63 premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft, 90-day possession, 6–8% rental yield. Near NH 947 (Sarkhej–Bavla Highway).',
+  keywords:
+    'industrial sheds moraiya, industrial sheds changodar, industrial park ahmedabad, warehouse changodar, industrial shed for sale ahmedabad, industrial shed for rent changodar, metro industrial park',
+  authors: [{ name: 'Metro Developers', url: SITE_BASE_URL }],
+  creator: 'Metro Developers',
+  publisher: 'Metro Developers',
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
-    },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
+  // FIX: Static OG fallback tags — previously these were missing from the raw HTML response.
+  // Now present in every page's <head> before JS executes.
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://www.metrodevelopers.co.in/',
+    url: SITE_BASE_URL,
     siteName: 'Metro Industrial Park',
-    title: 'Industrial Sheds in Moraiya, Changodar, Ahmedabad | Metro Industrial Park',
+    title: 'Metro Industrial Park | Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad',
     description:
-      'Premium industrial sheds and warehouses for sale and lease. Units 4,000–50,000 sq.ft. 90-day possession.',
+      '63 premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft, 90-day possession, 6–8% rental yield.',
     images: [
       {
-        url: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+        url: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
         width: 1200,
         height: 630,
-        alt: 'Metro Industrial Park — Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad',
+        alt: 'Industrial sheds and warehouses at Metro Industrial Park, Moraiya, Changodar, Ahmedabad',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Industrial Sheds in Moraiya, Changodar, Ahmedabad | Metro Industrial Park',
+    title: 'Metro Industrial Park | Industrial Sheds in Moraiya, Changodar',
     description:
-      'Premium industrial sheds and warehouses for sale and lease. Units 4,000–50,000 sq.ft. 90-day possession.',
-    images: ['/images/metro-industrial-park-site-map-moraiya-gujarat.jpg'],
+      '63 industrial sheds and warehouses from 4,000–50,000 sq.ft. 90-day possession. Near NH 947.',
+    images: ['/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg'],
   },
-  alternates: {
-    canonical: 'https://www.metrodevelopers.co.in/',
-  },
+  // Geo meta tags for local SEO — helps Google anchor the entity to Moraiya, Changodar
   other: {
     'geo.region': 'IN-GJ',
     'geo.placename': 'Moraiya, Changodar, Ahmedabad, Gujarat',
@@ -103,39 +60,21 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f4f5f7' },
-    { media: '(prefers-color-scheme: dark)',  color: '#0b0b0d' },
-  ],
+  themeColor: '#1a3a4a',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en-IN"
-      suppressHydrationWarning
-      className={`${anton.variable} ${bebasNeue.variable} ${instrumentSerif.variable} ${plusJakarta.variable}`}
-    >
+    <html lang="en-IN">
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
-        <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <link rel="me" href="https://www.instagram.com/metro.industrialpark/" type="text/html" />
-        {/* Theme init script — runs before paint to prevent flash */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('metro-theme');var t=s==='light'||s==='dark'?s:window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();`,
-          }}
-        />
+        {/* Canonical domain signal — always www */}
+        <link rel="canonical" href={SITE_BASE_URL} />
+        {/* Favicons */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
