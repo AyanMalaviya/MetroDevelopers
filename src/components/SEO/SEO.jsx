@@ -1,221 +1,36 @@
-import { useEffect } from 'react';
+'use client';
+// src/components/SEO/SEO.jsx
+//
+// In Next.js App Router, page-level <title>, <meta>, <link rel="canonical">,
+// og:*, twitter:* and robots tags are ALL handled by the `metadata` /
+// `generateMetadata()` exports in each src/app/*/page.jsx file — those run
+// on the SERVER and are injected into the raw HTML before any JS executes.
+//
+// This component now has ONE remaining job: inject JSON-LD <script> tags
+// for structured data (schemas) that can't be expressed via the metadata API.
+// It does this safely using next/script so Next.js manages deduplication.
 
-import { SITE_BASE_URL } from '../../data/seoRoutes';
+import Script from 'next/script';
 
-const SITE_NAME = 'Metro Industrial Park';
-const INSTAGRAM_URL = 'https://www.instagram.com/metro.industrialpark/';
-const GEO_REGION = 'IN-GJ';
-const GEO_PLACENAME = 'Moraiya, Changodar, Ahmedabad, Gujarat';
-const GEO_POSITION = '22.914141879249897;72.41748307531053';
-const GEO_ICBM = '22.914141879249897, 72.41748307531053';
+const SEO = ({ structuredData }) => {
+  if (!structuredData) return null;
 
-const resolveUrl = (value, baseUrl) => {
-  if (!value) {
-    return baseUrl;
-  }
+  const schemas = Array.isArray(structuredData) ? structuredData : [structuredData];
+  const validSchemas = schemas.filter(Boolean);
 
-  try {
-    return new URL(value, baseUrl).toString();
-  } catch {
-    return baseUrl;
-  }
-};
-
-const snapshotAttributes = (tag) =>
-  Array.from(tag.attributes, (attribute) => [attribute.name, attribute.value]);
-
-const restoreAttributes = (tag, attributes) => {
-  Array.from(tag.attributes).forEach((attribute) => tag.removeAttribute(attribute.name));
-  attributes.forEach(([name, value]) => tag.setAttribute(name, value));
-};
-
-const SEO = ({
-  title,
-  description,
-  keywords,
-  canonical,
-  ogImage = '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-  ogImageAlt,
-  alt,
-  structuredData,
-  noindex = false,
-  // Optional per-page overrides for geo (default to park coords)
-  geoRegion = GEO_REGION,
-  geoPlacename = GEO_PLACENAME,
-  geoPosition = GEO_POSITION,
-  geoIcbm = GEO_ICBM,
-}) => {
-  const siteUrl = SITE_BASE_URL;
-  const fullCanonical = canonical ? resolveUrl(canonical, siteUrl) : siteUrl;
-  const fullOgImage = resolveUrl(ogImage, siteUrl);
-  const resolvedOgImageAlt = ogImageAlt || alt || title || SITE_NAME;
-  const robotsContent = noindex
-    ? 'noindex, nofollow'
-    : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
-
-  useEffect(() => {
-    if (typeof document === 'undefined') {
-      return undefined;
-    }
-
-    const head = document.head;
-    const previousTitle = document.title;
-    const cleanupTasks = [];
-
-    head.querySelectorAll('[data-seo-managed="true"]').forEach((node) => node.remove());
-
-    document.title = title || SITE_NAME;
-
-    const upsertMeta = ({ name, property, content }) => {
-      const selector = name
-        ? `meta[name="${name}"]`
-        : `meta[property="${property}"]`;
-      let tag = head.querySelector(selector);
-      const existed = Boolean(tag);
-      const originalAttributes = existed ? snapshotAttributes(tag) : [];
-      const originalTextContent = existed ? tag.textContent : '';
-
-      if (!tag) {
-        tag = document.createElement('meta');
-        tag.setAttribute('data-seo-managed', 'true');
-        head.appendChild(tag);
-      }
-
-      if (name) {
-        tag.setAttribute('name', name);
-        tag.removeAttribute('property');
-      } else {
-        tag.setAttribute('property', property);
-        tag.removeAttribute('name');
-      }
-
-      if (content == null || content === '') {
-        tag.removeAttribute('content');
-      } else {
-        tag.setAttribute('content', String(content));
-      }
-
-      cleanupTasks.push(() => {
-        if (!tag.isConnected) {
-          return;
-        }
-
-        if (!existed) {
-          tag.remove();
-          return;
-        }
-
-        restoreAttributes(tag, originalAttributes);
-        tag.textContent = originalTextContent ?? '';
-      });
-    };
-
-    const upsertLink = (rel, href, extra = {}) => {
-      const selector = `link[rel="${rel}"]`;
-      let tag = head.querySelector(selector);
-      const existed = Boolean(tag);
-      const originalAttributes = existed ? snapshotAttributes(tag) : [];
-      const originalTextContent = existed ? tag.textContent : '';
-
-      if (!tag) {
-        tag = document.createElement('link');
-        tag.setAttribute('data-seo-managed', 'true');
-        head.appendChild(tag);
-      }
-
-      tag.setAttribute('rel', rel);
-      tag.setAttribute('href', href);
-      Object.entries(extra).forEach(([k, v]) => tag.setAttribute(k, v));
-
-      cleanupTasks.push(() => {
-        if (!tag.isConnected) {
-          return;
-        }
-
-        if (!existed) {
-          tag.remove();
-          return;
-        }
-
-        restoreAttributes(tag, originalAttributes);
-        tag.textContent = originalTextContent ?? '';
-      });
-    };
-
-    const syncStructuredData = (schemas) => {
-      const items = Array.isArray(schemas) ? schemas : [schemas];
-      const validSchemas = items.filter(Boolean);
-
-      validSchemas.forEach((schema) => {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
-        script.setAttribute('data-seo-managed', 'true');
-        script.textContent = JSON.stringify(schema);
-        head.appendChild(script);
-      });
-
-      cleanupTasks.push(() => {
-        head.querySelectorAll('script[data-seo-managed="true"]').forEach((node) => node.remove());
-      });
-    };
-
-    // ── Core meta ──────────────────────────────────────────────────────────────
-    upsertMeta({ name: 'description', content: description });
-
-    if (keywords) {
-      upsertMeta({ name: 'keywords', content: keywords });
-    }
-
-    upsertMeta({ name: 'robots', content: robotsContent });
-    upsertLink('canonical', fullCanonical);
-
-    // ── Geo meta — critical for local Google rankings ──────────────────────────
-    upsertMeta({ name: 'geo.region',    content: geoRegion    });
-    upsertMeta({ name: 'geo.placename', content: geoPlacename });
-    upsertMeta({ name: 'geo.position',  content: geoPosition  });
-    upsertMeta({ name: 'ICBM',          content: geoIcbm      });
-
-    // ── Open Graph ─────────────────────────────────────────────────────────────
-    upsertMeta({ property: 'og:site_name',   content: SITE_NAME      });
-    upsertMeta({ property: 'og:locale',      content: 'en_IN'        });
-    upsertMeta({ property: 'og:type',        content: 'website'      });
-    upsertMeta({ property: 'og:url',         content: fullCanonical  });
-    upsertMeta({ property: 'og:title',       content: title          });
-    upsertMeta({ property: 'og:description', content: description    });
-    upsertMeta({ property: 'og:image',       content: fullOgImage    });
-    upsertMeta({ property: 'og:image:width',  content: '1200'        });
-    upsertMeta({ property: 'og:image:height', content: '630'         });
-    upsertMeta({ property: 'og:image:type',   content: 'image/jpeg'  });
-    upsertMeta({ property: 'og:image:alt',    content: resolvedOgImageAlt });
-
-    // ── Instagram / social profile link ───────────────────────────────────────
-    // og:see_also signals related social profiles to crawlers
-    upsertMeta({ property: 'og:see_also', content: INSTAGRAM_URL });
-    upsertLink('me', INSTAGRAM_URL, { type: 'text/html' });
-
-    // ── Twitter / X Card ───────────────────────────────────────────────────────
-    upsertMeta({ name: 'twitter:card',        content: 'summary_large_image' });
-    upsertMeta({ name: 'twitter:site',        content: '@metroindustrial'     });
-    upsertMeta({ name: 'twitter:url',         content: fullCanonical         });
-    upsertMeta({ name: 'twitter:title',       content: title                 });
-    upsertMeta({ name: 'twitter:description', content: description           });
-    upsertMeta({ name: 'twitter:image',       content: fullOgImage           });
-    upsertMeta({ name: 'twitter:image:alt',   content: resolvedOgImageAlt    });
-
-    if (structuredData) {
-      syncStructuredData(structuredData);
-    }
-
-    return () => {
-      document.title = previousTitle;
-      cleanupTasks.reverse().forEach((cleanup) => cleanup());
-    };
-  }, [
-    title, description, keywords, fullCanonical, fullOgImage, resolvedOgImageAlt,
-    robotsContent, structuredData, geoRegion, geoPlacename, geoPosition, geoIcbm,
-  ]);
-
-  return null;
+  return (
+    <>
+      {validSchemas.map((schema, i) => (
+        <Script
+          key={i}
+          id={`schema-${i}-${schema['@type'] ?? 'unknown'}`}
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+    </>
+  );
 };
 
 export default SEO;

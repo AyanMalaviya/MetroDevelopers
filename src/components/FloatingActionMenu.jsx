@@ -1,9 +1,8 @@
-// FloatingActionMenu.jsx
-// The sparkle FAB is replaced by the chatbot toggle button.
-// The 5 quick-action items moved to the Navbar settings dropdown.
-// This component is kept for the side "Explore More" pill only.
+'use client';
+// src/components/FloatingActionMenu.jsx
+// Replaces react-router-dom useNavigate with next/navigation useRouter.
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Factory, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -12,18 +11,16 @@ const FloatingActionMenu = () => {
   const [isExploreCollapsed, setIsExploreCollapsed] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const navigateToMetroPark = () => {
-    navigate('/metro-industrial-park');
+    router.push('/metro-industrial-park');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    /* ─── Explore Side Button ─── */
     <div className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] flex flex-col items-end gap-1">
 
-      {/* X dismiss — only when expanded */}
       <AnimatePresence>
         {!isExploreCollapsed && (
           <motion.button

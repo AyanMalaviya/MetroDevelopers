@@ -1,3 +1,5 @@
+'use client';
+// src/components/Review.jsx
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, X } from 'lucide-react';
@@ -31,9 +33,7 @@ const ReviewPrompt = () => {
     setShowReviewPrompt(false);
   };
 
-  if (promptDismissed) {
-    return null;
-  }
+  if (promptDismissed) return null;
 
   return (
     <AnimatePresence>
@@ -59,7 +59,6 @@ const ReviewPrompt = () => {
               }`}
               aria-hidden="true"
             />
-
             <button
               onClick={dismissPrompt}
               aria-label="Close review prompt"
@@ -69,7 +68,6 @@ const ReviewPrompt = () => {
             >
               <X size={18} />
             </button>
-
             <div className="relative z-10 flex items-center gap-3 mb-3 pr-4">
               <div className="w-10 h-10 bg-brand-red rounded-full flex items-center justify-center flex-shrink-0">
                 <Star size={20} className="text-white fill-white" />
@@ -83,7 +81,6 @@ const ReviewPrompt = () => {
                 </p>
               </div>
             </div>
-
             <a
               href="https://g.page/r/CfbFhZSjMaH1EBI/review"
               target="_blank"
