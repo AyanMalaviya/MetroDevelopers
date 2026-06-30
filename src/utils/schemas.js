@@ -1,59 +1,84 @@
 // src/utils/schemas.js
 
 const SITE_URL = 'https://www.metrodevelopers.co.in';
-const MAPS_URL = 'https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad';
+const MAPS_URL = 'https://maps.google.com/?cid=17699482589183985142';
 
-const postalAddress = {
+export const postalAddress = {
   '@type': 'PostalAddress',
-  streetAddress: 'Opp. Suvas Ind Estate, b/h Siya Logistics Park',
+  streetAddress: 'Behind Siya Industrial Park, Opp. Suvas Industrial Park',
   addressLocality: 'Moraiya',
   addressRegion: 'Gujarat',
   postalCode: '382213',
   addressCountry: 'IN',
 };
 
-const geoCoordinates = {
+export const geoCoordinates = {
   '@type': 'GeoCoordinates',
   latitude: '22.914141879249897',
   longitude: '72.41748307531053',
 };
 
-const contactPoints = [
+// ─── Opening hours — Mon-Sun 11:00–19:00 ──────────────────────────────────────
+const openingHoursSpec = {
+  '@type': 'OpeningHoursSpecification',
+  dayOfWeek: [
+    'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+  ],
+  opens: '11:00',
+  closes: '19:00',
+};
+
+export const contactPoints = [
   {
     '@type': 'ContactPoint',
-    contactType: 'director',
+    contactType: 'sales',
     telephone: '+919824235642',
     email: 'metrodevelopers26@gmail.com',
     availableLanguage: ['English', 'Hindi', 'Gujarati'],
-    areaServed: 'IN',
-  },
-  {
-    '@type': 'ContactPoint',
-    contactType: 'director',
-    telephone: '+919624965017',
-    availableLanguage: ['English', 'Hindi', 'Gujarati'],
-    areaServed: 'IN',
-  },
-  {
-    '@type': 'ContactPoint',
-    contactType: 'customer service',
-    telephone: '+916356776767',
-    availableLanguage: ['English', 'Hindi', 'Gujarati'],
+    hoursAvailable: openingHoursSpec,
     areaServed: 'IN',
   },
   {
     '@type': 'ContactPoint',
     contactType: 'sales',
     telephone: '+916356766767',
+    email: 'metroenterprise1985@gmail.com',
     availableLanguage: ['English', 'Hindi', 'Gujarati'],
+    hoursAvailable: openingHoursSpec,
     areaServed: 'IN',
   },
 ];
 
+// ─── Person schemas for directors (E-E-A-T trust signal) ─────────────────────
+export const directorSchemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#amir-malaviya`,
+    name: 'Amir Malaviya',
+    jobTitle: 'Director',
+    worksFor: { '@id': `${SITE_URL}/#metro-enterprise` },
+    telephone: '+919824235642',
+    email: 'metrodevelopers26@gmail.com',
+    url: `${SITE_URL}/contact`,
+    image: `${SITE_URL}/images/amir.png`,
+    sameAs: ['https://www.instagram.com/metro.industrialpark/'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#nazim-kazani`,
+    name: 'Nazim Kazani',
+    jobTitle: 'Director',
+    worksFor: { '@id': `${SITE_URL}/#metro-enterprise` },
+    telephone: '+916356766767',
+    email: 'metroenterprise1985@gmail.com',
+    url: `${SITE_URL}/contact`,
+    image: `${SITE_URL}/images/nazim.png`,
+  },
+];
+
 // ─── Website Schema ────────────────────────────────────────────────────────────
-// NOTE: potentialAction SearchAction removed — no live search endpoint exists at
-// /?s=... so the previous SearchAction was generating Search Console warnings and
-// creating a broken trust signal. Re-add only if a real search feature is built.
 export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -94,31 +119,24 @@ export const propertySchema = {
     { '@type': 'Place', name: 'Bavla' },
   ],
   contactPoint: contactPoints,
-  openingHours: 'Mo-Su 10:00-19:00',
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: [
-      'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-    ],
-    opens: '10:00',
-    closes: '19:00',
-  },
+  employee: [
+    { '@id': `${SITE_URL}/#amir-malaviya` },
+    { '@id': `${SITE_URL}/#nazim-kazani` },
+  ],
+  openingHours: 'Mo-Su 11:00-19:00',
+  openingHoursSpecification: openingHoursSpec,
   priceRange: 'Contact for pricing',
   currenciesAccepted: 'INR',
   paymentAccepted: 'Cash, Bank Transfer, Cheque',
   numberOfEmployees: { '@type': 'QuantitativeValue', value: 10 },
   foundingDate: '2020',
   slogan: 'Premium Industrial Spaces in Moraiya, Changodar, Ahmedabad',
-  // ✅ Fixed: real Google Business Profile CID (extracted from Maps embed in ContactPage)
-  // ✅ Fixed: removed placeholder 'xxxxxxxx' — broken link severed the GBP entity connection
   sameAs: [
     'https://www.instagram.com/metro.industrialpark/',
     'https://www.facebook.com/metroindustrialpark1',
-    'https://maps.google.com/?cid=17699482589183985142',
+    MAPS_URL,
     'https://g.page/r/CfbFhZSjMaH1EBI',
   ],
-  // ✅ Enabled: 5/5 rating from Google Maps (verified via ContactPage review link)
-  // Update reviewCount to your actual number of Google reviews
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '5',
@@ -233,7 +251,7 @@ export const faqSchema = {
       name: 'Where is Metro Industrial Park located?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad, Gujarat - opposite Suvas Industrial Estate, behind Siya Logistics Park, near NH 47 (Sarkhej Bavla Highway).',
+        text: 'Metro Industrial Park is located in Moraiya, Changodar, Ahmedabad, Gujarat — behind Siya Industrial Park, opposite Suvas Industrial Park, near NH 47 (Sarkhej Bavla Highway).',
       },
     },
     {
@@ -330,7 +348,7 @@ export const imageObjectSchema = {
   ],
 };
 
-// ─── Social Presence Schema (Instagram signal) ────────────────────────────────
+// ─── Social Presence Schema ───────────────────────────────────────────────────
 export const socialProfileSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -348,7 +366,7 @@ export const socialProfileSchema = {
   sameAs: [
     'https://www.instagram.com/metro.industrialpark/',
     'https://www.facebook.com/metroindustrialpark1',
-    'https://maps.google.com/?cid=17699482589183985142',
+    MAPS_URL,
     'https://g.page/r/CfbFhZSjMaH1EBI',
   ],
 };
@@ -366,7 +384,6 @@ export const createBreadcrumbSchema = (crumbs) => ({
 });
 
 // ─── Helper: LocationPage Schema ──────────────────────────────────────────────
-// ✅ Added datePublished + dateModified — helps Google evaluate content freshness
 export const createLocationPageSchema = ({ pageTitle, pageDescription, path, locationName, focusKeyword }) => ({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
@@ -393,7 +410,7 @@ export const createLocationPageSchema = ({ pageTitle, pageDescription, path, loc
   },
 });
 
-// ─── Helper: Article / BlogPosting Schema (used by InsightGuidePage) ──────────
+// ─── Helper: Article / BlogPosting Schema ────────────────────────────────────
 export const createArticleSchema = ({ headline, description, path, keywords = [] }) => ({
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -404,9 +421,7 @@ export const createArticleSchema = ({ headline, description, path, keywords = []
   inLanguage: 'en-IN',
   keywords: Array.isArray(keywords) ? keywords.join(', ') : keywords,
   isPartOf: { '@id': `${SITE_URL}/#website` },
-  publisher: {
-    '@id': `${SITE_URL}/#metro-enterprise`,
-  },
+  publisher: { '@id': `${SITE_URL}/#metro-enterprise` },
   author: {
     '@type': 'Organization',
     '@id': `${SITE_URL}/#metro-enterprise`,
