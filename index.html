@@ -2,6 +2,9 @@
 <html lang="en-IN">
 <head>
 
+  <!-- ═══════════════════════════════════════════════════════════════════
+    THEME INIT — must be first to prevent flash of wrong theme
+  ════════════════════════════════════════════════════════════════════ -->
   <script>
     (function () {
       try {
@@ -10,16 +13,16 @@
         var theme = (savedTheme === 'light' || savedTheme === 'dark')
           ? savedTheme
           : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
         var root = document.documentElement;
         root.setAttribute('data-theme', theme);
         root.classList.toggle('dark', theme === 'dark');
-      } catch (err) {
-        // Ignore initialization errors and continue with default theme.
-      }
+      } catch (err) {}
     })();
   </script>
 
+  <!-- ═══════════════════════════════════════════════════════════════════
+    GOOGLE ANALYTICS
+  ════════════════════════════════════════════════════════════════════ -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7ELQFH95QF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -30,46 +33,117 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-language" content="en-IN" />
 
-  <!-- Primary SEO -->
-  <title>Industrial Sheds in Moraiya, Changodar, Ahmedabad | Metro Industrial Park</title>
-  <meta name="description" content="Metro Industrial Park offers premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. High rental yields — ideal industrial property investment in Gujarat. 60ft roads, CCTV, 24/7 water. 90-day possession. Call +91 98242 35642." />
-  <meta name="keywords" content="industrial sheds moraiya, industrial park changodar, warehouse for rent ahmedabad, warehouse for sale ahmedabad, industrial shed for rent changodar, industrial shed for sale changodar, industrial shed for rent moraiya, industrial shed for sale moraiya, godown for rent ahmedabad, godown for rent changodar, factory shed lease changodar, GIDC shed ahmedabad, industrial property investment gujarat, high return investment gujarat, industrial land changodar moraiya, industrial sheds near sarkhej bavla highway, industrial park near sanand, metro industrial park" />
+  <!-- ═══════════════════════════════════════════════════════════════════
+    PRIMARY SEO — FALLBACK DEFAULTS ONLY
+    These are the values Googlebot sees on the root / route.
+    Every other route gets its own <title> + <meta> injected by
+    react-helmet-async via SeoHead.jsx — those tags override these.
+    DO NOT put route-specific titles or og:url here.
+  ════════════════════════════════════════════════════════════════════ -->
+  <title>Metro Industrial Park | Industrial Sheds &amp; Warehouses in Moraiya, Changodar, Ahmedabad</title>
+  <meta name="description" content="Metro Industrial Park offers premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. High rental yields. 60ft roads, CCTV, 24/7 water. 90-day possession. Call +91 98242 35642." />
+  <meta name="keywords" content="industrial sheds moraiya, industrial park changodar, warehouse for rent ahmedabad, warehouse for sale ahmedabad, industrial shed for rent changodar, industrial shed for sale changodar, godown for rent ahmedabad, GIDC shed ahmedabad, industrial property investment gujarat, metro industrial park" />
   <meta name="author" content="Metro Industrial Park" />
   <meta name="application-name" content="Metro Industrial Park" />
-  <meta property="og:site_name" content="Metro Industrial Park" />
-  <meta http-equiv="content-language" content="en-IN" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
-  <!-- Geo targeting — boosts local pack rankings for Moraiya/Changodar/Ahmedabad -->
+  <!-- Canonical fallback for the homepage -->
+  <link rel="canonical" href="https://www.metrodevelopers.co.in/" />
+
+  <!-- Geo targeting — boosts local pack rankings -->
   <meta name="geo.region"    content="IN-GJ" />
   <meta name="geo.placename" content="Moraiya, Changodar, Ahmedabad, Gujarat" />
   <meta name="geo.position"  content="22.914141879249897;72.41748307531053" />
   <meta name="ICBM"          content="22.914141879249897, 72.41748307531053" />
 
-  <!-- Instagram profile link signal -->
+  <!-- Instagram profile signal -->
   <link rel="me" href="https://www.instagram.com/metro.industrialpark/" type="text/html" />
 
-  <!-- ✅ Static Open Graph fallback — visible to Googlebot before React hydrates.
-       Without these, crawlers that don't execute JS see no OG tags at all.
-       React SEO component will override these dynamically on each page route. -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:url"         content="https://www.metrodevelopers.co.in/" />
-  <meta property="og:title"       content="Industrial Sheds in Moraiya, Changodar, Ahmedabad | Metro Industrial Park" />
-  <meta property="og:description" content="Metro Industrial Park offers premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. 90-day possession. Call +91 98242 35642." />
-  <meta property="og:image"       content="https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg" />
+  <!-- ═══════════════════════════════════════════════════════════════════
+    OPEN GRAPH — FALLBACK (homepage values)
+    react-helmet-async overrides og:title, og:description, og:url
+    per route. og:image + og:type are safe to keep static here as
+    a fallback for routes that don't set their own.
+  ════════════════════════════════════════════════════════════════════ -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:locale"       content="en_IN" />
+  <meta property="og:site_name"    content="Metro Industrial Park" />
+  <meta property="og:url"          content="https://www.metrodevelopers.co.in/" />
+  <meta property="og:title"        content="Metro Industrial Park | Industrial Sheds &amp; Warehouses in Moraiya, Changodar, Ahmedabad" />
+  <meta property="og:description"  content="Premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft. 60ft roads, CCTV, 24/7 water. 90-day possession." />
+  <meta property="og:image"        content="https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt"    content="Metro Industrial Park — Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad" />
-  <meta property="og:locale"      content="en_IN" />
+  <meta property="og:image:type"   content="image/jpeg" />
 
-  <!-- ✅ Static Twitter/X Card fallback -->
+  <!-- ═══════════════════════════════════════════════════════════════════
+    TWITTER CARD — FALLBACK
+    Same pattern: react-helmet-async overrides title + description.
+    card type and image are safe as static fallback.
+  ════════════════════════════════════════════════════════════════════ -->
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Industrial Sheds in Moraiya, Changodar, Ahmedabad | Metro Industrial Park" />
-  <meta name="twitter:description" content="Premium industrial sheds and warehouses for sale and lease. Units 4,000–50,000 sq.ft. 90-day possession." />
+  <meta name="twitter:site"        content="@MetroIndustrialPark" />
+  <meta name="twitter:title"       content="Metro Industrial Park | Industrial Sheds &amp; Warehouses in Moraiya, Ahmedabad" />
+  <meta name="twitter:description" content="Premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad. 4,000–50,000 sq.ft. 90-day possession." />
   <meta name="twitter:image"       content="https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg" />
+  <meta name="twitter:image:alt"   content="Metro Industrial Park — Industrial Sheds and Warehouses in Moraiya, Changodar, Ahmedabad" />
 
-  <!-- Favicons -->
+  <!-- ═══════════════════════════════════════════════════════════════════
+    JSON-LD — HOMEPAGE STRUCTURED DATA (Organization + LocalBusiness)
+    react-helmet-async adds page-specific schemas (BreadcrumbList,
+    RealEstateListing, FAQPage, etc.) per route. This block provides
+    the baseline Organization/LocalBusiness signal for all routes.
+  ════════════════════════════════════════════════════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["RealEstateAgent", "LocalBusiness"],
+    "@id": "https://www.metrodevelopers.co.in/#business",
+    "name": "Metro Industrial Park",
+    "description": "Premium industrial sheds and warehouses for sale and lease in Moraiya, Changodar, Ahmedabad, Gujarat.",
+    "url": "https://www.metrodevelopers.co.in/",
+    "logo": "https://www.metrodevelopers.co.in/icons/icon-192x192.png",
+    "image": "https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg",
+    "telephone": "+919824235642",
+    "priceRange": "₹₹₹",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Moraiya, Changodar",
+      "addressLocality": "Ahmedabad",
+      "addressRegion": "Gujarat",
+      "postalCode": "382213",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 22.914141879249897,
+      "longitude": 72.41748307531053
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+        "opens": "09:00",
+        "closes": "19:00"
+      }
+    ],
+    "areaServed": {
+      "@type": "City",
+      "name": "Ahmedabad"
+    },
+    "sameAs": [
+      "https://www.instagram.com/metro.industrialpark/"
+    ]
+  }
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+    FAVICONS
+  ════════════════════════════════════════════════════════════════════ -->
   <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="/icons/favicon.ico" sizes="any" />
   <link rel="icon" href="/icons/favicon-32x32.png" type="image/png" sizes="32x32" />
@@ -77,7 +151,9 @@
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
   <link rel="manifest" href="/manifest.webmanifest" />
 
-  <!-- PWA / Theme -->
+  <!-- ═══════════════════════════════════════════════════════════════════
+    PWA / THEME COLOR
+  ════════════════════════════════════════════════════════════════════ -->
   <meta name="theme-color"                           content="#0b0b0d" />
   <meta name="msapplication-TileColor"               content="#0b0b0d" />
   <meta name="msapplication-TileImage"               content="/icons/icon-144x144.png" />
@@ -90,20 +166,22 @@
     (function () {
       try {
         var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-        var browserThemeColor = theme === 'dark' ? '#0b0b0d' : '#f4f5f7';
-        var themeColorMeta = document.querySelector("meta[name='theme-color']");
-        var tileColorMeta = document.querySelector("meta[name='msapplication-TileColor']");
-        if (themeColorMeta) themeColorMeta.setAttribute('content', browserThemeColor);
-        if (tileColorMeta) tileColorMeta.setAttribute('content', browserThemeColor);
-      } catch (err) {
-        // Ignore metadata update errors.
-      }
+        var color = theme === 'dark' ? '#0b0b0d' : '#f4f5f7';
+        var tc = document.querySelector("meta[name='theme-color']");
+        var mc = document.querySelector("meta[name='msapplication-TileColor']");
+        if (tc) tc.setAttribute('content', color);
+        if (mc) mc.setAttribute('content', color);
+      } catch (err) {}
     })();
   </script>
 
-  <!-- Fonts -->
+  <!-- ═══════════════════════════════════════════════════════════════════
+    FONTS
+  ════════════════════════════════════════════════════════════════════ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Preload the primary display font (Anton) to avoid FOUT on hero heading -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bungee+Outline&family=Instrument+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bungee+Outline&family=Instrument+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
 
   <!-- Preload hero image -->
@@ -125,7 +203,6 @@
     html[data-theme='light'] #splash {
       background: #f4f5f7;
     }
-
     #splash.hide {
       opacity: 0;
       visibility: hidden;
@@ -157,9 +234,7 @@
       display: grid;
       place-items: center;
     }
-    #splash-logo-glow {
-      display: none;
-    }
+    #splash-logo-glow { display: none; }
     #splash img {
       width: 60px;
       height: 60px;
@@ -190,9 +265,7 @@
       text-transform: uppercase;
       text-align: center;
     }
-    html[data-theme='light'] #splash-title {
-      color: #1e293b;
-    }
+    html[data-theme='light'] #splash-title { color: #1e293b; }
     #splash-subtitle {
       font-family: system-ui, -apple-system, sans-serif;
       font-size: 11px;
@@ -203,9 +276,6 @@
       text-align: center;
       margin-top: -3px;
     }
-    html[data-theme='light'] #splash-subtitle {
-      color: #64748b;
-    }
     #splash-bar-track {
       width: min(220px, 72vw);
       height: 3px;
@@ -213,9 +283,7 @@
       border-radius: 99px;
       overflow: hidden;
     }
-    html[data-theme='light'] #splash-bar-track {
-      background: rgba(71, 85, 105, 0.15);
-    }
+    html[data-theme='light'] #splash-bar-track { background: rgba(71, 85, 105, 0.15); }
     #splash-bar-fill {
       height: 100%;
       width: 0%;
@@ -223,9 +291,7 @@
       border-radius: 99px;
       animation: splashLoad 2.2s cubic-bezier(0.4,0,0.2,1) forwards;
     }
-    html[data-theme='light'] #splash-bar-fill {
-      background: rgba(71, 85, 105, 0.55);
-    }
+    html[data-theme='light'] #splash-bar-fill { background: rgba(71, 85, 105, 0.55); }
     #splash-status {
       font-family: system-ui, -apple-system, sans-serif;
       font-size: 11px;
@@ -242,9 +308,7 @@
       vertical-align: bottom;
       animation: splashDots 1.2s steps(4, end) infinite;
     }
-    html[data-theme='light'] #splash-status {
-      color: #64748b;
-    }
+    html[data-theme='light'] #splash-status { color: #64748b; }
     @keyframes splashPop {
       from { opacity: 0; transform: scale(0.78); }
       to   { opacity: 1; transform: scale(1);    }
@@ -261,13 +325,11 @@
       100% { width: 100%; }
     }
     @keyframes splashDots {
-      0%   { width: 0;      }
-      100% { width: 1.4em;  }
+      0%   { width: 0;     }
+      100% { width: 1.4em; }
     }
     @media (prefers-reduced-motion: reduce) {
-      #splash-ring,
-      #splash-bar-fill,
-      #splash-status::after {
+      #splash-ring, #splash-bar-fill, #splash-status::after {
         animation: none !important;
       }
     }
@@ -299,28 +361,26 @@
   <script>
     (function () {
       var splash = document.getElementById('splash');
-      var root = document.getElementById('root');
+      var root   = document.getElementById('root');
       if (!splash || !root) return;
 
-      var startedAt = Date.now();
+      var startedAt   = Date.now();
       var minVisibleMs = 900;
       var maxVisibleMs = 5000;
-      var isRemoved = false;
+      var isRemoved   = false;
 
       function removeSplash() {
         if (isRemoved) return;
         isRemoved = true;
         splash.classList.add('hide');
         setTimeout(function () {
-          if (splash && splash.parentNode) {
-            splash.parentNode.removeChild(splash);
-          }
+          if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
         }, 500);
       }
 
       function removeWhenMinimumShown() {
         var elapsed = Date.now() - startedAt;
-        var delay = Math.max(0, minVisibleMs - elapsed);
+        var delay   = Math.max(0, minVisibleMs - elapsed);
         setTimeout(removeSplash, delay);
       }
 
