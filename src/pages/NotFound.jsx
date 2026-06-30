@@ -164,7 +164,7 @@ export default function NotFound() {
           }`}
         >
           Looking for industrial sheds in Changodar or Moraiya near the
-          Sarkhej–Bavla Highway (NH 947), Ahmedabad?{' '}
+          Sarkhej–Bavla Highway (NH 47), Ahmedabad?{' '}
           <Link href="/metro-industrial-park" className="underline hover:text-brand-red transition-colors">
             Explore Metro Industrial Park
           </Link>
