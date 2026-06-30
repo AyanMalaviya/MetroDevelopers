@@ -8,7 +8,7 @@ import {
   TrendingDown, Award, Leaf, Quote as QuoteIcon, Shield,
 } from 'lucide-react';
 import { FaRoad, FaTrash, FaWhatsapp } from 'react-icons/fa';
-import SEO from '../components/SEO/SEO.jsx';
+import SeoHead from '../seo/SeoHead';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
 import {
@@ -17,6 +17,7 @@ import {
   imageObjectSchema,
   websiteSchema,
   realEstateListingSchema,
+  socialProfileSchema,
 } from '../utils/schemas.js';
 
 
@@ -179,7 +180,7 @@ const heroQuotes = [
 
 
 /* ════════════════════════════════════════════════
-   QUOTE CAROUSEL  (identical to original)
+   QUOTE CAROUSEL
 ════════════════════════════════════════════════ */
 const QuoteCarousel = ({ quotes, isDark }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -244,12 +245,14 @@ const QuoteCarousel = ({ quotes, isDark }) => {
             isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white'
                    : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
           }`}>
-          <ArrowRight size={14} className="rotate-180" />
+          <ArrowRight size={14} className="rotate-180" aria-hidden="true" />
         </button>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5" role="tablist" aria-label="Quote navigation">
           {quotes.map((quote, i) => (
             <button key={`${quote.author}-${i}`} type="button" onClick={() => setActiveIndex(i)}
-              aria-label={`Go to quote ${i + 1}`}
+              role="tab"
+              aria-selected={i === activeIndex}
+              aria-label={`Quote by ${quote.author}`}
               className={`rounded-full transition-all ${
                 i === activeIndex ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`
               }`}
@@ -261,7 +264,7 @@ const QuoteCarousel = ({ quotes, isDark }) => {
             isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white'
                    : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
           }`}>
-          <ArrowRight size={14} />
+          <ArrowRight size={14} aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -270,7 +273,7 @@ const QuoteCarousel = ({ quotes, isDark }) => {
 
 
 /* ════════════════════════════════════════════════
-   FEATURE CARD  (identical to original)
+   FEATURE CARD
 ════════════════════════════════════════════════ */
 const FeatureRow = ({ feat, index, isDark }) => {
   const rowRef = useRef(null);
@@ -292,7 +295,7 @@ const FeatureRow = ({ feat, index, isDark }) => {
         <div className={`p-[2px] rounded-2xl bg-gradient-to-br ${color.gradient}`}>
           <div className={`rounded-[calc(1rem-2px)] overflow-hidden aspect-[16/9] relative ${isDark ? 'bg-black' : 'bg-gray-100'}`}>
             <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} flex items-center justify-center`}>
-              <div className="opacity-[0.12] scale-[3.2] text-white pointer-events-none select-none">{feat.icon}</div>
+              <div className="opacity-[0.12] scale-[3.2] text-white pointer-events-none select-none" aria-hidden="true">{feat.icon}</div>
             </div>
             <img
               src={feat.image}
@@ -306,7 +309,7 @@ const FeatureRow = ({ feat, index, isDark }) => {
             />
           </div>
         </div>
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-3 right-3 z-10" aria-hidden="true">
           <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${color.gradient} text-white font-extrabold text-xs shadow-md font-display`}>
             Feature {String(index + 1).padStart(2, '0')}
           </div>
@@ -314,7 +317,7 @@ const FeatureRow = ({ feat, index, isDark }) => {
       </div>
 
       <div className="flex items-center gap-3 mb-3">
-        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-md`}>
+        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-md`} aria-hidden="true">
           {feat.icon}
         </div>
         <span className={`text-[10px] font-black tracking-[0.18em] uppercase ${color.text}`}>
@@ -328,10 +331,10 @@ const FeatureRow = ({ feat, index, isDark }) => {
       <p className={`text-sm leading-relaxed mb-5 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
         {feat.description}
       </p>
-      <ul className="space-y-2.5">
+      <ul className="space-y-2.5" aria-label={`${feat.title} details`}>
         {feat.details.map((detail, di) => (
           <li key={di} className="flex items-center gap-3">
-            <div className={`w-[18px] h-[18px] rounded-full flex-shrink-0 bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-sm`}>
+            <div className={`w-[18px] h-[18px] rounded-full flex-shrink-0 bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-sm`} aria-hidden="true">
               <svg width="9" height="7" viewBox="0 0 10 8" fill="none">
                 <path d="M1.5 4L3.5 6.5L8.5 1.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -340,7 +343,7 @@ const FeatureRow = ({ feat, index, isDark }) => {
           </li>
         ))}
       </ul>
-      <div className={`h-[3px] w-14 rounded-full bg-gradient-to-r ${color.gradient} mt-5`} />
+      <div className={`h-[3px] w-14 rounded-full bg-gradient-to-r ${color.gradient} mt-5`} aria-hidden="true" />
     </motion.article>
   );
 };
@@ -348,7 +351,6 @@ const FeatureRow = ({ feat, index, isDark }) => {
 
 /* ════════════════════════════════════════════════
    INVESTMENT SECTION
-   BG CHANGE: richer base + blueprint SVG pattern
 ════════════════════════════════════════════════ */
 const InvestmentSection = ({ isDark }) => {
   const sectionRef = useRef(null);
@@ -360,7 +362,6 @@ const InvestmentSection = ({ isDark }) => {
     return () => clearInterval(id);
   }, []);
 
-  /* ── colour tokens (identical to original) ── */
   const headingColor = isDark ? 'text-white'    : 'text-gray-900';
   const bodyColor    = isDark ? 'text-gray-400' : 'text-gray-600';
   const mutedColor   = isDark ? 'text-gray-500' : 'text-gray-500';
@@ -387,22 +388,18 @@ const InvestmentSection = ({ isDark }) => {
   const bottomText   = isDark ? 'text-gray-500' : 'text-gray-600';
 
   return (
-    /* ── BACKGROUND: deep near-black (dark) / rich cream (light) + blueprint pattern ── */
     <section
       ref={sectionRef}
+      aria-label="Industrial investment comparison"
       className="relative py-16 sm:py-36 overflow-hidden"
       style={{ background: isDark ? '#06060f' : '#faf9f6' }}
     >
-      {/* Blueprint grid pattern — replaces the plain CSS grid-texture from original */}
+      <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} aria-hidden="true" />
+      <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/10'}`} aria-hidden="true" />
+      <div className={`absolute top-1/2 left-0 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-violet-600/6' : 'bg-violet-300/8'}`} aria-hidden="true" />
 
-      {/* Radial glow accents (identical to original) */}
-      <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} />
-      <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/10'}`} />
-      <div className={`absolute top-1/2 left-0 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-violet-600/6' : 'bg-violet-300/8'}`} />
-
-      {/* Section separator lines */}
-      <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} />
-      <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} />
+      <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} aria-hidden="true" />
+      <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} aria-hidden="true" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
@@ -412,7 +409,7 @@ const InvestmentSection = ({ isDark }) => {
           className="text-center mb-20"
         >
           <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-5 ${tagBg}`}>
-            <TrendingUp size={11} className="animate-pulse" /> Smarter Investment
+            <TrendingUp size={11} className="animate-pulse" aria-hidden="true" /> Smarter Investment
           </span>
           <h2 className="text-3xl sm:text-6xl font-black leading-tight mb-5 font-display">
             <span className={headingColor}>Industrial Sheds </span>
@@ -432,9 +429,11 @@ const InvestmentSection = ({ isDark }) => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.8 }}
           className={`relative mb-12 rounded-3xl border overflow-hidden p-6 sm:p-12 transition-colors duration-300 ${quoteWrap}`}
+          aria-live="polite"
+          aria-atomic="true"
         >
-          <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/20' : 'via-gray-300/60'}`} />
-          <QuoteIcon className={`absolute top-6 left-6 ${quoteIconCls}`} size={64} />
+          <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/20' : 'via-gray-300/60'}`} aria-hidden="true" />
+          <QuoteIcon className={`absolute top-6 left-6 ${quoteIconCls}`} size={64} aria-hidden="true" />
 
           <div className="relative min-h-[260px] sm:min-h-[280px]">
             {bigQuotes.map((q, i) => (
@@ -461,26 +460,30 @@ const InvestmentSection = ({ isDark }) => {
             ))}
           </div>
 
-          <div className="flex justify-center gap-2 mt-6">
-            {bigQuotes.map((_, i) => (
+          <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Quote navigation">
+            {bigQuotes.map((q, i) => (
               <button
                 key={i}
                 onClick={() => setActiveQ(i)}
+                role="tab"
+                aria-selected={i === activeQ}
+                aria-label={`Quote by ${q.author}`}
                 className={`rounded-full transition-all duration-300 ${
                   i === activeQ ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${dotInactive}`
                 }`}
               />
             ))}
           </div>
-          <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/10' : 'via-gray-200'}`} />
+          <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/10' : 'via-gray-200'}`} aria-hidden="true" />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16" role="list" aria-label="Investment comparison">
           {investments.map((inv, i) => {
             const Icon = inv.icon;
             return (
               <motion.div
                 key={inv.name}
+                role="listitem"
                 initial={{ opacity: 0, y: 36 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.1 + i * 0.1, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
@@ -488,7 +491,7 @@ const InvestmentSection = ({ isDark }) => {
               >
                 {inv.isUs && (
                   <>
-                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-500 via-orange-400 to-amber-400" />
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-500 via-orange-400 to-amber-400" aria-hidden="true" />
                     <div className="absolute -top-3 right-4">
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg">
                         ✦ Best Choice
@@ -498,14 +501,14 @@ const InvestmentSection = ({ isDark }) => {
                 )}
 
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${inv.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-lg`}>
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${inv.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-lg`} aria-hidden="true">
                     <Icon size={18} />
                   </div>
                   <p className={`font-bold text-sm ${cardName} font-body`}>{inv.name}</p>
                 </div>
 
                 <div>
-                  <div className={`text-3xl font-black bg-gradient-to-r ${inv.gradient} bg-clip-text text-transparent font-display`}>
+                  <div className={`text-3xl font-black bg-gradient-to-r ${inv.gradient} bg-clip-text text-transparent font-display`} aria-label={`${inv.name} returns: ${inv.yield}`}>
                     {inv.yield}
                   </div>
                   <div className={`text-[11px] mt-0.5 ${cardYieldN}`}>{inv.yieldNote}</div>
@@ -515,13 +518,13 @@ const InvestmentSection = ({ isDark }) => {
                   {inv.isUs
                     ? inv.pros.map((p, j) => (
                         <li key={j} className="flex items-start gap-2">
-                          <CheckCircle2 size={13} className="text-orange-500 flex-shrink-0 mt-0.5" />
+                          <CheckCircle2 size={13} className="text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span className={`text-[12px] ${cardPros}`}>{p}</span>
                         </li>
                       ))
                     : inv.cons.map((c, j) => (
                         <li key={j} className="flex items-start gap-2">
-                          <TrendingDown size={13} className={`flex-shrink-0 mt-0.5 ${cardConsIcon}`} />
+                          <TrendingDown size={13} className={`flex-shrink-0 mt-0.5 ${cardConsIcon}`} aria-hidden="true" />
                           <span className={`text-[12px] ${cardCons}`}>{c}</span>
                         </li>
                       ))}
@@ -558,8 +561,8 @@ const InvestmentSection = ({ isDark }) => {
                 whileHover={{ y: -6, scale: 1.02 }}
                 className={`group relative rounded-2xl border p-6 overflow-hidden transition-all duration-300 cursor-default shadow-lg ${reasonCard} ${r.glow}`}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${r.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500 rounded-2xl`} />
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center text-white mb-4 shadow-lg`}>
+                <div className={`absolute inset-0 bg-gradient-to-br ${r.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500 rounded-2xl`} aria-hidden="true" />
+                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center text-white mb-4 shadow-lg`} aria-hidden="true">
                   <Icon size={20} />
                 </div>
                 <h4 className={`font-bold text-base mb-2 ${reasonTitle} font-body`}>{r.title}</h4>
@@ -585,9 +588,9 @@ const InvestmentSection = ({ isDark }) => {
               whileTap={{ scale: 0.97 }}
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white font-bold text-sm shadow-xl shadow-red-500/30 hover:shadow-red-500/50 transition-shadow"
             >
-              <Factory size={16} />
+              <Factory size={16} aria-hidden="true" />
               Start Your Investment — Explore Units
-              <ArrowRight size={15} />
+              <ArrowRight size={15} aria-hidden="true" />
             </motion.button>
           </Link>
         </motion.div>
@@ -606,8 +609,8 @@ const HomePage = () => {
 
   const heroImage = isDark ? heroImageDark : heroImageLight;
   const heroAlt   = isDark
-    ? 'Metro Industrial Park entrance at dawn in Moraiya, Ahmedabad'
-    : 'Metro Industrial Park entrance security gate in Moraiya, Ahmedabad';
+    ? 'Metro Industrial Park entrance at dawn — industrial sheds in Moraiya, Ahmedabad'
+    : 'Metro Industrial Park entrance security gate — industrial sheds for sale in Moraiya, Ahmedabad';
 
   const rafRef                                  = useRef(null);
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
@@ -621,7 +624,11 @@ const HomePage = () => {
   const statsInView    = useInView(statsRef,    { once: true, margin: '-80px' });
   const ctaInView      = useInView(ctaRef,      { once: true, margin: '-80px' });
 
-  const whatsappMessage = encodeURIComponent('Hello, I would like to inquire about the industrial sheds.');
+  // Pre-written WhatsApp message — matches the contact page message
+  const whatsappMessage = encodeURIComponent(
+    'Hello, I am interested in industrial sheds at Metro Industrial Park, Moraiya. Please share availability and pricing.'
+  );
+
   const [activeQuote, setActiveQuote] = useState(0);
 
   useEffect(() => {
@@ -652,17 +659,54 @@ const HomePage = () => {
     };
   }, [promptDismissed]);
 
+  // ── Schemas injected into <head> via SeoHead ─────────────────────────────────
+  // Homepage carries the broadest schema set:
+  //   1. WebSite        — site-level entity (@id anchor for all other pages)
+  //   2. propertySchema — LocalBusiness + RealEstateAgent (GBP entity match)
+  //   3. realEstateListingSchema — the actual property offering (rich result)
+  //   4. faqSchema      — FAQ rich result (shows in SERPs as expandable Q&A)
+  //   5. imageObjectSchema — ImageGallery (enables image carousel rich result)
+  //   6. socialProfileSchema — Organization with sameAs social links
+  const homeSchemas = [
+    websiteSchema,
+    propertySchema,
+    realEstateListingSchema,
+    faqSchema,
+    imageObjectSchema,
+    socialProfileSchema,
+  ];
+
   return (
     <>
-      <SEO
-        title="Industrial Sheds for Sale/Lease in Moraiya, Changodar, Ahmedabad at Metro Industrial Park"
-        description="Industrial sheds and warehouses in Moraiya, Changodar, and Ahmedabad. 4,000 to 50,000 sq.ft units with 60 ft roads, CCTV, water supply, and fast possession."
-        keywords="industrial shed moraiya, industrial shed changodar, industrial shed ahmedabad, warehouse for lease moraiya, warehouse for rent changodar, factory shed ahmedabad, industrial property near nh 47, industrial property near sarkhej bavla highway"
+      {/*
+        ── SEO HEAD ────────────────────────────────────────────────────────────
+        Title:       60 chars — primary keyword phrase first, brand at end
+        Description: 155 chars — includes city variants + unique value props
+                     (yield, sq.ft range, location, phone number)
+        canonical:   / (prevents ?utm_* params from splitting link equity)
+        ogImage:     hero dawn shot — distinct from internal page images
+        ogImageAlt:  keyword-rich, matches crawler expectation
+        6 schemas: WebSite + LocalBusiness + RealEstateListing + FAQ
+                   + ImageGallery + Organization/sameAs
+        ─────────────────────────────────────────────────────────────────────── */}
+      <SeoHead
+        title="Industrial Sheds for Sale & Lease in Moraiya, Changodar, Ahmedabad | Metro Industrial Park"
+        description="Premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. 4,000–50,000 sq.ft units. 6–8% rental yield. 60 ft roads, CCTV, 24x7 water. Call +91 98242 35642."
         canonical="/"
         ogImage="/images/metro-industrial-park-entrance-dawn.jpg"
-        ogImageAlt="Industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad"
-        structuredData={[propertySchema, realEstateListingSchema, faqSchema, imageObjectSchema, websiteSchema]}
+        ogImageAlt="Metro Industrial Park — industrial sheds for sale and lease in Moraiya, Changodar, Ahmedabad"
+        schema={homeSchemas}
       />
+
+      {/*
+        sr-only h1 — carries the exact target keyword phrase for crawlers.
+        The hero section uses a visual <p> with Bebas Neue for the decorative
+        headline (not a heading tag) to avoid duplicate h1 issues.
+        A11Y: screen readers announce this first — descriptive and complete.
+      */}
+      <h1 className="sr-only">
+        Industrial Sheds and Warehouses for Sale and Lease in Moraiya, Changodar, Ahmedabad — Metro Industrial Park
+      </h1>
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Instrument+Serif:ital@0;1&display=swap');
@@ -671,20 +715,22 @@ const HomePage = () => {
 
       <div className="min-h-screen theme-bg-primary overflow-hidden"
         style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
-        <h1 className="sr-only">Industrial Sheds & Warehouses for Sale & Lease in Moraiya, Changodar, Ahmedabad</h1>
 
-        {/* ════════ HERO ════════ (unchanged — photo bg) */}
-        <section className="relative pt-16">
+        {/* ════════ HERO ════════ */}
+        <section aria-label="Hero — Metro Industrial Park, Moraiya, Ahmedabad" className="relative pt-16">
           <div className="relative h-[26svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
             <img
               src={heroImage}
               alt={heroAlt}
+              width={1600}
+              height={900}
               className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
               loading="eager"
               fetchPriority="high"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
-            <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" />
+            <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" aria-hidden="true" />
 
             {/* Badge */}
             <div className="absolute inset-0 flex items-end justify-center pb-2 sm:pb-6 px-4">
@@ -693,33 +739,40 @@ const HomePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.5 }}
                 className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-brand-red/60 bg-black/45"
+                role="status"
               >
-                <Sparkles className="text-brand-red w-3.5 h-3.5 animate-pulse" />
+                <Sparkles className="text-brand-red w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
                 <span className="text-[10px] sm:text-xs font-bold tracking-[0.14em] text-white uppercase">
                   #1 Industrial Park in Ahmedabad
                 </span>
               </motion.div>
             </div>
 
-            {/* Text overlay */}
+            {/*
+              Hero text overlay — uses <p> tags, NOT <h1>/<h2>.
+              The real h1 is sr-only above. This is purely decorative display
+              text — marking it as headings would create a duplicate h1 and
+              confuse crawler heading hierarchy.
+            */}
             <motion.div
               initial={{ opacity: 0, x: -18 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.35, duration: 0.6 }}
               className="absolute bottom-5 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[58%] sm:max-w-[44%] lg:max-w-[340px]"
+              aria-hidden="true"
             >
               <span className="hidden sm:inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-red mb-1.5">
                 <span className="w-3 sm:w-5 h-[1.5px] bg-brand-red rounded-full" />
                 Industrial Opportunity
               </span>
-              <h1
+              <p
                 style={{ fontFamily: '"Bebas Neue", sans-serif', lineHeight: 1.05, letterSpacing: '0.02em' }}
                 className="text-[1.2rem] sm:text-[2rem] lg:text-[3rem]"
               >
                 <span className="block text-white">A Space Built for</span>
                 <span className="block" style={{ color: 'transparent', WebkitTextStroke: '1px #ffffff' }}>Manufacturing</span>
                 <span className="block" style={{ color: 'transparent', WebkitTextStroke: '1px #ef4444' }}>Growth</span>
-              </h1>
+              </p>
               <p className="hidden sm:block text-gray-300 text-[10px] sm:text-[11px] lg:text-xs leading-relaxed mt-2 max-w-[240px] lg:max-w-[260px]">
                 From small-scale production to expanding industrial operations, the right
                 facility creates the environment for efficiency, quality, and long-term
@@ -728,9 +781,7 @@ const HomePage = () => {
             </motion.div>
           </div>
 
-          {/* ── Below-hero panel ──
-              BACKGROUND CHANGE: warm off-white (light) / deep gray-950 (dark)
-              + subtle dot-grid texture pattern */}
+          {/* ── Below-hero panel ── */}
           <div
             className="relative overflow-hidden border-t"
             style={{
@@ -738,19 +789,20 @@ const HomePage = () => {
               borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)',
             }}
           >
-            {/* Accent edge line */}
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/25 to-transparent pointer-events-none" />
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/25 to-transparent pointer-events-none" aria-hidden="true" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
               <div className="flex flex-col items-center gap-4">
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg">
+                {/* Key metrics strip */}
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg" role="list" aria-label="Key metrics">
                   {[
-                    { icon: <TrendingUp size={16} />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
-                    { icon: <Factory size={16} />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
-                    { icon: <LucideLandPlot size={16} />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+                    { icon: <TrendingUp size={16} aria-hidden="true" />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
+                    { icon: <Factory size={16} aria-hidden="true" />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
+                    { icon: <LucideLandPlot size={16} aria-hidden="true" />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
                   ].map(({ icon, value, label, color, border }) => (
                     <motion.div
                       key={label}
+                      role="listitem"
                       whileHover={{ scale: 1.04, y: -3 }}
                       className={`p-2.5 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
                         isDark ? 'bg-black' : 'bg-white/90'
@@ -770,34 +822,37 @@ const HomePage = () => {
                 <div className="flex flex-wrap justify-center gap-2.5">
                   <Link
                     to="/metro-industrial-park"
+                    aria-label="Explore industrial shed units at Metro Industrial Park"
                     className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-xs sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
                   >
-                    <Factory size={15} />
+                    <Factory size={15} aria-hidden="true" />
                     Explore More
-                    <ArrowRight size={15} />
+                    <ArrowRight size={15} aria-hidden="true" />
                   </Link>
                   <Link
                     to="/site-map"
+                    aria-label="Check industrial shed availability at Metro Industrial Park"
                     className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
                       isDark
                         ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
                         : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
                     }`}
                   >
-                    <MapPin size={14} />
+                    <MapPin size={14} aria-hidden="true" />
                     Check Availability
                   </Link>
                   <a
                     href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="WhatsApp Metro Industrial Park about industrial shed availability"
                     className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
                       isDark
                         ? 'border-white/25 bg-black text-white hover:border-green-400/60 hover:text-green-300'
                         : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
                     }`}
                   >
-                    <FaWhatsapp size={14} className="text-green-500" />
+                    <FaWhatsapp size={14} className="text-green-500" aria-hidden="true" />
                     WhatsApp
                   </a>
                 </div>
@@ -806,24 +861,17 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ FEATURES ════════
-            BACKGROUND CHANGE:
-              Dark  → deep slate #0d0d18 (cool blue-black)
-              Light → warm stone #f4f2ed
-            PATTERN: diagonal hatching */}
+        {/* ════════ FEATURES ════════ */}
         <section
           ref={featuresRef}
+          aria-label="Metro Industrial Park features and infrastructure"
           className="relative py-14 sm:py-28 overflow-hidden"
           style={{ background: isDark ? '#0d0d18' : '#f4f2ed' }}
         >
-
-          {/* Radial glows */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" />
-
-          {/* Top/bottom edge accent lines */}
-          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-red-500/20' : 'via-orange-400/30'} to-transparent pointer-events-none`} />
-          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/8' : 'via-gray-400/20'} to-transparent pointer-events-none`} />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" aria-hidden="true" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" aria-hidden="true" />
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-red-500/20' : 'via-orange-400/30'} to-transparent pointer-events-none`} aria-hidden="true" />
+          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/8' : 'via-gray-400/20'} to-transparent pointer-events-none`} aria-hidden="true" />
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={featuresInView ? { opacity: 1, y: 0 } : {}}
@@ -831,14 +879,14 @@ const HomePage = () => {
               <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 ${
                 isDark ? 'bg-white/10 text-red-300 border-red-400/40' : 'bg-brand-red/10 text-brand-red border-brand-red/30'
               }`}>
-                <Sparkles size={11} className="animate-pulse" /> Why Choose Us
+                <Sparkles size={11} className="animate-pulse" aria-hidden="true" /> Why Choose Us
               </span>
               <h2 className="text-2xl sm:text-5xl font-black mt-3 mb-4 leading-tight"
                 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
                 <span className={isDark ? 'text-white' : 'text-gray-900'}>Everything Your Business </span>
                 <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">Needs</span>
               </h2>
-              <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" />
+              <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" aria-hidden="true" />
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
@@ -849,20 +897,16 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ STATS ════════
-            BACKGROUND CHANGE:
-              Dark  → carbon black #090909
-              Light → cool marble #f0f1f5 (slight blue tint)
-            PATTERN: dot matrix */}
+        {/* ════════ STATS ════════ */}
         <section
           ref={statsRef}
+          aria-label="Metro Industrial Park by the numbers"
           className="relative py-14 sm:py-28 overflow-hidden"
           style={{ background: isDark ? '#090909' : '#f0f1f5' }}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" />
-
-          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
-          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" aria-hidden="true" />
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} aria-hidden="true" />
+          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} aria-hidden="true" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
@@ -872,7 +916,7 @@ const HomePage = () => {
                 <span className={isDark ? 'text-white' : 'text-gray-900'}>Experience by </span>
                 <span className="bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">Numbers</span>
               </h2>
-              <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" />
+              <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" aria-hidden="true" />
             </motion.div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -886,13 +930,14 @@ const HomePage = () => {
                       ? 'bg-gray-900/80 border-gray-800 hover:border-brand-red/50 hover:shadow-lg hover:shadow-brand-red/20'
                       : 'bg-white/90 border-gray-200 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/10'
                   }`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand-red/0 to-brand-red/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-red/0 to-brand-red/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" aria-hidden="true" />
                   <div className={`w-12 h-12 mx-auto mb-5 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-brand-red/20 group-hover:text-brand-red group-hover:scale-110 group-hover:rotate-6 ${
                     isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-200 text-gray-500'
-                  }`}>{stat.icon}</div>
+                  }`} aria-hidden="true">{stat.icon}</div>
                   <div
                     className={`text-3xl sm:text-5xl font-extrabold mb-2 group-hover:text-brand-red transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}
                     style={{ fontFamily: '"Bebas Neue", sans-serif' }}
+                    aria-label={`${stat.countEnd}${stat.suffix} ${stat.label}`}
                   >
                     <CountUp end={stat.countEnd} suffix={stat.suffix} duration={2.5} enableScrollSpy scrollSpyOnce />
                   </div>
@@ -908,23 +953,17 @@ const HomePage = () => {
         {/* ════════ INVESTMENT ════════ */}
         <InvestmentSection isDark={isDark} />
 
-        {/* ════════ CTA ════════
-            BACKGROUND CHANGE:
-              Dark  → charcoal #111118 (warm-tinted dark)
-              Light → soft cool gray #eef0f4
-            PATTERN: circuit-line traces */}
+        {/* ════════ CTA ════════ */}
         <section
           ref={ctaRef}
+          aria-label="Contact Metro Industrial Park — book a site visit"
           className="relative py-14 sm:py-32 overflow-hidden"
           style={{ background: isDark ? '#111118' : '#eef0f4' }}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" />
-
-          {/* Corner accent glow */}
-          <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-red-600/8' : 'bg-red-300/14'}`} />
-          <div className={`absolute -top-24 -left-24 w-72 h-72 rounded-full blur-[80px] pointer-events-none hidden sm:block ${isDark ? 'bg-orange-600/6' : 'bg-orange-300/10'}`} />
-
-          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" aria-hidden="true" />
+          <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-red-600/8' : 'bg-red-300/14'}`} aria-hidden="true" />
+          <div className={`absolute -top-24 -left-24 w-72 h-72 rounded-full blur-[80px] pointer-events-none hidden sm:block ${isDark ? 'bg-orange-600/6' : 'bg-orange-300/10'}`} aria-hidden="true" />
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} aria-hidden="true" />
 
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 32 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
@@ -937,7 +976,7 @@ const HomePage = () => {
               <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2 }}
                 className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-red/10 border border-brand-red/30 rounded-full mb-8">
-                <Sparkles className="text-brand-red" size={14} />
+                <Sparkles className="text-brand-red" size={14} aria-hidden="true" />
                 <span className="text-xs font-bold text-brand-red tracking-wide">Get Started Today</span>
               </motion.div>
 
@@ -955,7 +994,7 @@ const HomePage = () => {
               <motion.p initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.4 }}
                 className={`text-base sm:text-lg mb-10 max-w-xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Contact us today to discuss your requirements and schedule a site visit.
+                Contact us today to discuss your requirements and schedule a site visit in Moraiya, Ahmedabad.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
@@ -965,22 +1004,24 @@ const HomePage = () => {
                   href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="WhatsApp Metro Industrial Park to enquire about industrial sheds"
                   className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-brand-red/40 overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  <FaWhatsapp size={20} className="relative z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" aria-hidden="true" />
+                  <FaWhatsapp size={20} className="relative z-10" aria-hidden="true" />
                   <span className="relative z-10">WhatsApp Us</span>
-                  <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </a>
                 <a
                   href="tel:+919824235642"
+                  aria-label="Call Metro Industrial Park at +91 98242 35642"
                   className={`group inline-flex items-center justify-center gap-3 px-9 py-4 border-2 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg ${
                     isDark
                       ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
                       : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
                   }`}
                 >
-                  <Phone size={18} className="group-hover:scale-110 transition-transform" />
+                  <Phone size={18} className="group-hover:scale-110 transition-transform" aria-hidden="true" />
                   <span>Call: +91 98242 35642</span>
                 </a>
               </motion.div>
