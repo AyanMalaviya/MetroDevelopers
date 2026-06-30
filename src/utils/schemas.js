@@ -1,4 +1,6 @@
 // src/utils/schemas.js
+// Central schema repository for Metro Industrial Park.
+// All structured data follows schema.org vocabulary for Google Rich Results.
 
 const SITE_URL = 'https://www.metrodevelopers.co.in';
 const MAPS_URL = 'https://maps.google.com/?cid=17699482589183985142';
@@ -87,6 +89,61 @@ export const websiteSchema = {
   alternateName: ['Metro Enterprise', 'Metro Developers'],
   url: `${SITE_URL}/`,
   inLanguage: 'en-IN',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+// ─── Homepage WebPage Schema ───────────────────────────────────────────────────
+// Gives Google explicit dateModified for freshness scoring.
+// isPartOf links to WebSite; about links to the LocalBusiness entity.
+export const homePageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE_URL}/#webpage`,
+  name: 'Industrial Sheds for Sale & Lease in Moraiya, Changodar, Ahmedabad | Metro Industrial Park',
+  description:
+    'Premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. 4,000–50,000 sq.ft units. 6–8% rental yield. 60 ft roads, CCTV, 24x7 water. Call +91 98242 35642.',
+  url: `${SITE_URL}/`,
+  inLanguage: 'en-IN',
+  datePublished: '2024-01-01',
+  dateModified: new Date().toISOString().split('T')[0],
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  about: { '@id': `${SITE_URL}/#metro-enterprise` },
+  primaryImageOfPage: {
+    '@type': 'ImageObject',
+    contentUrl: `${SITE_URL}/images/metro-industrial-park-entrance-dawn.jpg`,
+    name: 'Metro Industrial Park entrance at dawn',
+    description: 'Metro Industrial Park entrance — industrial sheds for sale and lease in Moraiya, Ahmedabad',
+    width: 1600,
+    height: 900,
+  },
+  keywords: [
+    'industrial sheds moraiya',
+    'industrial park changodar',
+    'warehouse for rent ahmedabad',
+    'warehouse for sale ahmedabad',
+    'industrial shed for rent changodar',
+    'industrial shed for sale changodar',
+    'GIDC shed ahmedabad',
+    'industrial property investment gujarat',
+    'metro industrial park',
+  ].join(', '),
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['h1', 'h2', '[aria-label]'],
+  },
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+    ],
+  },
 };
 
 // ─── Primary LocalBusiness + RealEstateAgent Schema ───────────────────────────
@@ -275,7 +332,7 @@ export const faqSchema = {
       name: 'How far is Metro Industrial Park from NH 47?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Metro Industrial Park in Moraiya is directly accessible from the Sarkhej–Bavla National Highway (NH 47), one of Ahmedabad\'s primary industrial freight corridors, within a few minutes drive.',
+        text: "Metro Industrial Park in Moraiya is directly accessible from the Sarkhej–Bavla National Highway (NH 47), one of Ahmedabad's primary industrial freight corridors, within a few minutes drive.",
       },
     },
     {
@@ -284,6 +341,22 @@ export const faqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Yes. Follow @metro.industrialpark on Instagram for the latest available units, site updates, construction progress, and property availability at Metro Industrial Park, Moraiya.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the minimum shed size available at Metro Industrial Park?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The minimum industrial shed size available at Metro Industrial Park, Moraiya is 4,000 sq.ft — suitable for small manufacturing, packaging, and warehousing operations.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is Metro Industrial Park near Sanand GIDC?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Metro Industrial Park in Moraiya is located within a short drive of Sanand GIDC and Bavla industrial areas, making it accessible to suppliers and logistics partners across the Ahmedabad industrial belt.',
       },
     },
   ],
