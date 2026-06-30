@@ -1,5 +1,6 @@
+'use client';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
   Phone, ArrowRight, Star, Clock, Sparkles, TrendingUp,
@@ -50,9 +51,9 @@ const features = [
     icon: <Truck size={26} />,
     title: 'Strategic Location',
     description: 'Prime connectivity to national highways, logistics hubs, and major ports for seamless supply chain operations.',
-    details: ['Near NH 47 (Sarkhej Bavla National Highway)', 'Easy access to GIDC industrial areas', 'Close to Ahmedabad city & airport'],
+    details: ['Near NH 47 (Sarkhej–Bavla National Highway)', 'Easy access to GIDC industrial areas', 'Close to Ahmedabad city & airport'],
     image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-    alt: 'Strategic location map of Metro Industrial Park near NH 47 (Sarkhej Bavla Highway) Moraiya',
+    alt: 'Strategic location map of Metro Industrial Park near NH 47 (Sarkhej–Bavla Highway) Moraiya',
   },
   {
     icon: <LucideCctv size={26} />,
@@ -179,7 +180,7 @@ const heroQuotes = [
 
 
 /* ════════════════════════════════════════════════
-   QUOTE CAROUSEL  (identical to original)
+   QUOTE CAROUSEL
 ════════════════════════════════════════════════ */
 const QuoteCarousel = ({ quotes, isDark }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -223,7 +224,7 @@ const QuoteCarousel = ({ quotes, isDark }) => {
             >
               <div className={`h-1.5 rounded-full bg-gradient-to-r ${quote.gradient} ${isCenter ? 'w-16' : 'w-10'} mb-2.5`} />
               <p className={`${isCenter ? 'text-xs sm:text-sm' : 'text-[10px] sm:text-xs'} leading-relaxed ${isDark ? 'text-gray-200' : 'text-gray-700'} mb-2.5`}>
-                "{quote.text}"
+                &ldquo;{quote.text}&rdquo;
               </p>
               <div>
                 <p className={`font-semibold bg-gradient-to-r ${quote.gradient} bg-clip-text text-transparent ${isCenter ? 'text-xs sm:text-sm' : 'text-[11px] sm:text-xs'}`}>
@@ -270,7 +271,7 @@ const QuoteCarousel = ({ quotes, isDark }) => {
 
 
 /* ════════════════════════════════════════════════
-   FEATURE CARD  (identical to original)
+   FEATURE CARD
 ════════════════════════════════════════════════ */
 const FeatureRow = ({ feat, index, isDark }) => {
   const rowRef = useRef(null);
@@ -348,7 +349,6 @@ const FeatureRow = ({ feat, index, isDark }) => {
 
 /* ════════════════════════════════════════════════
    INVESTMENT SECTION
-   BG CHANGE: richer base + blueprint SVG pattern
 ════════════════════════════════════════════════ */
 const InvestmentSection = ({ isDark }) => {
   const sectionRef = useRef(null);
@@ -360,7 +360,6 @@ const InvestmentSection = ({ isDark }) => {
     return () => clearInterval(id);
   }, []);
 
-  /* ── colour tokens (identical to original) ── */
   const headingColor = isDark ? 'text-white'    : 'text-gray-900';
   const bodyColor    = isDark ? 'text-gray-400' : 'text-gray-600';
   const mutedColor   = isDark ? 'text-gray-500' : 'text-gray-500';
@@ -387,20 +386,15 @@ const InvestmentSection = ({ isDark }) => {
   const bottomText   = isDark ? 'text-gray-500' : 'text-gray-600';
 
   return (
-    /* ── BACKGROUND: deep near-black (dark) / rich cream (light) + blueprint pattern ── */
     <section
       ref={sectionRef}
       className="relative py-16 sm:py-36 overflow-hidden"
       style={{ background: isDark ? '#06060f' : '#faf9f6' }}
     >
-      {/* Blueprint grid pattern — replaces the plain CSS grid-texture from original */}
-
-      {/* Radial glow accents (identical to original) */}
       <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} />
       <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/10'}`} />
       <div className={`absolute top-1/2 left-0 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-violet-600/6' : 'bg-violet-300/8'}`} />
 
-      {/* Section separator lines */}
       <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} />
       <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} />
 
@@ -448,7 +442,7 @@ const InvestmentSection = ({ isDark }) => {
               >
                 <div className="max-w-4xl mx-auto">
                   <p className={`text-lg sm:text-3xl font-light italic leading-relaxed mb-6 ${quoteText} font-accent`}>
-                    "{q.text}"
+                    &ldquo;{q.text}&rdquo;
                   </p>
                   <div className="flex flex-col items-center gap-1">
                     <span className={`text-sm font-bold bg-gradient-to-r ${q.gradient} bg-clip-text text-transparent`}>
@@ -542,7 +536,7 @@ const InvestmentSection = ({ isDark }) => {
             <span className="bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">The Bigger Picture</span>
           </h3>
           <p className={`text-sm max-w-xl mx-auto ${bodyColor}`}>
-            Industrial investment isn't just financially superior — it builds real communities, real jobs and real India.
+            Industrial investment isn&apos;t just financially superior — it builds real communities, real jobs and real India.
           </p>
         </motion.div>
 
@@ -576,10 +570,10 @@ const InvestmentSection = ({ isDark }) => {
           className="mt-12 text-center"
         >
           <p className={`text-sm mb-4 ${bottomText}`}>
-            Industrial & warehousing leasing hit a{' '}
-            <span className="text-orange-500 font-semibold">record 37 million sq ft in 2025</span> — a 28% surge across India's top cities.
+            Industrial &amp; warehousing leasing hit a{' '}
+            <span className="text-orange-500 font-semibold">record 37 million sq ft in 2025</span> — a 28% surge across India&apos;s top cities.
           </p>
-          <Link to="/metro-industrial-park">
+          <Link href="/metro-industrial-park">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
@@ -629,11 +623,13 @@ const HomePage = () => {
     return () => clearInterval(t);
   }, []);
 
-  useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => { if (typeof window !== 'undefined') window.scrollTo(0, 0); }, []);
   useEffect(() => {
-    if (localStorage.getItem('reviewPromptDismissed') === 'true') setPromptDismissed(true);
+    if (typeof window !== 'undefined' && localStorage.getItem('reviewPromptDismissed') === 'true')
+      setPromptDismissed(true);
   }, []);
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const onScroll = () => {
       if (rafRef.current) return;
       rafRef.current = requestAnimationFrame(() => {
@@ -671,9 +667,9 @@ const HomePage = () => {
 
       <div className="min-h-screen theme-bg-primary overflow-hidden"
         style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
-        <h1 className="sr-only">Industrial Sheds & Warehouses for Sale & Lease in Moraiya, Changodar, Ahmedabad</h1>
+        <h1 className="sr-only">Industrial Sheds &amp; Warehouses for Sale &amp; Lease in Moraiya, Changodar, Ahmedabad</h1>
 
-        {/* ════════ HERO ════════ (unchanged — photo bg) */}
+        {/* ════════ HERO ════════ */}
         <section className="relative pt-16">
           <div className="relative h-[26svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
             <img
@@ -728,9 +724,7 @@ const HomePage = () => {
             </motion.div>
           </div>
 
-          {/* ── Below-hero panel ──
-              BACKGROUND CHANGE: warm off-white (light) / deep gray-950 (dark)
-              + subtle dot-grid texture pattern */}
+          {/* Below-hero panel */}
           <div
             className="relative overflow-hidden border-t"
             style={{
@@ -738,7 +732,6 @@ const HomePage = () => {
               borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)',
             }}
           >
-            {/* Accent edge line */}
             <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/25 to-transparent pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
@@ -769,7 +762,7 @@ const HomePage = () => {
 
                 <div className="flex flex-wrap justify-center gap-2.5">
                   <Link
-                    to="/metro-industrial-park"
+                    href="/metro-industrial-park"
                     className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-xs sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
                   >
                     <Factory size={15} />
@@ -777,7 +770,7 @@ const HomePage = () => {
                     <ArrowRight size={15} />
                   </Link>
                   <Link
-                    to="/site-map"
+                    href="/site-map"
                     className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
                       isDark
                         ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
@@ -806,22 +799,14 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ FEATURES ════════
-            BACKGROUND CHANGE:
-              Dark  → deep slate #0d0d18 (cool blue-black)
-              Light → warm stone #f4f2ed
-            PATTERN: diagonal hatching */}
+        {/* ════════ FEATURES ════════ */}
         <section
           ref={featuresRef}
           className="relative py-14 sm:py-28 overflow-hidden"
           style={{ background: isDark ? '#0d0d18' : '#f4f2ed' }}
         >
-
-          {/* Radial glows */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" />
-
-          {/* Top/bottom edge accent lines */}
           <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-red-500/20' : 'via-orange-400/30'} to-transparent pointer-events-none`} />
           <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/8' : 'via-gray-400/20'} to-transparent pointer-events-none`} />
 
@@ -849,18 +834,13 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ STATS ════════
-            BACKGROUND CHANGE:
-              Dark  → carbon black #090909
-              Light → cool marble #f0f1f5 (slight blue tint)
-            PATTERN: dot matrix */}
+        {/* ════════ STATS ════════ */}
         <section
           ref={statsRef}
           className="relative py-14 sm:py-28 overflow-hidden"
           style={{ background: isDark ? '#090909' : '#f0f1f5' }}
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" />
-
           <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
           <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
 
@@ -908,22 +888,15 @@ const HomePage = () => {
         {/* ════════ INVESTMENT ════════ */}
         <InvestmentSection isDark={isDark} />
 
-        {/* ════════ CTA ════════
-            BACKGROUND CHANGE:
-              Dark  → charcoal #111118 (warm-tinted dark)
-              Light → soft cool gray #eef0f4
-            PATTERN: circuit-line traces */}
+        {/* ════════ CTA ════════ */}
         <section
           ref={ctaRef}
           className="relative py-14 sm:py-32 overflow-hidden"
           style={{ background: isDark ? '#111118' : '#eef0f4' }}
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" />
-
-          {/* Corner accent glow */}
           <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-red-600/8' : 'bg-red-300/14'}`} />
           <div className={`absolute -top-24 -left-24 w-72 h-72 rounded-full blur-[80px] pointer-events-none hidden sm:block ${isDark ? 'bg-orange-600/6' : 'bg-orange-300/10'}`} />
-
           <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} />
 
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">

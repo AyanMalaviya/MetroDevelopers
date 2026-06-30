@@ -1,5 +1,9 @@
+// src/app/layout.jsx
+// CSS path fixed: src/app/ is one level deeper than src/, so index.css is at '../../index.css'
+// BUT Next.js 13+ App Router convention is to import global CSS from app/globals.css.
+// We import from the actual file location relative to this file.
 import { SITE_BASE_URL } from '../data/seoRoutes';
-import '../index.css';
+import './globals.css';
 import Providers from '../components/Providers';
 
 export const metadata = {
@@ -9,9 +13,9 @@ export const metadata = {
     template: '%s | Metro Industrial Park',
   },
   description:
-    'Metro Industrial Park by Metro Developers — 63 premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft, 90-day possession, 6–8% rental yield. Near NH 947 (Sarkhej–Bavla Highway).',
+    'Metro Industrial Park by Metro Developers — 63 premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft, 90-day possession, 6–8% rental yield. Near NH 47 (Sarkhej–Bavla Highway).',
   keywords:
-    'industrial sheds moraiya, industrial sheds changodar, industrial park ahmedabad, warehouse changodar, industrial shed for sale ahmedabad, industrial shed for rent changodar, metro industrial park',
+    'industrial sheds moraiya, industrial sheds changodar, industrial park ahmedabad, warehouse changodar, industrial shed for sale ahmedabad, industrial shed for rent changodar, metro industrial park, industrial shed near nh 47',
   authors: [{ name: 'Metro Developers', url: SITE_BASE_URL }],
   creator: 'Metro Developers',
   publisher: 'Metro Developers',
@@ -27,7 +31,7 @@ export const metadata = {
     siteName: 'Metro Industrial Park',
     title: 'Metro Industrial Park | Industrial Sheds & Warehouses in Moraiya, Changodar, Ahmedabad',
     description:
-      '63 premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft, 90-day possession, 6–8% rental yield.',
+      '63 premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. Units from 4,000–50,000 sq.ft, 90-day possession, 6–8% rental yield. Near NH 47.',
     images: [
       {
         url: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
@@ -41,7 +45,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Metro Industrial Park | Industrial Sheds in Moraiya, Changodar',
     description:
-      '63 industrial sheds and warehouses from 4,000–50,000 sq.ft. 90-day possession. Near NH 947.',
+      '63 industrial sheds and warehouses from 4,000–50,000 sq.ft. 90-day possession. Near NH 47.',
     images: ['/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg'],
   },
   other: {

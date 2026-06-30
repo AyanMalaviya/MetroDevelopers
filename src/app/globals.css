@@ -1,0 +1,7 @@
+/* src/app/globals.css
+ * Symlink/copy of root index.css for Next.js App Router.
+ * Next.js requires global CSS imported in layout.jsx to live inside src/app/.
+ * Keep this file in sync with src/index.css — or replace src/index.css import
+ * everywhere with this file once fully migrated.
+ */
+@import '../index.css';
