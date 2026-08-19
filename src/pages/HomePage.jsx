@@ -1,3 +1,4 @@
+// src/pages/HomePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
@@ -5,7 +6,7 @@ import {
   Phone, ArrowRight, Star, Clock, Sparkles, TrendingUp,
   MapPin, LucideFactory, LucideLandPlot, Factory, LucideCctv, Droplets,
   Truck, BarChart3, Coins, Home, CheckCircle2, Banknote, Users, Globe,
-  TrendingDown, Award, Leaf, Quote as QuoteIcon, Shield,
+  TrendingDown, Award, Leaf, Quote as QuoteIcon, Shield, X
 } from 'lucide-react';
 import { FaRoad, FaTrash, FaWhatsapp } from 'react-icons/fa';
 import SeoHead from '../seo/SeoHead';
@@ -171,105 +172,6 @@ const bigQuotes = [
   { text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.", author: 'James Dyson',    role: 'Founder, Dyson',                  gradient: 'from-blue-500 via-cyan-400 to-teal-400'   },
   { text: 'No country is ever successful in the long term without a really strong and vibrant manufacturing base.', author: 'Alan Mulally', role: 'Former CEO, Ford Motor Company', gradient: 'from-violet-500 via-purple-400 to-pink-400'},
 ];
-
-const heroQuotes = [
-  { text: 'The factory is the machine that builds the machine.', author: 'Elon Musk', role: 'Tesla & SpaceX', gradient: 'from-red-500 to-orange-400' },
-  { text: 'No country is ever successful in the long term without a strong manufacturing base.', author: 'Alan Mulally', role: 'Former CEO, Ford', gradient: 'from-blue-500 to-cyan-400' },
-  { text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.", author: 'James Dyson', role: 'Founder, Dyson', gradient: 'from-violet-500 to-purple-400' },
-];
-
-
-/* ════════════════════════════════════════════════
-   QUOTE CAROUSEL
-════════════════════════════════════════════════ */
-const QuoteCarousel = ({ quotes, isDark }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const total = quotes.length;
-
-  useEffect(() => {
-    const id = setInterval(() => setActiveIndex((prev) => (prev + 1) % total), 5500);
-    return () => clearInterval(id);
-  }, [total]);
-
-  const prevIndex = (activeIndex - 1 + total) % total;
-  const nextIndex = (activeIndex + 1) % total;
-  const handlePrev = () => setActiveIndex((prev) => (prev - 1 + total) % total);
-  const handleNext = () => setActiveIndex((prev) => (prev + 1) % total);
-
-  const visibleCards = [
-    { key: `left-${prevIndex}`,     index: prevIndex,   position: 'left'   },
-    { key: `center-${activeIndex}`, index: activeIndex, position: 'center' },
-    { key: `right-${nextIndex}`,    index: nextIndex,   position: 'right'  },
-  ];
-
-  return (
-    <div>
-      <div className="grid grid-cols-[0.9fr_1.2fr_0.9fr] sm:grid-cols-[0.95fr_1.35fr_0.95fr] gap-2 sm:gap-4 items-stretch">
-        {visibleCards.map(({ key, index, position }) => {
-          const quote    = quotes[index];
-          const isCenter = position === 'center';
-          return (
-            <motion.article
-              key={key}
-              initial={{ opacity: 0, y: 10, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: isCenter ? 1 : 0.94 }}
-              transition={{ duration: 0.3 }}
-              className={`rounded-2xl border p-3 sm:p-5 transition-all ${
-                isCenter
-                  ? isDark ? 'bg-black border-gray-700 shadow-xl shadow-black/50'
-                           : 'bg-white border-gray-300 shadow-xl shadow-gray-200/80'
-                  : isDark ? 'bg-black border-gray-800 opacity-90'
-                           : 'bg-gray-50 border-gray-200 opacity-85'
-              }`}
-            >
-              <div className={`h-1.5 rounded-full bg-gradient-to-r ${quote.gradient} ${isCenter ? 'w-16' : 'w-10'} mb-2.5`} />
-              <p className={`${isCenter ? 'text-xs sm:text-sm' : 'text-[10px] sm:text-xs'} leading-relaxed ${isDark ? 'text-gray-200' : 'text-gray-700'} mb-2.5`}>
-                "{quote.text}"
-              </p>
-              <div>
-                <p className={`font-semibold bg-gradient-to-r ${quote.gradient} bg-clip-text text-transparent ${isCenter ? 'text-xs sm:text-sm' : 'text-[11px] sm:text-xs'}`}>
-                  {quote.author}
-                </p>
-                <p className={`${isCenter ? 'text-[11px]' : 'text-[10px]'} ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {quote.role}
-                </p>
-              </div>
-            </motion.article>
-          );
-        })}
-      </div>
-
-      <div className="mt-3 flex items-center justify-center gap-2 sm:gap-3">
-        <button type="button" onClick={handlePrev} aria-label="Previous quote"
-          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
-            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white'
-                   : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
-          }`}>
-          <ArrowRight size={14} className="rotate-180" aria-hidden="true" />
-        </button>
-        <div className="flex items-center gap-1.5" role="tablist" aria-label="Quote navigation">
-          {quotes.map((quote, i) => (
-            <button key={`${quote.author}-${i}`} type="button" onClick={() => setActiveIndex(i)}
-              role="tab"
-              aria-selected={i === activeIndex}
-              aria-label={`Quote by ${quote.author}`}
-              className={`rounded-full transition-all ${
-                i === activeIndex ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`
-              }`}
-            />
-          ))}
-        </div>
-        <button type="button" onClick={handleNext} aria-label="Next quote"
-          className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
-            isDark ? 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white'
-                   : 'border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900'
-          }`}>
-          <ArrowRight size={14} aria-hidden="true" />
-        </button>
-      </div>
-    </div>
-  );
-};
 
 
 /* ════════════════════════════════════════════════
@@ -612,9 +514,7 @@ const HomePage = () => {
     ? 'Metro Industrial Park entrance at dawn — industrial sheds in Moraiya, Ahmedabad'
     : 'Metro Industrial Park entrance security gate — industrial sheds for sale in Moraiya, Ahmedabad';
 
-  const rafRef                                  = useRef(null);
-  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
-  const [promptDismissed,  setPromptDismissed]  = useState(false);
+  const [showEstateToast, setShowEstateToast] = useState(false);
 
   const featuresRef = useRef(null);
   const statsRef    = useRef(null);
@@ -624,7 +524,7 @@ const HomePage = () => {
   const statsInView    = useInView(statsRef,    { once: true, margin: '-80px' });
   const ctaInView      = useInView(ctaRef,      { once: true, margin: '-80px' });
 
-  // Pre-written WhatsApp message — matches the contact page message
+  // Pre-written WhatsApp message
   const whatsappMessage = encodeURIComponent(
     'Hello, I am interested in industrial sheds at Metro Industrial Park, Moraiya. Please share availability and pricing.'
   );
@@ -637,36 +537,23 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
-  useEffect(() => {
-    if (localStorage.getItem('reviewPromptDismissed') === 'true') setPromptDismissed(true);
-  }, []);
-  useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        const y   = window.scrollY;
-        const pct = (y / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-        if (pct > 40 && !promptDismissed) setShowReviewPrompt(true);
-        rafRef.current = null;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    const timer = setTimeout(() => { if (!promptDismissed) setShowReviewPrompt(true); }, 15000);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      clearTimeout(timer);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [promptDismissed]);
 
-  // ── Schemas injected into <head> via SeoHead ─────────────────────────────────
-  // Homepage carries the broadest schema set:
-  //   1. WebSite        — site-level entity (@id anchor for all other pages)
-  //   2. propertySchema — LocalBusiness + RealEstateAgent (GBP entity match)
-  //   3. realEstateListingSchema — the actual property offering (rich result)
-  //   4. faqSchema      — FAQ rich result (shows in SERPs as expandable Q&A)
-  //   5. imageObjectSchema — ImageGallery (enables image carousel rich result)
-  //   6. socialProfileSchema — Organization with sameAs social links
+  // ── 3-Second Slide-In Toast Logic ──────────────────────────────────────────
+  useEffect(() => {
+    const hasSeenEstateToast = sessionStorage.getItem('estateToastSeen');
+    if (!hasSeenEstateToast) {
+      const toastTimer = setTimeout(() => {
+        setShowEstateToast(true);
+      }, 3000);
+      return () => clearTimeout(toastTimer);
+    }
+  }, []);
+
+  const closeEstateToast = () => {
+    setShowEstateToast(false);
+    sessionStorage.setItem('estateToastSeen', 'true');
+  };
+
   const homeSchemas = [
     websiteSchema,
     propertySchema,
@@ -678,17 +565,6 @@ const HomePage = () => {
 
   return (
     <>
-      {/*
-        ── SEO HEAD ────────────────────────────────────────────────────────────
-        Title:       60 chars — primary keyword phrase first, brand at end
-        Description: 155 chars — includes city variants + unique value props
-                     (yield, sq.ft range, location, phone number)
-        canonical:   / (prevents ?utm_* params from splitting link equity)
-        ogImage:     hero dawn shot — distinct from internal page images
-        ogImageAlt:  keyword-rich, matches crawler expectation
-        6 schemas: WebSite + LocalBusiness + RealEstateListing + FAQ
-                   + ImageGallery + Organization/sameAs
-        ─────────────────────────────────────────────────────────────────────── */}
       <SeoHead
         title="Industrial Sheds for Sale & Lease in Moraiya, Changodar, Ahmedabad | Metro Industrial Park"
         description="Premium industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad. 4,000–50,000 sq.ft units. 6–8% rental yield. 60 ft roads, CCTV, 24x7 water. Call +91 98242 35642."
@@ -698,12 +574,6 @@ const HomePage = () => {
         schema={homeSchemas}
       />
 
-      {/*
-        sr-only h1 — carries the exact target keyword phrase for crawlers.
-        The hero section uses a visual <p> with Bebas Neue for the decorative
-        headline (not a heading tag) to avoid duplicate h1 issues.
-        A11Y: screen readers announce this first — descriptive and complete.
-      */}
       <h1 className="sr-only">
         Industrial Sheds and Warehouses for Sale and Lease in Moraiya, Changodar, Ahmedabad — Metro Industrial Park
       </h1>
@@ -732,7 +602,6 @@ const HomePage = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
             <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" aria-hidden="true" />
 
-            {/* Badge */}
             <div className="absolute inset-0 flex items-end justify-center pb-2 sm:pb-6 px-4">
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
@@ -748,12 +617,6 @@ const HomePage = () => {
               </motion.div>
             </div>
 
-            {/*
-              Hero text overlay — uses <p> tags, NOT <h1>/<h2>.
-              The real h1 is sr-only above. This is purely decorative display
-              text — marking it as headings would create a duplicate h1 and
-              confuse crawler heading hierarchy.
-            */}
             <motion.div
               initial={{ opacity: 0, x: -18 }}
               animate={{ opacity: 1, x: 0 }}
@@ -781,7 +644,6 @@ const HomePage = () => {
             </motion.div>
           </div>
 
-          {/* ── Below-hero panel ── */}
           <div
             className="relative overflow-hidden border-t"
             style={{
@@ -793,8 +655,7 @@ const HomePage = () => {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
               <div className="flex flex-col items-center gap-4">
-                {/* Key metrics strip */}
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg" role="list" aria-label="Key metrics">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg mb-2" role="list" aria-label="Key metrics">
                   {[
                     { icon: <TrendingUp size={16} aria-hidden="true" />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
                     { icon: <Factory size={16} aria-hidden="true" />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
@@ -819,41 +680,44 @@ const HomePage = () => {
                   ))}
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-2.5">
+                {/* ── CTA Buttons with 1 Full / 2 Half layout on mobile ── */}
+                <div className="w-full max-w-[360px] sm:max-w-none grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2.5 mx-auto">
                   <Link
                     to="/metro-industrial-park"
                     aria-label="Explore industrial shed units at Metro Industrial Park"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-xs sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
+                    className="col-span-2 sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-[13px] sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform"
                   >
-                    <Factory size={15} aria-hidden="true" />
-                    Explore More
-                    <ArrowRight size={15} aria-hidden="true" />
+                    <Factory size={16} aria-hidden="true" />
+                    Explore Now
+                    <ArrowRight size={16} aria-hidden="true" />
                   </Link>
+                  
                   <Link
                     to="/site-map"
                     aria-label="Check industrial shed availability at Metro Industrial Park"
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
+                    className={`col-span-1 sm:w-auto inline-flex items-center justify-center gap-1.5 px-1 sm:px-5 py-3 sm:py-2.5 border font-bold rounded-xl text-[11px] sm:text-sm transition-colors text-center ${
                       isDark
                         ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
                         : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
                     }`}
                   >
-                    <MapPin size={14} aria-hidden="true" />
-                    Check Availability
+                    <MapPin size={13} className="shrink-0" aria-hidden="true" />
+                    <span className="whitespace-nowrap">Availability</span>
                   </Link>
+                  
                   <a
                     href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="WhatsApp Metro Industrial Park about industrial shed availability"
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 border font-semibold rounded-xl text-xs sm:text-sm transition-colors ${
+                    aria-label="WhatsApp Metro Industrial Park"
+                    className={`col-span-1 sm:w-auto inline-flex items-center justify-center gap-1.5 px-1 sm:px-5 py-3 sm:py-2.5 border font-bold rounded-xl text-[11px] sm:text-sm transition-colors text-center ${
                       isDark
                         ? 'border-white/25 bg-black text-white hover:border-green-400/60 hover:text-green-300'
                         : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
                     }`}
                   >
-                    <FaWhatsapp size={14} className="text-green-500" aria-hidden="true" />
-                    WhatsApp
+                    <FaWhatsapp size={13} className="text-green-500 shrink-0" aria-hidden="true" />
+                    <span className="whitespace-nowrap">WhatsApp</span>
                   </a>
                 </div>
               </div>
@@ -1029,6 +893,74 @@ const HomePage = () => {
           </div>
         </section>
 
+      </div>
+
+      {/* ════════ BOTTOM-CENTER SLIDE-UP TOAST (METRO INDUSTRIAL ESTATE) ════════ */}
+      <div className="fixed inset-x-0 bottom-4 sm:bottom-6 z-[999] flex justify-center px-4 pointer-events-none">
+        <AnimatePresence>
+          {showEstateToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{ type: "spring", damping: 25, stiffness: 260 }}
+              className="pointer-events-auto w-full max-w-sm p-5 sm:p-6 rounded-2xl shadow-2xl border backdrop-blur-md"
+              style={{
+                backgroundColor: isDark ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+              }}
+              role="region"
+              aria-label="New Project Announcement"
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeEstateToast}
+                aria-label="Close notification"
+                className={`absolute top-3 right-3 p-1.5 rounded-full transition-colors ${
+                  isDark ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-400 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                <X size={16} />
+              </button>
+
+              <div className="flex items-start gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white shrink-0 shadow-md">
+                  <Sparkles size={18} />
+                </div>
+                <div className="flex-1 pr-4">
+                  <span className="text-[9px] font-black tracking-widest uppercase bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent block mb-1">
+                    New Project Launch
+                  </span>
+                  <h4 className={`text-base font-black mb-1 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Metro Industrial Estate
+                  </h4>
+                  <p className={`text-xs mb-4 leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Explore newly launched premium industrial plots in Changodar. Check live layout & availability now.
+                  </p>
+
+                  <div className="flex items-center gap-2">
+                    <Link
+                      to="/site-map"
+                      state={{ activeTab: 'estate' }}
+                      onClick={closeEstateToast}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-xs shadow-md hover:scale-[1.02] transition-transform"
+                    >
+                      <MapPin size={13} /> View Site Map
+                    </Link>
+                    <button
+                      onClick={closeEstateToast}
+                      className={`py-2.5 px-3 rounded-xl font-bold text-xs transition-colors border ${
+                        isDark ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 border-gray-200 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );

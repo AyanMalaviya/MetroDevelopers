@@ -86,7 +86,7 @@ export const websiteSchema = {
   '@type': 'WebSite',
   '@id': `${SITE_URL}/#website`,
   name: 'Metro Industrial Park',
-  alternateName: ['Metro Enterprise', 'Metro Developers'],
+  alternateName: ['Metro Developers', 'Metro Enterprise'],
   url: `${SITE_URL}/`,
   inLanguage: 'en-IN',
   potentialAction: {
@@ -150,9 +150,9 @@ export const homePageSchema = {
 export const propertySchema = {
   '@context': 'https://schema.org',
   '@type': ['RealEstateAgent', 'LocalBusiness'],
-  '@id': `${SITE_URL}/#metro-enterprise`,
+  '@id': `${SITE_URL}/#metro-developers`,
   name: 'Metro Industrial Park',
-  alternateName: 'Metro Enterprise Moraiya Changodar Ahmedabad',
+  alternateName: 'Metro Developers Moraiya Changodar Ahmedabad',
   description:
     'Industrial sheds and warehouses for sale and lease in Moraiya, Changodar, and Ahmedabad. Unit sizes from 4,000 to 50,000 sq.ft with modern infrastructure and fast possession support.',
   url: SITE_URL,

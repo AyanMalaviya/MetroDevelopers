@@ -17,6 +17,7 @@ import MetroArcade from './components/Projects/MetroArcade';
 import NotFound from './pages/NotFound';
 import ReviewPrompt from './components/Review';
 import ChatBot from './components/Chatbot/ChatBot';
+import MetroIndustrialEstate from './pages/MetroIndustrialEstate';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
               <Route path="/sheet-changelog" element={<SheetChangelogPage />} />
+              <Route path="/metro-industrial-estate" element={<MetroIndustrialEstate />} />
 
               {/* ── Local Market / SEO pages ── */}
               <Route path="/industrial-sheds-in-moraiya" element={<LocalMarketPage />} />

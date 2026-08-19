@@ -201,7 +201,7 @@ const Footer = () => {
                 />
               </div>
               <div className="leading-tight">
-                <span className="block text-base font-bold theme-text-primary font-display">Metro Enterprise</span>
+                <span className="block text-base font-bold theme-text-primary font-display">Metro Developers</span>
                 <span className="block text-[11px] theme-text-secondary">Metro Industrial Park · Ahmedabad</span>
               </div>
             </div>
@@ -337,7 +337,7 @@ const Footer = () => {
       <div className={`border-t ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className={`text-xs text-center sm:text-left ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-            © {currentYear} Metro Enterprise. All rights reserved.
+            © {currentYear} Metro Developers. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <a

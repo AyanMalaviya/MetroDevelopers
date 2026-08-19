@@ -26,7 +26,7 @@ export default function NotFound() {
   return (
     <>
       <SEO
-        title="Page Not Found (404) – Metro Enterprise"
+        title="Page Not Found (404) – Metro Developers"
         description="The page you're looking for doesn't exist. Browse Metro Industrial Park's available industrial sheds in Changodar, Moraiya, and near Sarkhej–Bavla Highway (NH 947), Ahmedabad."
         canonical="/404"
         noindex={true}

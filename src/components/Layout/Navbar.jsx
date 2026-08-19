@@ -4,7 +4,8 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
   Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
-  Settings2, ArrowUp, Type, Map
+  Settings2, ArrowUp, Type, Map,
+  LucideLandPlot,
 } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
@@ -83,6 +84,7 @@ const Navbar = () => {
   const navItems = [
     { path: '/',                      label: 'Home',            icon: Home       },
     { path: '/metro-industrial-park', label: 'Industrial Park', icon: Factory    },
+    { path: '/metro-industrial-estate', label: 'Industrial Estate', icon: LucideLandPlot },
     { path: '/metro-arcade',          label: 'Arcade',          icon: Store      },
     { path: '/contact',               label: 'Contact',         icon: Mail       },
     { path: '/calculator',            label: 'Calculator',      icon: Calculator },
@@ -152,7 +154,7 @@ const Navbar = () => {
               <span className={`block text-sm sm:text-base font-extrabold font-display transition-colors ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
-                Metro Enterprise
+                Metro Developers
               </span>
               <span className={`block text-[10px] font-medium transition-colors ${
                 isDark ? 'text-gray-400' : 'text-gray-600'

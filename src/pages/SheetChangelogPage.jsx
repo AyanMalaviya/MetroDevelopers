@@ -66,11 +66,31 @@ const SheetChangelogPage = () => {
     try {
       const data = await getChangelog();
       
-      // Sort newest first
+      // 1. Sort newest first
       const sorted = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
       
-      // Group by distinct dates for the timeline UI
-      const grouped = sorted.reduce((acc, log) => {
+      // 2. Deduplicate rapid consecutive triggers (Google Apps Script onEdit often double-fires)
+      const deduplicated = [];
+      for (const log of sorted) {
+        if (deduplicated.length === 0) {
+          deduplicated.push(log);
+          continue;
+        }
+        
+        // Compare current log to the last successfully added log
+        const prevLog = deduplicated[deduplicated.length - 1];
+        const timeDiff = Math.abs(new Date(prevLog.date) - new Date(log.date));
+        
+        // If same shed, same status, and within 5000ms (5 seconds), skip it as a duplicate
+        if (log.id === prevLog.id && log.newStatus === prevLog.newStatus && timeDiff < 5000) {
+          continue; 
+        }
+        
+        deduplicated.push(log);
+      }
+
+      // 3. Group by distinct dates for the timeline UI
+      const grouped = deduplicated.reduce((acc, log) => {
         const dateKey = formatDate(log.date);
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(log);
@@ -78,13 +98,12 @@ const SheetChangelogPage = () => {
       }, {});
 
       setGroupedLogs(grouped);
-      setLogCount(sorted.length);
+      setLogCount(deduplicated.length);
 
     } catch (e) {
       let errMsg = e.message || 'Failed to load.';
-      // Intercept the specific invalid JSON bug
-      if (errMsg.includes('Unexpected token') || errMsg.includes('is not valid JSON')) {
-        errMsg = 'The server returned an invalid response (HTML or Text) instead of JSON data. Please verify your API URL routing and App Script deployment.';
+      if (errMsg.includes('Unexpected token') || errMsg.includes('Expected JSON')) {
+        errMsg = 'The app is trying to load a local script file instead of the API. Please ensure your VITE_CHANGELOG_SCRIPT_URL variable is configured correctly.';
       }
       setError(errMsg);
     } finally {
@@ -120,7 +139,7 @@ const SheetChangelogPage = () => {
           <motion.button
             initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
             type="button"
-            onClick={() => navigate('/site-map')}
+            onClick={() => navigate(-1)}
             className={`flex items-center gap-2 mb-8 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 w-fit ${
               isDark 
                 ? 'text-gray-400 bg-gray-800/50 hover:text-white hover:bg-gray-800 ring-1 ring-white/5' 

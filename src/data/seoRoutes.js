@@ -799,7 +799,7 @@ export const SEO_ROUTES = [
     images: [
       {
         loc: '/images/metro-industrial-park-office-changodar.jpg',
-        title: 'Metro Enterprise Contact Office',
+        title: 'Metro Developers Contact Office',
       },
     ],
   },

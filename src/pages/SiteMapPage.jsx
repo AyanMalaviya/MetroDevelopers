@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { ArrowLeft, History, Map } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import InteractiveSiteMap from '../components/InteractiveSiteMap/InteractiveSiteMap';
 import MetroEstateInteractiveMap from '../components/InteractiveSiteMap/MetroEstateInteractiveMap';
 import SEO from '../components/SEO/SEO';
@@ -12,10 +12,11 @@ const SiteMapPage = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
   const isDark = theme === 'dark';
+  const location = useLocation();
 
   // State to manage the active map tab
-  const [activeTab, setActiveTab] = useState('park');
-
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'park');
+  
   // Tab configurations
   const tabs = [
     { id: 'park', label: 'Industrial Park' },
