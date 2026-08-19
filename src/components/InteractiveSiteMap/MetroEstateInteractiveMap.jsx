@@ -78,7 +78,7 @@ export default function MetroEstateInteractiveMap() {
   const [cursor, setCursor] = useState('grab');
 
   const containerRef = useRef(null);
-  const mapWrapperRef = useRef(null); // Reference exactly matches the image's height
+  const mapWrapperRef = useRef(null);
   const dragging = useRef(false);
   const moved = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
@@ -158,13 +158,10 @@ export default function MetroEstateInteractiveMap() {
   const hasLessee = !!selectedPlotData?.lessee;
   const monthlyRentRaw = selectedPlotData?.monthlyRent?.trim() || null;
 
-  // Dynamically centers the map based on EXACT image proportions, fixing mobile skew
   const fitToContainer = useCallback(() => {
     setTimeout(() => {
       if (containerRef.current && mapWrapperRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect();
-        
-        // Dynamically reads real sizes, defaults to 910x800 fallback
         const mapWidth = mapWrapperRef.current.offsetWidth || 910;
         const mapHeight = mapWrapperRef.current.offsetHeight || 800;
         
@@ -275,43 +272,29 @@ export default function MetroEstateInteractiveMap() {
   });
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case 'sold': return isDark ? '#9CA3AF' : '#6B7280';
-      case 'for-lease': return isDark ? '#EF4444' : '#DC2626';
-      case 'pre-leased': return isDark ? '#60A5FA' : '#3B82F6';
-      default: return isDark ? '#34D399' : '#10B981';
-    }
+    return status === 'sold' ? '#808080' : (isDark ? '#34D399' : '#10B981');
+  };
+
+  const getCircleStroke = (p) => {
+    if (selectedPlot === p || hoveredPlot === p) return '#FFFFFF';
+    return isDark ? '#374151' : '#E5E7EB';
   };
 
   const getStatusLabel = (status) => {
-    switch (status) {
-      case 'sold': return 'Sold';
-      case 'for-lease': return 'Sold — Available for Lease';
-      case 'pre-leased': return 'Pre-Leased — Available';
-      default: return 'Available';
-    }
+    return status === 'sold' ? 'Sold' : 'Available';
   };
 
   const getStatusColorClass = (status) => {
-    switch (status) {
-      case 'sold': return isDark ? 'text-gray-400' : 'text-gray-500';
-      case 'for-lease': return 'text-red-500';
-      case 'pre-leased': return 'text-blue-500';
-      default: return 'text-emerald-500';
-    }
+    return status === 'sold' ? 'text-[#808080]' : 'text-emerald-500';
   };
 
   const getStatusGradient = (status) => {
-    switch (status) {
-      case 'sold': return isDark ? 'from-gray-700 to-gray-800' : 'from-gray-100 to-gray-200';
-      case 'for-lease': return isDark ? 'from-red-900/60 to-red-950/80' : 'from-red-50 to-red-100';
-      case 'pre-leased': return isDark ? 'from-blue-900/60 to-blue-950/80' : 'from-blue-50 to-blue-100';
-      default: return isDark ? 'from-emerald-900/50 to-emerald-950/80' : 'from-emerald-50 to-emerald-100';
-    }
+    return status === 'sold'
+      ? (isDark ? 'from-[#808080]/50 to-[#808080]/70' : 'from-[#808080]/20 to-[#808080]/40')
+      : (isDark ? 'from-emerald-900/50 to-emerald-950/80' : 'from-emerald-50 to-emerald-100');
   };
 
   const getCircleRadius = (p) => (selectedPlot === p ? 14 : hoveredPlot === p ? 12 : 12);
-  const getCircleStroke = (p) => (selectedPlot === p || hoveredPlot === p ? '#FFFFFF' : isDark ? '#374151' : '#E5E7EB');
   const getCircleStrokeWidth = (p) => (selectedPlot === p ? 3 : hoveredPlot === p ? 2.5 : 2);
 
   const formatLastUpdated = () => {
@@ -325,8 +308,6 @@ export default function MetroEstateInteractiveMap() {
   const stats = {
     total: Object.keys(estatePlotCoordinates).length,
     available: Object.keys(estatePlotCoordinates).filter((p) => !plotData[p] || plotData[p].status === 'available').length,
-    preLeased: Object.keys(estatePlotCoordinates).filter((p) => plotData[p]?.status === 'pre-leased').length,
-    forLease: Object.keys(estatePlotCoordinates).filter((p) => plotData[p]?.status === 'for-lease').length,
     sold: Object.keys(estatePlotCoordinates).filter((p) => plotData[p]?.status === 'sold').length,
   };
 
@@ -476,9 +457,7 @@ export default function MetroEstateInteractiveMap() {
               <div className="flex items-center gap-1.5 flex-wrap">
                 {[
                   { val: stats.available, label: 'Available', cls: isDark ? 'text-green-400 bg-green-900/40 border-green-800' : 'text-green-600 bg-green-50 border-green-200' },
-                  { val: stats.preLeased, label: 'Pre Leased', cls: isDark ? 'text-blue-400 bg-blue-900/40 border-blue-800' : 'text-blue-600 bg-blue-50 border-blue-200' },
-                  { val: stats.forLease, label: 'For Lease', cls: isDark ? 'text-red-400 bg-red-900/40 border-red-800' : 'text-red-600 bg-red-50 border-red-200' },
-                  { val: stats.sold + stats.forLease, label: 'Sold', cls: isDark ? 'text-gray-400 bg-white/5 border-white/10' : 'text-gray-600 bg-gray-100 border-gray-300' },
+                  { val: stats.sold,      label: 'Sold',      cls: isDark ? 'text-white bg-[#808080]/30 border-[#808080]' : 'text-black bg-[#808080]/20 border-[#808080]' },
                 ].map(({ val, label, cls }) => (
                   <span key={label} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cls}`}>
                     {val} {label}
@@ -526,7 +505,7 @@ export default function MetroEstateInteractiveMap() {
                   className="block select-none"
                   style={{ width: '910px', height: 'auto' }}
                   draggable={false}
-                  onLoad={fitToContainer} // Re-centers immediately after image renders on mobile
+                  onLoad={fitToContainer}
                 />
                 <svg viewBox="0 0 910 800" className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'none' }}>
                   {renderDots()}
@@ -701,13 +680,11 @@ export default function MetroEstateInteractiveMap() {
             </div>
           </div>
 
-          <div className="grid grid-cols-5 gap-2 mb-3">
+          <div className="grid grid-cols-3 gap-2 mb-3">
             {[
-              { val: stats.total, label: 'Total', cls: isDark ? 'text-white' : 'text-gray-900', bg: '' },
-              { val: stats.available, label: 'Avl', cls: 'text-green-500', bg: isDark ? 'bg-green-900/30' : 'bg-green-50' },
-              { val: stats.preLeased, label: 'Pre L', cls: 'text-blue-500', bg: isDark ? 'bg-blue-900/30' : 'bg-blue-50' },
-              { val: stats.forLease, label: 'For L', cls: 'text-red-500', bg: isDark ? 'bg-red-900/30' : 'bg-red-50' },
-              { val: stats.sold + stats.forLease, label: 'Sold', cls: isDark ? 'text-gray-400' : 'text-gray-600', bg: isDark ? 'bg-gray-700' : 'bg-gray-100' },
+              { val: stats.total,     label: 'Total', cls: isDark ? 'text-white' : 'text-gray-900', bg: '' },
+              { val: stats.available, label: 'Avl',   cls: 'text-green-500', bg: isDark ? 'bg-green-900/30' : 'bg-green-400/30' },
+              { val: stats.sold,      label: 'Sold',  cls: 'text-[#808080]', bg: isDark ? 'bg-[#808080]/30' : 'bg-[#808080]/30' },
             ].map(({ val, label, cls, bg }) => (
               <div key={label} className={`p-2 rounded-xl text-center ${bg}`}>
                 <p className={`text-xl font-bold ${cls}`}>{val}</p>
@@ -719,12 +696,10 @@ export default function MetroEstateInteractiveMap() {
           <div className="flex flex-wrap gap-2 text-[0.7rem] items-center">
             {[
               { color: 'bg-green-500', label: 'Available' },
-              { color: 'bg-blue-500', label: 'Pre Leased' },
-              { color: 'bg-red-500', label: 'For Lease' },
-              { color: 'bg-gray-500', label: 'Sold' },
+              { color: 'bg-[#808080]', label: 'Sold' },
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1">
-                <div className={`w-3.5 h-3.5 rounded-full border-2 border-white shadow ${color}`} />
+                <div className={`w-3.5 h-3.5 rounded-full shadow ${isDark ? `border-2 border-white ${color}` : `border-2 border-gray-300 ${color}`}`} />
                 <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
               </div>
             ))}

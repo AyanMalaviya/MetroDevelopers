@@ -19,8 +19,8 @@ const SiteMapPage = () => {
   
   // Tab configurations
   const tabs = [
-    { id: 'park', label: 'Industrial Park' },
-    { id: 'estate', label: 'Industrial Estate' }
+    { id: 'park', label: 'Industrial Sheds' },
+    { id: 'estate', label: 'Industrial Plots' }
   ];
 
   return (
