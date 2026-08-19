@@ -1,158 +1,188 @@
 // src/pages/SiteMapPage.jsx
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { ArrowLeft, History } from 'lucide-react';
+import { ArrowLeft, History, Map } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import InteractiveSiteMap from '../components/InteractiveSiteMap/InteractiveSiteMap';
+import MetroEstateInteractiveMap from '../components/InteractiveSiteMap/MetroEstateInteractiveMap';
 import SEO from '../components/SEO/SEO';
 
 const SiteMapPage = () => {
-  const { theme }  = useTheme();
-  const navigate   = useNavigate();
-  const isDark     = theme === 'dark';
+  const { theme } = useTheme();
+  const navigate = useNavigate();
+  const isDark = theme === 'dark';
 
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const mapRef = useRef(null);
+  // State to manage the active map tab
+  const [activeTab, setActiveTab] = useState('park');
 
-  const toggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) mapRef.current?.requestFullscreen?.();
-    else document.exitFullscreen?.();
-  }, []);
-
-  useEffect(() => {
-    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', onChange);
-    return () => document.removeEventListener('fullscreenchange', onChange);
-  }, []);
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'f' || e.key === 'F') toggleFullscreen(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [toggleFullscreen]);
+  // Tab configurations
+  const tabs = [
+    { id: 'park', label: 'Industrial Park' },
+    { id: 'estate', label: 'Industrial Estate' }
+  ];
 
   return (
     <>
       <SEO
-        title="Industrial Shed Site Map and Availability in Moraiya, Changodar, Ahmedabad"
-        description="Check industrial shed and warehouse unit availability in Moraiya, Changodar, and Ahmedabad with the live interactive site map."
+        title="Industrial Shed Site Map & Availability | Moraiya, Changodar"
+        description="Check live industrial shed and warehouse unit availability in Metro Industrial Park and Estate with our interactive site map."
         canonical="/site-map"
         ogImage="/images/metro-industrial-map.jpg"
         ogImageAlt="Industrial shed availability map in Moraiya Changodar Ahmedabad"
       />
-      <h1 className="sr-only">Metro Industrial Park Site Map — Check Unit Availability</h1>
+      <h1 className="sr-only">Metro Industrial Projects Site Map — Check Unit Availability</h1>
 
-      <div className={`relative overflow-hidden min-h-screen pt-20 pb-12 ${
+      <div className={`relative overflow-hidden min-h-screen pt-24 pb-16 ${
         isDark
           ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
       }`}>
 
-        {/* Header */}
-        <motion.section
-          initial={{ opacity: 0, y: -14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="px-4 pb-5"
-        >
-          <div className="max-w-7xl mx-auto">
-            <motion.button
-              initial={{ opacity: 0, x: -14 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.35 }}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          
+          {/* ── Top Action Bar ── */}
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-wrap items-center justify-between gap-4 mb-8"
+          >
+            <button
               type="button"
               onClick={() => navigate(-1)}
-              className={`flex items-center gap-2 mb-5 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 ${
                 isDark
-                  ? 'text-gray-400 hover:text-white hover:bg-gray-800'
-                  : 'text-gray-500 hover:text-black hover:bg-gray-200'
+                  ? 'text-gray-400 bg-gray-800/50 hover:text-white hover:bg-gray-800 ring-1 ring-white/5'
+                  : 'text-gray-600 bg-white hover:text-gray-900 hover:bg-gray-50 ring-1 ring-black/5 shadow-sm'
               }`}
             >
-              <ArrowLeft size={15} /> Back
-            </motion.button>
+              <ArrowLeft size={16} /> Back
+            </button>
 
-            <div className="flex items-end justify-between gap-4 flex-wrap">
-              <div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="flex items-center gap-2 mb-2"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse" />
-                  <span className={`text-[10px] font-bold tracking-widest uppercase ${
-                    isDark ? 'text-gray-500' : 'text-gray-400'
-                  }`}>
-                    Live Availability · Auto-updates every 30s
-                  </span>
-                </motion.div>
+            <button
+              type="button"
+              onClick={() => navigate('/sheet-changelog')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 ${
+                isDark
+                  ? 'text-gray-300 bg-gray-800/50 hover:text-white hover:bg-gray-800 ring-1 ring-white/5'
+                  : 'text-gray-600 bg-white hover:text-gray-900 hover:bg-gray-50 ring-1 ring-black/5 shadow-sm'
+              }`}
+            >
+              <History size={16} />
+              Change Log
+            </button>
+          </motion.div>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15, duration: 0.5 }}
-                  className={`text-3xl md:text-4xl lg:text-5xl font-extrabold ${
-                    isDark ? 'text-white' : 'text-gray-900'
-                  }`}
-                >
-                  Shed <span className="text-brand-red">Availability</span>
-                </motion.h1>
-
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.25 }}
-                  className={`text-sm mt-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
-                >
-                  Metro Industrial Park · Moraiya, Changodar
-                </motion.p>
+          {/* ── Title & Tab Navigation ── */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" />
+                <span className={`text-[10px] font-black tracking-widest uppercase ${
+                  isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
+                  Live Availability · Auto-updates
+                </span>
               </div>
+              <h2 className={`text-4xl md:text-5xl font-black tracking-tight ${
+                isDark ? 'text-white' : 'text-gray-900'
+              }`}>
+                Shed <span className="text-brand-red">Availability</span>
+              </h2>
+              <p className={`text-sm mt-2 font-medium ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                Moraiya & Changodar, Ahmedabad
+              </p>
+            </motion.div>
 
-              {/* View Change Log button */}
-              <motion.button
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
-                type="button"
-                onClick={() => navigate('/sheet-changelog')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  isDark
-                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'
-                }`}
-              >
-                <History size={15} />
-                View Change Log
-              </motion.button>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Map */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.2 }}
-          className="px-4"
-        >
-          <div className="max-w-7xl mx-auto">
-            <div
-              ref={mapRef}
-              className={`rounded-2xl overflow-hidden shadow-2xl border ${
-                isDark
-                  ? 'border-gray-800 shadow-black/50'
-                  : 'border-gray-200 shadow-gray-300/40'
+            {/* High-Visibility Responsive Tab Bar */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className={`flex p-1.5 rounded-2xl w-full lg:w-fit shrink-0 ${
+                isDark ? 'bg-gray-800/80 ring-1 ring-white/10' : 'bg-gray-200/80 ring-1 ring-black/5'
               }`}
             >
-              <InteractiveSiteMap />
-            </div>
-            <p className={`text-center text-xs mt-3 ${isDark ? 'text-gray-700' : 'text-gray-400'}`}>
-              Use zoom buttons inside the map · Scroll to navigate when zoomed · Click any shed for details
-            </p>
-          </div>
-        </motion.section>
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`relative flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-xl text-sm font-bold transition-colors duration-300 z-10 overflow-hidden ${
+                      isActive
+                        ? 'text-white' 
+                        : isDark
+                          ? 'text-gray-400 hover:text-white hover:bg-white/5'
+                          : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTabIndicator"
+                        className="absolute inset-0 bg-brand-red rounded-xl shadow-lg shadow-red-500/40"
+                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                      />
+                    )}
+                    
+                    <span className="relative z-20 flex items-center gap-2 whitespace-nowrap">
+                      <Map size={16} className={isActive ? 'text-white' : 'opacity-70'} />
+                      {tab.label}
+                    </span>
 
+                    {/* Subtle pulsing dot to encourage clicking */}
+                    {!isActive && (
+                      <span className="absolute top-3 right-3 flex h-1.5 w-1.5 z-20">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-red opacity-75" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          {/* ── Map Container ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className={`relative rounded-3xl overflow-hidden shadow-2xl border transition-colors duration-300 min-h-[600px] ${
+              isDark
+                ? 'border-gray-800 shadow-black/60 bg-gray-800'
+                : 'border-gray-200 shadow-gray-300/50 bg-white'
+            }`}
+          >
+            {/* AnimatePresence manages smooth mounting/unmounting between maps */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="h-full w-full"
+              >
+                {activeTab === 'park' ? (
+                  <InteractiveSiteMap />
+                ) : (
+                  <MetroEstateInteractiveMap />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+
+          <p className={`text-center text-xs mt-4 transition-colors duration-300 ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+            <span className="opacity-80">Use zoom buttons inside the map · Scroll to navigate when zoomed · Click any shed for details</span>
+          </p>
+
+        </div>
       </div>
     </>
   );

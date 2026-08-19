@@ -8,7 +8,7 @@ export const getPlotData = () => {
     Papa.parse(SHEET_URL, {
       download: true,
       header: true,
-      transformHeader: (h) => h.trim().toLowerCase(), // normalises Owner → owner, etc.
+      transformHeader: (h) => h.trim().toLowerCase(),
       complete: (results) => {
         try {
           const plotData = {};
@@ -21,7 +21,6 @@ export const getPlotData = () => {
             const area        = (row.area   || 'N/A').trim();
             const owner       = (row.owner  || '').trim();
             const lessee      = (row.lessee || '').trim();
-            // accept both "monthlyrent" and "monthly_rent" header spellings
             const monthlyRent = (row.monthlyrent || row.monthly_rent || '').trim();
 
             const validStatuses = ['available', 'pre-leased', 'for-lease', 'sold'];

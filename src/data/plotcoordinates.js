@@ -1,18 +1,11 @@
-// src/data/plotCoordinates.js
-// Metro Industrial Park - Simplified Plot Coordinates
-// Each plot only needs CENTER coordinates (x, y) for easy positioning!
 
 export const plotCoordinates = {
-
-  // ============================================================================
-  // SECTION A: RIGHT SIDE - Plots 1-13 (Along 9.00 MT Wide Road)
-  // ============================================================================
 
   "1": {
     name: "Plot 1",
     area: "112.92 FT",
     section: "A",
-    center: { x: 700, y: 860 }  // Just adjust x,y to move the circle!
+    center: { x: 700, y: 860 }
   },
 
   "2": {

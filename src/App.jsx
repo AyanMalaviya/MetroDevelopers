@@ -9,7 +9,6 @@ import Calculator from './pages/CalculatorPage';
 import SiteMapPage from './pages/SiteMapPage';
 import LocalMarketPage from './pages/LocalMarketPage';
 import InsightGuidePage from './pages/InsightGuidePage';
-import RecordsPage from './pages/RecordsPage';
 import SheetChangelogPage from './pages/SheetChangelogPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import FloatingActionMenu from './components/FloatingActionMenu';
@@ -17,7 +16,6 @@ import ScrollToTop from './components/ScrollToTop';
 import MetroArcade from './components/Projects/MetroArcade';
 import NotFound from './pages/NotFound';
 import ReviewPrompt from './components/Review';
-import RecordsAccessGate from './components/RecordsAccessGate';
 import ChatBot from './components/Chatbot/ChatBot';
 
 function App() {
@@ -40,7 +38,6 @@ function App() {
               <Route path="/sheet-changelog" element={<SheetChangelogPage />} />
 
               {/* ── Local Market / SEO pages ── */}
-              {/* Fixed: was incorrectly redirecting to /metro-industrial-park */}
               <Route path="/industrial-sheds-in-moraiya" element={<LocalMarketPage />} />
               <Route path="/industrial-sheds-in-changodar" element={<LocalMarketPage />} />
               <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
@@ -77,17 +74,6 @@ function App() {
               <Route path="/guides/industrial-investment-returns-gujarat-2026" element={<InsightGuidePage />} />
               <Route path="/guides/rent-vs-buy-industrial-shed-ahmedabad" element={<InsightGuidePage />} />
               <Route path="/guides/gidc-vs-private-industrial-park-gujarat" element={<InsightGuidePage />} />
-
-              {/* ── Protected Records ── */}
-              <Route path="/records" element={<Navigate to="/calculator" replace />} />
-              <Route
-                path="/records/:slug"
-                element={(
-                  <RecordsAccessGate>
-                    <RecordsPage />
-                  </RecordsAccessGate>
-                )}
-              />
 
               {/* ── 404 catch-all ── */}
               <Route path="*" element={<NotFound />} />
