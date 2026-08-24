@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
   Phone, ArrowRight, Star, Clock, Sparkles, TrendingUp,
-  MapPin, LucideFactory, LucideLandPlot, Factory, LucideCctv, Droplets,
+  MapPin, LucideLandPlot, Factory, LucideCctv, Droplets,
   Truck, BarChart3, Coins, Home, CheckCircle2, Banknote, Users, Globe,
-  TrendingDown, Award, Leaf, Quote as QuoteIcon, Shield, X
+  TrendingDown, Award, Quote as QuoteIcon, Shield, X
 } from 'lucide-react';
-import { FaRoad, FaTrash, FaWhatsapp } from 'react-icons/fa';
+import { FaRoad, FaTrash, FaWhatsapp, FaInstagram, FaPlay } from 'react-icons/fa';
 import SeoHead from '../seo/SeoHead';
 import { useTheme } from '../context/ThemeContext.jsx';
 import CountUp from 'react-countup';
@@ -500,6 +500,180 @@ const InvestmentSection = ({ isDark }) => {
     </section>
   );
 };
+/* ─── Cloud-Hosted Assets Data (SEO Optimized) ─── */
+const cloudUpdates = [
+  {
+    id: '1',
+    type: 'video',
+    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560096/METRO_INDUSTRIAL_PARK_04.mp4', 
+    thumbnail: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+    title: 'Complete Guide to Metro Industrial Park',
+    description: 'Watch the full walkthrough of Metro Industrial Park, showcasing its premium infrastructure, wide roads, and strategic location in Moraiya, Gujarat.',
+    altText: 'Full video walkthrough of Metro Industrial Park in Moraiya Ahmedabad',
+    uploadDate: '2026-08-22',
+  },
+  {
+    id: '2',
+    type: 'video',
+    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560385/Metro_industrial_park_reel_1.mov', 
+    thumbnail: '/images/post2.png',
+    title: 'Phase 1 Reaching Completion',
+    description: 'On-ground construction update showing structural progress of industrial sheds.',
+    altText: 'Construction progress of Phase 1 industrial sheds at Metro Industrial Park',
+    uploadDate: '2026-08-20',
+  },
+  {
+    id: '3',
+    type: 'video',
+    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560339/metro_industrial_park_pixel_art_video.mp4', 
+    thumbnail: '/images/post1.png', 
+    title: 'Digital Layout Visualization',
+    description: 'Warehouses and facilities in Metro Industrial Park',
+    altText: 'Pixel art style digital layout visualization of Metro Industrial Estate',
+    uploadDate: '2026-08-24',
+  },
+];
+/* ════════════════════════════════════════════════
+   LATEST UPDATES SECTION (Native Cloud Assets - Max SEO)
+════════════════════════════════════════════════ */
+const InstagramSection = ({ isDark }) => {
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-60px' });
+  const scrollContainerRef = useRef(null);
+
+  // Define the base URL for absolute paths required by Google Schema
+  const siteUrl = 'https://metroindustrialpark.com'; 
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-label="Latest Updates and On-Ground Progress"
+      className="relative py-12 sm:py-20 overflow-hidden border-b"
+      style={{
+        background: isDark ? '#08080d' : '#fcfbfa',
+        borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        
+        {/* ── Section Header ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            <span
+              className={`inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-3 ${
+                isDark
+                  ? 'bg-pink-500/10 text-pink-400 border-pink-500/30'
+                  : 'bg-pink-50 text-pink-600 border-pink-300/60'
+              }`}
+            >
+              <FaInstagram size={13} className="text-pink-500" aria-hidden="true" />
+              @metro.industrialpark
+            </span>
+
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight font-display">
+              <span className={isDark ? 'text-white' : 'text-gray-900'}>Catch the </span>
+              <span className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+                Live Action
+              </span>
+              <span className={isDark ? 'text-white' : 'text-gray-900'}> & </span>
+              <span className="bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">
+                Latest Updates
+              </span>
+            </h2>
+          </motion.div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.instagram.com/metro.industrialpark/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold text-xs shadow-md hover:scale-105 transition-transform"
+            >
+              <FaInstagram size={14} aria-hidden="true" /> Follow on Instagram
+            </a>
+          </div>
+        </div>
+
+        {/* ── Side Scrollable Native Feed ── */}
+        <div
+          ref={scrollContainerRef}
+          className="flex gap-5 sm:gap-6 overflow-x-auto pb-8 pt-2 scrollbar-none snap-x snap-mandatory scroll-smooth items-start"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {cloudUpdates.map((post, idx) => (
+            <motion.article
+              key={post.id}
+              initial={{ opacity: 0, x: 30 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="flex flex-col gap-3 flex-none w-[280px] sm:w-[320px] snap-start group"
+              // ── SCHEMA.ORG MICRODATA FOR MAXIMUM SEO ──
+              itemScope
+              itemType={post.type === 'video' ? "https://schema.org/VideoObject" : "https://schema.org/ImageObject"}
+            >
+              {/* Invisible Meta Tags specifically for Google Crawlers */}
+              <meta itemProp="name" content={post.title} />
+              <meta itemProp="description" content={post.description} />
+              <meta itemProp="contentUrl" content={post.url} />
+              {post.thumbnail && <meta itemProp="thumbnailUrl" content={`${siteUrl}${post.thumbnail}`} />}
+              {post.uploadDate && <meta itemProp="uploadDate" content={post.uploadDate} />}
+
+              {/* Media Container (Maintains 4:5 Aspect Ratio) */}
+              <div className={`relative rounded-2xl overflow-hidden border shadow-sm aspect-[4/5] bg-gray-900 ${
+                isDark ? 'border-gray-800' : 'border-gray-200'
+              }`}>
+                
+                {post.type === 'video' ? (
+                  <>
+                    <video
+                      className="w-full h-full object-cover [&:fullscreen]:object-contain [&:-webkit-full-screen]:object-contain"
+                      controls
+                      preload="none"
+                      poster={post.thumbnail}
+                      playsInline
+                      aria-label={post.altText || post.title}
+                      title={post.title}
+                    >
+                      <source src={post.url} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    {/* Visual Play Button Overlay (Disappears on hover/play) */}
+                    <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md p-2 rounded-full pointer-events-none border border-white/10 group-hover:opacity-0 transition-opacity">
+                      <FaPlay size={10} className="text-white ml-0.5" aria-hidden="true" />
+                    </div>
+                  </>
+                ) : (
+                  <img
+                    src={post.url}
+                    alt={post.altText || post.title}
+                    title={post.title}
+                    loading="lazy"
+                    itemProp="image"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+              </div>
+
+              {/* Text Context */}
+              <div className="px-1 mt-1">
+                <h3 className={`text-sm font-bold mb-1 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  {post.title}
+                </h3>
+                <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  {post.description}
+                </p>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 
 /* ════════════════════════════════════════════════
@@ -724,6 +898,8 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+
+        <InstagramSection isDark={isDark} />
 
         {/* ════════ FEATURES ════════ */}
         <section
