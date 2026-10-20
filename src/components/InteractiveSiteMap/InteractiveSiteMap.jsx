@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { X, RefreshCw, ExternalLink, RotateCcw, Maximize2, User, MapPin, Factory } from 'lucide-react';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
+import { phaseCoordinates, getShedPhase } from '../../data/phaseCoordinates';
 import { getPlotData } from '../../services/dataService';
 
 const ADMIN_SHEET_URL = 'https://docs.google.com/spreadsheets/d/100fiyz86pBVkMlU_Em8Veedqdhr-hV9yb1GrwD95n5w/edit';
@@ -77,6 +78,7 @@ export default function InteractiveSiteMap() {
   const [loading,       setLoading]      = useState(true);
   const [lastUpdated,   setLastUpdated]  = useState(null);
   const [isFullscreen,  setIsFullscreen] = useState(false);
+  const [showPhases,    setShowPhases]   = useState(true);
 
   const [tfm,    setTfm]    = useState({ x: 0, y: 0, scale: 1 });
   const [cursor, setCursor] = useState('grab');
@@ -347,6 +349,88 @@ export default function InteractiveSiteMap() {
     sold:      Object.keys(plotCoordinates).filter(p => plotData[p]?.status === 'sold').length,
   };
 
+  /* ════════════════════════════════════════
+     PHASE OVERLAYS (Translucent Gray Shapes + Letter Badges)
+  ════════════════════════════════════════ */
+  const renderPhases = () => {
+    if (!showPhases) return null;
+
+    return Object.values(phaseCoordinates).map((phase) => {
+      const pts = phase.points || phase.polygonCoordinates || phase.rectCoordinates;
+      const pointsStr = pts.map(p => `${p.x},${p.y}`).join(' ');
+      const { labelCenter, label, id, theme } = phase;
+
+      const fill = theme?.fill || 'rgba(100, 116, 139, 0.28)';
+      const stroke = theme?.stroke || 'rgba(71, 85, 105, 0.75)';
+      const badgeBg = theme?.badgeBg || (isDark ? 'rgba(15, 23, 42, 0.90)' : 'rgba(30, 41, 59, 0.90)');
+      const badgeBorder = theme?.badgeBorder || 'rgba(255, 255, 255, 0.95)';
+      const watermarkColor = theme?.watermarkColor || (isDark ? '#94A3B8' : '#334155');
+
+      return (
+        <g key={id} className="phase-overlay" pointerEvents="none">
+          {/* Translucent color overlay polygon */}
+          <polygon
+            points={pointsStr}
+            fill={fill}
+            stroke={stroke}
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            strokeDasharray="5 3"
+          />
+
+          {/* Large translucent watermark letter in the background */}
+          <text
+            x={labelCenter.x}
+            y={labelCenter.y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            style={{
+              fontSize: '48px',
+              fontWeight: '900',
+              fill: watermarkColor,
+              opacity: isDark ? 0.35 : 0.25,
+              userSelect: 'none',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+            }}
+          >
+            {label}
+          </text>
+
+          {/* Floating Phase Badge pill */}
+          <g transform={`translate(${labelCenter.x}, ${labelCenter.y})`}>
+            <rect
+              x="-26"
+              y="-13"
+              width="52"
+              height="26"
+              rx="13"
+              fill={badgeBg}
+              stroke={badgeBorder}
+              strokeWidth="1.5"
+              filter="drop-shadow(0 2px 4px rgba(0,0,0,0.35))"
+            />
+            <text
+              x="0"
+              y="1"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              style={{
+                fontSize: '13px',
+                fontWeight: '800',
+                fill: '#FFFFFF',
+                letterSpacing: '0.5px',
+                userSelect: 'none',
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+              }}
+            >
+              {label}
+            </text>
+          </g>
+        </g>
+      );
+    });
+  };
+
   const renderDots = () =>
     Object.entries(plotCoordinates).map(([plotNumber]) => {
       const center    = getPlotCenter(plotNumber);
@@ -552,6 +636,21 @@ export default function InteractiveSiteMap() {
                     {val} {label}
                   </span>
                 ))}
+                <button
+                  onClick={() => setShowPhases(v => !v)}
+                  className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border transition-all ${
+                    showPhases
+                      ? isDark
+                        ? 'text-white bg-slate-700/80 border-slate-500'
+                        : 'text-slate-900 bg-slate-200 border-slate-400'
+                      : isDark
+                        ? 'text-gray-500 bg-transparent border-gray-700'
+                        : 'text-gray-400 bg-transparent border-gray-300'
+                  }`}
+                  title="Toggle Phases overlay"
+                >
+                  Phases A-D {showPhases ? '✓' : ''}
+                </button>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -603,6 +702,7 @@ export default function InteractiveSiteMap() {
                 />
                 <svg viewBox="20 150 860 930" className="absolute inset-0 w-full h-full"
                   style={{ pointerEvents: 'none' }}>
+                  {renderPhases()}
                   {renderDots()}
                 </svg>
               </div>
@@ -629,7 +729,17 @@ export default function InteractiveSiteMap() {
                     backgroundColor: isDark ? '#111827' : '#ffffff' 
                   }}
                 >
-                  <p className="font-bold text-sm mb-0.5">Shed {hoveredPlot}</p>
+                  <div className="flex items-center justify-between gap-2 mb-0.5">
+                    <p className="font-bold text-sm">Shed {hoveredPlot}</p>
+                    {(() => {
+                      const phase = getShedPhase(hoveredPlot);
+                      return phase ? (
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold text-white ${phase.theme?.tagClass || 'bg-slate-700'}`}>
+                          Phase {phase.label}
+                        </span>
+                      ) : null;
+                    })()}
+                  </div>
                   {area && (
                     <p className={`text-xs mb-1.5 ${isDark ? 'opacity-70' : 'text-gray-600'}`}>
                       <AreaDisplay value={area} />
@@ -705,7 +815,7 @@ export default function InteractiveSiteMap() {
                 <X className="w-4 h-4" />
               </button>
 
-              {/* Status pill */}
+              {/* Status pill & Phase pill */}
               <div className="flex items-center gap-2 mb-4">
                 <span
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white"
@@ -714,6 +824,14 @@ export default function InteractiveSiteMap() {
                   <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
                   {getStatusLabel(selectedPlotData?.status)}
                 </span>
+                {(() => {
+                  const phase = getShedPhase(selectedPlot);
+                  return phase ? (
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white border border-white/20 ${phase.theme?.tagClass || 'bg-slate-800/80'}`}>
+                      Phase {phase.label}
+                    </span>
+                  ) : null;
+                })()}
               </div>
 
               {/* Shed number hero */}
@@ -846,6 +964,22 @@ export default function InteractiveSiteMap() {
                 <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
               </div>
             ))}
+            <button
+              onClick={() => setShowPhases(v => !v)}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[0.7rem] font-bold transition-all border ${
+                showPhases
+                  ? isDark
+                    ? 'bg-slate-700 text-slate-100 border-slate-500 shadow-sm'
+                    : 'bg-slate-200 text-slate-800 border-slate-400 shadow-sm'
+                  : isDark
+                    ? 'bg-transparent text-gray-500 border-gray-700 opacity-60'
+                    : 'bg-transparent text-gray-400 border-gray-300 opacity-60'
+              }`}
+              title="Toggle Phases overlay"
+            >
+              <span className="w-2 h-2 rounded-full bg-slate-400" />
+              Phases A-D {showPhases ? '✓' : ''}
+            </button>
             <div className="flex gap-1.5 ml-auto">
               <a
                 href={ADMIN_SHEET_URL} target="_blank" rel="noopener noreferrer"
@@ -876,6 +1010,7 @@ export default function InteractiveSiteMap() {
             />
             <svg viewBox="20 150 860 930" className="absolute inset-0 w-full h-full"
               style={{ pointerEvents: 'none' }}>
+              {renderPhases()}
               {renderDots()}
             </svg>
           </div>

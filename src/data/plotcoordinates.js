@@ -484,3 +484,7 @@ export const sections = {
   D: { name: "Left-Top", color: "#F59E0B", plots: 6 },
   E: { name: "Left-Bottom", color: "#EF4444", plots: 18 }
 };
+
+
+// Re-export phase coordinates for convenience
+export { phaseCoordinates, getShedPhase } from './phaseCoordinates';

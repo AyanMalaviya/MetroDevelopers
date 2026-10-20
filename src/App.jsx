@@ -10,7 +10,6 @@ import Calculator from './pages/CalculatorPage';
 import SiteMapPage from './pages/SiteMapPage';
 import LocalMarketPage from './pages/LocalMarketPage';
 import InsightGuidePage from './pages/InsightGuidePage';
-import SheetChangelogPage from './pages/SheetChangelogPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import FloatingActionMenu from './components/FloatingActionMenu';
 import ScrollToTop from './components/ScrollToTop';
@@ -37,7 +36,6 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
-              <Route path="/sheet-changelog" element={<SheetChangelogPage />} />
               <Route path="/metro-industrial-estate" element={<MetroIndustrialEstate />} />
 
               {/* ── Local Market / SEO pages ── */}

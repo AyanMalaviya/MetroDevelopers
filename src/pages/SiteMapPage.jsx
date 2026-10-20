@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { ArrowLeft, History, Map } from 'lucide-react';
+import { ArrowLeft, Map } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import InteractiveSiteMap from '../components/InteractiveSiteMap/InteractiveSiteMap';
 import MetroEstateInteractiveMap from '../components/InteractiveSiteMap/MetroEstateInteractiveMap';
@@ -61,18 +61,7 @@ const SiteMapPage = () => {
               <ArrowLeft size={16} /> Back
             </button>
 
-            <button
-              type="button"
-              onClick={() => navigate('/sheet-changelog')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 ${
-                isDark
-                  ? 'text-gray-300 bg-gray-800/50 hover:text-white hover:bg-gray-800 ring-1 ring-white/5'
-                  : 'text-gray-600 bg-white hover:text-gray-900 hover:bg-gray-50 ring-1 ring-black/5 shadow-sm'
-              }`}
-            >
-              <History size={16} />
-              Change Log
-            </button>
+
           </motion.div>
 
           {/* ── Title & Tab Navigation ── */}
