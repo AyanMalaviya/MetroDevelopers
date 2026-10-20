@@ -516,7 +516,7 @@ const cloudUpdates = [
     id: '2',
     type: 'video',
     url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560385/Metro_industrial_park_reel_1.mov', 
-    thumbnail: '/images/post2.jpg',
+    thumbnail: '/images/post2.png',
     title: 'Phase 1 Reaching Completion',
     description: 'On-ground construction update showing structural progress of industrial sheds.',
     altText: 'Construction progress of Phase 1 industrial sheds at Metro Industrial Park',

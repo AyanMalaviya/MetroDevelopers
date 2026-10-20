@@ -1,16 +1,28 @@
 // api/chat.js — Vercel serverless function
-// Model: gemini-3.1-flash-lite-preview
+// Model: gemini-3.5-flash-lite (with automatic fallback to gemini-2.5-flash-lite & gemini-2.0-flash)
 
 const SHEET_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-Qe6ocFozJNhckRwVPHfFE4g0rv4EuFyDsoN6zk3NUwqa8sVVA2s4GhXADDYnCOiSKm/pub?gid=0&single=true&output=csv';
 
+// In-memory cache for live sheet context
+let cachedSheetContext = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 60 * 1000; // 60 seconds
+
 async function fetchSheetContext() {
+  const now = Date.now();
+  if (cachedSheetContext && (now - cacheTimestamp < CACHE_TTL_MS)) {
+    return cachedSheetContext;
+  }
+
   try {
-    const res = await fetch(SHEET_CSV_URL);
-    if (!res.ok) return null;
+    const res = await fetch(SHEET_CSV_URL, {
+      signal: AbortSignal.timeout(3500),
+    });
+    if (!res.ok) return cachedSheetContext;
     const csv = await res.text();
     const lines = csv.trim().split('\n');
-    if (lines.length < 2) return null;
+    if (lines.length < 2) return cachedSheetContext;
 
     const headers = lines[0].split(',').map((h) => h.trim().toLowerCase().replace(/["']/g, ''));
     const idIdx     = headers.indexOf('id');
@@ -19,7 +31,7 @@ async function fetchSheetContext() {
     const ownerIdx  = headers.indexOf('owner');
     const lesseeIdx = headers.indexOf('lessee');
     const rentIdx   = Math.max(headers.indexOf('monthlyrent'), headers.indexOf('monthly_rent'));
-    if (idIdx === -1) return null;
+    if (idIdx === -1) return cachedSheetContext;
 
     const rows = [];
     for (let i = 1; i < lines.length; i++) {
@@ -38,9 +50,15 @@ async function fetchSheetContext() {
       if (rent)   row += `, rent: ₹${rent}`;
       rows.push(row);
     }
-    return rows.length > 0 ? rows.join('\n') : null;
+
+    if (rows.length > 0) {
+      cachedSheetContext = rows.join('\n');
+      cacheTimestamp = now;
+      return cachedSheetContext;
+    }
+    return cachedSheetContext;
   } catch {
-    return null;
+    return cachedSheetContext;
   }
 }
 
@@ -106,6 +124,13 @@ function getFriendlyError(status, rawMessage = '') {
   return 'Something went wrong on our end. For immediate assistance, please WhatsApp +91 98242 35642';
 }
 
+// Model hierarchy: Primary is gemini-3.5-flash-lite, with resilient fallbacks
+const CANDIDATE_MODELS = [
+  'gemini-3.8-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+];
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -128,51 +153,80 @@ export default async function handler(req, res) {
   const sheetData = await fetchSheetContext();
   const systemPrompt = buildSystemPrompt(sheetData);
 
+  // Sanitize conversational turn order so turns strictly alternate
   const safeHistory = Array.isArray(history) ? history.slice(-10) : [];
-  const contents = [
-    ...safeHistory.map((m) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    })),
-    { role: 'user', parts: [{ text: message.trim() }] },
-  ];
+  const contents = [];
+  let lastRole = null;
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemPrompt }] },
-          contents,
-          generationConfig: { maxOutputTokens: 2048, temperature: 0.5, topP: 0.9 },
-          safetySettings: [
-            { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-            { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          ],
-        }),
-      }
-    );
+  for (const m of safeHistory) {
+    const role = m.role === 'assistant' ? 'model' : 'user';
+    const text = typeof m.content === 'string' ? m.content.trim() : '';
+    if (!text) continue;
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      const rawMsg = data?.error?.message || '';
-      return res.status(200).json({ reply: getFriendlyError(response.status, rawMsg) });
+    if (role === lastRole && contents.length > 0) {
+      contents[contents.length - 1].parts[0].text += `\n${text}`;
+    } else {
+      contents.push({ role, parts: [{ text }] });
+      lastRole = role;
     }
-
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      'I was unable to generate a response. Please try again or WhatsApp us at +91 98242 35642';
-
-    return res.status(200).json({ reply });
-  } catch (err) {
-    console.error('Chat API error:', err);
-    return res.status(200).json({
-      reply: 'Something went wrong on our end. For immediate assistance, please WhatsApp +91 98242 35642',
-    });
   }
+
+  // Ensure last role before current prompt is not 'user'
+  if (lastRole === 'user' && contents.length > 0) {
+    contents.pop();
+  }
+
+  // Final turn must be user
+  contents.push({ role: 'user', parts: [{ text: message.trim() }] });
+
+  let reply = null;
+  let lastStatus = 500;
+  let lastError = '';
+
+  for (const model of CANDIDATE_MODELS) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents,
+            generationConfig: { maxOutputTokens: 2048 },
+            safetySettings: [
+              { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            ],
+          }),
+          signal: AbortSignal.timeout(9000),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (candidateText && candidateText.trim().length > 0) {
+          reply = candidateText.trim();
+          break; // Model successfully answered!
+        }
+      } else {
+        lastStatus = response.status;
+        lastError = data?.error?.message || '';
+        console.warn(`Gemini model ${model} responded with status ${response.status}: ${lastError}`);
+      }
+    } catch (err) {
+      lastError = err.message || '';
+      console.warn(`Gemini model ${model} network/timeout error:`, err);
+    }
+  }
+
+  if (reply) {
+    return res.status(200).json({ reply });
+  }
+
+  return res.status(200).json({ reply: getFriendlyError(lastStatus, lastError) });
 }

@@ -6,8 +6,8 @@ import { useTheme } from '../../context/ThemeContext';
 
 // ─── Rate limit config ───
 const RATE_LIMIT_WINDOW_MS  = 60 * 1000; // 1 minute
-const RATE_LIMIT_PER_WINDOW = 2;         // max 2 requests per minute
-const RATE_LIMIT_DAILY      = 30;        // max 30 requests per day
+const RATE_LIMIT_PER_WINDOW = 5;         // max 5 requests per minute (responsive conversation)
+const RATE_LIMIT_DAILY      = 50;        // max 50 requests per day
 
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
@@ -220,13 +220,23 @@ const ChatBot = () => {
       .map((m) => ({ role: m.role, content: m.content }));
 
     try {
-      const res  = await fetch('/api/chat', {
+      const res = await fetch('/api/chat', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ message: trimmed, history }),
       });
-      const data = await res.json();
-      const replyText = data.reply || 'Something went wrong. Please WhatsApp us at +91 98242 35642';
+
+      let replyText = 'Something went wrong. Please WhatsApp us at +91 98242 35642';
+      try {
+        const data = await res.json();
+        if (data?.reply) replyText = data.reply;
+      } catch {
+        // Fallback if response wasn't JSON
+        if (!res.ok) {
+          replyText = 'The AI service is temporarily busy. Please WhatsApp us at +91 98242 35642 for immediate assistance.';
+        }
+      }
+
       setMessages((p) => [...p, { role: 'assistant', content: replyText, id: Date.now() + '_ai' }]);
     } catch {
       setMessages((p) => [...p, {

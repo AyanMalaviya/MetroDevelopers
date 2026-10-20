@@ -51,6 +51,15 @@ const PRERENDER_ROUTES = [
 export default defineConfig({
   base: '/',
 
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://www.metrodevelopers.co.in',
+        changeOrigin: true,
+      },
+    },
+  },
+
   plugins: [
     react(),
 
@@ -98,6 +107,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,svg,webp,woff2}'],
         runtimeCaching: [
           {
