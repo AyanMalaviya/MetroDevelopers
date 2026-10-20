@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
@@ -85,6 +86,7 @@ function App() {
           <ReviewPrompt />
           <FloatingActionMenu />
           <ChatBot />
+          <Analytics />
         </div>
       </Router>
     </ThemeProvider>
