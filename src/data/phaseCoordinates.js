@@ -4,13 +4,13 @@
  * Phase definitions and coordinates for Metro Industrial Park Site Map.
  * 
  * You can easily customize or manually tweak coordinates below:
- * - `theme`: Custom fill, stroke, and badge colors for each phase.
+ * - `theme`: Custom fill, stroke, and watermark shadow colors for each phase.
  * - `rectCoordinates`: Exactly 4 corners [Top-Left, Top-Right, Bottom-Right, Bottom-Left].
  * - `polygonCoordinates`: Multi-point polygon capturing non-rectangular features
- *                         (e.g., shed 26 step-down, slanted northern roof, angled road).
+ *                         (e.g., shed 26 step-down, angled roads).
  * - `points`: The active coordinates rendered on the SVG map. Defaults to polygonCoordinates,
  *             or you can swap it to rectCoordinates or your own manual points!
- * - `labelCenter`: Center coordinate { x, y } where the letter (A, B, C, D) is displayed.
+ * - `labelCenter`: Center coordinate { x, y } where the letter (A, B, C, D) shadow is displayed.
  * - `sheds`: List of shed IDs belonging to this phase.
  */
 
@@ -28,11 +28,9 @@ export const phaseCoordinates = {
     theme: {
       fill: 'rgba(100, 116, 139, 0.28)',
       stroke: 'rgba(71, 85, 105, 0.75)',
-      badgeBg: 'rgba(30, 41, 59, 0.90)',
-      badgeBorder: 'rgba(255, 255, 255, 0.95)',
-      badgeText: '#FFFFFF',
       watermarkColor: '#64748B',
       tagClass: 'bg-slate-700 text-white',
+      badgeBg: 'rgba(30, 41, 59, 1)',
     },
 
     // 4 Corner rectangle coordinates:
@@ -84,11 +82,9 @@ export const phaseCoordinates = {
     theme: {
       fill: 'rgba(59, 130, 246, 0.26)',
       stroke: 'rgba(37, 99, 235, 0.75)',
-      badgeBg: 'rgba(29, 78, 216, 0.90)',
-      badgeBorder: 'rgba(255, 255, 255, 0.95)',
-      badgeText: '#FFFFFF',
       watermarkColor: '#3B82F6',
       tagClass: 'bg-blue-600 text-white',
+      badgeBg: 'rgba(29, 78, 216, 1)',
     },
 
     // 4 Corner rectangle coordinates:
@@ -127,53 +123,50 @@ export const phaseCoordinates = {
   },
 
   // ── PHASE C ──────────────────────────────────────────────────────────────
-  // Area covering sheds 18 to 39 (sheds 14-18 and 34-39)
+  // Area covering sheds 15-18 and 34-37 (sheds 14, 38, and 39 removed)
   C: {
     id: 'C',
     name: 'Phase C',
     label: 'C',
-    description: 'Sheds 18 to 39 (sheds 14 to 18 and 34 to 39)',
-    sheds: ['14', '15', '16', '17', '18', '34', '35', '36', '37', '38', '39'],
+    description: 'Sheds 15 to 18 and 34 to 37 (8 sheds total)',
+    sheds: ['15', '16', '17', '18', '34', '35', '36', '37'],
 
     // Translucent rich purple / violet theme
     theme: {
       fill: 'rgba(168, 85, 247, 0.26)',
       stroke: 'rgba(147, 51, 234, 0.75)',
-      badgeBg: 'rgba(109, 40, 217, 0.90)',
-      badgeBorder: 'rgba(255, 255, 255, 0.95)',
-      badgeText: '#FFFFFF',
       watermarkColor: '#A855F7',
       tagClass: 'bg-purple-600 text-white',
+      badgeBg: 'rgba(109, 40, 217, 1)',
     },
 
-    // 4 Corner rectangle coordinates (18 and 39 are opposite corners):
+    // 4 Corner rectangle coordinates:
     // [Top-Left, Top-Right, Bottom-Right, Bottom-Left]
     rectCoordinates: [
-      { x: 413, y: 237 }, // 1. Top-Left corner (shed 39)
-      { x: 588, y: 237 }, // 2. Top-Right corner
+      { x: 413, y: 328 }, // 1. Top-Left corner (shed 37)
+      { x: 588, y: 340 }, // 2. Top-Right corner (shed 15)
       { x: 588, y: 512 }, // 3. Bottom-Right corner (shed 18)
       { x: 413, y: 512 }, // 4. Bottom-Left corner (shed 34)
     ],
 
-    // Polygon coordinates (accounts for slanted northern road boundary above shed 39 and 14):
+    // Polygon coordinates (clean rectangle covering sheds 15-18 and 34-37):
     polygonCoordinates: [
-      { x: 413, y: 237 }, // Top-Left corner of shed 39
-      { x: 507, y: 281 }, // Top divider between shed 39 & shed 14
-      { x: 588, y: 276 }, // Top-Right corner of shed 14
-      { x: 588, y: 512 }, // Bottom-Right corner of shed 18
-      { x: 413, y: 512 }, // Bottom-Left corner of shed 34
+      { x: 413, y: 328 }, // Top-Left corner (shed 37)
+      { x: 588, y: 340 }, // Top-Right corner (shed 15)
+      { x: 588, y: 512 }, // Bottom-Right corner (shed 18)
+      { x: 413, y: 512 }, // Bottom-Left corner (shed 34)
     ],
 
     // Active coordinates rendered on the map:
     points: [
-      { x: 413, y: 230 },
-      { x: 570, y: 283 },
-      { x: 620, y: 276 },
+      { x: 413, y: 344 },
+      { x: 620, y: 344 },
       { x: 620, y: 512 },
       { x: 413, y: 512 },
     ],
 
-    labelCenter: { x: 520, y: 390 },
+    // Centered vertically in new Phase C (between 328 and 512)
+    labelCenter: { x: 510, y: 440 },
   },
 
   // ── PHASE D ──────────────────────────────────────────────────────────────
@@ -189,11 +182,9 @@ export const phaseCoordinates = {
     theme: {
       fill: 'rgba(245, 158, 11, 0.26)',
       stroke: 'rgba(217, 119, 6, 0.75)',
-      badgeBg: 'rgba(180, 83, 9, 0.90)',
-      badgeBorder: 'rgba(255, 255, 255, 0.95)',
-      badgeText: '#FFFFFF',
       watermarkColor: '#F59E0B',
       tagClass: 'bg-amber-600 text-white',
+      badgeBg: 'rgba(180, 83, 9, 1)',
     },
 
     // 4 Corner rectangle coordinates (51 and 58 are opposite corners):
@@ -210,15 +201,15 @@ export const phaseCoordinates = {
       { x: 188, y: 565 }, // Top-Left corner of shed 58
       { x: 369, y: 565 }, // Top-Right corner of shed 45
       { x: 369, y: 868 }, // Bottom-Right corner of shed 51
-      { x: 285, y: 895 }, // Divider step between shed 51 & shed 52
-      { x: 260, y: 870 }, // Bottom-Left corner of shed 52
-      { x: 210, y: 870 }, // Bottom-Right corner of shed 52
-      { x: 190, y: 640 }, // Angled road mid-point along western side
+      { x: 277, y: 856 }, // Divider step between shed 51 & shed 52
+      { x: 208, y: 856 }, // Bottom-Left corner of shed 52
+      { x: 197, y: 740 }, // Angled road mid-point along western side
     ],
 
     // Active coordinates rendered on the map:
     points: [
       { x: 188, y: 565 },
+      { x: 285, y: 565 },
       { x: 380, y: 565 },
       { x: 380, y: 868 },
       { x: 285, y: 895 },

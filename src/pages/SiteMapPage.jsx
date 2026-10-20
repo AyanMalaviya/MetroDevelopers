@@ -34,68 +34,71 @@ const SiteMapPage = () => {
       />
       <h1 className="sr-only">Metro Industrial Projects Site Map — Check Unit Availability</h1>
 
-      <div className={`relative overflow-hidden min-h-screen pt-24 pb-16 ${
+      <div className={`relative overflow-hidden min-h-screen pt-16 sm:pt-24 pb-8 sm:pb-16 ${
         isDark
-          ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'
-          : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
+          ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-black'
+          : 'bg-gradient-to-br from-slate-50 via-white to-gray-100'
       }`}>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
           
-          {/* ── Top Action Bar ── */}
+          {/* ── Top Navigation & Live Status Pill ── */}
           <motion.div 
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-wrap items-center justify-between gap-4 mb-8"
+            transition={{ duration: 0.35 }}
+            className="flex items-center justify-between gap-3 mb-3 sm:mb-6"
           >
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-95 ${
                 isDark
-                  ? 'text-gray-400 bg-gray-800/50 hover:text-white hover:bg-gray-800 ring-1 ring-white/5'
-                  : 'text-gray-600 bg-white hover:text-gray-900 hover:bg-gray-50 ring-1 ring-black/5 shadow-sm'
+                  ? 'text-gray-300 bg-gray-800/80 hover:text-white hover:bg-gray-700 ring-1 ring-white/10'
+                  : 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-50 ring-1 ring-black/5 shadow-sm'
               }`}
             >
-              <ArrowLeft size={16} /> Back
+              <ArrowLeft size={14} className="sm:w-4 sm:h-4" />
+              <span>Back</span>
             </button>
 
-
+            <div className={`inline-flex items-center gap-2 px-3 py-1 sm:py-1.5 rounded-full text-[11px] font-semibold border ${
+              isDark
+                ? 'bg-gray-800/70 border-gray-700 text-gray-300'
+                : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+            }`}>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span className="tracking-wide">Live Availability</span>
+            </div>
           </motion.div>
 
-          {/* ── Title & Tab Navigation ── */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+          {/* ── Title & Segmented Tab Navigation ── */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-6 mb-4 sm:mb-6">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.4, delay: 0.05 }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" />
-                <span className={`text-[10px] font-black tracking-widest uppercase ${
-                  isDark ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                  Live Availability · Auto-updates
-                </span>
-              </div>
-              <h2 className={`text-4xl md:text-5xl font-black tracking-tight ${
+              <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
-                Shed <span className="text-brand-red">Availability</span>
+                Shed & Plot <span className="text-brand-red">Availability</span>
               </h2>
-              <p className={`text-sm mt-2 font-medium ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                Moraiya & Changodar, Ahmedabad
+              <p className={`text-xs sm:text-sm mt-1 font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                Moraiya & Changodar, Ahmedabad · Live Interactive Map
               </p>
             </motion.div>
 
             {/* High-Visibility Responsive Tab Bar */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className={`flex p-1.5 rounded-2xl w-full lg:w-fit shrink-0 ${
-                isDark ? 'bg-gray-800/80 ring-1 ring-white/10' : 'bg-gray-200/80 ring-1 ring-black/5'
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className={`flex p-1 sm:p-1.5 rounded-2xl w-full md:w-auto shrink-0 shadow-sm ${
+                isDark ? 'bg-gray-800/90 ring-1 ring-white/10' : 'bg-gray-200/90 ring-1 ring-black/5'
               }`}
             >
               {tabs.map((tab) => {
@@ -104,30 +107,29 @@ const SiteMapPage = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-xl text-sm font-bold transition-colors duration-300 z-10 overflow-hidden ${
+                    className={`relative flex-1 md:flex-none flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-7 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors duration-200 z-10 overflow-hidden ${
                       isActive
                         ? 'text-white' 
                         : isDark
-                          ? 'text-gray-400 hover:text-white hover:bg-white/5'
-                          : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
+                          ? 'text-gray-400 hover:text-white'
+                          : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     {isActive && (
                       <motion.div
                         layoutId="activeTabIndicator"
-                        className="absolute inset-0 bg-brand-red rounded-xl shadow-lg shadow-red-500/40"
-                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                        className="absolute inset-0 bg-brand-red rounded-xl shadow-md shadow-red-500/40"
+                        transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                       />
                     )}
                     
-                    <span className="relative z-20 flex items-center gap-2 whitespace-nowrap">
-                      <Map size={16} className={isActive ? 'text-white' : 'opacity-70'} />
+                    <span className="relative z-20 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+                      <Map size={14} className={isActive ? 'text-white' : 'opacity-70'} />
                       {tab.label}
                     </span>
 
-                    {/* Subtle pulsing dot to encourage clicking */}
                     {!isActive && (
-                      <span className="absolute top-3 right-3 flex h-1.5 w-1.5 z-20">
+                      <span className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 flex h-1.5 w-1.5 z-20">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-red opacity-75" />
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
                       </span>

@@ -362,8 +362,6 @@ export default function InteractiveSiteMap() {
 
       const fill = theme?.fill || 'rgba(100, 116, 139, 0.28)';
       const stroke = theme?.stroke || 'rgba(71, 85, 105, 0.75)';
-      const badgeBg = theme?.badgeBg || (isDark ? 'rgba(15, 23, 42, 0.90)' : 'rgba(30, 41, 59, 0.90)');
-      const badgeBorder = theme?.badgeBorder || 'rgba(255, 255, 255, 0.95)';
       const watermarkColor = theme?.watermarkColor || (isDark ? '#94A3B8' : '#334155');
 
       return (
@@ -378,54 +376,25 @@ export default function InteractiveSiteMap() {
             strokeDasharray="5 3"
           />
 
-          {/* Large translucent watermark letter in the background */}
+          {/* Architectural shadow/watermark of the phase letter (no opaque white font) */}
           <text
             x={labelCenter.x}
             y={labelCenter.y}
             textAnchor="middle"
             dominantBaseline="middle"
             style={{
-              fontSize: '48px',
+              fontSize: '56px',
               fontWeight: '900',
               fill: watermarkColor,
-              opacity: isDark ? 0.35 : 0.25,
+              opacity: isDark ? 0.42 : 0.32,
               userSelect: 'none',
-              fontFamily: 'system-ui, -apple-system, sans-serif',
+              fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+              filter: 'drop-shadow(0px 2px 6px rgba(0,0,0,0.35))',
+              letterSpacing: '-1px',
             }}
           >
             {label}
           </text>
-
-          {/* Floating Phase Badge pill */}
-          <g transform={`translate(${labelCenter.x}, ${labelCenter.y})`}>
-            <rect
-              x="-26"
-              y="-13"
-              width="52"
-              height="26"
-              rx="13"
-              fill={badgeBg}
-              stroke={badgeBorder}
-              strokeWidth="1.5"
-              filter="drop-shadow(0 2px 4px rgba(0,0,0,0.35))"
-            />
-            <text
-              x="0"
-              y="1"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              style={{
-                fontSize: '13px',
-                fontWeight: '800',
-                fill: '#FFFFFF',
-                letterSpacing: '0.5px',
-                userSelect: 'none',
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-              }}
-            >
-              {label}
-            </text>
-          </g>
         </g>
       );
     });
@@ -926,75 +895,144 @@ export default function InteractiveSiteMap() {
   ════════════════════════════════════════ */
   return (
     <>
-      <div className={`rounded-2xl shadow-xl overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-        <div className={`p-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-          <div className="flex items-center justify-between mb-3">
-            <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-              {lastUpdated ? `Updated ${formatLastUpdated()}` : ''}
-            </span>
-            <div className={`flex items-center gap-1 text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-              <RefreshCw className="w-3 h-3" /> Auto-updates every 30s
+      <div className={`rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden border transition-colors ${
+        isDark ? 'bg-gray-900/90 border-gray-800 shadow-black/40' : 'bg-white border-gray-200/90 shadow-gray-200/60'
+      }`}>
+        {/* ── Top Dashboard Control Header (Optimized for Mobile & Desktop) ── */}
+        <div className={`p-3 sm:p-4 border-b transition-colors ${
+          isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-100 bg-slate-50/80'
+        }`}>
+          {/* Row 1: Actions, Sync Status & Phase Toggle */}
+          <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3">
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] sm:text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md ${
+                isDark ? 'bg-gray-800 text-gray-300 border border-gray-700/60' : 'bg-white text-gray-600 border border-gray-200 shadow-xs'
+              }`}>
+                Live Units
+              </span>
+              <span className={`text-[10px] sm:text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                {lastUpdated ? `Updated ${formatLastUpdated()}` : 'Syncing...'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              {/* Phase Toggle Pill */}
+              <button
+                onClick={() => setShowPhases(v => !v)}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all border ${
+                  showPhases
+                    ? isDark
+                      ? 'bg-gray-800 text-white border-gray-600 shadow-sm'
+                      : 'bg-white text-gray-900 border-gray-300 shadow-sm'
+                    : isDark
+                      ? 'bg-transparent text-gray-500 border-gray-800 opacity-60'
+                      : 'bg-transparent text-gray-400 border-gray-200 opacity-60'
+                }`}
+                title="Toggle Phases A-D overlay"
+              >
+                <div className="flex items-center -space-x-1">
+                  <span className="w-2 h-2 rounded-full bg-slate-400 ring-1 ring-white/20" />
+                  <span className="w-2 h-2 rounded-full bg-blue-500 ring-1 ring-white/20" />
+                  <span className="w-2 h-2 rounded-full bg-purple-500 ring-1 ring-white/20" />
+                  <span className="w-2 h-2 rounded-full bg-amber-500 ring-1 ring-white/20" />
+                </div>
+                <span>Phases {showPhases ? '✓' : 'Off'}</span>
+              </button>
+
+              {/* Edit Google Sheet Button */}
+              <a
+                href={ADMIN_SHEET_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg transition-all border ${
+                  isDark
+                    ? 'bg-emerald-950/40 text-emerald-400 hover:bg-emerald-900/60 border-emerald-800/60'
+                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200'
+                }`}
+                title="Edit Google Sheet"
+              >
+                <ExternalLink className="w-3 h-3" />
+                <span>Edit</span>
+              </a>
+
+              {/* Refresh Button */}
+              <button
+                onClick={() => loadData()}
+                disabled={loading}
+                className={`p-1.5 rounded-lg transition-all border ${
+                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                } ${
+                  isDark
+                    ? 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 border-gray-700/60'
+                    : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-gray-200 shadow-xs'
+                }`}
+                title="Refresh Status"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-5 gap-2 mb-3">
-            {[
-              { val: stats.total,                 label: 'Total', cls: isDark ? 'text-white' : 'text-gray-900', bg: '' },
-              { val: stats.available,             label: 'Avl',   cls: 'text-green-500', bg: isDark ? 'bg-green-900/30' : 'bg-green-400/30'  },
-              { val: stats.preLeased,             label: 'Pre L', cls: 'text-blue-500',  bg: isDark ? 'bg-blue-900/30'  : 'bg-blue-400/30'   },
-              { val: stats.forLease,              label: 'For L', cls: 'text-red-500',   bg: isDark ? 'bg-red-900/30'   : 'bg-red-400/30'    },
-              { val: stats.sold + stats.forLease, label: 'Sold',  cls: 'text-[#808080]', bg: isDark ? 'bg-[#808080]/30' : 'bg-[#808080]/30'  },
-            ].map(({ val, label, cls, bg }) => (
-              <div key={label} className={`p-2 rounded-xl text-center ${bg}`}>
-                <p className={`text-xl font-bold ${cls}`}>{val}</p>
-                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{label}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-2 text-[0.7rem] items-center">
-            {[
-              { color: 'bg-green-500', label: 'Available'  },
-              { color: 'bg-blue-500',  label: 'Pre Leased' },
-              { color: 'bg-red-500',   label: 'For Lease'  },
-              { color: 'bg-[#808080]', label: 'Sold' },
-            ].map(({ color, label }) => (
-              <div key={label} className="flex items-center gap-1">
-                <div className={`w-3.5 h-3.5 rounded-full shadow ${isDark ? `border-2 border-white ${color}` : `border-2 border-gray-300 ${color}`}`} />
-                <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
-              </div>
-            ))}
-            <button
-              onClick={() => setShowPhases(v => !v)}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[0.7rem] font-bold transition-all border ${
-                showPhases
-                  ? isDark
-                    ? 'bg-slate-700 text-slate-100 border-slate-500 shadow-sm'
-                    : 'bg-slate-200 text-slate-800 border-slate-400 shadow-sm'
-                  : isDark
-                    ? 'bg-transparent text-gray-500 border-gray-700 opacity-60'
-                    : 'bg-transparent text-gray-400 border-gray-300 opacity-60'
-              }`}
-              title="Toggle Phases overlay"
-            >
-              <span className="w-2 h-2 rounded-full bg-slate-400" />
-              Phases A-D {showPhases ? '✓' : ''}
-            </button>
-            <div className="flex gap-1.5 ml-auto">
-              <a
-                href={ADMIN_SHEET_URL} target="_blank" rel="noopener noreferrer"
-                className={`flex items-center gap-1 px-2 py-1.5 text-[0.62rem] font-semibold rounded-lg transition-all ${
-                  isDark ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50' : 'bg-green-50 text-green-600 hover:bg-green-100'
-                }`}
-              >
-                <ExternalLink className="w-3 h-3" /> Edit
-              </a>
-              <button onClick={() => loadData()} disabled={loading}
-                className={`p-1.5 rounded-lg transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''} ${
-                  isDark ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                }`}>
-                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-              </button>
+          {/* Row 2: Combined Stat & Legend Chips (Mobile smooth scroll / Desktop grid) */}
+          <div className="overflow-x-auto no-scrollbar -mx-1 px-1 py-0.5">
+            <div className="flex sm:grid sm:grid-cols-5 gap-1.5 sm:gap-2 min-w-max sm:min-w-0">
+              {[
+                {
+                  key: 'total',
+                  val: stats.total,
+                  label: 'Total Units',
+                  dot: isDark ? 'bg-gray-300' : 'bg-gray-700',
+                  cls: isDark ? 'text-white' : 'text-gray-900',
+                  bg: isDark ? 'bg-gray-800/80 border-gray-700/60' : 'bg-white border-gray-200/90 shadow-xs',
+                },
+                {
+                  key: 'available',
+                  val: stats.available,
+                  label: 'Available',
+                  dot: 'bg-emerald-500 shadow-sm shadow-emerald-500/50',
+                  cls: isDark ? 'text-emerald-400' : 'text-emerald-600',
+                  bg: isDark ? 'bg-emerald-950/30 border-emerald-800/50' : 'bg-emerald-50/70 border-emerald-200/90 shadow-xs',
+                },
+                {
+                  key: 'preLeased',
+                  val: stats.preLeased,
+                  label: 'Pre-Leased',
+                  dot: 'bg-blue-500 shadow-sm shadow-blue-500/50',
+                  cls: isDark ? 'text-blue-400' : 'text-blue-600',
+                  bg: isDark ? 'bg-blue-950/30 border-blue-800/50' : 'bg-blue-50/70 border-blue-200/90 shadow-xs',
+                },
+                {
+                  key: 'forLease',
+                  val: stats.forLease,
+                  label: 'For Lease',
+                  dot: 'bg-red-500 shadow-sm shadow-red-500/50',
+                  cls: isDark ? 'text-red-400' : 'text-red-600',
+                  bg: isDark ? 'bg-red-950/30 border-red-800/50' : 'bg-red-50/70 border-red-200/90 shadow-xs',
+                },
+                {
+                  key: 'sold',
+                  val: stats.sold + stats.forLease,
+                  label: 'Sold',
+                  dot: 'bg-gray-400',
+                  cls: isDark ? 'text-gray-300' : 'text-gray-700',
+                  bg: isDark ? 'bg-gray-800/50 border-gray-700/40' : 'bg-gray-100/70 border-gray-200/80 shadow-xs',
+                },
+              ].map(({ key, val, label, dot, cls, bg }) => (
+                <div
+                  key={key}
+                  className={`flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl border transition-all ${bg}`}
+                >
+                  <span className={`w-2 h-2 rounded-full shrink-0 ${dot}`} />
+                  <div className="flex items-baseline gap-1.5 sm:flex-col sm:gap-0">
+                    <span className={`text-sm sm:text-base font-black tracking-tight leading-none ${cls}`}>
+                      {val}
+                    </span>
+                    <span className={`text-[10px] sm:text-[11px] font-bold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                      {label}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -1020,10 +1058,11 @@ export default function InteractiveSiteMap() {
           >
             <Maximize2 size={14} /> View Fullscreen
           </button>
-          <div className={`absolute bottom-4 left-4 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium ${
-            isDark ? 'bg-black/60 text-gray-300' : 'bg-white/90 text-gray-700 border border-gray-200 shadow-lg'
+          <div className={`absolute bottom-3 left-3 sm:bottom-4 sm:left-4 pointer-events-none px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] font-medium backdrop-blur-sm ${
+            isDark ? 'bg-black/70 text-gray-300 border border-white/10' : 'bg-white/90 text-gray-700 border border-gray-200 shadow-md'
           }`}>
-            Tap shed for details
+            <span className="sm:hidden">Pinch to zoom · Tap shed</span>
+            <span className="hidden sm:inline">Tap shed for details</span>
           </div>
         </div>
       </div>
