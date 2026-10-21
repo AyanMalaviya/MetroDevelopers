@@ -901,6 +901,150 @@ const HomePage = () => {
 
         <InstagramSection isDark={isDark} />
 
+
+        {/* ════════ FLAGSHIP DEVELOPMENTS ════════ */}
+        <section
+          aria-label="Flagship Industrial Developments by Metro Developers"
+          className="relative py-14 sm:py-20 overflow-hidden"
+          style={{ background: isDark ? '#08080f' : '#ffffff' }}
+        >
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-12 sm:mb-16">
+              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-3 ${
+                isDark ? 'bg-red-500/10 text-red-400 border-red-500/30' : 'bg-red-50 text-red-600 border-red-200'
+              }`}>
+                <Factory size={13} /> Our Developments
+              </span>
+              <h2 className="text-2xl sm:text-5xl font-black leading-tight"
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                <span className={isDark ? 'text-white' : 'text-gray-900'}>Ready Sheds or </span>
+                <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+                  Build Your Own
+                </span>
+              </h2>
+              <p className={`text-xs sm:text-base max-w-2xl mx-auto mt-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Choose between move-in ready high-clearance industrial sheds or clear-title industrial plots with developer-provided 24/7 security & wide heavy RCC roads.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+              {/* Card 1: Metro Industrial Park */}
+              <div className={`rounded-3xl border overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl ${
+                isDark ? 'bg-gray-900/40 border-gray-800 hover:border-red-500/40' : 'bg-white border-gray-200 hover:border-red-300 shadow-md'
+              }`}>
+                <div>
+                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-950">
+                    <img
+                      src="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
+                      alt="Ready industrial sheds at Metro Industrial Park Moraiya Changodar"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-4 left-4 bg-brand-red text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                      Ready Possession
+                    </div>
+                  </div>
+                  <div className="p-6 sm:p-8">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-brand-red mb-2">
+                      <MapPin size={14} /> Moraiya, Changodar (Near NH 47)
+                    </div>
+                    <h3 className={`text-xl sm:text-2xl font-black mb-2 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      Metro Industrial Park
+                    </h3>
+                    <p className={`text-xs sm:text-sm leading-relaxed mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      63 premium ready-to-move industrial sheds & warehouses across 54,000+ sq.yards. 30–35 ft ceiling clearance, 60 ft heavy RCC internal roads, and proven 6–8% rental yield.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-xs font-semibold mb-6">
+                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
+                        <span className="block text-brand-red font-black text-sm">4K–50K Sq.ft</span> Units
+                      </div>
+                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
+                        <span className="block text-green-500 font-black text-sm">6–8%</span> Rental Yield
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 sm:p-8 pt-0 flex items-center gap-3">
+                  <Link
+                    to="/metro-industrial-park"
+                    className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] transition-transform"
+                  >
+                    <span>Explore Sheds</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                  <Link
+                    to="/site-map"
+                    className={`inline-flex items-center justify-center py-3 px-4 rounded-xl font-bold text-xs sm:text-sm border transition-colors ${
+                      isDark ? 'bg-black border-gray-800 text-gray-300 hover:border-brand-red' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <MapPin size={14} className="mr-1" /> Map
+                  </Link>
+                </div>
+              </div>
+
+              {/* Card 2: Metro Industrial Estate */}
+              <div className={`rounded-3xl border overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl ${
+                isDark ? 'bg-gray-900/40 border-gray-800 hover:border-orange-500/40' : 'bg-white border-gray-200 hover:border-orange-300 shadow-md'
+              }`}>
+                <div>
+                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-950">
+                    <img
+                      src="/images/metro-industrial-estate-site-plan.jpg"
+                      alt="Industrial plots for sale to build your own shed at Metro Industrial Estate Moraiya"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                      Build Your Own Shed
+                    </div>
+                    <div className="absolute top-4 right-4 bg-green-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                      New Launch
+                    </div>
+                  </div>
+                  <div className="p-6 sm:p-8">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-orange-500 mb-2">
+                      <MapPin size={14} /> Opp. Metro Industrial Park, Moraiya
+                    </div>
+                    <h3 className={`text-xl sm:text-2xl font-black mb-2 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      Metro Industrial Estate
+                    </h3>
+                    <p className={`text-xs sm:text-sm leading-relaxed mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      23 clear-title industrial plots providing complete freedom to "Build Your Own Shed". Supported by developer facilities including 24/7 security & CCTV, wide heavy RCC roads, water, and power.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-xs font-semibold mb-6">
+                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
+                        <span className="block text-orange-500 font-black text-sm">300–1,930+ Yd</span> Plots
+                      </div>
+                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
+                        <span className="block text-green-500 font-black text-sm">24/7 Security</span> & RCC Roads
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 sm:p-8 pt-0 flex items-center gap-3">
+                  <Link
+                    to="/metro-industrial-estate"
+                    className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] transition-transform"
+                  >
+                    <span>Explore Plots</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                  <Link
+                    to="/site-map"
+                    state={{ activeTab: 'estate' }}
+                    className={`inline-flex items-center justify-center py-3 px-4 rounded-xl font-bold text-xs sm:text-sm border transition-colors ${
+                      isDark ? 'bg-black border-gray-800 text-gray-300 hover:border-orange-500' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <MapPin size={14} className="mr-1" /> Plot Map
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ════════ FEATURES ════════ */}
         <section
           ref={featuresRef}
@@ -1105,32 +1249,35 @@ const HomePage = () => {
                 </div>
                 <div className="flex-1 pr-4">
                   <span className="text-[9px] font-black tracking-widest uppercase bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent block mb-1">
-                    New Project Launch
+                    New Launch • Build Your Own Shed
                   </span>
                   <h4 className={`text-base font-black mb-1 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
                     Metro Industrial Estate
                   </h4>
-                  <p className={`text-xs mb-4 leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Explore newly launched premium industrial plots in Changodar. Check live layout & availability now.
+                  <p className={`text-xs mb-3.5 leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Clear-title industrial plots in Moraiya, Changodar. Build your customized shed with 24/7 security & wide heavy RCC roads.
                   </p>
 
                   <div className="flex items-center gap-2">
                     <Link
-                      to="/site-map"
-                      state={{ activeTab: 'estate' }}
+                      to="/metro-industrial-estate"
                       onClick={closeEstateToast}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-xs shadow-md hover:scale-[1.02] transition-transform"
                     >
-                      <MapPin size={13} /> View Site Map
+                      <span>Explore Plots</span>
+                      <ArrowRight size={13} />
                     </Link>
-                    <button
+                    <Link
+                      to="/site-map"
+                      state={{ activeTab: 'estate' }}
                       onClick={closeEstateToast}
                       className={`py-2.5 px-3 rounded-xl font-bold text-xs transition-colors border ${
-                        isDark ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 border-gray-200 text-gray-600 hover:bg-gray-200'
+                        isDark ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 border-gray-200 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
-                      Dismiss
-                    </button>
+                      <MapPin size={13} className="inline mr-1" />
+                      Map
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -517,3 +517,139 @@ export const createArticleSchema = ({ headline, description, path, keywords = []
     description: 'Industrial sheds, warehouses, and investment property in Moraiya, Changodar, Ahmedabad, Gujarat.',
   },
 });
+
+
+// ─── Metro Industrial Estate Schemas (Plots — "Build Your Own Shed") ────────
+export const metroEstateSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
+  '@id': `${SITE_URL}/#metro-industrial-estate`,
+  name: 'Metro Industrial Estate',
+  alternateName: ['Metro Industrial Estate Moraiya Changodar', 'Metro Estate Industrial Plots'],
+  description:
+    'Clear-title industrial plots for "Build Your Own Shed" opposite Metro Industrial Park in Moraiya, Changodar, Ahmedabad. Features 24/7 security, wide heavy-duty RCC roads, dedicated water, drainage, and industrial power infrastructure.',
+  url: `${SITE_URL}/metro-industrial-estate`,
+  telephone: '+919824235642',
+  email: 'metrodevelopers26@gmail.com',
+  address: postalAddress,
+  geo: geoCoordinates,
+  hasMap: MAPS_URL,
+  openingHoursSpecification: openingHoursSpec,
+  parentOrganization: { '@id': `${SITE_URL}/#metro-enterprise` },
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Build Your Own Shed Customization', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security and CCTV Surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Wide Heavy-Duty RCC Internal Roads', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Industrial Water Supply', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Underground Drainage System', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'High-Tension Power Provisions', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '100% Clear Title & Non-Agricultural (NA) Land', value: true },
+  ],
+};
+
+export const metroEstateListingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateListing',
+  '@id': `${SITE_URL}/#metro-estate-listing`,
+  name: 'Industrial Plots for Sale — Build Your Own Shed in Moraiya, Changodar',
+  description:
+    'Premium clear-title industrial plots at Metro Industrial Estate, Moraiya, Changodar. Build your customized industrial shed or warehouse with developer-provided 24/7 security, heavy-duty RCC roads, water, drainage, and power.',
+  url: `${SITE_URL}/metro-industrial-estate`,
+  provider: { '@id': `${SITE_URL}/#metro-enterprise` },
+  address: postalAddress,
+  geo: geoCoordinates,
+  offers: {
+    '@type': 'Offer',
+    availability: 'https://schema.org/InStock',
+    priceCurrency: 'INR',
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      priceCurrency: 'INR',
+      valueAddedTaxIncluded: false,
+      description: 'Contact for current plot rates and custom parcel configurations.',
+    },
+    eligibleRegion: {
+      '@type': 'AdministrativeArea',
+      name: 'Ahmedabad, Gujarat, India',
+    },
+    seller: { '@id': `${SITE_URL}/#metro-enterprise` },
+  },
+  floorSize: {
+    '@type': 'QuantitativeValue',
+    minValue: 2800,
+    maxValue: 25000,
+    unitCode: 'FTK',
+    unitText: 'square feet',
+  },
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Build Your Own Shed layout freedom', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security & CCTV surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Heavy-duty RCC internal roads', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Dedicated industrial water connections', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Underground industrial drainage network', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'High-tension power line connectivity', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Clear Title with Immediate Registration', value: true },
+  ],
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'Project Type', value: 'Industrial Plots / Land' },
+    { '@type': 'PropertyValue', name: 'Concept', value: 'Build Your Own Shed' },
+    { '@type': 'PropertyValue', name: 'Total Plots', value: '23' },
+    { '@type': 'PropertyValue', name: 'Plot Area Range', value: '312 to 1,930 sq.yards' },
+    { '@type': 'PropertyValue', name: 'Location', value: 'Opp. Metro Industrial Park, Moraiya, Changodar' },
+  ],
+};
+
+export const metroEstateFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is Metro Industrial Estate in Moraiya, Changodar?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Metro Industrial Estate is an industrial plotting project located directly opposite Metro Industrial Park in Moraiya, Changodar, Ahmedabad. It provides clear-title industrial plots where businesses can "Build Your Own Shed" with ready developer infrastructure like 24/7 security and wide RCC roads.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What does "Build Your Own Shed" mean?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '"Build Your Own Shed" allows clients to purchase an industrial plot and construct their own customized factory, warehouse, or workshop tailored to their exact operational needs (custom clear height up to 35-40 ft, specific crane capacities, heavy machine foundations, dock levelers, or custom office layouts).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What facilities are provided at Metro Industrial Estate?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Metro Developers provides comprehensive estate infrastructure including 24/7 gated security with CCTV surveillance, wide heavy-duty RCC internal roads designed for container trucks, dedicated industrial water supply, underground drainage, and electrical power connectivity provisions.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What plot sizes are available at Metro Industrial Estate?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Plots range from approximately 312 sq.yards up to 1,930 sq.yards across Block A, Block B, and Block C. Multiple adjacent plots can also be combined for large industrial setups.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Are the industrial plots clear title and legally approved?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, all plots at Metro Industrial Estate have 100% clear legal titles, Non-Agricultural (NA) industrial zoning approval, and are ready for immediate sale deed registration.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where is Metro Industrial Estate located?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'It is situated directly opposite Metro Industrial Park in Moraiya, Changodar, Ahmedabad, minutes away from the Sarkhej-Bavla National Highway (NH 47) and close to Sanand GIDC.',
+      },
+    },
+  ],
+};

@@ -11,6 +11,7 @@ const PRERENDER_ROUTES = [
   '/',
   '/metro-industrial-park',
   '/metro-arcade',
+  '/metro-industrial-estate',
   '/contact',
   '/calculator',
   '/site-map',

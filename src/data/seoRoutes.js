@@ -782,6 +782,17 @@ export const SEO_ROUTES = [
     ],
   },
   {
+    path: '/metro-industrial-estate',
+    changefreq: 'weekly',
+    priority: 0.9,
+    images: [
+      {
+        loc: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+        title: 'Metro Industrial Estate Plots Moraiya Changodar',
+      },
+    ],
+  },
+  {
     path: '/metro-arcade',
     changefreq: 'monthly',
     priority: 0.8,

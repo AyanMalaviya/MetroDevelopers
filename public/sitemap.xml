@@ -28,6 +28,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://www.metrodevelopers.co.in/metro-industrial-estate</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.metrodevelopers.co.in/images/metro-industrial-park-site-map-moraiya-gujarat.jpg</image:loc>
+      <image:title>Metro Industrial Estate Plots Moraiya Changodar</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://www.metrodevelopers.co.in/metro-arcade</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>

@@ -76,6 +76,10 @@ const FAQ_ITEMS = [
     a: '24×7 water, CCTV, security guards, weigh bridge, 60 ft RCC roads, 30–35 ft ceiling clearance.',
   },
   {
+    q: 'Can I buy land to build my own shed?',
+    a: 'Yes. At Metro Industrial Estate (opp. Metro Industrial Park), we offer clear-title industrial plots to "Build Your Own Shed" with complete developer infrastructure including 24/7 security and wide heavy RCC roads.',
+  },
+  {
     q: 'Where is the park located?',
     a: 'Moraiya, Changodar — near NH 47 (Sarkhej Bavla Highway), opposite Suvas Industrial Estate, behind Siya Logistics Park.',
   },
@@ -90,6 +94,7 @@ const FAQ_ITEMS = [
 const QUICK_LINKS = [
   { to: '/',                                                           label: 'Home'                           },
   { to: '/metro-industrial-park',                                      label: 'Metro Industrial Park'          },
+  { to: '/metro-industrial-estate',                                    label: 'Metro Industrial Estate (Plots)'},
   { to: '/metro-arcade',                                               label: 'Metro Arcade'                   },
   { to: '/warehouses-in-changodar',                                    label: 'Warehouses in Changodar'        },
   { to: '/industrial-sheds-in-changodar',                              label: 'Industrial Sheds in Changodar'  },
