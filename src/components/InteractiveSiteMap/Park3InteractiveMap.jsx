@@ -8,7 +8,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { park3PlotCoordinates, getPark3PlotCenter } from '../../data/park3PlotCoordinates';
 import { getPark3PlotData } from '../../services/park3DataService';
 
-const ADMIN_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbpDHOEarWSXt8ip3w8XjlJIZ1PMG1IEqP8zPb8gXjNcYXFZQu0KwX_5w5ONIXYrBv77WeP1vCK6bi/pubhtml';
+const ADMIN_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1om2y2hG15CsH39lIIPtdiLrsAncSOSe0tYx6H3ih-1A/edit';
 const PARK3_PLOT_ENTRIES = Object.entries(park3PlotCoordinates);
 
 /* ── Pure Static Helpers ── */
