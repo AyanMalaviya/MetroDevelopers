@@ -917,6 +917,10 @@ export default function MetroEstateInteractiveMap() {
     setSelectedPlot(null);
   }, []);
 
+  const handleOpenFullscreen = useCallback(() => {
+    setIsFullscreen(true);
+  }, []);
+
   const handleCloseFullscreen = useCallback(() => {
     setIsFullscreen(false);
   }, []);
@@ -932,7 +936,7 @@ export default function MetroEstateInteractiveMap() {
           stats={stats}
           loading={loading}
           loadData={loadData}
-          onOpenFullscreen={() => setIsFullscreen(true)}
+          onOpenFullscreen={handleOpenFullscreen}
           isDark={isDark}
         />
 
@@ -973,7 +977,7 @@ export default function MetroEstateInteractiveMap() {
           {/* Bottom Floating Fullscreen Button */}
           <button
             type="button"
-            onClick={() => setIsFullscreen(true)}
+            onClick={handleOpenFullscreen}
             className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-brand-red/25 active:scale-95 transition-all whitespace-nowrap"
           >
             <Maximize2 size={13} />

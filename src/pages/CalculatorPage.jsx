@@ -1,7 +1,6 @@
 // src/pages/Calculator.jsx
-import { useRef } from 'react';
+import { useRef, useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import {
   FileText, MapPin, ArrowLeft, X,
@@ -26,6 +25,61 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
+const TABLES = [
+  { src: '/images/metro-industrial-park-area-details-table-1.jpg', alt: 'Area Sheet - Table 1' },
+  { src: '/images/metro-industrial-park-area-details-table-2.jpg', alt: 'Area Sheet - Table 2' },
+];
+
+/* ─── Specific Calculator Schema ─── */
+const CALCULATOR_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Metro Industrial Park ROI Calculator",
+  "applicationCategory": "BusinessApplication",
+  "description": "Calculate ROI, rental yield, and property values for industrial sheds at Metro Industrial Park, Ahmedabad.",
+  "operatingSystem": "Web",
+  "url": "https://www.metrodevelopers.co.in/calculator"
+};
+
+/* ─── Shared modal backdrop + container (Hoisted for zero remount churn) ─── */
+const Modal = memo(({ show, onClose, children, label }) => (
+  <AnimatePresence>
+    {show && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0, y: 20 }}
+          animate={{ scale: 1,    opacity: 1, y: 0  }}
+          exit={{ scale: 0.92,    opacity: 0, y: 20 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="relative max-w-5xl w-full"
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Close */}
+          <button
+            onClick={onClose}
+            className="absolute -top-11 right-0 p-2 text-white/70 hover:text-brand-red transition-colors"
+          >
+            <X className="w-7 h-7" />
+          </button>
+
+          {children}
+
+          {label && (
+            <p className="text-center text-white/50 text-xs mt-3">{label}</p>
+          )}
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+));
+
 const Calculator = () => {
   const { theme }  = useTheme();
   const navigate   = useNavigate();
@@ -41,63 +95,10 @@ const Calculator = () => {
   const heroInView = useInView(heroRef, { once: true });
   const calcInView = useInView(calcRef, { once: true, margin: '-60px' });
 
-  const tables = [
-    { src: '/images/metro-industrial-park-area-details-table-1.jpg', alt: 'Area Sheet - Table 1' },
-    { src: '/images/metro-industrial-park-area-details-table-2.jpg', alt: 'Area Sheet - Table 2' },
-  ];
-
-  const nextTable = () => setCurrentTable(p => (p + 1) % tables.length);
-  const prevTable = () => setCurrentTable(p => (p - 1 + tables.length) % tables.length);
-
-  /* ─── Specific Calculator Schema ─── */
-  const calculatorSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Metro Industrial Park ROI Calculator",
-    "applicationCategory": "BusinessApplication",
-    "description": "Calculate ROI, rental yield, and property values for industrial sheds at Metro Industrial Park, Ahmedabad.",
-    "operatingSystem": "Web",
-    "url": "https://www.metrodevelopers.co.in/calculator"
-  };
-
-  /* ─── Shared modal backdrop + container ─── */
-  const Modal = ({ show, onClose, children, label }) => (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.92, opacity: 0, y: 20 }}
-            animate={{ scale: 1,    opacity: 1, y: 0  }}
-            exit={{ scale: 0.92,    opacity: 0, y: 20 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="relative max-w-5xl w-full"
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Close */}
-            <button
-              onClick={onClose}
-              className="absolute -top-11 right-0 p-2 text-white/70 hover:text-brand-red transition-colors"
-            >
-              <X className="w-7 h-7" />
-            </button>
-
-            {children}
-
-            {label && (
-              <p className="text-center text-white/50 text-xs mt-3">{label}</p>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  const nextTable = useCallback(() => setCurrentTable(p => (p + 1) % TABLES.length), []);
+  const prevTable = useCallback(() => setCurrentTable(p => (p - 1 + TABLES.length) % TABLES.length), []);
+  const tables = TABLES;
+  const calculatorSchema = CALCULATOR_SCHEMA;
 
   return (
     <>

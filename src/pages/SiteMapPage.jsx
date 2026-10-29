@@ -19,6 +19,80 @@ import SEO from '../components/SEO/SEO';
 import { estatePlotsSchedule, estateTotalStats } from '../data/estatePlotCoordinates';
 import { park3Plots } from '../data/park3PlotsData';
 
+// Hoisted static image references
+const PARK1_IMAGES = {
+  table1: { src: '/images/metro-industrial-park-area-details-table-1.jpg', title: 'Industrial Park 1 — Area Details Table 1' },
+  table2: { src: '/images/metro-industrial-park-area-details-table-2.jpg', title: 'Industrial Park 1 — Area Details Table 2' },
+};
+
+const PARK2_IMAGES = {
+  table: { src: '/images/metro-industrial-park-2-area-table.png', title: 'Industrial Park 2 — 23 Plots Engineering Schedule' },
+};
+
+const PARK3_IMAGES = {
+  table1: { src: '/images/metro-industrial-park-3-area-table-1.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 1 to 39)' },
+  table2: { src: '/images/metro-industrial-park-3-area-table-2.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 40 to 77)' },
+};
+
+// Hoisted tab configurations
+const TABS = [
+  { id: 'park', label: 'Park 1 (MIP 1)', short: 'Park 1', subtitle: '63 Industrial Sheds' },
+  { id: 'estate', label: 'Park 2 (MIP 2)', short: 'Park 2', subtitle: '23 Plotted Parcels' },
+  { id: 'park3', label: 'Park 3 (MIP 3)', short: 'Park 3', subtitle: '77 Plotted Parcels' },
+];
+
+// Hoisted static dataset schema
+const TABLE_DATASET_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Dataset',
+      '@id': 'https://metroindustrialpark.com/site-map#schedule-dataset',
+      'name': 'Metro Industrial Park 1, 2 & 3 Official Area Details & Plot Schedule',
+      'alternateName': ['MIP Plot Schedule', 'Metro Developers Plot Area Table', 'MIP 1 2 3 Dimensions'],
+      'description': 'Comprehensive engineering area schedules for Metro Industrial Park 1 (63 sheds in Moraiya), Metro Industrial Park 2 (23 plotted parcels in Moraiya), and Metro Industrial Park 3 (77 plotted parcels on Bavla-Rajoda Road), Ahmedabad, Gujarat.',
+      'creator': {
+        '@type': 'RealEstateAgent',
+        'name': 'Metro Developers',
+        'url': 'https://metroindustrialpark.com'
+      },
+      'spatialCoverage': {
+        '@type': 'Place',
+        'name': 'Ahmedabad Industrial Belt (Moraiya, Changodar, Bavla), Gujarat, India',
+        'geo': {
+          '@type': 'GeoCoordinates',
+          'latitude': 22.9039,
+          'longitude': 72.4419
+        }
+      }
+    },
+    {
+      '@type': 'ItemList',
+      '@id': 'https://metroindustrialpark.com/site-map#park2-plots-list',
+      'name': 'Metro Industrial Park 2 (MIP 2) - 23 Clear Title Plotted Parcels',
+      'numberOfItems': estatePlotsSchedule.length,
+      'itemListElement': estatePlotsSchedule.map((p, idx) => ({
+        '@type': 'ListItem',
+        'position': idx + 1,
+        'name': `Plot #${p.plotNo} (Block ${p.section}) - Metro Industrial Park 2`,
+        'description': `Sub Plot Area: ${p.subPlotAreaSqYd.toFixed(2)} SQ.YD (${p.subPlotAreaSqMt.toFixed(2)} SQ.MT), Net Plot Area: ${p.netPlotAreaSqYd.toFixed(2)} SQ.YD (${p.netPlotAreaSqMt.toFixed(2)} SQ.MT), Total Plot Area: ${p.totalPlotAreaSqYd.toFixed(2)} SQ.YD (${p.totalPlotAreaSqMt.toFixed(2)} SQ.MT). Clear title industrial land in Moraiya, Ahmedabad by Metro Developers.`
+      }))
+    },
+    {
+      '@type': 'ItemList',
+      '@id': 'https://metroindustrialpark.com/site-map#park3-plots-list',
+      'name': 'Metro Industrial Park 3 (MIP 3) - 77 Clear Title Plotted Parcels',
+      'numberOfItems': park3Plots.length,
+      'itemListElement': park3Plots.map((p, idx) => ({
+        '@type': 'ListItem',
+        'position': idx + 1,
+        'name': `Plot #${p.id} - Metro Industrial Park 3`,
+        'description': `Carpet Area: ${p.carpetSqmt?.toFixed(2) || 'N/A'} SQ.MT, Total Area: ${p.totalSqmt?.toFixed(2) || 'N/A'} SQ.MT (${p.area} SQ.YD), Super Loading: ${p.superPct || '23.39%'}. Clear title industrial land on Bavla-Rajoda Road, Ahmedabad by Metro Developers.`
+      }))
+    }
+  ]
+};
+
 const SiteMapPage = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
@@ -45,29 +119,11 @@ const SiteMapPage = () => {
     setViewerOpen(true);
   }, []);
 
-  // Park 1 images
-  const park1Images = {
-    table1: { src: '/images/metro-industrial-park-area-details-table-1.jpg', title: 'Industrial Park 1 — Area Details Table 1' },
-    table2: { src: '/images/metro-industrial-park-area-details-table-2.jpg', title: 'Industrial Park 1 — Area Details Table 2' },
-  };
-
-  // Park 2 images
-  const park2Images = {
-    table: { src: '/images/metro-industrial-park-2-area-table.png', title: 'Industrial Park 2 — 23 Plots Engineering Schedule' },
-  };
-
-  // Park 3 images
-  const park3Images = {
-    table1: { src: '/images/metro-industrial-park-3-area-table-1.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 1 to 39)' },
-    table2: { src: '/images/metro-industrial-park-3-area-table-2.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 40 to 77)' },
-  };
-
-  // Tab configurations: cleanly labeled 1, 2 & 3
-  const tabs = [
-    { id: 'park', label: 'Park 1 (MIP 1)', short: 'Park 1', subtitle: '63 Industrial Sheds' },
-    { id: 'estate', label: 'Park 2 (MIP 2)', short: 'Park 2', subtitle: '23 Plotted Parcels' },
-    { id: 'park3', label: 'Park 3 (MIP 3)', short: 'Park 3', subtitle: '77 Plotted Parcels' },
-  ];
+  const park1Images = PARK1_IMAGES;
+  const park2Images = PARK2_IMAGES;
+  const park3Images = PARK3_IMAGES;
+  const tabs = TABS;
+  const tableDatasetSchema = TABLE_DATASET_SCHEMA;
 
   // Filtered Park 2 plots
   const filteredPark2Plots = useMemo(() => {
@@ -89,60 +145,6 @@ const SiteMapPage = () => {
       return true;
     });
   }, [park3Filter, searchQuery]);
-
-  // Structured dataset and item lists for AI crawlers & search engines
-  const tableDatasetSchema = useMemo(() => {
-    return {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Dataset',
-          '@id': 'https://metroindustrialpark.com/site-map#schedule-dataset',
-          'name': 'Metro Industrial Park 1, 2 & 3 Official Area Details & Plot Schedule',
-          'alternateName': ['MIP Plot Schedule', 'Metro Developers Plot Area Table', 'MIP 1 2 3 Dimensions'],
-          'description': 'Comprehensive engineering area schedules for Metro Industrial Park 1 (63 sheds in Moraiya), Metro Industrial Park 2 (23 plotted parcels in Moraiya), and Metro Industrial Park 3 (77 plotted parcels on Bavla-Rajoda Road), Ahmedabad, Gujarat.',
-          'creator': {
-            '@type': 'RealEstateAgent',
-            'name': 'Metro Developers',
-            'url': 'https://metroindustrialpark.com'
-          },
-          'spatialCoverage': {
-            '@type': 'Place',
-            'name': 'Ahmedabad Industrial Belt (Moraiya, Changodar, Bavla), Gujarat, India',
-            'geo': {
-              '@type': 'GeoCoordinates',
-              'latitude': 22.9039,
-              'longitude': 72.4419
-            }
-          }
-        },
-        {
-          '@type': 'ItemList',
-          '@id': 'https://metroindustrialpark.com/site-map#park2-plots-list',
-          'name': 'Metro Industrial Park 2 (MIP 2) - 23 Clear Title Plotted Parcels',
-          'numberOfItems': estatePlotsSchedule.length,
-          'itemListElement': estatePlotsSchedule.map((p, idx) => ({
-            '@type': 'ListItem',
-            'position': idx + 1,
-            'name': `Plot #${p.plotNo} (Block ${p.section}) - Metro Industrial Park 2`,
-            'description': `Sub Plot Area: ${p.subPlotAreaSqYd.toFixed(2)} SQ.YD (${p.subPlotAreaSqMt.toFixed(2)} SQ.MT), Net Plot Area: ${p.netPlotAreaSqYd.toFixed(2)} SQ.YD (${p.netPlotAreaSqMt.toFixed(2)} SQ.MT), Total Plot Area: ${p.totalPlotAreaSqYd.toFixed(2)} SQ.YD (${p.totalPlotAreaSqMt.toFixed(2)} SQ.MT). Clear title industrial land in Moraiya, Ahmedabad by Metro Developers.`
-          }))
-        },
-        {
-          '@type': 'ItemList',
-          '@id': 'https://metroindustrialpark.com/site-map#park3-plots-list',
-          'name': 'Metro Industrial Park 3 (MIP 3) - 77 Clear Title Plotted Parcels',
-          'numberOfItems': park3Plots.length,
-          'itemListElement': park3Plots.map((p, idx) => ({
-            '@type': 'ListItem',
-            'position': idx + 1,
-            'name': `Plot #${p.id} - Metro Industrial Park 3`,
-            'description': `Carpet Area: ${p.carpetSqmt?.toFixed(2) || 'N/A'} SQ.MT, Total Area: ${p.totalSqmt?.toFixed(2) || 'N/A'} SQ.MT (${p.area} SQ.YD), Super Loading: ${p.superPct || '23.39%'}. Clear title industrial land on Bavla-Rajoda Road, Ahmedabad by Metro Developers.`
-          }))
-        }
-      ]
-    };
-  }, []);
 
   return (
     <>

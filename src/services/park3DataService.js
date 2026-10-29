@@ -33,8 +33,8 @@ export const getPark3PlotData = () => {
             const lessee = (row.lessee || '').trim();
             const monthlyRent = (row.monthlyrent || row.monthly_rent || '').trim();
 
-            const validStatuses = ['available', 'pre-leased', 'for-lease', 'sold', 'booked'];
-            const finalStatus = validStatuses.includes(status) ? status : 'available';
+            // Park 3 status is available or sold (same as Park 2)
+            const finalStatus = status === 'sold' ? 'sold' : 'available';
 
             plotData[id] = {
               status: finalStatus,

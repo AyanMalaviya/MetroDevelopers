@@ -1,5 +1,5 @@
 // src/components/Layout/Navbar.jsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
@@ -13,6 +13,17 @@ import { useTheme } from '../../context/ThemeContext';
 const FONT_SIZE_STORAGE_KEY = 'metro-font-size';
 const FONT_SIZE_VALUES = { normal: '16px', large: '18px', xlarge: '20px' };
 
+const NAV_ITEMS = [
+  { path: '/',                        label: 'Home',       icon: Home           },
+  { path: '/metro-industrial-park',   label: 'Park 1',     icon: Factory        },
+  { path: '/metro-industrial-estate', label: 'Park 2',     icon: LucideLandPlot },
+  { path: '/metro-industrial-park-3', label: 'Park 3',     icon: LucideLandPlot },
+  { path: '/metro-arcade',            label: 'Arcade',     icon: Store          },
+  { path: '/contact',                 label: 'Contact',    icon: Mail           },
+  { path: '/calculator',              label: 'Calculator', icon: Calculator     },
+  { path: '/site-map',                label: 'Site Map',   icon: MapPin         },
+];
+
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
@@ -20,14 +31,14 @@ const Navbar = () => {
 
   const [isMenuOpen,    setIsMenuOpen]    = useState(false);
   const [isVisible,     setIsVisible]     = useState(true);
-  const [lastScrollY,   setLastScrollY]   = useState(0);
   const [scrolled,      setScrolled]      = useState(false);
   const [contactOpen,   setContactOpen]   = useState(false);
   const [settingsOpen,  setSettingsOpen]  = useState(false);
   const [fontSize,      setFontSize]      = useState('normal');
 
-  const contactRef  = useRef(null);
-  const settingsRef = useRef(null);
+  const lastScrollYRef = useRef(0);
+  const contactRef     = useRef(null);
+  const settingsRef    = useRef(null);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
@@ -43,18 +54,39 @@ const Navbar = () => {
     } catch { /* ignore */ }
   }, []);
 
+  // Optimized, non-blocking scroll handler with rAF throttling & ref tracking
   useEffect(() => {
+    let ticking = false;
+
     const control = () => {
-      const y = window.scrollY;
-      setScrolled(y > 50);
-      if (y < 10)                           { setIsVisible(true); }
-      else if (y > lastScrollY && y > 100)  { setIsVisible(false); setIsMenuOpen(false); setContactOpen(false); setSettingsOpen(false); }
-      else if (y < lastScrollY)             { setIsVisible(true); }
-      setLastScrollY(y);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const y = window.scrollY;
+          const isPastTop = y > 50;
+          setScrolled((prev) => (prev !== isPastTop ? isPastTop : prev));
+
+          const lastY = lastScrollYRef.current;
+          if (y < 10) {
+            setIsVisible(true);
+          } else if (y > lastY && y > 100) {
+            setIsVisible((prev) => (prev ? false : prev));
+            setIsMenuOpen(false);
+            setContactOpen(false);
+            setSettingsOpen(false);
+          } else if (y < lastY) {
+            setIsVisible((prev) => (!prev ? true : prev));
+          }
+
+          lastScrollYRef.current = y;
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', control);
+
+    window.addEventListener('scroll', control, { passive: true });
     return () => window.removeEventListener('scroll', control);
-  }, [lastScrollY]);
+  }, []);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -71,26 +103,19 @@ const Navbar = () => {
     return () => { document.body.style.overflow = 'unset'; };
   }, [isMenuOpen]);
 
-  const closeMenu  = () => setIsMenuOpen(false);
-  const toggleMenu = () => setIsMenuOpen(v => !v);
+  const closeMenu  = useCallback(() => setIsMenuOpen(false), []);
+  const toggleMenu = useCallback(() => setIsMenuOpen(v => !v), []);
 
-  const toggleFontSize = () => {
-    const next = fontSize === 'normal' ? 'large' : fontSize === 'large' ? 'xlarge' : 'normal';
-    document.documentElement.style.fontSize = FONT_SIZE_VALUES[next];
-    setFontSize(next);
-    try { localStorage.setItem(FONT_SIZE_STORAGE_KEY, next); } catch { /* ignore */ }
-  };
+  const toggleFontSize = useCallback(() => {
+    setFontSize((prev) => {
+      const next = prev === 'normal' ? 'large' : prev === 'large' ? 'xlarge' : 'normal';
+      document.documentElement.style.fontSize = FONT_SIZE_VALUES[next];
+      try { localStorage.setItem(FONT_SIZE_STORAGE_KEY, next); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
 
-  const navItems = [
-    { path: '/',                        label: 'Home',       icon: Home           },
-    { path: '/metro-industrial-park',   label: 'Park 1',     icon: Factory        },
-    { path: '/metro-industrial-estate', label: 'Park 2',     icon: LucideLandPlot },
-    { path: '/metro-industrial-park-3', label: 'Park 3',     icon: LucideLandPlot },
-    { path: '/metro-arcade',            label: 'Arcade',     icon: Store          },
-    { path: '/contact',                 label: 'Contact',    icon: Mail           },
-    { path: '/calculator',              label: 'Calculator', icon: Calculator     },
-    { path: '/site-map',                label: 'Site Map',   icon: MapPin         },
-  ];
+  const navItems = NAV_ITEMS;
 
   // Settings quick-actions (no theme toggle — that's already in the navbar)
   const settingsItems = [

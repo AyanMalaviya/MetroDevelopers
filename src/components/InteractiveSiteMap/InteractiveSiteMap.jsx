@@ -798,7 +798,7 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
 const DashboardHeader = React.memo(function DashboardHeader({
   stats,
   showPhases,
-  setShowPhases,
+  onTogglePhases,
   loading,
   loadData,
   onOpenFullscreen,
@@ -825,10 +825,10 @@ const DashboardHeader = React.memo(function DashboardHeader({
 
         {/* Right: Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {setShowPhases && (
+          {onTogglePhases && (
             <button
               type="button"
-              onClick={() => setShowPhases((v) => !v)}
+              onClick={onTogglePhases}
               className={`inline-flex items-center gap-1.5 px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
                 showPhases
                   ? isDark
@@ -1055,8 +1055,16 @@ export default function InteractiveSiteMap() {
     setSelectedPlot(null);
   }, []);
 
+  const handleOpenFullscreen = useCallback(() => {
+    setIsFullscreen(true);
+  }, []);
+
   const handleCloseFullscreen = useCallback(() => {
     setIsFullscreen(false);
+  }, []);
+
+  const handleTogglePhases = useCallback(() => {
+    setShowPhases((v) => !v);
   }, []);
 
   return (
@@ -1069,10 +1077,10 @@ export default function InteractiveSiteMap() {
         <DashboardHeader
           stats={stats}
           showPhases={showPhases}
-          setShowPhases={setShowPhases}
+          onTogglePhases={handleTogglePhases}
           loading={loading}
           loadData={loadData}
-          onOpenFullscreen={() => setIsFullscreen(true)}
+          onOpenFullscreen={handleOpenFullscreen}
           isDark={isDark}
         />
 
@@ -1113,7 +1121,7 @@ export default function InteractiveSiteMap() {
           {/* Bottom Floating Fullscreen Button */}
           <button
             type="button"
-            onClick={() => setIsFullscreen(true)}
+            onClick={handleOpenFullscreen}
             className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-brand-red/25 active:scale-95 transition-all whitespace-nowrap"
           >
             <Maximize2 size={13} />
