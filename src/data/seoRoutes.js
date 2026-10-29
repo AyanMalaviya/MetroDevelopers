@@ -776,8 +776,19 @@ export const SEO_ROUTES = [
     images: [
       {
         loc: '/images/warehouse-unit-lease-changodar-ahmedabad.jpg',
-        title: 'Warehouse Units in Changodar',
+        title: 'Metro Industrial Park 1 (MIP 1) Industrial Sheds',
         caption: 'Warehouse and industrial units in Changodar, Ahmedabad.',
+      },
+    ],
+  },
+  {
+    path: '/metro-industrial-park-3',
+    changefreq: 'weekly',
+    priority: 0.92,
+    images: [
+      {
+        loc: '/images/metro-industrial-park-3-site-plan.jpg',
+        title: 'Metro Industrial Park 3 (MIP 3) Plots Bavla Rajoda Road',
       },
     ],
   },
@@ -788,7 +799,7 @@ export const SEO_ROUTES = [
     images: [
       {
         loc: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-        title: 'Metro Industrial Estate Plots Moraiya Changodar',
+        title: 'Metro Industrial Park 2 (MIP 2) Plots Moraiya Changodar',
       },
     ],
   },

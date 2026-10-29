@@ -3,7 +3,7 @@
 // All structured data follows schema.org vocabulary for Google Rich Results.
 
 const SITE_URL = 'https://www.metrodevelopers.co.in';
-const MAPS_URL = 'https://maps.google.com/?cid=17699482589183985142';
+const MAPS_URL = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
 
 export const postalAddress = {
   '@type': 'PostalAddress',
@@ -16,9 +16,33 @@ export const postalAddress = {
 
 export const geoCoordinates = {
   '@type': 'GeoCoordinates',
-  latitude: '22.914141879249897',
-  longitude: '72.41748307531053',
+  latitude: '22.9140377',
+  longitude: '72.4206651',
 };
+
+export const park2GeoCoordinates = {
+  '@type': 'GeoCoordinates',
+  latitude: '22.9138011',
+  longitude: '72.4212934',
+};
+
+export const park3GeoCoordinates = {
+  '@type': 'GeoCoordinates',
+  latitude: '22.8443566',
+  longitude: '72.3762037',
+};
+
+export const regionalCoverage = [
+  { '@type': 'City', name: 'Ahmedabad' },
+  { '@type': 'AdministrativeArea', name: 'Gujarat' },
+  { '@type': 'Place', name: 'Moraiya' },
+  { '@type': 'Place', name: 'Changodar' },
+  { '@type': 'Place', name: 'Bavla' },
+  { '@type': 'Place', name: 'Sanand' },
+  { '@type': 'Place', name: 'Sarkhej' },
+  { '@type': 'Place', name: 'Dholera' },
+  { '@type': 'Country', name: 'India' },
+];
 
 // ─── Opening hours — Mon-Sun 11:00–19:00 ──────────────────────────────────────
 const openingHoursSpec = {
@@ -85,8 +109,8 @@ export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   '@id': `${SITE_URL}/#website`,
-  name: 'Metro Industrial Park',
-  alternateName: ['Metro Developers', 'Metro Enterprise'],
+  name: 'Metro Developers',
+  alternateName: ['Metro Developers', 'Metro Industrial Park', 'MIP', 'Metro Industrial Parks', 'MIP Ahmedabad', 'Metro Industrial Park 1', 'Metro Industrial Park 2', 'Metro Industrial Park 3', 'MIP 1', 'MIP 2', 'MIP 3'],
   url: `${SITE_URL}/`,
   inLanguage: 'en-IN',
   potentialAction: {
@@ -151,8 +175,8 @@ export const propertySchema = {
   '@context': 'https://schema.org',
   '@type': ['RealEstateAgent', 'LocalBusiness'],
   '@id': `${SITE_URL}/#metro-developers`,
-  name: 'Metro Industrial Park',
-  alternateName: 'Metro Developers Moraiya Changodar Ahmedabad',
+  name: 'Metro Developers',
+  alternateName: ['Metro Industrial Park', 'MIP', 'Metro Developers Moraiya Changodar Ahmedabad', 'MIP Ahmedabad', 'Metro Industrial Park 1', 'MIP 1'],
   description:
     'Industrial sheds and warehouses for sale and lease in Moraiya, Changodar, and Ahmedabad. Unit sizes from 4,000 to 50,000 sq.ft with modern infrastructure and fast possession support.',
   url: SITE_URL,
@@ -201,6 +225,25 @@ export const propertySchema = {
     worstRating: '1',
     reviewCount: '5',
   },
+};
+
+// ─── Industrial Park 1 Schema (Sheds & Warehouses — Moraiya, Changodar) ────────
+export const metroPark1Schema = {
+  '@context': 'https://schema.org',
+  '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
+  '@id': `${SITE_URL}/#metro-industrial-park-1`,
+  name: 'Metro Industrial Park 1',
+  alternateName: ['Industrial Park 1', 'MIP 1', 'MIP-1', 'MIP1', 'Metro Industrial Park', 'MIP Moraiya'],
+  description:
+    'Metro Industrial Park 1 (MIP 1) in Moraiya, Changodar, Ahmedabad. 63 modern industrial sheds and warehouses (4,000 to 50,000 sq.ft) for sale and lease with 60ft RCC roads, 24/7 CCTV surveillance, and 90-day possession.',
+  url: `${SITE_URL}/metro-industrial-park`,
+  telephone: '+919824235642',
+  email: 'metrodevelopers26@gmail.com',
+  address: postalAddress,
+  geo: geoCoordinates,
+  hasMap: MAPS_URL,
+  openingHoursSpecification: openingHoursSpec,
+  parentOrganization: { '@id': `${SITE_URL}/#metro-developers` },
 };
 
 // ─── RealEstateListing Schema ─────────────────────────────────────────────────
@@ -426,7 +469,7 @@ export const socialProfileSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   '@id': `${SITE_URL}/#organization`,
-  name: 'Metro Industrial Park',
+  name: 'Metro Developers',
   url: SITE_URL,
   logo: {
     '@type': 'ImageObject',
@@ -498,7 +541,7 @@ export const createArticleSchema = ({ headline, description, path, keywords = []
   author: {
     '@type': 'Organization',
     '@id': `${SITE_URL}/#metro-enterprise`,
-    name: 'Metro Industrial Park',
+    name: 'Metro Developers',
     url: SITE_URL,
   },
   image: {
@@ -519,15 +562,15 @@ export const createArticleSchema = ({ headline, description, path, keywords = []
 });
 
 
-// ─── Metro Industrial Estate Schemas (Plots — "Build Your Own Shed") ────────
+// ─── Industrial Park 2 Schemas (Plots — "Build Your Own Shed") ────────
 export const metroEstateSchema = {
   '@context': 'https://schema.org',
   '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
   '@id': `${SITE_URL}/#metro-industrial-estate`,
-  name: 'Metro Industrial Estate',
-  alternateName: ['Metro Industrial Estate Moraiya Changodar', 'Metro Estate Industrial Plots'],
+  name: 'Metro Industrial Park 2',
+  alternateName: ['Industrial Park 2', 'Metro Industrial Park 2', 'MIP 2', 'MIP-2', 'MIP2', 'Metro Industrial Estate', 'Metro Park 2 Industrial Plots', 'MIP Moraiya 2'],
   description:
-    'Clear-title industrial plots for "Build Your Own Shed" opposite Metro Industrial Park in Moraiya, Changodar, Ahmedabad. Features 24/7 security, wide heavy-duty RCC roads, dedicated water, drainage, and industrial power infrastructure.',
+    'Clear-title industrial plots for "Build Your Own Shed" opposite Industrial Park 1 in Moraiya, Changodar, Ahmedabad. Features Wide Heavy RCC internal roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
   url: `${SITE_URL}/metro-industrial-estate`,
   telephone: '+919824235642',
   email: 'metrodevelopers26@gmail.com',
@@ -553,7 +596,7 @@ export const metroEstateListingSchema = {
   '@id': `${SITE_URL}/#metro-estate-listing`,
   name: 'Industrial Plots for Sale — Build Your Own Shed in Moraiya, Changodar',
   description:
-    'Premium clear-title industrial plots at Metro Industrial Estate, Moraiya, Changodar. Build your customized industrial shed or warehouse with developer-provided 24/7 security, heavy-duty RCC roads, water, drainage, and power.',
+    'Premium clear-title industrial plots at Industrial Park 2, Moraiya, Changodar. Build your customized industrial shed with Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
   url: `${SITE_URL}/metro-industrial-estate`,
   provider: { '@id': `${SITE_URL}/#metro-enterprise` },
   address: postalAddress,
@@ -605,10 +648,10 @@ export const metroEstateFaqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is Metro Industrial Estate in Moraiya, Changodar?',
+      name: 'What is Industrial Park 2 in Moraiya, Changodar?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Metro Industrial Estate is an industrial plotting project located directly opposite Metro Industrial Park in Moraiya, Changodar, Ahmedabad. It provides clear-title industrial plots where businesses can "Build Your Own Shed" with ready developer infrastructure like 24/7 security and wide RCC roads.',
+        text: 'Industrial Park 2 is an industrial plotting project located directly opposite Industrial Park 1 in Moraiya, Changodar, Ahmedabad. It provides clear-title industrial plots where businesses can "Build Your Own Shed" with ready developer infrastructure: Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
       },
     },
     {
@@ -621,15 +664,15 @@ export const metroEstateFaqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What facilities are provided at Metro Industrial Estate?',
+      name: 'What facilities are provided at Industrial Park 2?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Metro Developers provides comprehensive estate infrastructure including 24/7 gated security with CCTV surveillance, wide heavy-duty RCC internal roads designed for container trucks, dedicated industrial water supply, underground drainage, and electrical power connectivity provisions.',
+        text: 'Metro Developers provides developer infrastructure including Wide Heavy RCC internal roads, Street lights, Puran (Soil filling & precision ground leveling), Compound wall, and 24/7 Gated security (no CCTV).',
       },
     },
     {
       '@type': 'Question',
-      name: 'What plot sizes are available at Metro Industrial Estate?',
+      name: 'What plot sizes are available at Industrial Park 2?',
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Plots range from approximately 312 sq.yards up to 1,930 sq.yards across Block A, Block B, and Block C. Multiple adjacent plots can also be combined for large industrial setups.',
@@ -640,15 +683,162 @@ export const metroEstateFaqSchema = {
       name: 'Are the industrial plots clear title and legally approved?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, all plots at Metro Industrial Estate have 100% clear legal titles, Non-Agricultural (NA) industrial zoning approval, and are ready for immediate sale deed registration.',
+        text: 'Yes, all plots at Industrial Park 2 have 100% clear legal titles, Non-Agricultural (NA) industrial zoning approval, and are ready for immediate sale deed registration.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Where is Metro Industrial Estate located?',
+      name: 'Where is Industrial Park 2 located?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'It is situated directly opposite Metro Industrial Park in Moraiya, Changodar, Ahmedabad, minutes away from the Sarkhej-Bavla National Highway (NH 47) and close to Sanand GIDC.',
+        text: 'It is situated directly opposite Industrial Park 1 in Moraiya, Changodar, Ahmedabad, minutes away from the Sarkhej-Bavla National Highway (NH 47) and close to Sanand GIDC.',
+      },
+    },
+  ],
+};
+
+
+// ─── Metro Industrial Park 3 Schemas (Plots — Bavla Rajoda Road) ─────────────
+export const metroPark3Schema = {
+  '@context': 'https://schema.org',
+  '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
+  '@id': `${SITE_URL}/#metro-industrial-park-3`,
+  name: 'Metro Industrial Park 3',
+  alternateName: ['Industrial Park 3', 'Metro Industrial Park 3', 'MIP 3', 'MIP-3', 'MIP3', 'Metro Industrial Park 3 Bavla Rajoda Road', 'Metro Park 3 Industrial Plots', 'MIP Bavla'],
+  description:
+    'Clear-title industrial plots for "Build Your Own Shed" on Bavla – Rajoda Road, Ahmedabad. Bookings open! Features developer-executed ground filling & precision leveling (Puran - ongoing), land possession soon, LED streetlights, 24/7 gated security, 18m/12m/9m wide roads, water, drainage, and power infrastructure across 77 plots.',
+  url: `${SITE_URL}/metro-industrial-park-3`,
+  telephone: '+919824235642',
+  email: 'metrodevelopers26@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Bavla – Rajoda Road',
+    addressLocality: 'Bavla',
+    addressRegion: 'Gujarat',
+    postalCode: '382220',
+    addressCountry: 'IN',
+  },
+  geo: park3GeoCoordinates,
+  hasMap: 'https://maps.app.goo.gl/5SaRAjuzrQzLjoZh9',
+  areaServed: regionalCoverage,
+  openingHoursSpecification: openingHoursSpec,
+  parentOrganization: { '@id': `${SITE_URL}/#metro-enterprise` },
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Precision Ground Filling & Leveling (Puran - Ongoing)', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Bookings Open — Land Possession Soon', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'LED Streetlights Across Campus', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security & CCTV Surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '18 Meter & 12 Meter Wide Heavy-Duty Internal Roads', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Industrial Water Supply', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Underground Drainage System', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'High-Tension Power Provisions', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '100% Clear Title & Non-Agricultural (NA) Land', value: true },
+  ],
+};
+
+export const metroPark3ListingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateListing',
+  '@id': `${SITE_URL}/#metro-park-3-listing`,
+  name: 'Industrial Plots for Sale — Metro Industrial Park 3, Bavla Rajoda Road',
+  description:
+    '77 premium clear-title industrial plots at Metro Industrial Park 3 on Bavla – Rajoda Road, Ahmedabad. Bookings open, land possession soon! Build your customized industrial shed or warehouse with developer-provided ground filling & precision leveling (Puran work in progress), streetlights, 24/7 security, wide roads, water, and power.',
+  url: `${SITE_URL}/metro-industrial-park-3`,
+  provider: { '@id': `${SITE_URL}/#metro-enterprise` },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Bavla – Rajoda Road',
+    addressLocality: 'Bavla',
+    addressRegion: 'Gujarat',
+    postalCode: '382220',
+    addressCountry: 'IN',
+  },
+  offers: {
+    '@type': 'Offer',
+    availability: 'https://schema.org/InStock',
+    priceCurrency: 'INR',
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      priceCurrency: 'INR',
+      valueAddedTaxIncluded: false,
+      description: 'Contact for current plot rates and custom parcel configurations.',
+    },
+    eligibleRegion: {
+      '@type': 'AdministrativeArea',
+      name: 'Ahmedabad, Gujarat, India',
+    },
+    seller: { '@id': `${SITE_URL}/#metro-enterprise` },
+  },
+  floorSize: {
+    '@type': 'QuantitativeValue',
+    minValue: 2700,
+    maxValue: 26000,
+    unitCode: 'FTK',
+    unitText: 'square feet',
+  },
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Ground Filling & Precision Leveling (Puran - Ongoing)', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Bookings Open — Possession Soon', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'LED Streetlights', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security & CCTV surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '18m & 12m wide internal roads', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Dedicated industrial water connections', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Underground industrial drainage network', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'High-tension power line connectivity', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Clear Title with Immediate Registration', value: true },
+  ],
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'Project Type', value: 'Industrial Plots / Land' },
+    { '@type': 'PropertyValue', name: 'Concept', value: 'Build Your Own Shed' },
+    { '@type': 'PropertyValue', name: 'Total Plots', value: '77' },
+    { '@type': 'PropertyValue', name: 'Total Campus Area', value: '59,508 sq.yards (approx 60,000 SQYD)' },
+    { '@type': 'PropertyValue', name: 'Plot Area Range', value: '300 to 2,876 sq.yards' },
+    { '@type': 'PropertyValue', name: 'Location', value: 'Bavla – Rajoda Road, Ahmedabad' },
+  ],
+};
+
+export const metroPark3FaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is Metro Industrial Park 3 on Bavla Rajoda Road?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Metro Industrial Park 3 is a 60,000 sq.yard industrial plotting project on Bavla – Rajoda Road, Ahmedabad. It offers 77 clear-title plots to "Build Your Own Shed" with ready developer facilities including Puran (ground leveling), LED streetlights, 24/7 security, 18m wide roads, water, and power.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What does "Puran Done" mean in Metro Industrial Park 3?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '"Puran" (Gujarati: પૂરાણ) means comprehensive soil filling, compaction, and precision grading/leveling done across all plots. The land is elevated, flat, flood-safe, and ready for immediate shed plinth and column foundation casting without unexpected site preparation expenses.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What facilities are provided at Metro Industrial Park 3?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Facilities include LED streetlights, 24/7 gated security with CCTV, 18-meter and 12-meter wide heavy-duty roads, dedicated industrial water supply, underground drainage, and high-tension three-phase electrical power provisions.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What plot sizes are available at Metro Industrial Park 3?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The estate features 77 plots ranging from 300 sq.yards up to 2,876 sq.yards across an expansive 59,508 sq.yard campus.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where is Metro Industrial Park 3 located?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'It is situated on Bavla – Rajoda Road, Ahmedabad, close to Bavla GIDC and minutes from the Sarkhej–Bavla National Highway (NH 47).',
       },
     },
   ],

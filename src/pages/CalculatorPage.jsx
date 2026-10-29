@@ -285,7 +285,7 @@ const Calculator = () => {
               >
                 <button
                   onClick={() => setShowAreaSheet(true)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all hover:scale-105 hover:border-brand-red hover:text-brand-red shadow-sm ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all hover:scale-105 hover:border-brand-red hover:text-brand-red shadow-sm whitespace-nowrap ${
                     isDark
                       ? 'bg-gray-900 border-gray-700 text-gray-200'
                       : 'bg-white border-gray-200 text-gray-700'
@@ -297,7 +297,7 @@ const Calculator = () => {
 
                 <button
                   onClick={() => setShowSiteLayout(true)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all hover:scale-105 hover:border-brand-red hover:text-brand-red shadow-sm ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all hover:scale-105 hover:border-brand-red hover:text-brand-red shadow-sm whitespace-nowrap ${
                     isDark
                       ? 'bg-gray-900 border-gray-700 text-gray-200'
                       : 'bg-white border-gray-200 text-gray-700'

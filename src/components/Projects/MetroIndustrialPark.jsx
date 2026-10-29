@@ -25,7 +25,7 @@ import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
 
 // ✅ Import your schemas from the new utils file
-import { propertySchema, faqSchema, imageObjectSchema, realEstateListingSchema } from '../../utils/schemas';
+import { metroPark1Schema, propertySchema, faqSchema, imageObjectSchema, realEstateListingSchema } from '../../utils/schemas';
 
 /* ── Motion variants ── */
 const containerVariants = {
@@ -235,16 +235,16 @@ const MetroIndustrialPark = () => {
   return (
     <>
       <SEO
-        title="Industrial Sheds in Moraiya, Changodar, Ahmedabad for Sale and Lease"
-        description="Find industrial sheds and warehouses in Moraiya, Changodar, Ahmedabad with 4,000 to 50,000 sq.ft units, 60 ft internal roads, CCTV security, and quick possession timelines."
-        keywords="industrial shed in moraiya, industrial shed in changodar, warehouse in ahmedabad, factory shed near changodar, industrial property near nh 47, industrial property near sarkhej bavla highway"
+        title="Metro Industrial Park 1 (MIP 1) | Industrial Sheds in Moraiya, Changodar"
+        description="Metro Industrial Park 1 (MIP 1) by Metro Developers in Moraiya, Changodar, Ahmedabad. 63 modern industrial sheds & warehouses (4,000 to 50,000 sq.ft) for sale & lease with 60ft roads, CCTV, 24x7 water & 90-day possession."
+        keywords="metro industrial park 1, industrial park 1, MIP 1, MIP-1, MIP1, metro industrial park, MIP, MIP moraiya, MIP changodar, industrial shed in moraiya, industrial shed in changodar, warehouse in ahmedabad, factory shed near changodar, industrial property near nh 47"
         canonical="/metro-industrial-park"
         ogImage="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
         ogImageAlt="Industrial park project in Moraiya Changodar Ahmedabad"
-        structuredData={[propertySchema, realEstateListingSchema, faqSchema, imageObjectSchema]}
+        structuredData={[metroPark1Schema, propertySchema, realEstateListingSchema, faqSchema, imageObjectSchema]}
       />
 
-      <h1 className="sr-only">Industrial Sheds for Sale/Lease in Moraiya, Changodar, Ahmedabad</h1>
+      <h1 className="sr-only">Metro Industrial Park 1 (MIP 1) — Industrial Sheds for Sale &amp; Lease in Moraiya, Changodar, Ahmedabad</h1>
 
       <div className="min-h-screen theme-bg-primary">
 
@@ -336,7 +336,7 @@ const MetroIndustrialPark = () => {
                   </div>
 
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold theme-text-primary mb-1.5">
-                    Metro Industrial Park
+                    Metro Industrial Park 1
                   </h1>
 
                   <AnimatePresence mode="wait">
@@ -360,13 +360,13 @@ const MetroIndustrialPark = () => {
                     <a
                       href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                       target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all text-xs sm:text-sm shadow-lg shadow-brand-red/30 hover:scale-105 hover:shadow-xl hover:shadow-brand-red/40"
+                      className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all text-xs sm:text-sm shadow-md shadow-brand-red/25 hover:scale-105 whitespace-nowrap"
                     >
                       <FaWhatsapp size={16} /> Inquire Now
                     </a>
                     <a
                       href="/site-map"
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all text-xs sm:text-sm hover:scale-105 border-2 ${
+                      className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-bold transition-all text-xs sm:text-sm hover:scale-105 border-2 whitespace-nowrap ${
                         isDark
                           ? 'border-gray-700 hover:border-brand-red text-white hover:bg-brand-red/10'
                           : 'border-gray-200 hover:border-brand-red text-gray-800 hover:bg-brand-red/5 hover:text-brand-red'
@@ -506,7 +506,7 @@ const MetroIndustrialPark = () => {
                       <button
                         key={tab.key} type="button"
                         onClick={() => setActiveTab(tab.key)}
-                        className={`px-5 sm:px-7 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                        className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 ${
                           activeTab === tab.key
                             ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30'
                             : isDark
@@ -603,13 +603,13 @@ const MetroIndustrialPark = () => {
                       <a
                         href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                         target="_blank" rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-brand-red/30 text-sm"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/25 text-xs sm:text-sm whitespace-nowrap"
                       >
                         <FaWhatsapp size={18} /> WhatsApp Us
                       </a>
                       <a
                         href="tel:+919824235642"
-                        className={`w-full inline-flex items-center justify-center gap-2 px-5 py-3 border-2 font-bold rounded-xl transition-all hover:scale-105 text-sm ${
+                        className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 border-2 font-bold rounded-xl transition-all hover:scale-105 text-xs sm:text-sm whitespace-nowrap ${
                           isDark
                             ? 'border-gray-700 hover:border-brand-red text-white'
                             : 'border-gray-300 hover:border-brand-red text-gray-900'

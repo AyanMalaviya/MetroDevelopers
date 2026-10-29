@@ -210,7 +210,7 @@ const ContactPage = () => {
               <a
                 href="mailto:metrodevelopers26@gmail.com"
                 aria-label="Email Metro Industrial Park"
-                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all hover:scale-105 hover:border-brand-red/50 ${
+                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all hover:scale-105 hover:border-brand-red/50 whitespace-nowrap ${
                   isDark ? 'bg-gray-900 border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800 shadow-sm'
                 }`}
               >
@@ -222,7 +222,7 @@ const ContactPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp Metro Industrial Park"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-red hover:bg-red-700 text-white text-sm font-bold transition-all hover:scale-105 shadow-lg shadow-brand-red/25"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-red hover:bg-red-700 text-white text-sm font-bold transition-all hover:scale-105 shadow-lg shadow-brand-red/25 whitespace-nowrap"
               >
                 <FaWhatsapp size={16} />
                 WhatsApp Us
@@ -363,7 +363,7 @@ const ContactPage = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`WhatsApp ${partner.name}`}
-                        className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/20"
+                        className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/20 whitespace-nowrap"
                       >
                         <FaWhatsapp size={16} /> WhatsApp
                       </a>
@@ -460,7 +460,7 @@ const ContactPage = () => {
 
               <div className={`p-4 flex justify-center ${isDark ? 'bg-gray-900/50' : 'bg-gray-50'}`}>
                 <a
-                  href="https://maps.google.com/?cid=17699482589183985142"
+                  href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Get directions to Metro Industrial Park on Google Maps"
@@ -509,7 +509,7 @@ const ContactPage = () => {
                       key={href}
                       href={href}
                       aria-label={`Call ${label}`}
-                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/20"
+                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/20 whitespace-nowrap"
                     >
                       <Phone size={15} /> {label}
                     </a>

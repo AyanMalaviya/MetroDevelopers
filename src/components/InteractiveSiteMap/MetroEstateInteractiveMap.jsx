@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, ExternalLink, RotateCcw, Maximize2, User, MapPin, Factory } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, CheckCircle, Phone, ExternalLink } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { estatePlotCoordinates, getEstatePlotCenter } from '../../data/estatePlotCoordinates';
 import { getEstatePlotData } from '../../services/estateDataService';
 
@@ -12,7 +13,6 @@ const ESTATE_PLOT_ENTRIES = Object.entries(estatePlotCoordinates);
 
 /* ── Pure Static Helpers ── */
 const parseArea = (str = '') => parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
-const areaUnit  = (str = '') => String(str).replace(/[0-9.,\s]/g, '').trim() || 'sq yd';
 
 const getStatusColor = (status, isDark) => {
   return status === 'sold' ? '#808080' : isDark ? '#34D399' : '#10B981';
@@ -26,16 +26,6 @@ const getStatusColorClass = (status) => {
   return status === 'sold' ? 'text-[#808080]' : 'text-emerald-500';
 };
 
-const getStatusGradient = (status, isDark) => {
-  return status === 'sold'
-    ? isDark
-      ? 'from-[#808080]/50 to-[#808080]/70'
-      : 'from-[#808080]/20 to-[#808080]/40'
-    : isDark
-      ? 'from-emerald-900/50 to-emerald-950/80'
-      : 'from-emerald-50 to-emerald-100';
-};
-
 /* ── Area with superscript yd² ── */
 const AreaDisplay = React.memo(function AreaDisplay({ value, className = '', numClass = '', unitClass = '' }) {
   const raw = String(value || 'N/A');
@@ -47,9 +37,7 @@ const AreaDisplay = React.memo(function AreaDisplay({ value, className = '', num
     <span className={className}>
       <span className={numClass}>{num}</span>{' '}
       {isYd ? (
-        <span className={unitClass}>
-          yd<sup style={{ fontSize: '0.6em', verticalAlign: 'super', lineHeight: 0 }}>2</sup>
-        </span>
+        <span className={unitClass}>SQ.YD</span>
       ) : (
         <span className={unitClass}>{unit}</span>
       )}
@@ -57,50 +45,7 @@ const AreaDisplay = React.memo(function AreaDisplay({ value, className = '', num
   );
 });
 
-const LesseeIcon = React.memo(function LesseeIcon({ size = 13, className = '' }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect x="2" y="7" width="20" height="14" rx="2" />
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-    </svg>
-  );
-});
-
-/* ── Clickable shed chips ── */
-const ShedChips = React.memo(function ShedChips({ sheds, selected, plotData, isDark, onSelect }) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {sheds.map((id) => (
-        <button
-          key={id}
-          onClick={() => onSelect(id)}
-          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
-            id === selected
-              ? 'text-white shadow-md'
-              : isDark
-                ? 'bg-gray-700 text-gray-100 hover:bg-gray-600 border border-gray-500'
-                : 'bg-gray-200 text-gray-800 hover:bg-gray-300 border border-gray-400'
-          }`}
-          style={id === selected ? { backgroundColor: getStatusColor(plotData[id]?.status, isDark) } : {}}
-        >
-          #{id}
-        </button>
-      ))}
-    </div>
-  );
-});
-
-/* ── Individual Estate Plot Dot (Memoized with zero layout thrashing) ── */
+/* ── Individual Estate Plot Dot ── */
 const EstatePlotDot = React.memo(
   function EstatePlotDot({
     plotNumber,
@@ -108,14 +53,13 @@ const EstatePlotDot = React.memo(
     status,
     isHov,
     isSel,
-    isSibling,
     isDark,
     onSelect,
     onHover,
     onLeave,
   }) {
     const statusColor = getStatusColor(status, isDark);
-    const radius = isSel ? 14 : isHov ? 12 : 12;
+    const radius = isSel ? 14 : isHov ? 13 : 12;
     const stroke = isSel || isHov ? '#FFFFFF' : isDark ? '#374151' : '#E5E7EB';
     const strokeWidth = isSel ? 3 : isHov ? 2.5 : 2;
 
@@ -132,15 +76,6 @@ const EstatePlotDot = React.memo(
             fill={statusColor}
             opacity="0.35"
             className="animate-pulse"
-          />
-        )}
-        {isSibling && (
-          <circle
-            cx={center.x}
-            cy={center.y}
-            r={radius + 4}
-            fill={statusColor}
-            opacity="0.25"
           />
         )}
         <circle
@@ -164,7 +99,7 @@ const EstatePlotDot = React.memo(
           style={{
             fontSize: isSel ? '11px' : isHov ? '10px' : '9px',
             fill: '#FFFFFF',
-            fontWeight: 'bold',
+            fontWeight: '900',
             pointerEvents: 'none',
             userSelect: 'none',
           }}
@@ -179,7 +114,6 @@ const EstatePlotDot = React.memo(
       prev.status === next.status &&
       prev.isHov === next.isHov &&
       prev.isSel === next.isSel &&
-      prev.isSibling === next.isSibling &&
       prev.isDark === next.isDark &&
       prev.center.x === next.center.x &&
       prev.center.y === next.center.y &&
@@ -190,12 +124,11 @@ const EstatePlotDot = React.memo(
   }
 );
 
-/* ── Estate Map SVG ── */
-const EstateMapSvg = React.memo(function EstateMapSvg({
+/* ── Estate Site Map SVG (Plots Layer) ── */
+const EstateSiteMapSvg = React.memo(function EstateSiteMapSvg({
   plotData,
   selectedPlot,
   hoveredPlot,
-  siblingPlotSet,
   isDark,
   onSelectPlot,
   onHoverPlot,
@@ -208,7 +141,6 @@ const EstateMapSvg = React.memo(function EstateMapSvg({
         const status = plotData[plotNumber]?.status || 'available';
         const isHov = hoveredPlot === plotNumber;
         const isSel = selectedPlot === plotNumber;
-        const isSibling = siblingPlotSet.has(plotNumber);
 
         return (
           <EstatePlotDot
@@ -218,7 +150,6 @@ const EstateMapSvg = React.memo(function EstateMapSvg({
             status={status}
             isHov={isHov}
             isSel={isSel}
-            isSibling={isSibling}
             isDark={isDark}
             onSelect={onSelectPlot}
             onHover={onHoverPlot}
@@ -230,7 +161,7 @@ const EstateMapSvg = React.memo(function EstateMapSvg({
   );
 });
 
-/* ── Fullscreen Modal Component (Isolated transform state for 120fps pan/zoom) ── */
+/* ── Fullscreen Modal Component ── */
 const FullscreenViewer = React.memo(function FullscreenViewer({
   isOpen,
   onClose,
@@ -240,7 +171,6 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
   stats,
   loading,
   loadData,
-  siblingPlotSet,
   isDark,
 }) {
   const [tfm, setTfm] = useState({ x: 0, y: 0, scale: 1 });
@@ -261,12 +191,6 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
       setTfm(updater);
       rafId.current = null;
     });
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
   }, []);
 
   const fitToContainer = useCallback(() => {
@@ -419,167 +343,144 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
       >
         {/* Fullscreen Header */}
         <div
-          className={`flex-shrink-0 flex items-center justify-between px-4 py-3 border-b ${
-            isDark ? 'border-white/10 bg-black' : 'border-gray-200 bg-white'
+          className={`flex-shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b ${
+            isDark ? 'border-white/10 bg-gray-950' : 'border-gray-200 bg-white'
           }`}
         >
-          <div className="flex items-center gap-3">
-            <span className={`font-bold text-sm hidden sm:block ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Metro Industrial Estate — Site Map
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <span className={`font-black text-xs sm:text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              Industrial Park 2 — Master Site Map
             </span>
             <div className="flex items-center gap-1.5 flex-wrap">
-              {[
-                {
-                  val: stats.available,
-                  label: 'Available',
-                  cls: isDark
-                    ? 'text-green-400 bg-green-900/40 border-green-800'
-                    : 'text-green-600 bg-green-50 border-green-200',
-                },
-                {
-                  val: stats.sold,
-                  label: 'Sold',
-                  cls: isDark
-                    ? 'text-white bg-[#808080]/30 border-[#808080]'
-                    : 'text-black bg-[#808080]/20 border-[#808080]',
-                },
-              ].map(({ val, label, cls }) => (
-                <span key={label} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cls}`}>
-                  {val} {label}
-                </span>
-              ))}
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                {stats.available} Available
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400 border border-gray-500/30">
+                {stats.sold} Sold
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                100% NA Industrial
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg border hidden sm:inline ${
-                isDark ? 'bg-white/5 border-white/10 text-gray-400' : 'bg-gray-100 border-gray-200 text-gray-600'
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <a
+              href={ADMIN_SHEET_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all inline-flex items-center gap-1 ${
+                isDark
+                  ? 'bg-emerald-950/40 text-emerald-400 hover:bg-emerald-900/60 border-emerald-800/60'
+                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200'
               }`}
+              title="Edit Google Sheet"
             >
-              {Math.round(tfm.scale * 100)}%
-            </span>
+              <ExternalLink size={11} />
+              <span>Edit</span>
+            </a>
             <button
               onClick={fitToContainer}
-              title="Reset view"
-              className={`p-2 rounded-lg transition-all border ${
-                isDark
-                  ? 'bg-white/5 text-gray-400 hover:text-white border-white/10 hover:bg-white/10'
-                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-100 shadow-sm'
+              className={`p-1.5 rounded-lg border ${
+                isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'
               }`}
+              title="Reset View"
             >
-              <RotateCcw size={14} />
-            </button>
-            <button
-              onClick={() => loadData()}
-              disabled={loading}
-              className={`p-2 rounded-lg transition-all border ${
-                isDark
-                  ? 'bg-white/5 text-gray-400 hover:text-white border-white/10 hover:bg-white/10'
-                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-100 shadow-sm'
-              } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <RotateCcw className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={onClose}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-red text-white text-xs font-bold hover:bg-red-700 active:scale-95 transition-all"
+              className="p-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white"
+              title="Close Fullscreen"
             >
-              <X size={14} /> Close
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Pan / Zoom Canvas */}
+        {/* Viewport Canvas */}
         <div
           ref={containerRef}
-          className={`flex-1 relative overflow-hidden ${isDark ? 'bg-black' : 'bg-white'}`}
-          style={{ cursor, userSelect: 'none', touchAction: 'none' }}
+          className="flex-1 relative overflow-hidden select-none"
+          style={{ cursor }}
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
           <div
+            ref={mapWrapperRef}
             style={{
+              transform: `translate(${tfm.x}px, ${tfm.y}px) scale(${tfm.scale})`,
+              transformOrigin: '0 0',
+              willChange: 'transform',
               position: 'absolute',
               top: 0,
               left: 0,
-              transform: `translate3d(${tfm.x}px, ${tfm.y}px, 0) scale(${tfm.scale})`,
-              transformOrigin: '0 0',
-              willChange: 'transform',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
+              width: 910,
+              height: 800,
             }}
           >
-            <div ref={mapWrapperRef} className="relative" style={{ display: 'inline-block' }}>
-              <img
-                src="/images/metro-industrial-estate-site-plan.jpg"
-                alt="Metro Industrial Estate Site Plan"
-                className="block select-none"
-                style={{ width: '910px', height: 'auto' }}
-                draggable={false}
-                onLoad={fitToContainer}
-              />
-              <EstateMapSvg
-                plotData={plotData}
-                selectedPlot={selectedPlot}
-                hoveredPlot={hoveredPlot}
-                siblingPlotSet={siblingPlotSet}
-                isDark={isDark}
-                onSelectPlot={handlePlotSelect}
-                onHoverPlot={handlePlotHover}
-                onLeavePlot={handlePlotLeave}
-              />
-            </div>
+            <img
+              src="/images/metro-industrial-park-2-site-plan.jpg"
+              alt="Industrial Park 2 Site Plan"
+              width={910}
+              height={800}
+              className="pointer-events-none select-none block"
+              draggable={false}
+            />
+            <EstateSiteMapSvg
+              plotData={plotData}
+              selectedPlot={selectedPlot}
+              hoveredPlot={hoveredPlot}
+              isDark={isDark}
+              onSelectPlot={handlePlotSelect}
+              onHoverPlot={handlePlotHover}
+              onLeavePlot={handlePlotLeave}
+            />
           </div>
 
-          {/* Hover Tooltip in Fullscreen */}
+          {/* Hover Tooltip in Fullscreen (Clean & Scannable) */}
           {hoveredPlot && (() => {
-            const center = getEstatePlotCenter(hoveredPlot);
+            const plotInfo = estatePlotCoordinates[hoveredPlot];
+            const center = plotInfo?.center || getEstatePlotCenter(hoveredPlot);
             const posX = center.x * tfm.scale + tfm.x;
             const posY = center.y * tfm.scale + tfm.y;
-            const owner = plotData[hoveredPlot]?.owner;
-            const lessee = plotData[hoveredPlot]?.lessee;
-            const area = plotData[hoveredPlot]?.area || estatePlotCoordinates[hoveredPlot]?.area;
+            const status = plotData[hoveredPlot]?.status || 'available';
+            const statusColor = getStatusColor(status, isDark);
 
             return (
               <div
-                className={`absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl border ${
-                  isDark ? 'border-gray-700 text-white' : 'border-gray-200 text-gray-900'
+                className={`absolute pointer-events-none p-2.5 rounded-xl shadow-2xl border ${
+                  isDark ? 'border-gray-700 bg-gray-950/95 text-white' : 'border-gray-200 bg-white/95 text-gray-900'
                 }`}
                 style={{
-                  top: posY - 90,
+                  top: posY - 75,
                   left: posX + 16,
                   zIndex: 100000,
-                  maxWidth: '220px',
                   minWidth: '150px',
-                  opacity: 1,
-                  backgroundColor: isDark ? '#111827' : '#ffffff',
+                  maxWidth: '220px',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
-                <p className="font-bold text-sm mb-0.5">Shed {hoveredPlot}</p>
-                {area && (
-                  <p className={`text-xs mb-1.5 ${isDark ? 'opacity-70' : 'text-gray-600'}`}>
-                    <AreaDisplay value={area} />
+                <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <span className="font-black text-xs">Plot #{hoveredPlot}</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded text-[9px] font-extrabold text-white"
+                    style={{ background: statusColor }}
+                  >
+                    {getStatusLabel(status)}
+                  </span>
+                </div>
+                {plotInfo && (
+                  <p className="text-xs font-bold text-brand-red mb-0.5">
+                    {plotInfo.totalPlotAreaSqYd?.toFixed(2)} SQ.YD
+                    <span className="text-[10px] text-gray-400 font-normal ml-1">({plotInfo.totalPlotAreaSqMt?.toFixed(2)} m²)</span>
                   </p>
                 )}
-                {owner && (
-                  <p className="text-[11px] text-blue-500 mb-0.5 flex items-center gap-1">
-                    <User size={9} className="flex-shrink-0" /> {owner}
-                  </p>
-                )}
-                {lessee && (
-                  <p className="text-[11px] text-amber-500 mb-1 flex items-center gap-1">
-                    <LesseeIcon size={9} className="flex-shrink-0" /> {lessee}
-                  </p>
-                )}
-                <p className={`text-xs font-semibold ${getStatusColorClass(plotData[hoveredPlot]?.status)}`}>
-                  {getStatusLabel(plotData[hoveredPlot]?.status)}
-                </p>
-                <p className={`text-[10px] mt-1 ${isDark ? 'opacity-40' : 'text-gray-400'}`}>Click for details</p>
+                <p className="text-[10px] text-gray-400 mb-0.5">Block {plotInfo?.section || 'A'} · Moraiya</p>
+                <p className="text-[9px] text-gray-400">Tap to view full details</p>
               </div>
             );
           })()}
@@ -591,7 +492,7 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
                 : 'bg-white/90 text-gray-700 border-gray-200 shadow-lg'
             }`}
           >
-            🖱 Scroll / Pinch to zoom · Drag to pan · Tap shed for details
+            🖱 Scroll / Pinch to zoom · Drag to pan · Tap plot for details
           </div>
         </div>
       </motion.div>
@@ -600,29 +501,31 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
   );
 });
 
-/* ── Plot Detail Modal Component (Memoized) ── */
+/* ── Plot Detail Modal Component (Redesigned: Clean, Scannable & Professional) ── */
 const PlotDetailModal = React.memo(function PlotDetailModal({
   selectedPlot,
   selectedPlotData,
-  ownerSheds,
-  lesseeSheds,
-  ownerTotalArea,
-  lesseeTotalArea,
   plotData,
   isDark,
   onClose,
-  onSelectPlot,
 }) {
   if (!selectedPlot || !estatePlotCoordinates[selectedPlot]) return null;
 
+  const plotCoord = estatePlotCoordinates[selectedPlot];
   const status = selectedPlotData?.status || 'available';
   const statusColor = getStatusColor(status, isDark);
-  const statusGrad = getStatusGradient(status, isDark);
-  const areaValue = selectedPlotData?.area || estatePlotCoordinates[selectedPlot]?.area;
-  const areaNum = parseArea(areaValue);
-  const hasOwner = !!selectedPlotData?.owner;
-  const hasLessee = !!selectedPlotData?.lessee;
-  const monthlyRentRaw = selectedPlotData?.monthlyRent?.trim() || null;
+
+  const totalSqYd = plotCoord?.totalPlotAreaSqYd?.toFixed(2) || 'N/A';
+  const totalSqMt = plotCoord?.totalPlotAreaSqMt?.toFixed(2) || 'N/A';
+  const netSqYd = plotCoord?.netPlotAreaSqYd?.toFixed(2) || 'N/A';
+  const netSqMt = plotCoord?.netPlotAreaSqMt?.toFixed(2) || 'N/A';
+  const roadSqMt = plotCoord?.roadAreaSqMt?.toFixed(2) || 'N/A';
+  const extraCpSqMt = plotCoord?.extraLandCpSqMt ? plotCoord.extraLandCpSqMt.toFixed(2) : null;
+  const section = plotCoord?.section || 'A';
+
+  const whatsappMessage = encodeURIComponent(
+    `Hello, I would like to inquire about Plot #${selectedPlot} (Block ${section}, ${totalSqYd} sq.yds / ${totalSqMt} sq.mtr) in Industrial Park 2, Moraiya. Please share pricing and possession details.`
+  );
 
   return createPortal(
     <AnimatePresence>
@@ -631,261 +534,163 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18 }}
-        className="fixed inset-0 flex items-center justify-center p-4"
+        className="fixed inset-0 flex items-center justify-center p-3 sm:p-4"
         style={{
           zIndex: 100001,
-          backdropFilter: 'blur(8px)',
-          background: isDark ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.55)',
+          backdropFilter: 'blur(10px)',
+          background: isDark ? 'rgba(0,0,0,0.80)' : 'rgba(0,0,0,0.55)',
         }}
         onClick={onClose}
       >
         <motion.div
-          initial={{ scale: 0.88, opacity: 0, y: 24 }}
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.88, opacity: 0, y: 24 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
           onClick={(e) => e.stopPropagation()}
-          className={`relative w-full max-w-[360px] rounded-2xl overflow-hidden shadow-2xl ${
-            isDark ? 'ring-1 ring-white/10' : 'ring-1 ring-black/8'
+          className={`relative w-full max-w-[390px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border ${
+            isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'
           }`}
-          style={{ backgroundColor: isDark ? '#111827' : '#ffffff' }}
         >
-          {/* Header */}
-          <div className={`relative bg-gradient-to-br ${statusGrad} px-5 pt-6 pb-5`}>
-            <button
-              onClick={onClose}
-              className={`absolute top-4 right-4 p-1.5 rounded-lg transition-colors ${
-                isDark
-                  ? 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'
-                  : 'bg-black/8 hover:bg-black/15 text-black/50 hover:text-black'
-              }`}
-            >
-              <X className="w-4 h-4" />
-            </button>
+          {/* Card Header */}
+          <div className={`p-4 sm:p-5 border-b ${
+            isDark ? 'bg-gray-950/80 border-gray-800' : 'bg-slate-50 border-gray-200'
+          }`}>
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs"
+                  style={{ background: statusColor }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                  {getStatusLabel(status)}
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                  Block {section}
+                </span>
+              </div>
 
-            {/* Status pill */}
-            <div className="flex items-center gap-2 mb-4">
-              <span
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white"
-                style={{ background: statusColor }}
+              <button
+                type="button"
+                onClick={onClose}
+                className={`p-1.5 rounded-xl transition-colors ${
+                  isDark
+                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-600 hover:text-gray-900'
+                }`}
+                aria-label="Close details"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
-                {getStatusLabel(status)}
-              </span>
+                <X size={16} />
+              </button>
             </div>
 
-            {/* Shed number */}
-            <div className="flex items-end gap-4">
+            {/* Plot Title & Campus */}
+            <div className="flex items-center gap-3">
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl flex-shrink-0"
-                style={{ background: statusColor, boxShadow: `0 8px 24px ${statusColor}55` }}
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md shrink-0"
+                style={{ background: statusColor }}
               >
-                {selectedPlot}
+                #{selectedPlot}
               </div>
               <div>
-                <p
-                  className={`text-xs font-bold uppercase tracking-widest mb-0.5 ${
-                    isDark ? 'text-white/50' : 'text-gray-500'
-                  }`}
-                >
-                  Metro Industrial Estate
-                </p>
-                <h3 className={`text-xl font-black leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  Shed {selectedPlot}
+                <h3 className={`text-lg font-black leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Industrial Plot #{selectedPlot}
                 </h3>
+                <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                  <MapPin size={11} className="text-brand-red shrink-0" />
+                  <span>Industrial Park 2 · Moraiya, Changodar</span>
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Body */}
-          <div className="px-5 py-4">
-            {/* Area */}
-            <div
-              className={`rounded-xl p-4 mb-4 flex items-center gap-4 ${
-                isDark ? 'bg-white/5 ring-1 ring-white/8' : 'bg-gray-50 ring-1 ring-black/5'
-              }`}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: `${statusColor}22` }}
-              >
-                <Factory size={18} style={{ color: statusColor }} />
-              </div>
+          {/* Body Content */}
+          <div className="p-4 sm:p-5 space-y-3.5">
+            {/* Primary Area Box (Hero Metric) */}
+            <div className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 ${
+              isDark ? 'bg-gray-950/50 border-gray-800' : 'bg-gray-50 border-gray-200'
+            }`}>
               <div>
-                <p
-                  className={`text-[10px] font-bold uppercase tracking-widest mb-0.5 ${
-                    isDark ? 'text-white/40' : 'text-gray-400'
-                  }`}
-                >
-                  Shed Area
-                </p>
-                {areaValue && areaValue !== 'N/A' ? (
-                  <p className={`text-2xl font-black leading-none ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    <AreaDisplay
-                      value={areaValue}
-                      numClass=""
-                      unitClass={`text-sm font-bold ${isDark ? 'text-white/50' : 'text-gray-400'}`}
-                    />
-                  </p>
-                ) : (
-                  <p className={`text-lg font-bold ${isDark ? 'text-white/50' : 'text-gray-400'}`}>N/A</p>
-                )}
-                {areaNum > 0 && (
-                  <p className={`text-[10px] mt-0.5 ${isDark ? 'text-white/30' : 'text-gray-400'}`}>
-                    ≈ {(areaNum * 9).toLocaleString('en-IN')} sq ft
-                  </p>
-                )}
+                <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-0.5">
+                  Total Plot Area
+                </span>
+                <span className={`text-xl sm:text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  {totalSqYd} <span className="text-sm font-bold text-brand-red">SQ.YD</span>
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block mb-0.5">Metric Dimension</span>
+                <span className="text-sm font-black text-brand-red">
+                  {totalSqMt} SQ.MT
+                </span>
+                <span className="block text-[10px] text-gray-400">
+                  ≈ {(parseFloat(totalSqYd) * 9).toFixed(0)} sq.ft
+                </span>
               </div>
             </div>
 
-            {/* Location pill */}
-            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg mb-4 ${isDark ? 'bg-white/4' : 'bg-gray-50'}`}>
-              <MapPin size={12} className={isDark ? 'text-white/40' : 'text-gray-400'} />
-              <span className={`text-xs ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
-                Moraiya, Changodar, Ahmedabad
-              </span>
+            {/* Quick 2x2 Specs Grid */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Net Plotted Area</span>
+                <span className={`font-bold text-[11px] sm:text-xs ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  {netSqMt} m² ({netSqYd} yd²)
+                </span>
+              </div>
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Dedicated Road</span>
+                <span className={`font-bold text-[11px] sm:text-xs ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  {roadSqMt} SQ.MT Loading
+                </span>
+              </div>
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Land Title &amp; Zone</span>
+                <span className="font-bold text-[11px] sm:text-xs text-emerald-500">
+                  100% NA Industrial Title
+                </span>
+              </div>
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Extra Common Plot</span>
+                <span className={`font-bold text-[11px] sm:text-xs ${extraCpSqMt ? 'text-amber-500' : isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  {extraCpSqMt ? `${extraCpSqMt} SQ.MT` : 'Direct Frontage'}
+                </span>
+              </div>
             </div>
 
-            {/* Owner & Lessee Cards */}
-            {(hasOwner || hasLessee) && (
-              <div className="space-y-2.5 mb-4">
-                {hasOwner && (
-                  <div
-                    className={`rounded-xl overflow-hidden border ${
-                      isDark ? 'border-blue-800/60' : 'border-blue-200'
-                    }`}
-                  >
-                    <div className={`px-3.5 py-2.5 flex items-center gap-2 ${isDark ? 'bg-blue-900/40' : 'bg-blue-600'}`}>
-                      <User size={11} className="text-white opacity-80" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white">Owner Portfolio</span>
-                    </div>
-                    <div className={`px-3.5 py-3 ${isDark ? 'bg-blue-950/30' : 'bg-blue-50'}`}>
-                      <p className={`font-bold text-sm mb-2.5 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {selectedPlotData.owner}
-                      </p>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        {ownerSheds.length > 0 && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-blue-900/60 text-blue-200' : 'bg-blue-100 text-blue-800'
-                            }`}
-                          >
-                            <span className="font-black">{ownerSheds.length}</span>
-                            <span className="opacity-70 ml-1">shed{ownerSheds.length > 1 ? 's' : ''}</span>
-                          </div>
-                        )}
-                        {ownerTotalArea && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-blue-900/60 text-blue-200' : 'bg-blue-100 text-blue-800'
-                            }`}
-                          >
-                            <AreaDisplay value={ownerTotalArea} numClass="font-black" unitClass="opacity-70" />
-                          </div>
-                        )}
-                        {monthlyRentRaw && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg font-black ${
-                              isDark ? 'bg-emerald-900/60 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
-                            }`}
-                          >
-                            ₹{monthlyRentRaw}
-                            <span className="font-normal opacity-70">/mo</span>
-                          </div>
-                        )}
-                      </div>
-                      {ownerSheds.length > 1 && (
-                        <div className="mt-2.5">
-                          <ShedChips
-                            sheds={ownerSheds}
-                            selected={selectedPlot}
-                            plotData={plotData}
-                            isDark={isDark}
-                            onSelect={onSelectPlot}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+            {/* Park Features Strip */}
+            <div className={`p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-1 text-[10px] font-bold ${
+              isDark ? 'bg-gray-950/40 border-gray-800 text-gray-400' : 'bg-gray-100/70 border-gray-200 text-gray-600'
+            }`}>
+              <span>✓ Heavy RCC Road</span>
+              <span>✓ Street Light</span>
+              <span>✓ Soil Filling (Puran)</span>
+              <span>✓ Compound Wall</span>
+              <span>✓ 24/7 Security</span>
+            </div>
 
-                {hasLessee && (
-                  <div
-                    className={`rounded-xl overflow-hidden border ${
-                      isDark ? 'border-amber-800/60' : 'border-amber-200'
-                    }`}
-                  >
-                    <div
-                      className={`px-3.5 py-2.5 flex items-center gap-2 ${
-                        isDark ? 'bg-amber-900/50' : 'bg-amber-500'
-                      }`}
-                    >
-                      <LesseeIcon size={11} className="text-white opacity-80" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white">Lessee</span>
-                    </div>
-                    <div className={`px-3.5 py-3 ${isDark ? 'bg-amber-950/30' : 'bg-amber-50'}`}>
-                      <p className={`font-bold text-sm mb-2.5 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {selectedPlotData.lessee}
-                      </p>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        {lesseeSheds.length > 0 && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            <span className="font-black">{lesseeSheds.length}</span>
-                            <span className="opacity-70 ml-1">shed{lesseeSheds.length > 1 ? 's' : ''}</span>
-                          </div>
-                        )}
-                        {lesseeTotalArea && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            <AreaDisplay value={lesseeTotalArea} numClass="font-black" unitClass="opacity-70" />
-                          </div>
-                        )}
-                        {!hasOwner && monthlyRentRaw && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg font-black ${
-                              isDark ? 'bg-emerald-900/60 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
-                            }`}
-                          >
-                            ₹{monthlyRentRaw}
-                            <span className="font-normal opacity-70">/mo</span>
-                          </div>
-                        )}
-                      </div>
-                      {lesseeSheds.length > 1 && (
-                        <div className="mt-2.5">
-                          <ShedChips
-                            sheds={lesseeSheds}
-                            selected={selectedPlot}
-                            plotData={plotData}
-                            isDark={isDark}
-                            onSelect={onSelectPlot}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* CTA */}
-            <button
-              onClick={onClose}
-              className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 ${
-                isDark
-                  ? 'bg-white/8 hover:bg-white/12 text-white ring-1 ring-white/10'
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 ring-1 ring-black/5'
-              }`}
-            >
-              Close
-            </button>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2 pt-1">
+              <a
+                href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 px-3.5 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-green-600/25 active:scale-95 transition-all whitespace-nowrap"
+              >
+                <FaWhatsapp size={15} />
+                <span>Enquire on WhatsApp</span>
+              </a>
+              <button
+                type="button"
+                onClick={onClose}
+                className={`py-2.5 px-4 rounded-xl font-bold text-xs transition-all active:scale-95 whitespace-nowrap ${
+                  isDark
+                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                }`}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -894,97 +699,138 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
   );
 });
 
-/* ── Top Dashboard Header (Memoized) ── */
+/* ── Top Dashboard Header (Clean, Executive & Scannable) ── */
 const DashboardHeader = React.memo(function DashboardHeader({
   stats,
-  lastUpdated,
   loading,
   loadData,
+  onOpenFullscreen,
   isDark,
 }) {
-  const formatLastUpdated = () => {
-    if (!lastUpdated) return '';
-    const diff = Math.floor((Date.now() - lastUpdated) / 1000);
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    return `${Math.floor(diff / 3600)}h ago`;
-  };
-
   return (
-    <div className={`p-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-      <div className="flex items-center justify-between mb-3">
-        <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-          {lastUpdated ? `Updated ${formatLastUpdated()}` : ''}
-        </span>
-        <div className={`flex items-center gap-1 text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-          <RefreshCw className="w-3 h-3" /> Auto-updates every 30s
+    <div
+      className={`p-3 sm:p-4 border-b transition-colors ${
+        isDark ? 'border-gray-800 bg-gray-950/70' : 'border-gray-200 bg-slate-50/90'
+      }`}
+    >
+      {/* Top Row: Title Badge & Action Controls (Edit, Sync, Pan & Zoom) */}
+      <div className="flex items-center justify-between gap-2.5 sm:gap-3 mb-3">
+        {/* Left: Project Badge */}
+        <div
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-black tracking-tight border ${
+            isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xs'
+          }`}
+        >
+          <Factory size={13} className="text-brand-red shrink-0" />
+          <span>Park 2</span>
+          <span className="text-[10px] text-gray-400 font-semibold">• 23 Industrial Plots</span>
         </div>
-      </div>
 
-      <div className="grid grid-cols-3 gap-2 mb-3">
-        {[
-          { val: stats.total, label: 'Total', cls: isDark ? 'text-white' : 'text-gray-900', bg: '' },
-          {
-            val: stats.available,
-            label: 'Avl',
-            cls: 'text-green-500',
-            bg: isDark ? 'bg-green-900/30' : 'bg-green-400/30',
-          },
-          {
-            val: stats.sold,
-            label: 'Sold',
-            cls: 'text-[#808080]',
-            bg: isDark ? 'bg-[#808080]/30' : 'bg-[#808080]/30',
-          },
-        ].map(({ val, label, cls, bg }) => (
-          <div key={label} className={`p-2 rounded-xl text-center ${bg}`}>
-            <p className={`text-xl font-bold ${cls}`}>{val}</p>
-            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap gap-2 text-[0.7rem] items-center">
-        {[
-          { color: 'bg-green-500', label: 'Available' },
-          { color: 'bg-[#808080]', label: 'Sold' },
-        ].map(({ color, label }) => (
-          <div key={label} className="flex items-center gap-1">
-            <div
-              className={`w-3.5 h-3.5 rounded-full shadow ${
-                isDark ? `border-2 border-white ${color}` : `border-2 border-gray-300 ${color}`
-              }`}
-            />
-            <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>{label}</span>
-          </div>
-        ))}
-        <div className="flex gap-1.5 ml-auto">
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Edit Button */}
           <a
             href={ADMIN_SHEET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-1 px-2 py-1.5 text-[0.62rem] font-semibold rounded-lg transition-all ${
+            className={`inline-flex items-center gap-1 px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
               isDark
-                ? 'bg-green-900/30 text-green-400 hover:bg-green-900/50'
-                : 'bg-green-50 text-green-600 hover:bg-green-100'
+                ? 'bg-emerald-950/40 text-emerald-400 hover:bg-emerald-900/60 border-emerald-800/60'
+                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200 shadow-xs'
             }`}
+            title="Edit Inventory on Google Sheet"
           >
-            <ExternalLink className="w-3 h-3" /> Edit
+            <ExternalLink size={12} />
+            <span>Edit</span>
           </a>
+
+          {/* Sync Button */}
           <button
+            type="button"
             onClick={() => loadData()}
             disabled={loading}
-            className={`p-1.5 rounded-lg transition-all ${
+            className={`inline-flex items-center gap-1 px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             } ${
               isDark
-                ? 'bg-gray-700 text-white hover:bg-gray-600'
-                : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
+                ? 'bg-gray-900 text-gray-300 hover:text-white hover:bg-gray-800 border-gray-700/70'
+                : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-gray-200 shadow-xs'
             }`}
+            title="Sync Live Data"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-brand-red' : ''}`} />
+            <span className="hidden sm:inline">Sync</span>
+          </button>
+
+          {/* Pan & Zoom Button */}
+          <button
+            type="button"
+            onClick={onOpenFullscreen}
+            className="inline-flex items-center gap-1 px-3 py-1 sm:py-1.5 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-xs active:scale-95 transition-all whitespace-nowrap"
+            title="Open Fullscreen Interactive Map"
+          >
+            <Maximize2 size={12} />
+            <span>Pan &amp; Zoom</span>
           </button>
         </div>
+      </div>
+
+      {/* Row 2: Availability Colored Stat Boxes (Number on top, Title below) */}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
+        {[
+          {
+            key: 'total',
+            val: stats.total,
+            label: 'Total Plots',
+            box: isDark
+              ? 'bg-gray-900/80 border-gray-800 text-white'
+              : 'bg-white border-gray-200 text-gray-900 shadow-xs',
+            num: isDark ? 'text-white' : 'text-gray-900',
+            lbl: isDark ? 'text-gray-400' : 'text-gray-500',
+          },
+          {
+            key: 'available',
+            val: stats.available,
+            label: 'Available',
+            box: isDark
+              ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-400'
+              : 'bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs',
+            num: isDark ? 'text-emerald-400' : 'text-emerald-700',
+            lbl: isDark ? 'text-emerald-400/90' : 'text-emerald-700/90',
+          },
+          {
+            key: 'sold',
+            val: stats.sold,
+            label: 'Sold',
+            box: isDark
+              ? 'bg-gray-800/50 border-gray-700/60 text-gray-300'
+              : 'bg-gray-100/90 border-gray-200 text-gray-700 shadow-xs',
+            num: isDark ? 'text-gray-300' : 'text-gray-700',
+            lbl: isDark ? 'text-gray-400' : 'text-gray-500',
+          },
+          {
+            key: 'title',
+            val: '100% NA',
+            label: 'Clear Title',
+            box: isDark
+              ? 'bg-blue-950/40 border-blue-800/60 text-blue-400'
+              : 'bg-blue-50 border-blue-200 text-blue-700 shadow-xs',
+            num: isDark ? 'text-blue-400' : 'text-blue-700',
+            lbl: isDark ? 'text-blue-400/90' : 'text-blue-700/90',
+          },
+        ].map(({ key, val, label, box, num, lbl }) => (
+          <div
+            key={key}
+            className={`flex flex-col items-center justify-center py-1.5 sm:py-2 px-1 sm:px-2 rounded-xl border text-center transition-all ${box}`}
+          >
+            <span className={`text-sm sm:text-lg font-black tabular-nums leading-none ${num}`}>
+              {val}
+            </span>
+            <span className={`text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider mt-1 whitespace-nowrap leading-tight ${lbl}`}>
+              {label}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1001,7 +847,6 @@ export default function MetroEstateInteractiveMap() {
   const [selectedPlot, setSelectedPlot] = useState(null);
   const [hoveredPlot, setHoveredPlot] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -1024,7 +869,6 @@ export default function MetroEstateInteractiveMap() {
       } else {
         setPlotData(data);
       }
-      setLastUpdated(new Date());
     } catch (err) {
       console.error('Error loading Estate data:', err);
     } finally {
@@ -1038,7 +882,6 @@ export default function MetroEstateInteractiveMap() {
     return () => clearInterval(id);
   }, [loadData]);
 
-  // Memoized single-pass stats calculation
   const stats = useMemo(() => {
     const total = ESTATE_PLOT_ENTRIES.length;
     let available = 0;
@@ -1047,19 +890,17 @@ export default function MetroEstateInteractiveMap() {
     for (let i = 0; i < total; i++) {
       const id = ESTATE_PLOT_ENTRIES[i][0];
       const st = plotData[id]?.status || 'available';
-      if (st === 'sold') sold++;
-      else available++;
+      if (st === 'available') available++;
+      else if (st === 'sold') sold++;
     }
 
     return { total, available, sold };
   }, [plotData]);
 
-  // Memoized selected plot data
   const selectedPlotData = useMemo(() => {
     return selectedPlot ? plotData[selectedPlot] : null;
   }, [selectedPlot, plotData]);
 
-  // Stable callbacks for plot actions
   const handleSelectPlot = useCallback((plotNumber) => {
     setSelectedPlot(plotNumber);
   }, []);
@@ -1080,91 +921,36 @@ export default function MetroEstateInteractiveMap() {
     setIsFullscreen(false);
   }, []);
 
-  // Memoized sibling plots calculation
-  const { siblingPlotSet, ownerSheds, lesseeSheds, ownerTotalArea, lesseeTotalArea } = useMemo(() => {
-    const set = new Set();
-    if (!selectedPlot || !selectedPlotData) {
-      return {
-        siblingPlotSet: set,
-        ownerSheds: [],
-        lesseeSheds: [],
-        ownerTotalArea: null,
-        lesseeTotalArea: null,
-      };
-    }
-
-    const selOwner = selectedPlotData.owner?.trim().toLowerCase();
-    const selLessee = selectedPlotData.lessee?.trim().toLowerCase();
-
-    const oSheds = [];
-    const lSheds = [];
-
-    ESTATE_PLOT_ENTRIES.forEach(([id]) => {
-      const d = plotData[id];
-      if (selOwner && d?.owner && d.owner.trim().toLowerCase() === selOwner) {
-        oSheds.push(id);
-        if (id !== selectedPlot) set.add(id);
-      }
-      if (selLessee && d?.lessee && d.lessee.trim().toLowerCase() === selLessee) {
-        lSheds.push(id);
-        if (id !== selectedPlot) set.add(id);
-      }
-    });
-
-    oSheds.sort((a, b) => Number(a) - Number(b));
-    lSheds.sort((a, b) => Number(a) - Number(b));
-
-    const finalOwnerSheds = oSheds.length > 0 ? oSheds : selectedPlotData.owner ? [selectedPlot] : [];
-    const finalLesseeSheds = lSheds.length > 0 ? lSheds : selectedPlotData.lessee ? [selectedPlot] : [];
-
-    const computeArea = (ids) => {
-      if (!ids.length) return null;
-      let total = 0;
-      let sampleRaw = '';
-      ids.forEach((id) => {
-        const raw = plotData[id]?.area || estatePlotCoordinates[id]?.area || '';
-        if (raw && raw !== 'N/A' && !sampleRaw) sampleRaw = raw;
-        total += parseArea(raw);
-      });
-      if (!total) return null;
-      return `${total.toLocaleString('en-IN')} ${areaUnit(sampleRaw)}`.trim();
-    };
-
-    return {
-      siblingPlotSet: set,
-      ownerSheds: finalOwnerSheds,
-      lesseeSheds: finalLesseeSheds,
-      ownerTotalArea: computeArea(finalOwnerSheds),
-      lesseeTotalArea: computeArea(finalLesseeSheds),
-    };
-  }, [selectedPlot, selectedPlotData, plotData]);
-
   return (
     <>
-      <div className={`rounded-2xl shadow-xl overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+      <div
+        className={`rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden border transition-colors ${
+          isDark ? 'bg-gray-900/90 border-gray-800 shadow-black/40' : 'bg-white border-gray-200/90 shadow-gray-200/60'
+        }`}
+      >
         <DashboardHeader
           stats={stats}
-          lastUpdated={lastUpdated}
           loading={loading}
           loadData={loadData}
+          onOpenFullscreen={() => setIsFullscreen(true)}
           isDark={isDark}
         />
 
-        {/* Embedded Site Map View */}
-        <div className={`relative flex justify-center items-center py-4 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-          <div className="relative" style={{ display: 'inline-block' }}>
+        {/* Embedded Map Canvas */}
+        <div className={`relative flex justify-center items-center p-2 sm:p-4 min-h-[440px] sm:min-h-[580px] max-h-[70vh] overflow-hidden ${
+          isDark ? 'bg-[#08090d]' : 'bg-slate-100/60'
+        }`}>
+          <div className="relative max-w-full max-h-[64vh] select-none" style={{ display: 'inline-block' }}>
             <img
-              src="/images/metro-industrial-estate-site-plan.jpg"
-              alt="Metro Industrial Estate Site Map"
-              className="block select-none"
-              style={{ maxHeight: '68vh', width: 'auto' }}
+              src="/images/metro-industrial-park-2-site-plan.jpg"
+              alt="Industrial Park 2 Site Plan"
+              className="block max-w-full max-h-[64vh] w-auto h-auto object-contain select-none pointer-events-none drop-shadow-md rounded-lg"
               draggable={false}
             />
-            <EstateMapSvg
+            <EstateSiteMapSvg
               plotData={plotData}
               selectedPlot={selectedPlot}
               hoveredPlot={hoveredPlot}
-              siblingPlotSet={siblingPlotSet}
               isDark={isDark}
               onSelectPlot={handleSelectPlot}
               onHoverPlot={handleHoverPlot}
@@ -1172,19 +958,28 @@ export default function MetroEstateInteractiveMap() {
             />
           </div>
 
-          <button
-            onClick={() => setIsFullscreen(true)}
-            className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-red text-white font-bold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-xl shadow-red-500/25"
-          >
-            <Maximize2 size={14} /> View Fullscreen
-          </button>
+          {/* Bottom Floating Info Pill */}
           <div
-            className={`absolute bottom-4 left-4 pointer-events-none px-3 py-1.5 rounded-full text-[10px] font-medium ${
-              isDark ? 'bg-black/60 text-gray-300' : 'bg-white/90 text-gray-700 border border-gray-200 shadow-lg'
+            className={`absolute bottom-3 left-3 sm:bottom-4 sm:left-4 pointer-events-none px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 shadow-sm border ${
+              isDark
+                ? 'bg-black/75 text-gray-300 border-white/10'
+                : 'bg-white/90 text-gray-700 border-gray-200'
             }`}
           >
-            Tap shed for details
+            <MapPin size={12} className="text-brand-red shrink-0" />
+            <span>Tap plot for dimensions &amp; WhatsApp enquiry</span>
           </div>
+
+          {/* Bottom Floating Fullscreen Button */}
+          <button
+            type="button"
+            onClick={() => setIsFullscreen(true)}
+            className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-brand-red/25 active:scale-95 transition-all whitespace-nowrap"
+          >
+            <Maximize2 size={13} />
+            <span className="hidden sm:inline">Pan &amp; Zoom</span>
+            <span className="sm:hidden">Zoom</span>
+          </button>
         </div>
       </div>
 
@@ -1198,22 +993,16 @@ export default function MetroEstateInteractiveMap() {
         stats={stats}
         loading={loading}
         loadData={loadData}
-        siblingPlotSet={siblingPlotSet}
         isDark={isDark}
       />
 
-      {/* Modal Popup for Details */}
+      {/* Dedicated Plot Detail Modal */}
       <PlotDetailModal
         selectedPlot={selectedPlot}
         selectedPlotData={selectedPlotData}
-        ownerSheds={ownerSheds}
-        lesseeSheds={lesseeSheds}
-        ownerTotalArea={ownerTotalArea}
-        lesseeTotalArea={lesseeTotalArea}
         plotData={plotData}
         isDark={isDark}
         onClose={handleCloseModal}
-        onSelectPlot={handleSelectPlot}
       />
     </>
   );

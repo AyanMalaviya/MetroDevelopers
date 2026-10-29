@@ -21,7 +21,7 @@ import {
 
 const MAP_EMBED_SRC =
   'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e0!3m2!1sen!2sin!4v1767639082192!5m2!1sen!2sin'
-const MAP_DIRECTIONS_URL = 'https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad'
+const MAP_DIRECTIONS_URL = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6'
 const WHATSAPP_URL =
   'https://wa.me/919824235642?text=Hello%2C%20I%20want%20details%20for%20industrial%20space%20availability.'
 
@@ -268,17 +268,17 @@ export default function LocalMarketPage() {
             >
               <Link
                 to="/metro-industrial-park"
-                className="group inline-flex items-center gap-2.5 px-6 py-3 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-bold rounded-xl text-sm shadow-xl shadow-brand-red/30 hover:scale-105 active:scale-95 transition-transform"
+                className="group inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-bold rounded-xl text-xs sm:text-sm shadow-xl shadow-brand-red/30 hover:scale-105 active:scale-95 transition-transform whitespace-nowrap"
               >
                 <Factory size={15} />
-                View Metro Industrial Park
+                Explore Park
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm border transition-all hover:scale-105 active:scale-95 ${
+                className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm border transition-all hover:scale-105 active:scale-95 whitespace-nowrap ${
                   isDark
                     ? 'border-green-500/30 bg-green-500/10 text-green-400 hover:border-green-400'
                     : 'border-green-300/70 bg-green-50 text-green-700 hover:border-green-500'
@@ -289,7 +289,7 @@ export default function LocalMarketPage() {
               </a>
               <a
                 href="tel:919824235642"
-                className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm border transition-all hover:scale-105 active:scale-95 ${
+                className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm border transition-all hover:scale-105 active:scale-95 whitespace-nowrap ${
                   isDark
                     ? 'border-gray-700 text-gray-200 hover:border-brand-red'
                     : 'border-gray-200 text-gray-700 hover:border-brand-red'
@@ -741,7 +741,7 @@ export default function LocalMarketPage() {
                     href={MAP_DIRECTIONS_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-brand-red px-4 py-2 text-sm font-bold text-white hover:bg-red-700 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-xl bg-brand-red px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-red-700 transition-colors whitespace-nowrap"
                   >
                     <MapPin size={14} />
                     Open in Google Maps
@@ -749,13 +749,13 @@ export default function LocalMarketPage() {
                   </a>
                   <Link
                     to="/site-map"
-                    className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold border transition-colors ${
+                    className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold border transition-colors whitespace-nowrap ${
                       isDark
                         ? 'border-gray-700 text-gray-200 hover:border-brand-red hover:text-brand-red'
                         : 'border-gray-200 text-gray-700 hover:border-brand-red hover:text-brand-red'
                     }`}
                   >
-                    Check Unit Availability
+                    Check Availability
                   </Link>
                 </div>
               </motion.article>
@@ -781,9 +781,9 @@ export default function LocalMarketPage() {
                   </p>
                   <Link
                     to="/metro-industrial-park"
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 text-sm shadow-lg shadow-brand-red/30"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm shadow-md shadow-brand-red/30 whitespace-nowrap"
                   >
-                    Explore Metro Industrial Park
+                    Explore Metro Park
                     <ArrowRight size={14} />
                   </Link>
                   <div className="mt-3 flex gap-2.5">
@@ -791,17 +791,17 @@ export default function LocalMarketPage() {
                       href={WHATSAPP_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border transition-all hover:scale-105 ${
+                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border transition-all hover:scale-105 whitespace-nowrap ${
                         isDark
                           ? 'border-green-500/30 bg-green-500/10 text-green-400 hover:border-green-400'
                           : 'border-green-200 bg-green-50 text-green-700 hover:border-green-400'
                       }`}
                     >
-                      <FaWhatsapp size={13} /> WhatsApp
+                      <FaWhatsapp size={13} /> WhatsApp Us
                     </a>
                     <a
                       href="tel:919824235642"
-                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border transition-all hover:scale-105 ${
+                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border transition-all hover:scale-105 whitespace-nowrap ${
                         isDark
                           ? 'border-gray-700 text-gray-200 hover:border-brand-red'
                           : 'border-gray-200 text-gray-700 hover:border-brand-red'
@@ -908,18 +908,18 @@ export default function LocalMarketPage() {
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
                   to="/metro-industrial-park"
-                  className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 shadow-xl shadow-brand-red/40 overflow-hidden text-sm"
+                  className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-red/30 overflow-hidden text-xs sm:text-sm whitespace-nowrap"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <Factory size={16} className="relative z-10" />
-                  <span className="relative z-10">View Metro Industrial Park</span>
+                  <span className="relative z-10">Explore Park</span>
                   <ArrowRight size={15} className="relative z-10 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold border-2 transition-all hover:scale-105 active:scale-95 text-sm ${
+                  className={`inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold border-2 transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm whitespace-nowrap ${
                     isDark
                       ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
                       : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
@@ -930,14 +930,14 @@ export default function LocalMarketPage() {
                 </a>
                 <a
                   href="tel:919824235642"
-                  className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold border-2 transition-all hover:scale-105 active:scale-95 text-sm ${
+                  className={`inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold border-2 transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm whitespace-nowrap ${
                     isDark
                       ? 'border-gray-700 text-gray-200 hover:border-gray-600'
                       : 'border-gray-200 text-gray-700 hover:border-gray-400'
                   }`}
                 >
                   <Phone size={16} />
-                  Call Sales Team
+                  Call Now
                 </a>
               </motion.div>
 

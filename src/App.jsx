@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound';
 import ReviewPrompt from './components/Review';
 import ChatBot from './components/Chatbot/ChatBot';
 import MetroIndustrialEstate from './pages/MetroIndustrialEstate';
+import MetroIndustrialPark3 from './pages/MetroIndustrialPark3';
 
 function App() {
   return (
@@ -32,11 +33,14 @@ function App() {
               {/* ── Core pages ── */}
               <Route path="/" element={<HomePage />} />
               <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
+              <Route path="/metro-industrial-park-1" element={<MetroIndustrialPark />} />
+              <Route path="/metro-industrial-estate" element={<MetroIndustrialEstate />} />
+              <Route path="/metro-industrial-park-2" element={<MetroIndustrialEstate />} />
+              <Route path="/metro-industrial-park-3" element={<MetroIndustrialPark3 />} />
               <Route path="/metro-arcade" element={<MetroArcade />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/site-map" element={<SiteMapPage />} />
-              <Route path="/metro-industrial-estate" element={<MetroIndustrialEstate />} />
 
               {/* ── Local Market / SEO pages ── */}
               <Route path="/industrial-sheds-in-moraiya" element={<LocalMarketPage />} />

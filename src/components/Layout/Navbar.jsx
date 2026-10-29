@@ -82,13 +82,14 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { path: '/',                      label: 'Home',            icon: Home       },
-    { path: '/metro-industrial-park', label: 'Industrial Park', icon: Factory    },
-    { path: '/metro-industrial-estate', label: 'Industrial Estate', icon: LucideLandPlot },
-    { path: '/metro-arcade',          label: 'Arcade',          icon: Store      },
-    { path: '/contact',               label: 'Contact',         icon: Mail       },
-    { path: '/calculator',            label: 'Calculator',      icon: Calculator },
-    { path: '/site-map',              label: 'Site Map',        icon: MapPin     },
+    { path: '/',                        label: 'Home',       icon: Home           },
+    { path: '/metro-industrial-park',   label: 'Park 1',     icon: Factory        },
+    { path: '/metro-industrial-estate', label: 'Park 2',     icon: LucideLandPlot },
+    { path: '/metro-industrial-park-3', label: 'Park 3',     icon: LucideLandPlot },
+    { path: '/metro-arcade',            label: 'Arcade',     icon: Store          },
+    { path: '/contact',                 label: 'Contact',    icon: Mail           },
+    { path: '/calculator',              label: 'Calculator', icon: Calculator     },
+    { path: '/site-map',                label: 'Site Map',   icon: MapPin         },
   ];
 
   // Settings quick-actions (no theme toggle — that's already in the navbar)
@@ -144,8 +145,11 @@ const Navbar = () => {
           <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
             <div className="relative flex-shrink-0">
               <img
-                src="/icons/icon-96x96.png"
-                alt="Metro Industrial Park"
+                src="/MDLogo.png"
+                alt="Metro Developers Logo"
+                width={40}
+                height={40}
+                onError={(e) => { e.currentTarget.src = '/icons/icon-192x192.png'; }}
                 className="mt-1 h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 rounded-xl bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10" />
@@ -183,8 +187,8 @@ const Navbar = () => {
                 {({ isActive }) => (
                   <>
                     <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />
-                    <span className="hidden lg:inline">{item.label}</span>
-                    <span className="lg:hidden">{item.label.split(' ')[0]}</span>
+                    <span className="whitespace-nowrap">{item.label}</span>
+
                   </>
                 )}
               </NavLink>
@@ -250,7 +254,7 @@ const Navbar = () => {
                         <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0"><MessageCircle size={11} /></div>
                         <div><p className="font-bold text-[11px]">WhatsApp</p><p className="text-[10px] text-green-200">Chat instantly</p></div>
                       </a>
-                      <a href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
+                      <a href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
                         target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border text-xs font-semibold active:scale-95 transition-all ${
                           isDark ? 'border-gray-700 bg-black text-gray-300 hover:bg-gray-900' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -497,7 +501,7 @@ const Navbar = () => {
                       <MessageCircle size={15} />
                       <div><p className="text-xs font-bold">WhatsApp</p><p className="text-[10px] text-green-200">Chat instantly</p></div>
                     </a>
-                    <a href="https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad"
+                    <a href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
                       target="_blank" rel="noopener noreferrer" onClick={closeMenu}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold active:scale-95 transition-all ${
                         isDark ? 'border-gray-700 text-gray-300 hover:bg-gray-800' : 'border-gray-200 text-gray-700 hover:bg-gray-50'

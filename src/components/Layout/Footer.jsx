@@ -77,7 +77,11 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Can I buy land to build my own shed?',
-    a: 'Yes. At Metro Industrial Estate (opp. Metro Industrial Park), we offer clear-title industrial plots to "Build Your Own Shed" with complete developer infrastructure including 24/7 security and wide heavy RCC roads.',
+    a: 'Yes. At Industrial Park 2 (opp. Industrial Park 1), we offer clear-title industrial plots to "Build Your Own Shed" with developer infrastructure: Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
+  },
+  {
+    q: 'Where is Metro Industrial Park 3 and what are its features?',
+    a: 'Industrial Park 3 is located on Bavla – Rajoda Road, Ahmedabad. It features 77 industrial plots to "Build Your Own Shed" with bookings open, land possession soon, Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
   },
   {
     q: 'Where is the park located?',
@@ -93,8 +97,9 @@ const FAQ_ITEMS = [
 // ── Quick links ────────────────────────────────────────────────────────────────
 const QUICK_LINKS = [
   { to: '/',                                                           label: 'Home'                           },
-  { to: '/metro-industrial-park',                                      label: 'Metro Industrial Park'          },
-  { to: '/metro-industrial-estate',                                    label: 'Metro Industrial Estate (Plots)'},
+  { to: '/metro-industrial-park',                                      label: 'Industrial Park 1 (Sheds)'     },
+  { to: '/metro-industrial-estate',                                    label: 'Industrial Park 2 (Plots)'     },
+  { to: '/metro-industrial-park-3',                                    label: 'Industrial Park 3 (Bavla)'     },
   { to: '/metro-arcade',                                               label: 'Metro Arcade'                   },
   { to: '/warehouses-in-changodar',                                    label: 'Warehouses in Changodar'        },
   { to: '/industrial-sheds-in-changodar',                              label: 'Industrial Sheds in Changodar'  },
@@ -121,7 +126,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [faqOpen, setFaqOpen] = useState(false);
 
-  const mapsUrl   = 'https://maps.google.com/?q=Metro+Industrial+Park+Moraiya+Ahmedabad';
+  const mapsUrl   = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
   const mapsQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(mapsUrl)}`;
 
   const pill = isDark

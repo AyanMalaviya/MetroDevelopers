@@ -116,14 +116,14 @@ const InsightGuidePage = () => {
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   to="/calculator"
-                  className="inline-flex items-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-105 hover:bg-red-700"
+                  className="inline-flex items-center gap-2 rounded-xl bg-brand-red px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-transform hover:scale-105 hover:bg-red-700 whitespace-nowrap"
                 >
                   <Calculator size={15} />
-                  Open ROI Calculator
+                  ROI Calculator
                 </Link>
                 <Link
                   to="/metro-industrial-park"
-                  className={`inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition-colors ${
+                  className={`inline-flex items-center gap-2 rounded-xl border px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
                     isDark
                       ? 'border-gray-700 text-gray-200 hover:border-brand-red hover:text-brand-red'
                       : 'border-gray-200 text-gray-700 hover:border-brand-red hover:text-brand-red'

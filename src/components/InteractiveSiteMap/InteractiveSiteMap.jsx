@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, ExternalLink, RotateCcw, Maximize2, User, MapPin, Factory } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { phaseCoordinates, getShedPhase } from '../../data/phaseCoordinates';
 import { getPlotData } from '../../services/dataService';
@@ -13,7 +14,6 @@ const PLOT_ENTRIES = Object.entries(plotCoordinates);
 
 /* ── Pure Static Helpers ── */
 const parseArea = (str = '') => parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
-const areaUnit  = (str = '') => String(str).replace(/[0-9.,\s]/g, '').trim() || 'sq yd';
 
 const getStatusColor = (status, isDark) => {
   switch (status) {
@@ -27,8 +27,8 @@ const getStatusColor = (status, isDark) => {
 const getStatusLabel = (status) => {
   switch (status) {
     case 'sold':       return 'Sold';
-    case 'for-lease':  return 'Sold — Available for Lease';
-    case 'pre-leased': return 'Pre-Leased — Available';
+    case 'for-lease':  return 'Available for Lease';
+    case 'pre-leased': return 'Pre-Leased';
     default:           return 'Available';
   }
 };
@@ -39,15 +39,6 @@ const getStatusColorClass = (status) => {
     case 'for-lease':  return 'text-red-500';
     case 'pre-leased': return 'text-blue-500';
     default:           return 'text-emerald-500';
-  }
-};
-
-const getStatusGradient = (status, isDark) => {
-  switch (status) {
-    case 'sold':       return isDark ? 'from-[#808080]/50 to-[#808080]/70'     : 'from-[#808080]/20 to-[#808080]/40';
-    case 'for-lease':  return isDark ? 'from-red-900/60 to-red-950/80'         : 'from-red-50 to-red-100';
-    case 'pre-leased': return isDark ? 'from-blue-900/60 to-blue-950/80'       : 'from-blue-50 to-blue-100';
-    default:           return isDark ? 'from-emerald-900/50 to-emerald-950/80' : 'from-emerald-50 to-emerald-100';
   }
 };
 
@@ -62,56 +53,11 @@ const AreaDisplay = React.memo(function AreaDisplay({ value, className = '', num
     <span className={className}>
       <span className={numClass}>{num}</span>{' '}
       {isYd ? (
-        <span className={unitClass}>
-          yd<sup style={{ fontSize: '0.6em', verticalAlign: 'super', lineHeight: 0 }}>2</sup>
-        </span>
+        <span className={unitClass}>SQ.YD</span>
       ) : (
         <span className={unitClass}>{unit}</span>
       )}
     </span>
-  );
-});
-
-const LesseeIcon = React.memo(function LesseeIcon({ size = 13, className = '' }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect x="2" y="7" width="20" height="14" rx="2" />
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-    </svg>
-  );
-});
-
-/* ── Clickable shed chips ── */
-const ShedChips = React.memo(function ShedChips({ sheds, selected, plotData, isDark, onSelect }) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {sheds.map((id) => (
-        <button
-          key={id}
-          onClick={() => onSelect(id)}
-          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
-            id === selected
-              ? 'text-white shadow-md'
-              : isDark
-                ? 'bg-gray-700 text-gray-100 hover:bg-gray-600 border border-gray-500'
-                : 'bg-gray-200 text-gray-800 hover:bg-gray-300 border border-gray-400'
-          }`}
-          style={id === selected ? { backgroundColor: getStatusColor(plotData[id]?.status, isDark) } : {}}
-        >
-          #{id}
-        </button>
-      ))}
-    </div>
   );
 });
 
@@ -149,11 +95,10 @@ const PhaseOverlays = React.memo(function PhaseOverlays({ showPhases, isDark }) 
                 fontSize: '56px',
                 fontWeight: '900',
                 fill: watermarkColor,
-                opacity: isDark ? 0.42 : 0.32,
+                opacity: isDark ? 0.35 : 0.25,
+                fontFamily: 'system-ui, sans-serif',
+                letterSpacing: '-2px',
                 userSelect: 'none',
-                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-                filter: 'drop-shadow(0px 2px 6px rgba(0,0,0,0.35))',
-                letterSpacing: '-1px',
               }}
             >
               {label}
@@ -173,12 +118,12 @@ const PlotDot = React.memo(
     status,
     isHov,
     isSel,
-    isSibling,
     isDark,
     onSelect,
     onHover,
     onLeave,
   }) {
+    if (!center) return null;
     const statusColor = getStatusColor(status, isDark);
     const radius = isSel ? 14 : isHov ? 12 : 10;
     const stroke = isSel || isHov ? '#FFFFFF' : isDark ? '#374151' : '#E5E7EB';
@@ -197,15 +142,6 @@ const PlotDot = React.memo(
             fill={statusColor}
             opacity="0.35"
             className="animate-pulse"
-          />
-        )}
-        {isSibling && (
-          <circle
-            cx={center.x}
-            cy={center.y}
-            r={radius + 4}
-            fill={statusColor}
-            opacity="0.25"
           />
         )}
         <circle
@@ -244,10 +180,9 @@ const PlotDot = React.memo(
       prev.status === next.status &&
       prev.isHov === next.isHov &&
       prev.isSel === next.isSel &&
-      prev.isSibling === next.isSibling &&
       prev.isDark === next.isDark &&
-      prev.center.x === next.center.x &&
-      prev.center.y === next.center.y &&
+      prev.center?.x === next.center?.x &&
+      prev.center?.y === next.center?.y &&
       prev.onSelect === next.onSelect &&
       prev.onHover === next.onHover &&
       prev.onLeave === next.onLeave
@@ -260,7 +195,6 @@ const SiteMapSvg = React.memo(function SiteMapSvg({
   plotData,
   selectedPlot,
   hoveredPlot,
-  siblingPlotSet,
   showPhases,
   isDark,
   onSelectPlot,
@@ -274,46 +208,46 @@ const SiteMapSvg = React.memo(function SiteMapSvg({
       style={{ pointerEvents: 'none' }}
     >
       <PhaseOverlays showPhases={showPhases} isDark={isDark} />
-      {PLOT_ENTRIES.map(([plotNumber, plot]) => {
-        const center = plot.center;
-        const status = plotData[plotNumber]?.status || 'available';
-        const isHov = hoveredPlot === plotNumber;
-        const isSel = selectedPlot === plotNumber;
-        const isSibling = siblingPlotSet.has(plotNumber);
 
-        return (
-          <PlotDot
-            key={plotNumber}
-            plotNumber={plotNumber}
-            center={center}
-            status={status}
-            isHov={isHov}
-            isSel={isSel}
-            isSibling={isSibling}
-            isDark={isDark}
-            onSelect={onSelectPlot}
-            onHover={onHoverPlot}
-            onLeave={onLeavePlot}
-          />
-        );
-      })}
+      <g className="plots-layer">
+        {PLOT_ENTRIES.map(([plotNumber, plot]) => {
+          const center = plot.center || getPlotCenter(plotNumber);
+          const status = plotData[plotNumber]?.status || 'available';
+          const isHov = hoveredPlot === plotNumber;
+          const isSel = selectedPlot === plotNumber;
+
+          return (
+            <PlotDot
+              key={plotNumber}
+              plotNumber={plotNumber}
+              center={center}
+              status={status}
+              isHov={isHov}
+              isSel={isSel}
+              isDark={isDark}
+              onSelect={onSelectPlot}
+              onHover={onHoverPlot}
+              onLeave={onLeavePlot}
+            />
+          );
+        })}
+      </g>
     </svg>
   );
 });
 
-/* ── Fullscreen Modal Component (Isolated transform state for 120fps pan/zoom) ── */
+/* ── Fullscreen Modal Component ── */
 const FullscreenViewer = React.memo(function FullscreenViewer({
   isOpen,
   onClose,
   plotData,
   selectedPlot,
   onSelectPlot,
+  stats,
   showPhases,
   setShowPhases,
-  stats,
   loading,
   loadData,
-  siblingPlotSet,
   isDark,
 }) {
   const [tfm, setTfm] = useState({ x: 0, y: 0, scale: 1 });
@@ -334,12 +268,6 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
       setTfm(updater);
       rafId.current = null;
     });
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
   }, []);
 
   const fitToContainer = useCallback(() => {
@@ -492,102 +420,72 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
       >
         {/* Fullscreen Header */}
         <div
-          className={`flex-shrink-0 flex items-center justify-between px-4 py-3 border-b ${
-            isDark ? 'border-white/10 bg-black' : 'border-gray-200 bg-white'
+          className={`flex-shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b ${
+            isDark ? 'border-white/10 bg-gray-950' : 'border-gray-200 bg-white'
           }`}
         >
-          <div className="flex items-center gap-3">
-            <span className={`font-bold text-sm hidden sm:block ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Metro Industrial Park — Site Map
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <span className={`font-black text-xs sm:text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              Industrial Park 1 — Master Site Map
             </span>
             <div className="flex items-center gap-1.5 flex-wrap">
-              {[
-                {
-                  val: stats.available,
-                  label: 'Available',
-                  cls: isDark
-                    ? 'text-green-400 bg-green-900/40 border-green-800'
-                    : 'text-green-600 bg-green-50 border-green-200',
-                },
-                {
-                  val: stats.preLeased,
-                  label: 'Pre Leased',
-                  cls: isDark
-                    ? 'text-blue-400 bg-blue-900/40 border-blue-800'
-                    : 'text-blue-600 bg-blue-50 border-blue-200',
-                },
-                {
-                  val: stats.forLease,
-                  label: 'For Lease',
-                  cls: isDark
-                    ? 'text-red-400 bg-red-900/40 border-red-800'
-                    : 'text-red-600 bg-red-50 border-red-200',
-                },
-                {
-                  val: stats.sold + stats.forLease,
-                  label: 'Sold',
-                  cls: isDark
-                    ? 'text-white bg-[#808080]/30 border-[#808080]'
-                    : 'text-black bg-[#808080]/20 border-[#808080]',
-                },
-              ].map(({ val, label, cls }) => (
-                <span key={label} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cls}`}>
-                  {val} {label}
-                </span>
-              ))}
-              <button
-                onClick={() => setShowPhases((v) => !v)}
-                className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border transition-all ${
-                  showPhases
-                    ? isDark
-                      ? 'text-white bg-slate-700/80 border-slate-500'
-                      : 'text-slate-900 bg-slate-200 border-slate-400'
-                    : isDark
-                      ? 'text-gray-500 bg-transparent border-gray-700'
-                      : 'text-gray-400 bg-transparent border-gray-300'
-                }`}
-                title="Toggle Phases overlay"
-              >
-                Phases A-D {showPhases ? '✓' : ''}
-              </button>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                {stats.available} Available
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                {stats.preLeased} Pre-Leased
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                {stats.forLease} For Lease
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400 border border-gray-500/30">
+                {stats.sold + stats.forLease} Sold
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-[10px] font-bold tabular-nums px-2 py-1 rounded-lg border hidden sm:inline ${
-                isDark ? 'bg-white/5 border-white/10 text-gray-400' : 'bg-gray-100 border-gray-200 text-gray-600'
-              }`}
-            >
-              {Math.round(tfm.scale * 100)}%
-            </span>
-            <button
-              onClick={fitToContainer}
-              title="Reset view"
-              className={`p-2 rounded-lg transition-all border ${
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <a
+              href={ADMIN_SHEET_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all inline-flex items-center gap-1 ${
                 isDark
-                  ? 'bg-white/5 text-gray-400 hover:text-white border-white/10 hover:bg-white/10'
-                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-100 shadow-sm'
+                  ? 'bg-emerald-950/40 text-emerald-400 hover:bg-emerald-900/60 border-emerald-800/60'
+                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200'
+              }`}
+              title="Edit Google Sheet"
+            >
+              <ExternalLink size={11} />
+              <span>Edit</span>
+            </a>
+            <button
+              onClick={() => setShowPhases((v) => !v)}
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all ${
+                showPhases
+                  ? isDark
+                    ? 'text-white bg-slate-800 border-slate-600'
+                    : 'text-slate-900 bg-slate-200 border-slate-400'
+                  : 'text-gray-400 bg-transparent border-gray-700'
               }`}
             >
-              <RotateCcw size={14} />
+              Phases {showPhases ? '✓' : 'Off'}
             </button>
             <button
-              onClick={() => loadData()}
-              disabled={loading}
-              className={`p-2 rounded-lg transition-all border ${
-                isDark
-                  ? 'bg-white/5 text-gray-400 hover:text-white border-white/10 hover:bg-white/10'
-                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-100 shadow-sm'
-              } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={fitToContainer}
+              className={`p-1.5 rounded-lg border ${
+                isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'
+              }`}
+              title="Reset View"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <RotateCcw className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={onClose}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-red text-white text-xs font-bold hover:bg-red-700 active:scale-95 transition-all"
+              className="p-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white"
+              title="Close Fullscreen"
             >
-              <X size={14} /> Close
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -612,8 +510,6 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
               transform: `translate3d(${tfm.x}px, ${tfm.y}px, 0) scale(${tfm.scale})`,
               transformOrigin: '0 0',
               willChange: 'transform',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
             }}
           >
             <div ref={mapWrapperRef} className="relative" style={{ display: 'inline-block' }}>
@@ -629,7 +525,6 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
                 plotData={plotData}
                 selectedPlot={selectedPlot}
                 hoveredPlot={hoveredPlot}
-                siblingPlotSet={siblingPlotSet}
                 showPhases={showPhases}
                 isDark={isDark}
                 onSelectPlot={handlePlotSelect}
@@ -639,62 +534,50 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
             </div>
           </div>
 
-          {/* Hover Tooltip in Fullscreen */}
+          {/* Hover Tooltip in Fullscreen (Clean & Scannable) */}
           {hoveredPlot && (() => {
             const center = getPlotCenter(hoveredPlot);
             const posX = center.x * tfm.scale + tfm.x;
             const posY = center.y * tfm.scale + tfm.y;
-            const owner = plotData[hoveredPlot]?.owner;
-            const lessee = plotData[hoveredPlot]?.lessee;
+            const status = plotData[hoveredPlot]?.status || 'available';
+            const statusColor = getStatusColor(status, isDark);
             const area = plotData[hoveredPlot]?.area || plotCoordinates[hoveredPlot]?.area;
+            const areaNum = parseArea(area);
             const phase = getShedPhase(hoveredPlot);
 
             return (
               <div
-                className={`absolute pointer-events-none px-3 py-2.5 rounded-xl shadow-2xl border ${
-                  isDark ? 'border-gray-700 text-white' : 'border-gray-200 text-gray-900'
+                className={`absolute pointer-events-none p-2.5 rounded-xl shadow-2xl border ${
+                  isDark ? 'border-gray-700 bg-gray-950/95 text-white' : 'border-gray-200 bg-white/95 text-gray-900'
                 }`}
                 style={{
-                  top: posY - 90,
+                  top: posY - 75,
                   left: posX + 16,
                   zIndex: 100000,
-                  maxWidth: '220px',
                   minWidth: '150px',
-                  opacity: 1,
-                  backgroundColor: isDark ? '#111827' : '#ffffff',
+                  maxWidth: '220px',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
-                <div className="flex items-center justify-between gap-2 mb-0.5">
-                  <p className="font-bold text-sm">Shed {hoveredPlot}</p>
-                  {phase && (
-                    <span
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold text-white ${
-                        phase.theme?.tagClass || 'bg-slate-700'
-                      }`}
-                    >
-                      Phase {phase.label}
-                    </span>
-                  )}
+                <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <span className="font-black text-xs">Shed #{hoveredPlot}</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded text-[9px] font-extrabold text-white"
+                    style={{ background: statusColor }}
+                  >
+                    {getStatusLabel(status)}
+                  </span>
                 </div>
                 {area && (
-                  <p className={`text-xs mb-1.5 ${isDark ? 'opacity-70' : 'text-gray-600'}`}>
+                  <p className="text-xs font-bold text-brand-red mb-0.5">
                     <AreaDisplay value={area} />
+                    {areaNum > 0 && <span className="font-normal text-gray-400 ml-1 text-[10px]">(≈{(areaNum * 9).toLocaleString('en-IN')} sq.ft)</span>}
                   </p>
                 )}
-                {owner && (
-                  <p className="text-[11px] text-blue-500 mb-0.5 flex items-center gap-1">
-                    <User size={9} className="flex-shrink-0" /> {owner}
-                  </p>
+                {phase && (
+                  <p className="text-[10px] text-gray-400 mb-0.5">Phase {phase.label} · Moraiya</p>
                 )}
-                {lessee && (
-                  <p className="text-[11px] text-amber-500 mb-1 flex items-center gap-1">
-                    <LesseeIcon size={9} className="flex-shrink-0" /> {lessee}
-                  </p>
-                )}
-                <p className={`text-xs font-semibold ${getStatusColorClass(plotData[hoveredPlot]?.status)}`}>
-                  {getStatusLabel(plotData[hoveredPlot]?.status)}
-                </p>
-                <p className={`text-[10px] mt-1 ${isDark ? 'opacity-40' : 'text-gray-400'}`}>Click for details</p>
+                <p className="text-[9px] text-gray-400">Tap to view full details</p>
               </div>
             );
           })()}
@@ -715,30 +598,25 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
   );
 });
 
-/* ── Shed Detail Modal Component (Memoized) ── */
+/* ── Shed Detail Modal Component (Redesigned: Clean, Scannable & Professional) ── */
 const ShedDetailModal = React.memo(function ShedDetailModal({
   selectedPlot,
   selectedPlotData,
-  ownerSheds,
-  lesseeSheds,
-  ownerTotalArea,
-  lesseeTotalArea,
   plotData,
   isDark,
   onClose,
-  onSelectPlot,
 }) {
   if (!selectedPlot || !plotCoordinates[selectedPlot]) return null;
 
   const status = selectedPlotData?.status || 'available';
   const statusColor = getStatusColor(status, isDark);
-  const statusGrad = getStatusGradient(status, isDark);
   const areaValue = selectedPlotData?.area || plotCoordinates[selectedPlot]?.area;
   const areaNum = parseArea(areaValue);
-  const hasOwner = !!selectedPlotData?.owner;
-  const hasLessee = !!selectedPlotData?.lessee;
-  const monthlyRentRaw = selectedPlotData?.monthlyRent?.trim() || null;
   const phase = getShedPhase(selectedPlot);
+
+  const whatsappMessage = encodeURIComponent(
+    `Hello, I am interested in Shed #${selectedPlot} (${areaValue && areaValue !== 'N/A' ? `${areaValue} / ` : ''}${areaNum > 0 ? `${(areaNum * 9).toLocaleString('en-IN')} sq.ft` : ''}) in Industrial Park 1, Moraiya. Please share pricing and possession details.`
+  );
 
   return createPortal(
     <AnimatePresence>
@@ -747,270 +625,167 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18 }}
-        className="fixed inset-0 flex items-center justify-center p-4"
+        className="fixed inset-0 flex items-center justify-center p-3 sm:p-4"
         style={{
           zIndex: 100001,
-          backdropFilter: 'blur(8px)',
-          background: isDark ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.55)',
+          backdropFilter: 'blur(10px)',
+          background: isDark ? 'rgba(0,0,0,0.80)' : 'rgba(0,0,0,0.55)',
         }}
         onClick={onClose}
       >
         <motion.div
-          initial={{ scale: 0.88, opacity: 0, y: 24 }}
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.88, opacity: 0, y: 24 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
           onClick={(e) => e.stopPropagation()}
-          className={`relative w-full max-w-[360px] rounded-2xl overflow-hidden shadow-2xl ${
-            isDark ? 'ring-1 ring-white/10' : 'ring-1 ring-black/8'
+          className={`relative w-full max-w-[390px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border ${
+            isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'
           }`}
-          style={{ backgroundColor: isDark ? '#111827' : '#ffffff' }}
         >
-          {/* Header */}
-          <div className={`relative bg-gradient-to-br ${statusGrad} px-5 pt-6 pb-5`}>
-            <button
-              onClick={onClose}
-              className={`absolute top-4 right-4 p-1.5 rounded-lg transition-colors ${
-                isDark
-                  ? 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'
-                  : 'bg-black/8 hover:bg-black/15 text-black/50 hover:text-black'
-              }`}
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            {/* Status & Phase pills */}
-            <div className="flex items-center gap-2 mb-4">
-              <span
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white"
-                style={{ background: statusColor }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
-                {getStatusLabel(status)}
-              </span>
-              {phase && (
+          {/* Card Header */}
+          <div className={`p-4 sm:p-5 border-b ${
+            isDark ? 'bg-gray-950/80 border-gray-800' : 'bg-slate-50 border-gray-200'
+          }`}>
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <span
-                  className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white border border-white/20 ${
-                    phase.theme?.tagClass || 'bg-slate-800/80'
-                  }`}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs"
+                  style={{ background: statusColor }}
                 >
-                  Phase {phase.label}
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                  {getStatusLabel(status)}
                 </span>
-              )}
+                {phase && (
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white border border-white/20 ${
+                      phase.theme?.tagClass || 'bg-slate-700'
+                    }`}
+                  >
+                    Phase {phase.label}
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className={`p-1.5 rounded-xl transition-colors ${
+                  isDark
+                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-600 hover:text-gray-900'
+                }`}
+                aria-label="Close details"
+              >
+                <X size={16} />
+              </button>
             </div>
 
-            {/* Shed number */}
-            <div className="flex items-end gap-4">
+            {/* Shed Title & Campus */}
+            <div className="flex items-center gap-3">
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl flex-shrink-0"
-                style={{ background: statusColor, boxShadow: `0 8px 24px ${statusColor}55` }}
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md shrink-0"
+                style={{ background: statusColor }}
               >
-                {selectedPlot}
+                #{selectedPlot}
               </div>
               <div>
-                <p
-                  className={`text-xs font-bold uppercase tracking-widest mb-0.5 ${
-                    isDark ? 'text-white/50' : 'text-gray-500'
-                  }`}
-                >
-                  Metro Industrial Park
-                </p>
-                <h3 className={`text-xl font-black leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  Shed {selectedPlot}
+                <h3 className={`text-lg font-black leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Industrial Shed #{selectedPlot}
                 </h3>
+                <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                  <MapPin size={11} className="text-brand-red shrink-0" />
+                  <span>Industrial Park 1 · Moraiya, Changodar</span>
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Body */}
-          <div className="px-5 py-4">
-            {/* Area */}
-            <div
-              className={`rounded-xl p-4 mb-4 flex items-center gap-4 ${
-                isDark ? 'bg-white/5 ring-1 ring-white/8' : 'bg-gray-50 ring-1 ring-black/5'
-              }`}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: `${statusColor}22` }}
-              >
-                <Factory size={18} style={{ color: statusColor }} />
-              </div>
+          {/* Body Content */}
+          <div className="p-4 sm:p-5 space-y-3.5">
+            {/* Primary Area Box (Hero Metric) */}
+            <div className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 ${
+              isDark ? 'bg-gray-950/50 border-gray-800' : 'bg-gray-50 border-gray-200'
+            }`}>
               <div>
-                <p
-                  className={`text-[10px] font-bold uppercase tracking-widest mb-0.5 ${
-                    isDark ? 'text-white/40' : 'text-gray-400'
-                  }`}
-                >
-                  Shed Area
-                </p>
-                {areaValue && areaValue !== 'N/A' ? (
-                  <p className={`text-2xl font-black leading-none ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    <AreaDisplay
-                      value={areaValue}
-                      numClass=""
-                      unitClass={`text-sm font-bold ${isDark ? 'text-white/50' : 'text-gray-400'}`}
-                    />
-                  </p>
-                ) : (
-                  <p className={`text-lg font-bold ${isDark ? 'text-white/50' : 'text-gray-400'}`}>N/A</p>
-                )}
-                {areaNum > 0 && (
-                  <p className={`text-[10px] mt-0.5 ${isDark ? 'text-white/30' : 'text-gray-400'}`}>
-                    ≈ {(areaNum * 9).toLocaleString('en-IN')} sq ft
-                  </p>
-                )}
+                <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-0.5">
+                  Total Shed Area
+                </span>
+                <span className={`text-xl sm:text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  <AreaDisplay value={areaValue} />
+                </span>
+              </div>
+              {areaNum > 0 && (
+                <div className="text-right">
+                  <span className="text-[10px] uppercase font-bold text-gray-400 block mb-0.5">Built-up Footprint</span>
+                  <span className="text-sm font-black text-brand-red">
+                    ≈ {(areaNum * 9).toLocaleString('en-IN')} SQ.FT
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Quick 2x2 Specs Grid */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Property Type</span>
+                <span className={`font-bold text-[11px] sm:text-xs ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  Factory / Warehouse Shed
+                </span>
+              </div>
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Road Frontage</span>
+                <span className={`font-bold text-[11px] sm:text-xs ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  60 Ft Heavy RCC
+                </span>
+              </div>
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Possession</span>
+                <span className="font-bold text-[11px] sm:text-xs text-emerald-500">
+                  Ready to Move
+                </span>
+              </div>
+              <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
+                <span className="text-[9px] uppercase font-bold text-gray-400 block">Industrial Belt</span>
+                <span className={`font-bold text-[11px] sm:text-xs ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  Moraiya GIDC / Changodar
+                </span>
               </div>
             </div>
 
-            {/* Location pill */}
-            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg mb-4 ${isDark ? 'bg-white/4' : 'bg-gray-50'}`}>
-              <MapPin size={12} className={isDark ? 'text-white/40' : 'text-gray-400'} />
-              <span className={`text-xs ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
-                Changodar, Ahmedabad, Gujarat
-              </span>
+            {/* Park Features Strip */}
+            <div className={`p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-1 text-[10px] font-bold ${
+              isDark ? 'bg-gray-950/40 border-gray-800 text-gray-400' : 'bg-gray-100/70 border-gray-200 text-gray-600'
+            }`}>
+              <span>✓ Heavy RCC Road</span>
+              <span>✓ Street Light</span>
+              <span>✓ Soil Filling</span>
+              <span>✓ 24/7 Security</span>
             </div>
 
-            {/* Owner & Lessee Cards */}
-            {(hasOwner || hasLessee) && (
-              <div className="space-y-2.5 mb-4">
-                {hasOwner && (
-                  <div
-                    className={`rounded-xl overflow-hidden border ${
-                      isDark ? 'border-blue-800/60' : 'border-blue-200'
-                    }`}
-                  >
-                    <div className={`px-3.5 py-2.5 flex items-center gap-2 ${isDark ? 'bg-blue-900/40' : 'bg-blue-600'}`}>
-                      <User size={11} className="text-white opacity-80" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white">Owner Portfolio</span>
-                    </div>
-                    <div className={`px-3.5 py-3 ${isDark ? 'bg-blue-950/30' : 'bg-blue-50'}`}>
-                      <p className={`font-bold text-sm mb-2.5 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {selectedPlotData.owner}
-                      </p>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        {ownerSheds.length > 0 && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-blue-900/60 text-blue-200' : 'bg-blue-100 text-blue-800'
-                            }`}
-                          >
-                            <span className="font-black">{ownerSheds.length}</span>
-                            <span className="opacity-70 ml-1">shed{ownerSheds.length > 1 ? 's' : ''}</span>
-                          </div>
-                        )}
-                        {ownerTotalArea && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-blue-900/60 text-blue-200' : 'bg-blue-100 text-blue-800'
-                            }`}
-                          >
-                            <AreaDisplay value={ownerTotalArea} numClass="font-black" unitClass="opacity-70" />
-                          </div>
-                        )}
-                        {monthlyRentRaw && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg font-black ${
-                              isDark ? 'bg-emerald-900/60 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
-                            }`}
-                          >
-                            ₹{monthlyRentRaw}
-                            <span className="font-normal opacity-70">/mo</span>
-                          </div>
-                        )}
-                      </div>
-                      {ownerSheds.length > 1 && (
-                        <div className="mt-2.5">
-                          <ShedChips
-                            sheds={ownerSheds}
-                            selected={selectedPlot}
-                            plotData={plotData}
-                            isDark={isDark}
-                            onSelect={onSelectPlot}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {hasLessee && (
-                  <div
-                    className={`rounded-xl overflow-hidden border ${
-                      isDark ? 'border-amber-800/60' : 'border-amber-200'
-                    }`}
-                  >
-                    <div
-                      className={`px-3.5 py-2.5 flex items-center gap-2 ${
-                        isDark ? 'bg-amber-900/50' : 'bg-amber-500'
-                      }`}
-                    >
-                      <LesseeIcon size={11} className="text-white opacity-80" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white">Lessee</span>
-                    </div>
-                    <div className={`px-3.5 py-3 ${isDark ? 'bg-amber-950/30' : 'bg-amber-50'}`}>
-                      <p className={`font-bold text-sm mb-2.5 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {selectedPlotData.lessee}
-                      </p>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        {lesseeSheds.length > 0 && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            <span className="font-black">{lesseeSheds.length}</span>
-                            <span className="opacity-70 ml-1">shed{lesseeSheds.length > 1 ? 's' : ''}</span>
-                          </div>
-                        )}
-                        {lesseeTotalArea && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg ${
-                              isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            <AreaDisplay value={lesseeTotalArea} numClass="font-black" unitClass="opacity-70" />
-                          </div>
-                        )}
-                        {!hasOwner && monthlyRentRaw && (
-                          <div
-                            className={`px-2.5 py-1.5 rounded-lg font-black ${
-                              isDark ? 'bg-emerald-900/60 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
-                            }`}
-                          >
-                            ₹{monthlyRentRaw}
-                            <span className="font-normal opacity-70">/mo</span>
-                          </div>
-                        )}
-                      </div>
-                      {lesseeSheds.length > 1 && (
-                        <div className="mt-2.5">
-                          <ShedChips
-                            sheds={lesseeSheds}
-                            selected={selectedPlot}
-                            plotData={plotData}
-                            isDark={isDark}
-                            onSelect={onSelectPlot}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* CTA */}
-            <button
-              onClick={onClose}
-              className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 ${
-                isDark
-                  ? 'bg-white/8 hover:bg-white/12 text-white ring-1 ring-white/10'
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 ring-1 ring-black/5'
-              }`}
-            >
-              Close
-            </button>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2 pt-1">
+              <a
+                href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 px-3.5 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-green-600/25 active:scale-95 transition-all whitespace-nowrap"
+              >
+                <FaWhatsapp size={15} />
+                <span>Enquire on WhatsApp</span>
+              </a>
+              <button
+                type="button"
+                onClick={onClose}
+                className={`py-2.5 px-4 rounded-xl font-bold text-xs transition-all active:scale-95 whitespace-nowrap ${
+                  isDark
+                    ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                }`}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -1019,168 +794,176 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
   );
 });
 
-/* ── Top Dashboard Header (Memoized) ── */
+/* ── Top Dashboard Header (Clean, Executive & Scannable) ── */
 const DashboardHeader = React.memo(function DashboardHeader({
   stats,
   showPhases,
   setShowPhases,
-  lastUpdated,
   loading,
   loadData,
+  onOpenFullscreen,
   isDark,
 }) {
-  const formatLastUpdated = () => {
-    if (!lastUpdated) return '';
-    const diff = Math.floor((Date.now() - lastUpdated) / 1000);
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    return `${Math.floor(diff / 3600)}h ago`;
-  };
-
   return (
     <div
       className={`p-3 sm:p-4 border-b transition-colors ${
-        isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-100 bg-slate-50/80'
+        isDark ? 'border-gray-800 bg-gray-950/70' : 'border-gray-200 bg-slate-50/90'
       }`}
     >
-      {/* Row 1: Actions, Sync Status & Phase Toggle */}
-      <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3">
-        <div className="flex items-center gap-2">
-          <span
-            className={`text-[10px] sm:text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md ${
-              isDark
-                ? 'bg-gray-800 text-gray-300 border border-gray-700/60'
-                : 'bg-white text-gray-600 border border-gray-200 shadow-xs'
-            }`}
-          >
-            Live Units
-          </span>
-          <span className={`text-[10px] sm:text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            {lastUpdated ? `Updated ${formatLastUpdated()}` : 'Syncing...'}
-          </span>
+      {/* Top Row: Title Badge & Action Controls (Phases, Edit, Sync, Pan & Zoom) */}
+      <div className="flex items-center justify-between gap-2 sm:gap-3 mb-3">
+        {/* Left: Project Badge */}
+        <div
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-black tracking-tight border ${
+            isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xs'
+          }`}
+        >
+          <Factory size={13} className="text-brand-red shrink-0" />
+          <span>Park 1</span>
+          <span className="text-[10px] text-gray-400 font-semibold">• 63 Industrial Sheds</span>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {/* Phase Toggle Pill */}
-          <button
-            onClick={() => setShowPhases((v) => !v)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all border ${
-              showPhases
-                ? isDark
-                  ? 'bg-gray-800 text-white border-gray-600 shadow-sm'
-                  : 'bg-white text-gray-900 border-gray-300 shadow-sm'
-                : isDark
-                  ? 'bg-transparent text-gray-500 border-gray-800 opacity-60'
-                  : 'bg-transparent text-gray-400 border-gray-200 opacity-60'
-            }`}
-            title="Toggle Phases A-D overlay"
-          >
-            <div className="flex items-center -space-x-1">
-              <span className="w-2 h-2 rounded-full bg-slate-400 ring-1 ring-white/20" />
-              <span className="w-2 h-2 rounded-full bg-blue-500 ring-1 ring-white/20" />
-              <span className="w-2 h-2 rounded-full bg-purple-500 ring-1 ring-white/20" />
-              <span className="w-2 h-2 rounded-full bg-amber-500 ring-1 ring-white/20" />
-            </div>
-            <span>Phases {showPhases ? '✓' : 'Off'}</span>
-          </button>
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {setShowPhases && (
+            <button
+              type="button"
+              onClick={() => setShowPhases((v) => !v)}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
+                showPhases
+                  ? isDark
+                    ? 'bg-gray-800 text-white border-gray-600 shadow-xs'
+                    : 'bg-white text-gray-900 border-gray-300 shadow-xs'
+                  : isDark
+                    ? 'bg-transparent text-gray-500 border-gray-800 opacity-60'
+                    : 'bg-transparent text-gray-400 border-gray-200 opacity-60'
+              }`}
+              title="Toggle Phases A-D overlay"
+            >
+              <div className="flex items-center -space-x-1 shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              </div>
+              <span className="hidden sm:inline">Phases {showPhases ? '✓' : 'Off'}</span>
+              <span className="sm:hidden">Phase</span>
+            </button>
+          )}
 
-          {/* Edit Google Sheet Button */}
+          {/* Edit Button */}
           <a
             href={ADMIN_SHEET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg transition-all border ${
+            className={`inline-flex items-center gap-1 px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
               isDark
                 ? 'bg-emerald-950/40 text-emerald-400 hover:bg-emerald-900/60 border-emerald-800/60'
-                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200'
+                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200 shadow-xs'
             }`}
-            title="Edit Google Sheet"
+            title="Edit Inventory on Google Sheet"
           >
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink size={12} />
             <span>Edit</span>
           </a>
 
-          {/* Refresh Button */}
+          {/* Sync Button */}
           <button
+            type="button"
             onClick={() => loadData()}
             disabled={loading}
-            className={`p-1.5 rounded-lg transition-all border ${
+            className={`inline-flex items-center gap-1 px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             } ${
               isDark
-                ? 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 border-gray-700/60'
+                ? 'bg-gray-900 text-gray-300 hover:text-white hover:bg-gray-800 border-gray-700/70'
                 : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-gray-200 shadow-xs'
             }`}
-            title="Refresh Status"
+            title="Sync Live Data"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-brand-red' : ''}`} />
+            <span className="hidden sm:inline">Sync</span>
+          </button>
+
+          {/* Pan & Zoom Button */}
+          <button
+            type="button"
+            onClick={onOpenFullscreen}
+            className="inline-flex items-center gap-1 px-3 py-1 sm:py-1.5 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-xs active:scale-95 transition-all whitespace-nowrap"
+            title="Open Fullscreen Interactive Map"
+          >
+            <Maximize2 size={12} />
+            <span>Pan &amp; Zoom</span>
           </button>
         </div>
       </div>
 
-      {/* Row 2: Stat Chips */}
-      <div className="overflow-x-auto no-scrollbar -mx-1 px-1 py-0.5">
-        <div className="flex sm:grid sm:grid-cols-5 gap-1.5 sm:gap-2 min-w-max sm:min-w-0">
-          {[
-            {
-              key: 'total',
-              val: stats.total,
-              label: 'Total Units',
-              dot: isDark ? 'bg-gray-300' : 'bg-gray-700',
-              cls: isDark ? 'text-white' : 'text-gray-900',
-              bg: isDark ? 'bg-gray-800/80 border-gray-700/60' : 'bg-white border-gray-200/90 shadow-xs',
-            },
-            {
-              key: 'available',
-              val: stats.available,
-              label: 'Available',
-              dot: 'bg-emerald-500 shadow-sm shadow-emerald-500/50',
-              cls: isDark ? 'text-emerald-400' : 'text-emerald-600',
-              bg: isDark
-                ? 'bg-emerald-950/30 border-emerald-800/50'
-                : 'bg-emerald-50/70 border-emerald-200/90 shadow-xs',
-            },
-            {
-              key: 'preLeased',
-              val: stats.preLeased,
-              label: 'Pre-Leased',
-              dot: 'bg-blue-500 shadow-sm shadow-blue-500/50',
-              cls: isDark ? 'text-blue-400' : 'text-blue-600',
-              bg: isDark ? 'bg-blue-950/30 border-blue-800/50' : 'bg-blue-50/70 border-blue-200/90 shadow-xs',
-            },
-            {
-              key: 'forLease',
-              val: stats.forLease,
-              label: 'For Lease',
-              dot: 'bg-red-500 shadow-sm shadow-red-500/50',
-              cls: isDark ? 'text-red-400' : 'text-red-600',
-              bg: isDark ? 'bg-red-950/30 border-red-800/50' : 'bg-red-50/70 border-red-200/90 shadow-xs',
-            },
-            {
-              key: 'sold',
-              val: stats.sold + stats.forLease,
-              label: 'Sold',
-              dot: 'bg-gray-400',
-              cls: isDark ? 'text-gray-300' : 'text-gray-700',
-              bg: isDark ? 'bg-gray-800/50 border-gray-700/40' : 'bg-gray-100/70 border-gray-200/80 shadow-xs',
-            },
-          ].map(({ key, val, label, dot, cls, bg }) => (
-            <div
-              key={key}
-              className={`flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl border transition-all ${bg}`}
-            >
-              <span className={`w-2 h-2 rounded-full shrink-0 ${dot}`} />
-              <div className="flex items-baseline gap-1.5 sm:flex-col sm:gap-0">
-                <span className={`text-sm sm:text-base font-black tracking-tight leading-none ${cls}`}>
-                  {val}
-                </span>
-                <span className={`text-[10px] sm:text-[11px] font-bold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {label}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Row 2: Availability Colored Stat Boxes (Number on top, Title below) */}
+      <div className="grid grid-cols-5 gap-1.5 sm:gap-2.5">
+        {[
+          {
+            key: 'total',
+            val: stats.total,
+            label: 'Total Units',
+            box: isDark
+              ? 'bg-gray-900/80 border-gray-800 text-white'
+              : 'bg-white border-gray-200 text-gray-900 shadow-xs',
+            num: isDark ? 'text-white' : 'text-gray-900',
+            lbl: isDark ? 'text-gray-400' : 'text-gray-500',
+          },
+          {
+            key: 'available',
+            val: stats.available,
+            label: 'Available',
+            box: isDark
+              ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-400'
+              : 'bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs',
+            num: isDark ? 'text-emerald-400' : 'text-emerald-700',
+            lbl: isDark ? 'text-emerald-400/90' : 'text-emerald-700/90',
+          },
+          {
+            key: 'preLeased',
+            val: stats.preLeased,
+            label: 'Pre-Leased',
+            box: isDark
+              ? 'bg-blue-950/40 border-blue-800/60 text-blue-400'
+              : 'bg-blue-50 border-blue-200 text-blue-700 shadow-xs',
+            num: isDark ? 'text-blue-400' : 'text-blue-700',
+            lbl: isDark ? 'text-blue-400/90' : 'text-blue-700/90',
+          },
+          {
+            key: 'forLease',
+            val: stats.forLease,
+            label: 'For Lease',
+            box: isDark
+              ? 'bg-red-950/40 border-red-800/60 text-red-400'
+              : 'bg-red-50 border-red-200 text-red-700 shadow-xs',
+            num: isDark ? 'text-red-400' : 'text-red-700',
+            lbl: isDark ? 'text-red-400/90' : 'text-red-700/90',
+          },
+          {
+            key: 'sold',
+            val: stats.sold + stats.forLease,
+            label: 'Sold',
+            box: isDark
+              ? 'bg-gray-800/50 border-gray-700/60 text-gray-300'
+              : 'bg-gray-100/90 border-gray-200 text-gray-700 shadow-xs',
+            num: isDark ? 'text-gray-300' : 'text-gray-700',
+            lbl: isDark ? 'text-gray-400' : 'text-gray-500',
+          },
+        ].map(({ key, val, label, box, num, lbl }) => (
+          <div
+            key={key}
+            className={`flex flex-col items-center justify-center py-1.5 sm:py-2 px-1 sm:px-2 rounded-xl border text-center transition-all ${box}`}
+          >
+            <span className={`text-sm sm:text-lg font-black tabular-nums leading-none ${num}`}>
+              {val}
+            </span>
+            <span className={`text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider mt-1 whitespace-nowrap leading-tight ${lbl}`}>
+              {label}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1197,11 +980,9 @@ export default function InteractiveSiteMap() {
   const [selectedPlot, setSelectedPlot] = useState(null);
   const [hoveredPlot, setHoveredPlot] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showPhases, setShowPhases] = useState(true);
 
-  // Lock body scroll on fullscreen
   useEffect(() => {
     document.body.style.overflow = isFullscreen ? 'hidden' : '';
     return () => {
@@ -1222,7 +1003,6 @@ export default function InteractiveSiteMap() {
       } else {
         setPlotData(data);
       }
-      setLastUpdated(new Date());
     } catch (err) {
       console.error('Error loading data:', err);
     } finally {
@@ -1236,7 +1016,6 @@ export default function InteractiveSiteMap() {
     return () => clearInterval(id);
   }, [loadData]);
 
-  // Memoized single-pass stats calculation
   const stats = useMemo(() => {
     const total = PLOT_ENTRIES.length;
     let available = 0;
@@ -1256,12 +1035,10 @@ export default function InteractiveSiteMap() {
     return { total, available, preLeased, forLease, sold };
   }, [plotData]);
 
-  // Memoized selected plot data
   const selectedPlotData = useMemo(() => {
     return selectedPlot ? plotData[selectedPlot] : null;
   }, [selectedPlot, plotData]);
 
-  // Stable callbacks for plot actions
   const handleSelectPlot = useCallback((plotNumber) => {
     setSelectedPlot(plotNumber);
   }, []);
@@ -1282,65 +1059,6 @@ export default function InteractiveSiteMap() {
     setIsFullscreen(false);
   }, []);
 
-  // Memoized sibling plots calculation (Owner / Lessee group)
-  const { siblingPlotSet, ownerSheds, lesseeSheds, ownerTotalArea, lesseeTotalArea } = useMemo(() => {
-    const set = new Set();
-    if (!selectedPlot || !selectedPlotData) {
-      return {
-        siblingPlotSet: set,
-        ownerSheds: [],
-        lesseeSheds: [],
-        ownerTotalArea: null,
-        lesseeTotalArea: null,
-      };
-    }
-
-    const selOwner = selectedPlotData.owner?.trim().toLowerCase();
-    const selLessee = selectedPlotData.lessee?.trim().toLowerCase();
-
-    const oSheds = [];
-    const lSheds = [];
-
-    PLOT_ENTRIES.forEach(([id]) => {
-      const d = plotData[id];
-      if (selOwner && d?.owner && d.owner.trim().toLowerCase() === selOwner) {
-        oSheds.push(id);
-        if (id !== selectedPlot) set.add(id);
-      }
-      if (selLessee && d?.lessee && d.lessee.trim().toLowerCase() === selLessee) {
-        lSheds.push(id);
-        if (id !== selectedPlot) set.add(id);
-      }
-    });
-
-    oSheds.sort((a, b) => Number(a) - Number(b));
-    lSheds.sort((a, b) => Number(a) - Number(b));
-
-    const finalOwnerSheds = oSheds.length > 0 ? oSheds : selectedPlotData.owner ? [selectedPlot] : [];
-    const finalLesseeSheds = lSheds.length > 0 ? lSheds : selectedPlotData.lessee ? [selectedPlot] : [];
-
-    const computeArea = (ids) => {
-      if (!ids.length) return null;
-      let total = 0;
-      let sampleRaw = '';
-      ids.forEach((id) => {
-        const raw = plotData[id]?.area || plotCoordinates[id]?.area || '';
-        if (raw && raw !== 'N/A' && !sampleRaw) sampleRaw = raw;
-        total += parseArea(raw);
-      });
-      if (!total) return null;
-      return `${total.toLocaleString('en-IN')} ${areaUnit(sampleRaw)}`.trim();
-    };
-
-    return {
-      siblingPlotSet: set,
-      ownerSheds: finalOwnerSheds,
-      lesseeSheds: finalLesseeSheds,
-      ownerTotalArea: computeArea(finalOwnerSheds),
-      lesseeTotalArea: computeArea(finalLesseeSheds),
-    };
-  }, [selectedPlot, selectedPlotData, plotData]);
-
   return (
     <>
       <div
@@ -1348,14 +1066,13 @@ export default function InteractiveSiteMap() {
           isDark ? 'bg-gray-900/90 border-gray-800 shadow-black/40' : 'bg-white border-gray-200/90 shadow-gray-200/60'
         }`}
       >
-        {/* Top Control & Stats Header */}
         <DashboardHeader
           stats={stats}
           showPhases={showPhases}
           setShowPhases={setShowPhases}
-          lastUpdated={lastUpdated}
           loading={loading}
           loadData={loadData}
+          onOpenFullscreen={() => setIsFullscreen(true)}
           isDark={isDark}
         />
 
@@ -1364,7 +1081,7 @@ export default function InteractiveSiteMap() {
           <div className="relative" style={{ display: 'inline-block' }}>
             <img
               src="/images/metro-industrial-park-site-plan-moraiya.jpg"
-              alt="Metro Industrial Park Site Map"
+              alt="Industrial Park 1 Site Plan"
               className="block select-none"
               style={{ maxHeight: '68vh', width: 'auto' }}
               draggable={false}
@@ -1373,7 +1090,6 @@ export default function InteractiveSiteMap() {
               plotData={plotData}
               selectedPlot={selectedPlot}
               hoveredPlot={hoveredPlot}
-              siblingPlotSet={siblingPlotSet}
               showPhases={showPhases}
               isDark={isDark}
               onSelectPlot={handleSelectPlot}
@@ -1382,22 +1098,28 @@ export default function InteractiveSiteMap() {
             />
           </div>
 
-          <button
-            onClick={() => setIsFullscreen(true)}
-            className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-red text-white font-bold text-xs hover:bg-red-700 active:scale-95 transition-all shadow-xl shadow-red-500/25"
-          >
-            <Maximize2 size={14} /> View Fullscreen
-          </button>
+          {/* Bottom Floating Info Pill */}
           <div
-            className={`absolute bottom-3 left-3 sm:bottom-4 sm:left-4 pointer-events-none px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] font-medium backdrop-blur-sm ${
+            className={`absolute bottom-3 left-3 sm:bottom-4 sm:left-4 pointer-events-none px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 shadow-sm border ${
               isDark
-                ? 'bg-black/70 text-gray-300 border border-white/10'
-                : 'bg-white/90 text-gray-700 border border-gray-200 shadow-md'
+                ? 'bg-black/75 text-gray-300 border-white/10'
+                : 'bg-white/90 text-gray-700 border-gray-200'
             }`}
           >
-            <span className="sm:hidden">Pinch to zoom · Tap shed</span>
-            <span className="hidden sm:inline">Tap shed for details</span>
+            <MapPin size={12} className="text-brand-red shrink-0" />
+            <span>Tap shed for specifications &amp; WhatsApp enquiry</span>
           </div>
+
+          {/* Bottom Floating Fullscreen Button */}
+          <button
+            type="button"
+            onClick={() => setIsFullscreen(true)}
+            className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-brand-red/25 active:scale-95 transition-all whitespace-nowrap"
+          >
+            <Maximize2 size={13} />
+            <span className="hidden sm:inline">Pan &amp; Zoom</span>
+            <span className="sm:hidden">Zoom</span>
+          </button>
         </div>
       </div>
 
@@ -1408,27 +1130,21 @@ export default function InteractiveSiteMap() {
         plotData={plotData}
         selectedPlot={selectedPlot}
         onSelectPlot={handleSelectPlot}
+        stats={stats}
         showPhases={showPhases}
         setShowPhases={setShowPhases}
-        stats={stats}
         loading={loading}
         loadData={loadData}
-        siblingPlotSet={siblingPlotSet}
         isDark={isDark}
       />
 
-      {/* Modal Popup for Details */}
+      {/* Dedicated Shed Detail Modal */}
       <ShedDetailModal
         selectedPlot={selectedPlot}
         selectedPlotData={selectedPlotData}
-        ownerSheds={ownerSheds}
-        lesseeSheds={lesseeSheds}
-        ownerTotalArea={ownerTotalArea}
-        lesseeTotalArea={lesseeTotalArea}
         plotData={plotData}
         isDark={isDark}
         onClose={handleCloseModal}
-        onSelectPlot={handleSelectPlot}
       />
     </>
   );

@@ -41,3 +41,6 @@ Crawl-delay: 20
 
 # ── Sitemap locations ──────────────────────────────────────────────────────────────
 Sitemap: https://www.metrodevelopers.co.in/sitemap.xml
+
+# LLMs knowledge context for SearchGPT, Perplexity, Claude, Gemini:
+# https://www.metrodevelopers.co.in/llms.txt
