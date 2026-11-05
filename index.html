@@ -109,8 +109,8 @@
     },
     "geo": {
       "@type": "GeoCoordinates",
-      "latitude": 22.914141879249897,
-      "longitude": 72.41748307531053
+      "latitude": 22.9140377,
+      "longitude": 72.4206651
     },
     "openingHoursSpecification": [
       {
@@ -120,13 +120,28 @@
         "closes": "19:00"
       }
     ],
-    "areaServed": {
-      "@type": "City",
-      "name": "Ahmedabad"
-    },
+    "areaServed": [
+      { "@type": "City", "name": "Ahmedabad" },
+      { "@type": "Place", "name": "Changodar" },
+      { "@type": "Place", "name": "Moraiya" },
+      { "@type": "Place", "name": "Bavla" }
+    ],
+    "hasMap": "https://maps.app.goo.gl/6fBawQdYxcmUw3WE6",
     "sameAs": [
-      "https://www.instagram.com/metro.industrialpark/"
-    ]
+      "https://www.instagram.com/metro.industrialpark/",
+      "https://www.facebook.com/metroindustrialpark1",
+      "https://maps.app.goo.gl/6fBawQdYxcmUw3WE6",
+      "https://g.page/r/CfbFhZSjMaH1EBI",
+      "https://g.page/r/CfbFhZSjMaH1EBI/review",
+      "https://www.wikidata.org/wiki/Q207908"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "worstRating": "1",
+      "reviewCount": "5"
+    }
   }
   </script>
 
@@ -221,6 +236,11 @@
       background: rgba(255, 255, 255, 0.82);
       box-shadow: 0 12px 36px rgba(15, 23, 42, 0.1);
     }
+    html[data-theme='light'] #splash img {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
     #splash-logo-wrap {
       position: relative;
       width: 88px;
@@ -233,6 +253,9 @@
       width: 60px;
       height: 60px;
       border-radius: 14px;
+      padding: 6px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
       animation: splashPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
       position: relative;
@@ -336,7 +359,7 @@
     <div id="splash-shell">
       <div id="splash-logo-wrap" aria-hidden="true">
         <div id="splash-logo-glow"></div>
-        <img src="/icons/icon-192x192.png" alt="Metro Industrial Park" />
+        <img src="/MDLogo.png" alt="Metro Developers" />
         <div id="splash-ring"></div>
       </div>
       <div id="splash-title">Metro Developers</div>

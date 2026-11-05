@@ -1013,6 +1013,7 @@ const SiteMapPage = () => {
           close={() => setViewerOpen(false)}
           slides={viewerSlides}
           plugins={[Zoom]}
+          zoom={{ maxZoomPixelRatio: 5, scrollToZoom: true }}
         />
       </div>
     </>

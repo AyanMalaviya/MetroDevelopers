@@ -2,53 +2,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import webfontDownload from 'vite-plugin-webfont-dl';
-import prerenderStatic from 'vite-plugin-prerender-static';
-
-// ─── All static routes to pre-render at build time ────────────────────────────
-// Pure ESM, no headless Chrome — just copies dist/index.html into each
-// route folder at build time so crawlers get real HTML, zero serverless.
-const PRERENDER_ROUTES = [
-  '/',
-  '/metro-industrial-park',
-  '/metro-arcade',
-  '/metro-industrial-estate',
-  '/metro-industrial-park-3',
-  '/contact',
-  '/calculator',
-  '/site-map',
-
-  // Local Market SEO pages
-  '/industrial-sheds-in-moraiya',
-  '/industrial-sheds-in-changodar',
-  '/warehouses-in-changodar',
-  '/industrial-sheds-near-sarkhej-bavla-highway',
-  '/industrial-sheds-in-ahmedabad',
-  '/investment-in-real-estate-in-ahmedabad',
-  '/industrial-shed-for-rent-changodar',
-  '/industrial-shed-for-sale-changodar',
-  '/godown-for-rent-changodar',
-  '/industrial-park-near-sanand',
-  '/warehouse-for-rent-ahmedabad',
-  '/warehouse-for-sale-ahmedabad',
-  '/industrial-shed-for-rent-moraiya',
-  '/industrial-shed-for-sale-moraiya',
-  '/godown-for-rent-ahmedabad',
-  '/factory-shed-for-rent-changodar',
-  '/industrial-shed-for-rent-gujarat',
-  '/gidc-shed-for-rent-ahmedabad',
-  '/industrial-property-investment-ahmedabad',
-  '/industrial-land-for-sale-moraiya-changodar',
-  '/high-return-investment-gujarat',
-
-  // Guide pages
-  '/guides/gst-input-credit-industrial-tenants-gujarat',
-  '/guides/warehousing-yield-cagr-gujarat',
-  '/guides/industrial-property-due-diligence-ahmedabad',
-  '/guides/how-to-choose-industrial-shed-gujarat',
-  '/guides/industrial-investment-returns-gujarat-2026',
-  '/guides/rent-vs-buy-industrial-shed-ahmedabad',
-  '/guides/gidc-vs-private-industrial-park-gujarat',
-];
 
 export default defineConfig({
   base: '/',
@@ -70,22 +23,13 @@ export default defineConfig({
       'https://fonts.googleapis.com/css2?family=Anton&family=Bungee+Outline&display=swap',
     ]),
 
-    // ── SSG Pre-rendering ──────────────────────────────────────────────────────
-    // Copies dist/index.html into dist/<route>/index.html at build time.
-    // No Puppeteer, no headless Chrome, fully ESM — fast & Vercel-safe.
-    // react-helmet-async writes <title>/<meta> into the HTML shell before
-    // the copy, so each file gets the right SEO tags baked in.
-    prerenderStatic({
-      routes: PRERENDER_ROUTES,
-    }),
-
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       includeAssets: [
         'favicon.ico', 'favicon.svg', 'robots.txt', 'apple-touch-icon.png',
         'icons/*.png', 'icons/*.svg',
-        'images/*.jpg', 'images/*.jpeg', 'images/*.png', 'images/*.webp',
+        'images/*.jpg', 'images/*.jpeg', 'images/*.png',
       ],
       manifest: {
         name: 'Metro Enterprise',
@@ -174,10 +118,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor':   ['react', 'react-dom', 'react-router-dom'],
-          'motion-vendor':  ['framer-motion'],
-          'icons-vendor':   ['lucide-react', 'react-icons'],
-          'countup-vendor': ['react-countup'],
+          'react-vendor':    ['react', 'react-dom', 'react-router-dom'],
+          'motion-vendor':   ['framer-motion'],
+          'icons-vendor':    ['lucide-react', 'react-icons'],
+          'countup-vendor':  ['react-countup'],
+          'lightbox-vendor': ['yet-another-react-lightbox'],
         },
       },
     },

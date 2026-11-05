@@ -25,7 +25,7 @@ import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
 
 // ✅ Import your schemas from the new utils file
-import { metroPark1Schema, propertySchema, faqSchema, imageObjectSchema, realEstateListingSchema } from '../../utils/schemas';
+import { metroPark1Schema, propertySchema, faqSchema, imageObjectSchema, realEstateListingSchema, metroPark1IndividualUnitsSchema } from '../../utils/schemas';
 
 /* ── Motion variants ── */
 const containerVariants = {
@@ -172,17 +172,17 @@ const MetroIndustrialPark = () => {
   ];
 
   const specifications = [
-    { label: 'Location',     value: 'Moraiya, Changodar' },
+    { label: 'Location',     value: 'Moraiya, Changodar, Ahmedabad' },
     { label: 'Total Area',   value: '54,000 sq.yards' },
     { label: 'Units',        value: '63 Industrial Sheds' },
     { label: 'Unit Sizes',   value: '4,000–50,000 sq.ft' },
     { label: 'Height',       value: '30–35 feet' },
-    { label: 'Road Width',   value: '60 feet' },
-    { label: 'Possession',   value: '90 days' },
+    { label: 'Road Width',   value: '60 feet Heavy RCC' },
+    { label: 'Availability', value: 'For Lease & Outright Sale' },
+    { label: 'Lease Terms',  value: '5–10 Year Corporate Lease' },
+    { label: 'Possession',   value: 'Immediate / 90 Days' },
     { label: 'Rental Yield', value: '6–8%' },
     { label: 'Yearly Appreciation', value: 'Up to 10-12%' },
-    { label: 'Combined Potential', value: '16-20%' },
-    { label: 'RCC Option',   value: 'On request with additional charges' },
     { label: 'Status',       value: 'Available Now' },
   ];
 
@@ -235,16 +235,16 @@ const MetroIndustrialPark = () => {
   return (
     <>
       <SEO
-        title="Metro Industrial Park 1 (MIP 1) | Industrial Sheds in Moraiya, Changodar"
-        description="Metro Industrial Park 1 (MIP 1) by Metro Developers in Moraiya, Changodar, Ahmedabad. 63 modern industrial sheds & warehouses (4,000 to 50,000 sq.ft) for sale & lease with 60ft roads, CCTV, 24x7 water & 90-day possession."
-        keywords="metro industrial park 1, industrial park 1, MIP 1, MIP-1, MIP1, metro industrial park, MIP, MIP moraiya, MIP changodar, industrial shed in moraiya, industrial shed in changodar, warehouse in ahmedabad, factory shed near changodar, industrial property near nh 47"
+        title="Industrial Sheds for Lease & Sale in Changodar, Ahmedabad | Metro Industrial Park 1"
+        description="Ready industrial sheds & warehouses for lease and outright sale in Changodar (Moraiya), Ahmedabad on NH 47. 4,000 to 50,000 sq.ft, 30–35ft clear height, 60ft RCC roads, 24/7 security. Contact for per sq.ft lease rates & purchase pricing."
+        keywords="industrial shed for rent changodar, industrial shed for lease changodar ahmedabad, warehouse for rent changodar, warehouse on lease ahmedabad, industrial shed for sale changodar, industrial shed in changodar, industrial shed in moraiya, industrial shed ahmedabad, factory shed for rent changodar, warehouse for sale ahmedabad, metro industrial park 1, MIP 1"
         canonical="/metro-industrial-park"
         ogImage="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
-        ogImageAlt="Industrial park project in Moraiya Changodar Ahmedabad"
-        structuredData={[metroPark1Schema, propertySchema, realEstateListingSchema, faqSchema, imageObjectSchema]}
+        ogImageAlt="Industrial sheds for lease and sale in Changodar Ahmedabad — Metro Industrial Park 1"
+        structuredData={[metroPark1Schema, propertySchema, realEstateListingSchema, metroPark1IndividualUnitsSchema, faqSchema, imageObjectSchema]}
       />
 
-      <h1 className="sr-only">Metro Industrial Park 1 (MIP 1) — Industrial Sheds for Sale &amp; Lease in Moraiya, Changodar, Ahmedabad</h1>
+      <h1 className="sr-only">Metro Industrial Park 1 (MIP 1) — Industrial Sheds for Lease &amp; Sale in Changodar, Moraiya, Ahmedabad</h1>
 
       <div className="min-h-screen theme-bg-primary">
 
@@ -460,6 +460,76 @@ const MetroIndustrialPark = () => {
                       RCC construction is not standard — available only on request with additional charges.
                     </p>
                   </motion.div>
+                </motion.div>
+
+                {/* ── Dual Intent: For Lease vs. For Sale ── */}
+                <motion.div variants={fadeUp}>
+                  <SectionHeader icon={<Building2 size={26} />} title="Flexible Options: For Lease &amp; For Sale" />
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    {/* Option 1: For Lease */}
+                    <div className={`rounded-2xl p-6 border-2 relative overflow-hidden flex flex-col justify-between transition-all duration-300 ${
+                      isDark ? 'bg-gradient-to-br from-red-950/30 via-gray-900 to-black border-brand-red/50' : 'bg-gradient-to-br from-red-50/70 via-rose-50/30 to-white border-brand-red/40'
+                    }`}>
+                      <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-brand-red/10 text-brand-red border border-brand-red/20">
+                        For Tenants &amp; 3PL
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold theme-text-primary mb-2 flex items-center gap-2">
+                          <Factory className="text-brand-red" size={20} />
+                          For Corporate Lease / Rent
+                        </h3>
+                        <p className="text-xs sm:text-sm theme-text-secondary leading-relaxed mb-4">
+                          Ready factory &amp; warehouse spaces from 4,000 to 50,000 sq.ft with immediate handover in Changodar.
+                        </p>
+                        <ul className="space-y-2 text-xs theme-text-secondary mb-5">
+                          <li className="flex items-center gap-2"><span className="text-brand-red font-bold">✓</span> Structured 5–10 year institutional leases</li>
+                          <li className="flex items-center gap-2"><span className="text-brand-red font-bold">✓</span> 30–35 ft ceiling height for pallet racking</li>
+                          <li className="flex items-center gap-2"><span className="text-brand-red font-bold">✓</span> 60 ft heavy RCC roads for 40ft freight trailers</li>
+                          <li className="flex items-center gap-2"><span className="text-brand-red font-bold">✓</span> Full 18% GST input tax credit eligible</li>
+                        </ul>
+                      </div>
+                      <a
+                        href={`https://wa.me/919824235642?text=${encodeURIComponent('Hello, I am interested in leasing an industrial shed/warehouse at Metro Industrial Park 1 in Changodar. Please share available units and lease rates.')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-md transition-all active:scale-95"
+                      >
+                        <FaWhatsapp size={15} /> Inquire for Lease Rates
+                      </a>
+                    </div>
+
+                    {/* Option 2: For Outright Sale */}
+                    <div className={`rounded-2xl p-6 border-2 relative overflow-hidden flex flex-col justify-between transition-all duration-300 ${
+                      isDark ? 'bg-gradient-to-br from-emerald-950/30 via-gray-900 to-black border-emerald-500/50' : 'bg-gradient-to-br from-emerald-50/70 via-lime-50/30 to-white border-emerald-500/40'
+                    }`}>
+                      <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                        For Buyers &amp; Investors
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold theme-text-primary mb-2 flex items-center gap-2">
+                          <TrendingUp className="text-emerald-500" size={20} />
+                          For Outright Freehold Sale
+                        </h3>
+                        <p className="text-xs sm:text-sm theme-text-secondary leading-relaxed mb-4">
+                          Freehold NA industrial sheds for owner-occupiers and investors seeking high passive income in Ahmedabad.
+                        </p>
+                        <ul className="space-y-2 text-xs theme-text-secondary mb-5">
+                          <li className="flex items-center gap-2"><span className="text-emerald-500 font-bold">✓</span> 100% Clear Title NA Industrial Land</li>
+                          <li className="flex items-center gap-2"><span className="text-emerald-500 font-bold">✓</span> Immediate sale deed registration &amp; bank finance</li>
+                          <li className="flex items-center gap-2"><span className="text-emerald-500 font-bold">✓</span> 6–8% net rental yields from day one</li>
+                          <li className="flex items-center gap-2"><span className="text-emerald-500 font-bold">✓</span> Up to 10–12% annual capital appreciation</li>
+                        </ul>
+                      </div>
+                      <a
+                        href={`https://wa.me/919824235642?text=${encodeURIComponent('Hello, I am interested in purchasing an industrial shed for sale at Metro Industrial Park 1 in Changodar. Please share pricing and title details.')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all active:scale-95"
+                      >
+                        <FaWhatsapp size={15} /> Inquire for Sale Pricing
+                      </a>
+                    </div>
+                  </div>
                 </motion.div>
 
                 {/* Key Features */}

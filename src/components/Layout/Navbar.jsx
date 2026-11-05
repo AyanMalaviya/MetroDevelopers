@@ -5,7 +5,7 @@ import {
   Menu, X, Calculator, MapPin, Home, Factory,
   Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
   Settings2, ArrowUp, Type, Map,
-  LucideLandPlot,
+  LucideLandPlot, Star,
 } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
@@ -168,14 +168,16 @@ const Navbar = () => {
 
           {/* ── Logo ── */}
           <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
-            <div className="relative flex-shrink-0">
+            <div className={`relative flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl border flex items-center justify-center p-1 transition-all duration-300 ${
+              isDark ? 'bg-black border-gray-800' : 'bg-white border-gray-200'
+            }`}>
               <img
                 src="/MDLogo.png"
                 alt="Metro Developers Logo"
-                width={40}
-                height={40}
+                width={36}
+                height={36}
                 onError={(e) => { e.currentTarget.src = '/icons/icon-192x192.png'; }}
-                className="mt-1 h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
+                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 rounded-xl bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10" />
             </div>
@@ -290,6 +292,19 @@ const Navbar = () => {
                         <div>
                           <p className="font-bold text-[11px]">Get Directions</p>
                           <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Moraiya, Ahmedabad</p>
+                        </div>
+                      </a>
+                      <a href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                        target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border text-xs font-semibold active:scale-95 transition-all ${
+                          isDark ? 'border-amber-500/30 bg-amber-950/20 text-amber-300 hover:bg-amber-900/30' : 'border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100'
+                        }`}>
+                        <div className="w-6 h-6 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                          <Star size={11} className="text-amber-500 fill-amber-500" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-[11px] flex items-center gap-1.5">Google Reviews <span className="text-[10px] px-1 py-0.5 bg-amber-500 text-white rounded font-mono font-bold">5.0 ★</span></p>
+                          <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Read & write verified reviews</p>
                         </div>
                       </a>
                     </div>
@@ -537,6 +552,19 @@ const Navbar = () => {
                       <div>
                         <p className="text-xs font-bold">Get Directions</p>
                         <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Moraiya, Ahmedabad</p>
+                      </div>
+                    </a>
+                    <a href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                      target="_blank" rel="noopener noreferrer" onClick={closeMenu}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold active:scale-95 transition-all ${
+                        isDark ? 'border-amber-500/30 bg-amber-950/20 text-amber-300 hover:bg-amber-900/30' : 'border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100'
+                      }`}>
+                      <div className="w-6 h-6 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                        <Star size={13} className="text-amber-500 fill-amber-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold flex items-center gap-1.5">Google Reviews <span className="text-[10px] px-1 py-0.5 bg-amber-500 text-white rounded font-mono font-bold">5.0 ★</span></p>
+                        <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Read & write verified reviews</p>
                       </div>
                     </a>
                   </div>

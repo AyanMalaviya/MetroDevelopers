@@ -18,7 +18,8 @@ import SEO from '../components/SEO/SEO';
 import {
   metroPark3Schema,
   metroPark3ListingSchema,
-  metroPark3FaqSchema
+  metroPark3FaqSchema,
+  metroPark3IndividualUnitsSchema,
 } from '../utils/schemas';
 
 /* ── Section Header matching Park 1 ── */
@@ -138,6 +139,7 @@ const MetroIndustrialPark3 = () => {
     { label: 'Total Plots', value: '77 Industrial Plots' },
     { label: 'Plot Sizing', value: '300 to 2,876 sq.yards' },
     { label: 'Metric Sizing', value: '251 to 2,404 sq.meters' },
+    { label: 'Yearly Appreciation', value: '12–15%' },
     { label: 'Super Loading', value: '23.39%' },
     { label: 'Road Network', value: '18m & 12m Wide RCC Roads' },
     { label: 'Street Lighting', value: 'Street Lights Installed' },
@@ -184,17 +186,17 @@ const MetroIndustrialPark3 = () => {
   return (
     <>
       <SEO
-        title="Metro Industrial Park 3 (MIP 3) | Industrial Plots in Bavla, Ahmedabad"
-        description="Metro Industrial Park 3 (MIP 3) by Metro Developers on Bavla–Rajoda Road, Ahmedabad. 77 prime NA industrial plots (166 to 2,056 sq.yds). Bookings open! Features Wide Heavy RCC roads, Street lights, Puran (Soil filling ongoing), Compound wall, and 24/7 Gated security."
+        title="Industrial Plots for Sale in Bavla, Ahmedabad | Metro Industrial Park 3"
+        description="77 prime NA industrial plots (300 to 2,876 sq.yds) for sale on Bavla–Rajoda Road, Bavla, Ahmedabad. Bookings open! Wide Heavy RCC roads, Street lights, Puran (ground leveling), compound wall, 24/7 gated security."
         canonical="/metro-industrial-park-3"
-        keywords="metro industrial park 3, industrial park 3, MIP 3, MIP-3, MIP3, MIP bavla, metro industrial park bavla, industrial plots bavla rajoda road, build your own shed ahmedabad, industrial land for sale bavla, MIP, MIP ahmedabad"
+        keywords="industrial plots in bavla, industrial plots bavla ahmedabad, industrial land for sale in bavla, industrial land bavla rajoda road, plots in bavla gidc, build your own shed bavla, metro industrial park 3, MIP 3, industrial property bavla ahmedabad, NA industrial plots bavla, industrial plots near nh 47"
         ogImage="/images/metro-industrial-park-3-site-plan.jpg"
         ogImageAlt="Metro Industrial Park 3 Master Layout Site Plan Bavla Rajoda Road Ahmedabad"
-        structuredData={[metroPark3Schema, metroPark3ListingSchema, metroPark3FaqSchema]}
+        structuredData={[metroPark3Schema, metroPark3ListingSchema, metroPark3IndividualUnitsSchema, metroPark3FaqSchema]}
       />
 
       <h1 className="sr-only">
-        Metro Industrial Park 3 (MIP 3) — Industrial Plots for Sale on Bavla Rajoda Road, Ahmedabad
+        Metro Industrial Park 3 (MIP 3) — Industrial Plots for Sale in Bavla, Ahmedabad
       </h1>
 
       <div className="min-h-screen theme-bg-primary">
@@ -531,17 +533,17 @@ const MetroIndustrialPark3 = () => {
                     <div className="flex items-center gap-3 mb-2">
                       <TrendingUp className="text-amber-500" size={22} />
                       <h3 className="text-base font-bold theme-text-primary">
-                        Capital Growth Corridor
+                        Yearly Land Appreciation
                       </h3>
                     </div>
                     <p
                       className="text-3xl font-extrabold text-amber-500 mb-1"
                       style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}
                     >
-                      18–25%
+                      12–15%
                     </p>
                     <p className="theme-text-tertiary text-xs leading-relaxed">
-                      Expected yearly appreciation on the fast-growing Bavla–Rajoda corridor near NH 47.
+                      12–15% expected yearly appreciation on the fast-growing Bavla–Rajoda corridor near NH 47.
                     </p>
                   </div>
 
@@ -607,6 +609,7 @@ const MetroIndustrialPark3 = () => {
           close={() => setViewerOpen(false)}
           slides={viewerSlides}
           plugins={[Zoom]}
+          zoom={{ maxZoomPixelRatio: 5, scrollToZoom: true }}
         />
       </div>
     </>

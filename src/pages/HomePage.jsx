@@ -19,6 +19,9 @@ import {
   websiteSchema,
   realEstateListingSchema,
   socialProfileSchema,
+  metroPark1IndividualUnitsSchema,
+  metroEstateIndividualUnitsSchema,
+  metroPark3IndividualUnitsSchema,
 } from '../utils/schemas.js';
 
 
@@ -711,6 +714,9 @@ const HomePage = () => {
     websiteSchema,
     propertySchema,
     realEstateListingSchema,
+    metroPark1IndividualUnitsSchema,
+    metroEstateIndividualUnitsSchema,
+    metroPark3IndividualUnitsSchema,
     faqSchema,
     imageObjectSchema,
     socialProfileSchema,

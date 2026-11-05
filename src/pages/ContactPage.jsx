@@ -419,11 +419,11 @@ const ContactPage = () => {
                 itemScope
                 itemType="https://schema.org/LocalBusiness"
               >
-                <div className={`w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                <div className={`w-20 h-20 rounded-xl border flex items-center justify-center flex-shrink-0 p-2.5 transition-all duration-300 ${isDark ? 'bg-black border-gray-800' : 'bg-white border-gray-200'}`}>
                   <img
-                    src="/MDLogoBG.png"
+                    src="/MDLogo.png"
                     alt="Metro Industrial Park Logo"
-                    className="w-20 h-20 object-contain drop-shadow-sm"
+                    className="w-full h-full object-contain drop-shadow-sm"
                     width={80}
                     height={80}
                     loading="lazy"

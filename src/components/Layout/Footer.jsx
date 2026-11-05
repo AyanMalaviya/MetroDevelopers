@@ -198,16 +198,16 @@ const Footer = () => {
           {/* Col 1 — Brand + socials */}
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden flex-shrink-0 ${
+              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden flex-shrink-0 p-1 transition-all duration-300 ${
                 isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'
               }`}>
                 <img
                   src="/MDLogo.png"
                   alt="Metro Developers logo"
-                  width={40}
-                  height={40}
+                  width={36}
+                  height={36}
                   loading="lazy"
-                  className="w-10 h-10 object-contain"
+                  className="w-full h-full object-contain"
                 />
               </div>
               <div className="leading-tight">
@@ -236,6 +236,25 @@ const Footer = () => {
                   {icon}
                 </a>
               ))}
+            </div>
+
+            {/* Google Business Profile Review Widget / Authority Signal */}
+            <div className="mt-4 pt-3 border-t theme-border">
+              <a
+                href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Google Business Profile Reviews for Metro Industrial Park"
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-xs transition-all hover:scale-105 ${
+                  isDark
+                    ? 'border-amber-500/30 bg-amber-950/20 text-amber-300 hover:border-amber-400'
+                    : 'border-amber-200 bg-amber-50 text-amber-900 hover:border-amber-300'
+                }`}
+              >
+                <span className="text-amber-400 text-xs tracking-tighter">★★★★★</span>
+                <span className="font-bold">5.0 on Google</span>
+                <span className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>· Write Review</span>
+              </a>
             </div>
           </div>
 

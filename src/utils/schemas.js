@@ -7,12 +7,87 @@ const MAPS_URL = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
 
 export const postalAddress = {
   '@type': 'PostalAddress',
-  streetAddress: 'Behind Siya Industrial Park, Opp. Suvas Industrial Park',
-  addressLocality: 'Moraiya',
+  streetAddress: 'Behind Siya Industrial Park, Opp. Suvas Industrial Park, Moraiya',
+  addressLocality: 'Changodar, Moraiya',
   addressRegion: 'Gujarat',
   postalCode: '382213',
   addressCountry: 'IN',
 };
+
+export const changodarPostalAddress = {
+  '@type': 'PostalAddress',
+  streetAddress: 'Behind Siya Industrial Park, Opp. Suvas Industrial Park, Moraiya',
+  addressLocality: 'Changodar, Moraiya',
+  addressRegion: 'Gujarat',
+  postalCode: '382213',
+  addressCountry: 'IN',
+};
+
+export const bavlaPostalAddress = {
+  '@type': 'PostalAddress',
+  streetAddress: 'Bavla – Rajoda Road',
+  addressLocality: 'Bavla',
+  addressRegion: 'Gujarat',
+  postalCode: '382220',
+  addressCountry: 'IN',
+};
+
+export const changodarContainedInPlace = [
+  {
+    '@type': 'Place',
+    name: 'Changodar Industrial Area',
+    alternateName: ['Changodar Industrial Estate', 'Moraiya Changodar GIDC Belt'],
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Changodar',
+      addressRegion: 'Gujarat',
+      postalCode: '382213',
+      addressCountry: 'IN',
+    },
+  },
+  {
+    '@type': 'AdministrativeArea',
+    name: 'Ahmedabad',
+    alternateName: ['Ahmedabad District', 'Western Ahmedabad Industrial Corridor'],
+    containedInPlace: {
+      '@type': 'State',
+      name: 'Gujarat',
+    },
+  },
+  {
+    '@type': 'Place',
+    name: 'Sarkhej–Bavla National Highway (NH 47) Corridor',
+    alternateName: ['NH 47 Logistics Spine', 'NH 947 Industrial Belt'],
+  },
+];
+
+export const bavlaContainedInPlace = [
+  {
+    '@type': 'Place',
+    name: 'Bavla Industrial Corridor',
+    alternateName: ['Bavla GIDC Zone', 'Bavla Rajoda Industrial Area'],
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Bavla',
+      addressRegion: 'Gujarat',
+      postalCode: '382220',
+      addressCountry: 'IN',
+    },
+  },
+  {
+    '@type': 'AdministrativeArea',
+    name: 'Ahmedabad',
+    alternateName: ['Ahmedabad District', 'Greater Ahmedabad Logistics Zone'],
+    containedInPlace: {
+      '@type': 'State',
+      name: 'Gujarat',
+    },
+  },
+  {
+    '@type': 'Place',
+    name: 'Sarkhej–Bavla–Rajkot National Highway (NH 47) Corridor',
+  },
+];
 
 export const geoCoordinates = {
   '@type': 'GeoCoordinates',
@@ -184,21 +259,11 @@ export const propertySchema = {
   image: `${SITE_URL}/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg`,
   telephone: '+919824235642',
   email: 'metrodevelopers26@gmail.com',
-  address: postalAddress,
+  address: changodarPostalAddress,
   geo: geoCoordinates,
   hasMap: MAPS_URL,
-  areaServed: [
-    {
-      '@type': 'GeoCircle',
-      geoMidpoint: geoCoordinates,
-      geoRadius: '25000',
-    },
-    { '@type': 'Place', name: 'Moraiya' },
-    { '@type': 'Place', name: 'Changodar' },
-    { '@type': 'City', name: 'Ahmedabad' },
-    { '@type': 'Place', name: 'Sanand' },
-    { '@type': 'Place', name: 'Bavla' },
-  ],
+  containedInPlace: changodarContainedInPlace,
+  areaServed: regionalCoverage,
   contactPoint: contactPoints,
   employee: [
     { '@id': `${SITE_URL}/#amir-malaviya` },
@@ -211,13 +276,51 @@ export const propertySchema = {
   paymentAccepted: 'Cash, Bank Transfer, Cheque',
   numberOfEmployees: { '@type': 'QuantitativeValue', value: 10 },
   foundingDate: '2020',
-  slogan: 'Premium Industrial Spaces in Moraiya, Changodar, Ahmedabad',
+  slogan: 'Premium Industrial Spaces in Changodar, Bavla & Ahmedabad',
   sameAs: [
     'https://www.instagram.com/metro.industrialpark/',
     'https://www.facebook.com/metroindustrialpark1',
     MAPS_URL,
     'https://g.page/r/CfbFhZSjMaH1EBI',
+    'https://g.page/r/CfbFhZSjMaH1EBI/review',
+    'https://www.wikidata.org/wiki/Q207908',
   ],
+  knowsAbout: [
+    'Industrial Real Estate in Ahmedabad',
+    'Industrial Shed for Lease and Sale',
+    'Warehousing and Logistics Parks',
+    'Industrial Plots to Build Your Own Shed',
+    'Changodar Moraiya GIDC Industrial Belt',
+    'Bavla Industrial Corridor NH 47',
+    'Clear Title NA Industrial Land Gujarat',
+    'Commercial Shops and Showrooms',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Metro Developers Master Real Estate Catalog',
+    itemListElement: [
+      {
+        '@type': 'OfferCatalog',
+        name: 'Metro Industrial Park 1 — Ready Sheds & Warehouses (Lease & Sale)',
+        url: `${SITE_URL}/metro-industrial-park`,
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Metro Industrial Park 2 — Clear-Title Plots ("Build Your Own Shed")',
+        url: `${SITE_URL}/metro-industrial-estate`,
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Metro Industrial Park 3 — Bavla Rajoda Industrial Plots (~60,000 SQYD)',
+        url: `${SITE_URL}/metro-industrial-park-3`,
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Metro Arcade — Highway Commercial Showrooms & Shops',
+        url: `${SITE_URL}/metro-arcade`,
+      },
+    ],
+  },
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '5',
@@ -225,6 +328,20 @@ export const propertySchema = {
     worstRating: '1',
     reviewCount: '5',
   },
+  review: [
+    {
+      '@type': 'Review',
+      author: { '@type': 'Person', name: 'Industrial Client' },
+      datePublished: '2025-11-15',
+      reviewBody: 'Top-tier industrial park on Sarkhej-Bavla Highway. 60ft RCC roads, immediate 90-day possession, and high clear ceiling heights.',
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+        worstRating: '1',
+      },
+    },
+  ],
 };
 
 // ─── Industrial Park 1 Schema (Sheds & Warehouses — Moraiya, Changodar) ────────
@@ -233,48 +350,71 @@ export const metroPark1Schema = {
   '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
   '@id': `${SITE_URL}/#metro-industrial-park-1`,
   name: 'Metro Industrial Park 1',
-  alternateName: ['Industrial Park 1', 'MIP 1', 'MIP-1', 'MIP1', 'Metro Industrial Park', 'MIP Moraiya'],
+  alternateName: ['Industrial Park 1', 'MIP 1', 'MIP-1', 'MIP1', 'Metro Industrial Park', 'MIP Moraiya', 'Metro Industrial Park Changodar', 'Industrial Sheds in Changodar Ahmedabad'],
   description:
-    'Metro Industrial Park 1 (MIP 1) in Moraiya, Changodar, Ahmedabad. 63 modern industrial sheds and warehouses (4,000 to 50,000 sq.ft) for sale and lease with 60ft RCC roads, 24/7 CCTV surveillance, and 90-day possession.',
+    'Metro Industrial Park 1 (MIP 1) in Moraiya, Changodar, Ahmedabad. 63 modern industrial sheds and warehouses (4,000 to 50,000 sq.ft) for lease and sale with 60ft RCC roads, 24/7 CCTV surveillance, and 90-day possession.',
   url: `${SITE_URL}/metro-industrial-park`,
   telephone: '+919824235642',
   email: 'metrodevelopers26@gmail.com',
-  address: postalAddress,
+  address: changodarPostalAddress,
   geo: geoCoordinates,
   hasMap: MAPS_URL,
+  containedInPlace: changodarContainedInPlace,
+  areaServed: regionalCoverage,
   openingHoursSpecification: openingHoursSpec,
   parentOrganization: { '@id': `${SITE_URL}/#metro-developers` },
 };
 
-// ─── RealEstateListing Schema ─────────────────────────────────────────────────
+// ─── RealEstateListing Schema (Dual Intent: For Lease & For Sale) ─────────────
 export const realEstateListingSchema = {
   '@context': 'https://schema.org',
   '@type': 'RealEstateListing',
   '@id': `${SITE_URL}/#primary-listing`,
-  name: 'Industrial Sheds and Warehouses for Sale and Lease in Moraiya, Changodar, Ahmedabad',
+  name: 'Industrial Sheds & Warehouses for Lease & Sale in Changodar, Ahmedabad',
   description:
-    'Industrial sheds and warehouses near NH 47 (Sarkhej Bavla Highway) with 30 to 35 ft clear height, 60 ft RCC roads, and rental yield potential of 6 to 8%.',
-  url: SITE_URL,
+    'Factory sheds and modern warehouses for lease and outright sale in Changodar (Moraiya), Ahmedabad on NH 47. 4,000 to 50,000 sq.ft units with 30-35 ft clear height, 60 ft heavy RCC roads, 24/7 CCTV security, and 6–8% net rental yield for investors.',
+  url: `${SITE_URL}/metro-industrial-park`,
   provider: { '@id': `${SITE_URL}/#metro-enterprise` },
-  address: postalAddress,
+  address: changodarPostalAddress,
   geo: geoCoordinates,
-  offers: {
-    '@type': 'Offer',
-    availability: 'https://schema.org/InStock',
-    availabilityStarts: '2026-01-01',
-    priceCurrency: 'INR',
-    priceSpecification: {
-      '@type': 'PriceSpecification',
+  containedInPlace: changodarContainedInPlace,
+  areaServed: regionalCoverage,
+  offers: [
+    {
+      '@type': 'Offer',
+      '@id': `${SITE_URL}/#lease-offer`,
+      name: 'Industrial Shed & Warehouse for Lease / Rent in Changodar, Ahmedabad',
+      businessFunction: 'http://purl.org/goodrelations/v1#LeaseOut',
+      availability: 'https://schema.org/InStock',
+      availabilityStarts: '2026-01-01',
       priceCurrency: 'INR',
-      valueAddedTaxIncluded: false,
-      description: 'Contact for current sale and lease pricing.',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'INR',
+        valueAddedTaxIncluded: false,
+        description: 'Competitive per sq.ft monthly/annual industrial lease rates with structured 5–10 year corporate lease agreements.',
+      },
+      eligibleRegion: regionalCoverage,
+      seller: { '@id': `${SITE_URL}/#metro-enterprise` },
     },
-    eligibleRegion: {
-      '@type': 'AdministrativeArea',
-      name: 'Ahmedabad, Gujarat, India',
+    {
+      '@type': 'Offer',
+      '@id': `${SITE_URL}/#sale-offer`,
+      name: 'Industrial Shed & Warehouse for Outright Sale in Changodar, Ahmedabad',
+      businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+      availability: 'https://schema.org/InStock',
+      availabilityStarts: '2026-01-01',
+      priceCurrency: 'INR',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'INR',
+        valueAddedTaxIncluded: false,
+        description: 'Outright purchase with 100% clear NA industrial title, immediate sale deed registration, and 90-day possession.',
+      },
+      eligibleRegion: regionalCoverage,
+      seller: { '@id': `${SITE_URL}/#metro-enterprise` },
     },
-    seller: { '@id': `${SITE_URL}/#metro-enterprise` },
-  },
+  ],
   floorSize: {
     '@type': 'QuantitativeValue',
     minValue: 4000,
@@ -500,31 +640,44 @@ export const createBreadcrumbSchema = (crumbs) => ({
 });
 
 // ─── Helper: LocationPage Schema ──────────────────────────────────────────────
-export const createLocationPageSchema = ({ pageTitle, pageDescription, path, locationName, focusKeyword }) => ({
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  '@id': `${SITE_URL}${path}#webpage`,
-  name: pageTitle,
-  description: pageDescription,
-  url: `${SITE_URL}${path}`,
-  inLanguage: 'en-IN',
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
-  isPartOf: { '@id': `${SITE_URL}/#website` },
-  about: { '@id': `${SITE_URL}/#metro-enterprise` },
-  keywords: focusKeyword,
-  speakable: {
-    '@type': 'SpeakableSpecification',
-    cssSelector: ['h1', 'h2', '.speakable'],
-  },
-  breadcrumb: {
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-      { '@type': 'ListItem', position: 2, name: locationName, item: `${SITE_URL}${path}` },
-    ],
-  },
-});
+export const createLocationPageSchema = ({ pageTitle, pageDescription, path, locationName, focusKeyword }) => {
+  const isBavla = (path + ' ' + locationName).toLowerCase().includes('bavla');
+  const targetAddress = isBavla ? bavlaPostalAddress : changodarPostalAddress;
+  const targetContained = isBavla ? bavlaContainedInPlace : changodarContainedInPlace;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${SITE_URL}${path}#webpage`,
+    name: pageTitle,
+    description: pageDescription,
+    url: `${SITE_URL}${path}`,
+    inLanguage: 'en-IN',
+    datePublished: '2024-01-01',
+    dateModified: new Date().toISOString().split('T')[0],
+    isPartOf: { '@id': `${SITE_URL}/#website` },
+    about: {
+      '@type': ['RealEstateListing', 'Place'],
+      name: locationName,
+      description: pageDescription,
+      address: targetAddress,
+      containedInPlace: targetContained,
+      areaServed: regionalCoverage,
+    },
+    keywords: focusKeyword,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', 'h2', '.speakable'],
+    },
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: locationName, item: `${SITE_URL}${path}` },
+      ],
+    },
+  };
+};
 
 // ─── Helper: Article / BlogPosting Schema ────────────────────────────────────
 export const createArticleSchema = ({ headline, description, path, keywords = [] }) => ({
@@ -568,20 +721,22 @@ export const metroEstateSchema = {
   '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
   '@id': `${SITE_URL}/#metro-industrial-estate`,
   name: 'Metro Industrial Park 2',
-  alternateName: ['Industrial Park 2', 'Metro Industrial Park 2', 'MIP 2', 'MIP-2', 'MIP2', 'Metro Industrial Estate', 'Metro Park 2 Industrial Plots', 'MIP Moraiya 2'],
+  alternateName: ['Industrial Park 2', 'Metro Industrial Park 2', 'MIP 2', 'MIP-2', 'MIP2', 'Metro Industrial Estate', 'Metro Park 2 Industrial Plots', 'MIP Moraiya 2', 'Industrial Plots in Changodar Ahmedabad'],
   description:
-    'Clear-title industrial plots for "Build Your Own Shed" opposite Industrial Park 1 in Moraiya, Changodar, Ahmedabad. Features Wide Heavy RCC internal roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
+    'Clear-title NA industrial plots for "Build Your Own Shed" opposite Industrial Park 1 in Moraiya, Changodar, Ahmedabad. Features Wide Heavy RCC internal roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
   url: `${SITE_URL}/metro-industrial-estate`,
   telephone: '+919824235642',
   email: 'metrodevelopers26@gmail.com',
-  address: postalAddress,
-  geo: geoCoordinates,
+  address: changodarPostalAddress,
+  geo: park2GeoCoordinates,
   hasMap: MAPS_URL,
+  containedInPlace: changodarContainedInPlace,
+  areaServed: regionalCoverage,
   openingHoursSpecification: openingHoursSpec,
   parentOrganization: { '@id': `${SITE_URL}/#metro-enterprise` },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: 'Build Your Own Shed Customization', value: true },
-    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security and CCTV Surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security (No CCTV)', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Wide Heavy-Duty RCC Internal Roads', value: true },
     { '@type': 'LocationFeatureSpecification', name: '24/7 Industrial Water Supply', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Underground Drainage System', value: true },
@@ -594,13 +749,15 @@ export const metroEstateListingSchema = {
   '@context': 'https://schema.org',
   '@type': 'RealEstateListing',
   '@id': `${SITE_URL}/#metro-estate-listing`,
-  name: 'Industrial Plots for Sale — Build Your Own Shed in Moraiya, Changodar',
+  name: 'Industrial Plots for Sale — Build Your Own Shed in Changodar, Ahmedabad',
   description:
-    'Premium clear-title industrial plots at Industrial Park 2, Moraiya, Changodar. Build your customized industrial shed with Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
+    'Premium clear-title industrial plots at Industrial Park 2, Moraiya, Changodar, Ahmedabad. Build your customized industrial shed with Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security.',
   url: `${SITE_URL}/metro-industrial-estate`,
   provider: { '@id': `${SITE_URL}/#metro-enterprise` },
-  address: postalAddress,
-  geo: geoCoordinates,
+  address: changodarPostalAddress,
+  geo: park2GeoCoordinates,
+  containedInPlace: changodarContainedInPlace,
+  areaServed: regionalCoverage,
   offers: {
     '@type': 'Offer',
     availability: 'https://schema.org/InStock',
@@ -611,10 +768,7 @@ export const metroEstateListingSchema = {
       valueAddedTaxIncluded: false,
       description: 'Contact for current plot rates and custom parcel configurations.',
     },
-    eligibleRegion: {
-      '@type': 'AdministrativeArea',
-      name: 'Ahmedabad, Gujarat, India',
-    },
+    eligibleRegion: regionalCoverage,
     seller: { '@id': `${SITE_URL}/#metro-enterprise` },
   },
   floorSize: {
@@ -626,7 +780,7 @@ export const metroEstateListingSchema = {
   },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: 'Build Your Own Shed layout freedom', value: true },
-    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security & CCTV surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security (No CCTV)', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Heavy-duty RCC internal roads', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Dedicated industrial water connections', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Underground industrial drainage network', value: true },
@@ -638,7 +792,7 @@ export const metroEstateListingSchema = {
     { '@type': 'PropertyValue', name: 'Concept', value: 'Build Your Own Shed' },
     { '@type': 'PropertyValue', name: 'Total Plots', value: '23' },
     { '@type': 'PropertyValue', name: 'Plot Area Range', value: '312 to 1,930 sq.yards' },
-    { '@type': 'PropertyValue', name: 'Location', value: 'Opp. Metro Industrial Park, Moraiya, Changodar' },
+    { '@type': 'PropertyValue', name: 'Location', value: 'Opp. Metro Industrial Park, Moraiya, Changodar, Ahmedabad' },
   ],
 };
 
@@ -704,22 +858,16 @@ export const metroPark3Schema = {
   '@type': ['Place', 'RealEstateAgent', 'LocalBusiness'],
   '@id': `${SITE_URL}/#metro-industrial-park-3`,
   name: 'Metro Industrial Park 3',
-  alternateName: ['Industrial Park 3', 'Metro Industrial Park 3', 'MIP 3', 'MIP-3', 'MIP3', 'Metro Industrial Park 3 Bavla Rajoda Road', 'Metro Park 3 Industrial Plots', 'MIP Bavla'],
+  alternateName: ['Industrial Park 3', 'Metro Industrial Park 3', 'MIP 3', 'MIP-3', 'MIP3', 'Metro Industrial Park 3 Bavla Rajoda Road', 'Metro Park 3 Industrial Plots', 'MIP Bavla', 'Industrial Plots in Bavla Ahmedabad'],
   description:
-    'Clear-title industrial plots for "Build Your Own Shed" on Bavla – Rajoda Road, Ahmedabad. Bookings open! Features developer-executed ground filling & precision leveling (Puran - ongoing), land possession soon, LED streetlights, 24/7 gated security, 18m/12m/9m wide roads, water, drainage, and power infrastructure across 77 plots.',
+    'Clear-title NA industrial plots for "Build Your Own Shed" on Bavla – Rajoda Road, Bavla, Ahmedabad. Bookings open! Features developer-executed ground filling & precision leveling (Puran - ongoing), land possession soon, LED streetlights, 24/7 gated security, 18m/12m/9m wide roads, water, drainage, and power infrastructure across 77 plots.',
   url: `${SITE_URL}/metro-industrial-park-3`,
   telephone: '+919824235642',
   email: 'metrodevelopers26@gmail.com',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Bavla – Rajoda Road',
-    addressLocality: 'Bavla',
-    addressRegion: 'Gujarat',
-    postalCode: '382220',
-    addressCountry: 'IN',
-  },
+  address: bavlaPostalAddress,
   geo: park3GeoCoordinates,
   hasMap: 'https://maps.app.goo.gl/5SaRAjuzrQzLjoZh9',
+  containedInPlace: bavlaContainedInPlace,
   areaServed: regionalCoverage,
   openingHoursSpecification: openingHoursSpec,
   parentOrganization: { '@id': `${SITE_URL}/#metro-enterprise` },
@@ -727,7 +875,7 @@ export const metroPark3Schema = {
     { '@type': 'LocationFeatureSpecification', name: 'Precision Ground Filling & Leveling (Puran - Ongoing)', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Bookings Open — Land Possession Soon', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'LED Streetlights Across Campus', value: true },
-    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security & CCTV Surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security (No CCTV)', value: true },
     { '@type': 'LocationFeatureSpecification', name: '18 Meter & 12 Meter Wide Heavy-Duty Internal Roads', value: true },
     { '@type': 'LocationFeatureSpecification', name: '24/7 Industrial Water Supply', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Underground Drainage System', value: true },
@@ -740,19 +888,15 @@ export const metroPark3ListingSchema = {
   '@context': 'https://schema.org',
   '@type': 'RealEstateListing',
   '@id': `${SITE_URL}/#metro-park-3-listing`,
-  name: 'Industrial Plots for Sale — Metro Industrial Park 3, Bavla Rajoda Road',
+  name: 'Industrial Plots for Sale — Metro Industrial Park 3, Bavla, Ahmedabad',
   description:
-    '77 premium clear-title industrial plots at Metro Industrial Park 3 on Bavla – Rajoda Road, Ahmedabad. Bookings open, land possession soon! Build your customized industrial shed or warehouse with developer-provided ground filling & precision leveling (Puran work in progress), streetlights, 24/7 security, wide roads, water, and power.',
+    '77 premium clear-title industrial plots at Metro Industrial Park 3 on Bavla – Rajoda Road, Bavla, Ahmedabad. Bookings open, land possession soon! Build your customized industrial shed or warehouse with developer-provided ground filling & precision leveling (Puran work in progress), streetlights, 24/7 security, wide roads, water, and power.',
   url: `${SITE_URL}/metro-industrial-park-3`,
   provider: { '@id': `${SITE_URL}/#metro-enterprise` },
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Bavla – Rajoda Road',
-    addressLocality: 'Bavla',
-    addressRegion: 'Gujarat',
-    postalCode: '382220',
-    addressCountry: 'IN',
-  },
+  address: bavlaPostalAddress,
+  geo: park3GeoCoordinates,
+  containedInPlace: bavlaContainedInPlace,
+  areaServed: regionalCoverage,
   offers: {
     '@type': 'Offer',
     availability: 'https://schema.org/InStock',
@@ -763,10 +907,7 @@ export const metroPark3ListingSchema = {
       valueAddedTaxIncluded: false,
       description: 'Contact for current plot rates and custom parcel configurations.',
     },
-    eligibleRegion: {
-      '@type': 'AdministrativeArea',
-      name: 'Ahmedabad, Gujarat, India',
-    },
+    eligibleRegion: regionalCoverage,
     seller: { '@id': `${SITE_URL}/#metro-enterprise` },
   },
   floorSize: {
@@ -780,7 +921,7 @@ export const metroPark3ListingSchema = {
     { '@type': 'LocationFeatureSpecification', name: 'Ground Filling & Precision Leveling (Puran - Ongoing)', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Bookings Open — Possession Soon', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'LED Streetlights', value: true },
-    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security & CCTV surveillance', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Gated Security (No CCTV)', value: true },
     { '@type': 'LocationFeatureSpecification', name: '18m & 12m wide internal roads', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Dedicated industrial water connections', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Underground industrial drainage network', value: true },
@@ -793,7 +934,7 @@ export const metroPark3ListingSchema = {
     { '@type': 'PropertyValue', name: 'Total Plots', value: '77' },
     { '@type': 'PropertyValue', name: 'Total Campus Area', value: '59,508 sq.yards (approx 60,000 SQYD)' },
     { '@type': 'PropertyValue', name: 'Plot Area Range', value: '300 to 2,876 sq.yards' },
-    { '@type': 'PropertyValue', name: 'Location', value: 'Bavla – Rajoda Road, Ahmedabad' },
+    { '@type': 'PropertyValue', name: 'Location', value: 'Bavla – Rajoda Road, Bavla, Ahmedabad' },
   ],
 };
 
@@ -839,6 +980,473 @@ export const metroPark3FaqSchema = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'It is situated on Bavla – Rajoda Road, Ahmedabad, close to Bavla GIDC and minutes from the Sarkhej–Bavla National Highway (NH 47).',
+      },
+    },
+  ],
+};
+// ═══════════════════════════════════════════════════════════════════════════
+// INDIVIDUAL UNIT STRUCTURED DATA (CommercialProperty & RealEstateListing)
+// ═══════════════════════════════════════════════════════════════════════════
+// Explicitly provides floorSize (QuantitativeValue in FTK/YDK), leaseLength,
+// pricing specifications, and structural metrics directly to Google AI Overviews,
+// rich search snippets, and conversational search agents (Gemini, SearchGPT, Perplexity).
+
+export const metroPark1IndividualUnitsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${SITE_URL}/metro-industrial-park#individual-units`,
+  name: 'Available Industrial Shed & Warehouse Units at Metro Industrial Park 1',
+  description: 'Complete listing of ready-to-move factory sheds and warehousing units with discrete structural metrics, 30–35 ft ceiling clearance, 60 ft heavy RCC internal road access, and dual lease/purchase availability.',
+  numberOfItems: 5,
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park#unit-4000-sqft`,
+        name: '4,000 Sq.Ft Ready Industrial Shed / Warehouse Unit',
+        description: 'Ready manufacturing and warehousing shed unit with 30-35 ft clear height, 60 ft heavy RCC road access, 24/7 CCTV surveillance, and dedicated industrial water and power.',
+        url: `${SITE_URL}/metro-industrial-park`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 4000,
+          unitCode: 'FTK',
+          unitText: 'sq.ft',
+        },
+        address: changodarPostalAddress,
+        geo: geoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        occupancy: {
+          '@type': 'QuantitativeValue',
+          minValue: 1,
+        },
+        amenityFeature: [
+          { '@type': 'LocationFeatureSpecification', name: '30-35 ft clear ceiling height', value: true },
+          { '@type': 'LocationFeatureSpecification', name: '60 ft RCC road front', value: true },
+          { '@type': 'LocationFeatureSpecification', name: '24/7 CCTV security & guards', value: true },
+          { '@type': 'LocationFeatureSpecification', name: 'Heavy vehicle turning radius', value: true },
+          { '@type': 'LocationFeatureSpecification', name: '90-Day possession timeline', value: true },
+        ],
+        offers: [
+          {
+            '@type': 'Offer',
+            name: 'Long-Term Industrial Corporate Lease',
+            businessFunction: 'http://purl.org/goodrelations/v1#LeaseOut',
+            availability: 'https://schema.org/InStock',
+            leaseLength: {
+              '@type': 'QuantitativeValue',
+              minValue: 3,
+              maxValue: 10,
+              unitCode: 'ANN',
+              unitText: 'years',
+            },
+            priceCurrency: 'INR',
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              priceCurrency: 'INR',
+              unitCode: 'FTK',
+              description: 'Market-competitive monthly/annual lease rates with 5–10 year lock-in options.',
+            },
+          },
+          {
+            '@type': 'Offer',
+            name: 'Freehold Outright Sale',
+            businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+            availability: 'https://schema.org/InStock',
+            priceCurrency: 'INR',
+            priceSpecification: {
+              '@type': 'PriceSpecification',
+              priceCurrency: 'INR',
+              valueAddedTaxIncluded: false,
+              description: 'Outright purchase with 100% clear NA industrial title and 6–8% net rental yield for investors.',
+            },
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park#unit-8500-sqft`,
+        name: '8,500 Sq.Ft Industrial Factory Shed / Mid-Size Warehouse',
+        description: 'Mid-size production shed with dedicated loading bays, 35 ft clear height, heavy machine flooring, and high-tension three-phase electrical connections.',
+        url: `${SITE_URL}/metro-industrial-park`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 8500,
+          unitCode: 'FTK',
+          unitText: 'sq.ft',
+        },
+        address: changodarPostalAddress,
+        geo: geoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        amenityFeature: [
+          { '@type': 'LocationFeatureSpecification', name: '35 ft clear ceiling height', value: true },
+          { '@type': 'LocationFeatureSpecification', name: 'Dedicated truck dock leveler space', value: true },
+          { '@type': 'LocationFeatureSpecification', name: '60 ft RCC internal roads', value: true },
+          { '@type': 'LocationFeatureSpecification', name: '24/7 CCTV surveillance', value: true },
+        ],
+        offers: [
+          {
+            '@type': 'Offer',
+            name: 'Industrial Corporate Lease (5–10 Yrs)',
+            businessFunction: 'http://purl.org/goodrelations/v1#LeaseOut',
+            availability: 'https://schema.org/InStock',
+            leaseLength: { '@type': 'QuantitativeValue', minValue: 3, maxValue: 10, unitCode: 'ANN', unitText: 'years' },
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Freehold Sale',
+            businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+            availability: 'https://schema.org/InStock',
+            priceCurrency: 'INR',
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park#unit-15000-sqft`,
+        name: '15,000 Sq.Ft Industrial Shed / Manufacturing Facility',
+        description: 'Heavy manufacturing factory unit equipped for crane gantry installations, heavy floor loads, wide shutter doors, and smooth container maneuvering.',
+        url: `${SITE_URL}/metro-industrial-park`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 15000,
+          unitCode: 'FTK',
+          unitText: 'sq.ft',
+        },
+        address: changodarPostalAddress,
+        geo: geoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: [
+          {
+            '@type': 'Offer',
+            name: 'Corporate Lease Agreement',
+            businessFunction: 'http://purl.org/goodrelations/v1#LeaseOut',
+            availability: 'https://schema.org/InStock',
+            leaseLength: { '@type': 'QuantitativeValue', minValue: 5, maxValue: 10, unitCode: 'ANN', unitText: 'years' },
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Outright Purchase',
+            businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+            availability: 'https://schema.org/InStock',
+            priceCurrency: 'INR',
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park#unit-25000-sqft`,
+        name: '25,000 Sq.Ft Large-Format Logistics Warehouse',
+        description: 'Grade-A compliant logistics warehouse unit designed for 3PL providers, FMCG distribution, and auto ancillaries on NH 47 Sarkhej–Bavla corridor.',
+        url: `${SITE_URL}/metro-industrial-park`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 25000,
+          unitCode: 'FTK',
+          unitText: 'sq.ft',
+        },
+        address: changodarPostalAddress,
+        geo: geoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: [
+          {
+            '@type': 'Offer',
+            name: 'Long-Term 3PL / Corporate Lease',
+            businessFunction: 'http://purl.org/goodrelations/v1#LeaseOut',
+            availability: 'https://schema.org/InStock',
+            leaseLength: { '@type': 'QuantitativeValue', minValue: 5, maxValue: 10, unitCode: 'ANN', unitText: 'years' },
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Outright Asset Purchase',
+            businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+            availability: 'https://schema.org/InStock',
+            priceCurrency: 'INR',
+          },
+        ],
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 5,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park#unit-50000-sqft`,
+        name: '50,000 Sq.Ft Regional Mega Logistics & Distribution Center',
+        description: 'Flagship multi-bay industrial distribution center with full trailer turnaround, dedicated weigh bridge access, 24/7 security, and clear height up to 35 feet.',
+        url: `${SITE_URL}/metro-industrial-park`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 50000,
+          unitCode: 'FTK',
+          unitText: 'sq.ft',
+        },
+        address: changodarPostalAddress,
+        geo: geoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: [
+          {
+            '@type': 'Offer',
+            name: 'Institutional Lease',
+            businessFunction: 'http://purl.org/goodrelations/v1#LeaseOut',
+            availability: 'https://schema.org/InStock',
+            leaseLength: { '@type': 'QuantitativeValue', minValue: 5, maxValue: 10, unitCode: 'ANN', unitText: 'years' },
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Clear-Title Acquisition',
+            businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+            availability: 'https://schema.org/InStock',
+            priceCurrency: 'INR',
+          },
+        ],
+      },
+    },
+  ],
+};
+
+export const metroEstateIndividualUnitsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${SITE_URL}/metro-industrial-estate#individual-plots`,
+  name: 'Available Industrial Land Plots at Metro Industrial Park 2 (Changodar)',
+  description: 'Clear-title NA industrial plots for "Build Your Own Shed" opposite Metro Industrial Park 1 in Moraiya, Changodar, Ahmedabad. Features wide RCC roads, streetlights, Puran (ground leveling), compound wall, and 24/7 security.',
+  numberOfItems: 4,
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-estate#plot-312-sqyd`,
+        name: '312 Sq.Yard (~2,808 Sq.Ft) Clear-Title Industrial Plot',
+        description: 'Compact industrial plot with precision ground leveling (Puran), wide heavy RCC road access, and NA approval ready for immediate shed plinth construction.',
+        url: `${SITE_URL}/metro-industrial-estate`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 312,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: changodarPostalAddress,
+        geo: park2GeoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-estate#plot-650-sqyd`,
+        name: '650 Sq.Yard (~5,850 Sq.Ft) Industrial Plot — Build Your Own Shed',
+        description: 'Mid-size plot ideal for a 4,000–5,000 sq.ft custom factory shed or warehouse in Moraiya, Changodar industrial belt.',
+        url: `${SITE_URL}/metro-industrial-estate`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 650,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: changodarPostalAddress,
+        geo: park2GeoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-estate#plot-1200-sqyd`,
+        name: '1,200 Sq.Yard (~10,800 Sq.Ft) Industrial Plot',
+        description: 'Large clear-title industrial land parcel with dual-side internal road connectivity for heavy manufacturing.',
+        url: `${SITE_URL}/metro-industrial-estate`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 1200,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: changodarPostalAddress,
+        geo: park2GeoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-estate#plot-1930-sqyd`,
+        name: '1,930 Sq.Yard (~17,370 Sq.Ft) Prime Corner Industrial Plot',
+        description: 'Premier large industrial plot with maximum road frontage, ideal for logistics depot, fabrication, or multi-shed campus.',
+        url: `${SITE_URL}/metro-industrial-estate`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 1930,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: changodarPostalAddress,
+        geo: park2GeoCoordinates,
+        containedInPlace: changodarContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+  ],
+};
+
+export const metroPark3IndividualUnitsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${SITE_URL}/metro-industrial-park-3#individual-plots`,
+  name: 'Available Industrial Land Plots at Metro Industrial Park 3 (Bavla)',
+  description: '77 clear-title industrial plots on Bavla – Rajoda Road, Ahmedabad across ~60,000 SQYD campus. Active ground filling & precision leveling (Puran ongoing), 18m wide roads, streetlights, and 24/7 security.',
+  numberOfItems: 4,
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park-3#plot-300-sqyd`,
+        name: '300 Sq.Yard (~2,700 Sq.Ft) Plotted Industrial Land — Bavla',
+        description: 'Compact industrial plot with ongoing soil compaction (Puran), wide access roads, clear NA title, and land possession soon.',
+        url: `${SITE_URL}/metro-industrial-park-3`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 300,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: bavlaPostalAddress,
+        geo: park3GeoCoordinates,
+        containedInPlace: bavlaContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park-3#plot-850-sqyd`,
+        name: '850 Sq.Yard (~7,650 Sq.Ft) Industrial Plot — Bavla Rajoda Road',
+        description: 'Mid-scale plot engineered for custom shed construction on 12-meter wide internal spine roads with water and power infrastructure.',
+        url: `${SITE_URL}/metro-industrial-park-3`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 850,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: bavlaPostalAddress,
+        geo: park3GeoCoordinates,
+        containedInPlace: bavlaContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park-3#plot-1500-sqyd`,
+        name: '1,500 Sq.Yard (~13,500 Sq.Ft) Industrial Plot — Bavla',
+        description: 'Large manufacturing plot with direct connectivity to the 18.00-meter (~60 Ft) main crossover boulevard.',
+        url: `${SITE_URL}/metro-industrial-park-3`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 1500,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: bavlaPostalAddress,
+        geo: park3GeoCoordinates,
+        containedInPlace: bavlaContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
+      },
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      item: {
+        '@type': ['CommercialProperty', 'RealEstateListing'],
+        '@id': `${SITE_URL}/metro-industrial-park-3#plot-2876-sqyd`,
+        name: '2,876 Sq.Yard (~25,884 Sq.Ft) Flagship Industrial Plot — Bavla',
+        description: 'The largest individual plot parcel at Metro Industrial Park 3, suitable for heavy engineering, mega warehousing, or corporate regional headquarters.',
+        url: `${SITE_URL}/metro-industrial-park-3`,
+        floorSize: {
+          '@type': 'QuantitativeValue',
+          value: 2876,
+          unitCode: 'YDK',
+          unitText: 'sq.yards',
+        },
+        address: bavlaPostalAddress,
+        geo: park3GeoCoordinates,
+        containedInPlace: bavlaContainedInPlace,
+        offers: {
+          '@type': 'Offer',
+          businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'INR',
+        },
       },
     },
   ],

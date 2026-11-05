@@ -1,24 +1,31 @@
-import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
-import { Analytics } from '@vercel/analytics/react';
+import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
-import MetroIndustrialPark from './components/Projects/MetroIndustrialPark';
-import ContactPage from './pages/ContactPage';
-import Calculator from './pages/CalculatorPage';
-import SiteMapPage from './pages/SiteMapPage';
-import LocalMarketPage from './pages/LocalMarketPage';
-import InsightGuidePage from './pages/InsightGuidePage';
-import PWAInstallPrompt from './components/PWAInstallPrompt';
-import FloatingActionMenu from './components/FloatingActionMenu';
 import ScrollToTop from './components/ScrollToTop';
-import MetroArcade from './components/Projects/MetroArcade';
-import NotFound from './pages/NotFound';
-import ReviewPrompt from './components/Review';
-import ChatBot from './components/Chatbot/ChatBot';
-import MetroIndustrialEstate from './pages/MetroIndustrialEstate';
-import MetroIndustrialPark3 from './pages/MetroIndustrialPark3';
+
+const MetroIndustrialPark = lazy(() => import('./components/Projects/MetroIndustrialPark'));
+const MetroIndustrialEstate = lazy(() => import('./pages/MetroIndustrialEstate'));
+const MetroIndustrialPark3 = lazy(() => import('./pages/MetroIndustrialPark3'));
+const MetroArcade = lazy(() => import('./components/Projects/MetroArcade'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const Calculator = lazy(() => import('./pages/CalculatorPage'));
+const SiteMapPage = lazy(() => import('./pages/SiteMapPage'));
+const LocalMarketPage = lazy(() => import('./pages/LocalMarketPage'));
+const InsightGuidePage = lazy(() => import('./pages/InsightGuidePage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const PWAInstallPrompt = lazy(() => import('./components/PWAInstallPrompt'));
+const ReviewPrompt = lazy(() => import('./components/Review'));
+const FloatingActionMenu = lazy(() => import('./components/FloatingActionMenu'));
+const ChatBot = lazy(() => import('./components/Chatbot/ChatBot'));
+
+const PageLoader = () => (
+  <div className="min-h-[70vh] flex items-center justify-center theme-bg-primary">
+    <div className="w-8 h-8 rounded-full border-2 border-brand-red border-t-transparent animate-spin" />
+  </div>
+);
 
 function App() {
   return (
@@ -26,69 +33,85 @@ function App() {
       <Router>
         <ScrollToTop />
         <div className="flex flex-col min-h-screen theme-bg-primary">
-          <PWAInstallPrompt />
+          <Suspense fallback={null}>
+            <PWAInstallPrompt />
+          </Suspense>
           <Navbar />
           <main className="flex-grow">
-            <Routes>
-              {/* ── Core pages ── */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
-              <Route path="/metro-industrial-park-1" element={<MetroIndustrialPark />} />
-              <Route path="/metro-industrial-estate" element={<MetroIndustrialEstate />} />
-              <Route path="/metro-industrial-park-2" element={<MetroIndustrialEstate />} />
-              <Route path="/metro-industrial-park-3" element={<MetroIndustrialPark3 />} />
-              <Route path="/metro-arcade" element={<MetroArcade />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/calculator" element={<Calculator />} />
-              <Route path="/site-map" element={<SiteMapPage />} />
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                {/* ── Core pages ── */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/metro-industrial-park" element={<MetroIndustrialPark />} />
+                <Route path="/metro-industrial-park-1" element={<MetroIndustrialPark />} />
+                <Route path="/metro-industrial-estate" element={<MetroIndustrialEstate />} />
+                <Route path="/metro-industrial-park-2" element={<MetroIndustrialEstate />} />
+                <Route path="/metro-industrial-park-3" element={<MetroIndustrialPark3 />} />
+                <Route path="/metro-arcade" element={<MetroArcade />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/calculator" element={<Calculator />} />
+                <Route path="/site-map" element={<SiteMapPage />} />
 
-              {/* ── Local Market / SEO pages ── */}
-              <Route path="/industrial-sheds-in-moraiya" element={<LocalMarketPage />} />
-              <Route path="/industrial-sheds-in-changodar" element={<LocalMarketPage />} />
-              <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
-              <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
-              <Route path="/industrial-sheds-in-ahmedabad" element={<LocalMarketPage />} />
-              <Route path="/investment-in-real-estate-in-ahmedabad" element={<LocalMarketPage />} />
-              <Route path="/industrial-shed-for-rent-changodar" element={<LocalMarketPage />} />
-              <Route path="/industrial-shed-for-sale-changodar" element={<LocalMarketPage />} />
-              <Route path="/godown-for-rent-changodar" element={<LocalMarketPage />} />
-              <Route path="/industrial-park-near-sanand" element={<LocalMarketPage />} />
+                {/* ── Programmatic Directory Hierarchies (Google AI Recommendation) ── */}
+                <Route path="/commercial/changodar/industrial-shed-for-lease" element={<LocalMarketPage />} />
+                <Route path="/commercial/changodar/industrial-shed-for-sale" element={<LocalMarketPage />} />
+                <Route path="/commercial/changodar/industrial-plots-for-sale" element={<LocalMarketPage />} />
+                <Route path="/commercial/bavla/industrial-plots-for-sale" element={<LocalMarketPage />} />
+                <Route path="/commercial/ahmedabad/warehouse-for-lease" element={<LocalMarketPage />} />
+                <Route path="/commercial/ahmedabad/factory-space-for-rent" element={<LocalMarketPage />} />
+                <Route path="/commercial/ahmedabad/industrial-plots-for-sale" element={<LocalMarketPage />} />
 
-              {/* ── New SEO routes: Warehouse / Rent / Sale / Godown ── */}
-              <Route path="/warehouse-for-rent-ahmedabad" element={<LocalMarketPage />} />
-              <Route path="/warehouse-for-sale-ahmedabad" element={<LocalMarketPage />} />
-              <Route path="/industrial-shed-for-rent-moraiya" element={<LocalMarketPage />} />
-              <Route path="/industrial-shed-for-sale-moraiya" element={<LocalMarketPage />} />
-              <Route path="/godown-for-rent-ahmedabad" element={<LocalMarketPage />} />
-              <Route path="/factory-shed-for-rent-changodar" element={<LocalMarketPage />} />
-              <Route path="/industrial-shed-for-rent-gujarat" element={<LocalMarketPage />} />
-              <Route path="/gidc-shed-for-rent-ahmedabad" element={<LocalMarketPage />} />
+                {/* ── Local Market / SEO pages ── */}
+                <Route path="/industrial-sheds-in-moraiya" element={<LocalMarketPage />} />
+                <Route path="/industrial-sheds-in-changodar" element={<LocalMarketPage />} />
+                <Route path="/warehouses-in-changodar" element={<LocalMarketPage />} />
+                <Route path="/industrial-sheds-near-sarkhej-bavla-highway" element={<LocalMarketPage />} />
+                <Route path="/industrial-sheds-in-ahmedabad" element={<LocalMarketPage />} />
+                <Route path="/investment-in-real-estate-in-ahmedabad" element={<LocalMarketPage />} />
+                <Route path="/industrial-shed-for-rent-changodar" element={<LocalMarketPage />} />
+                <Route path="/industrial-shed-for-sale-changodar" element={<LocalMarketPage />} />
+                <Route path="/godown-for-rent-changodar" element={<LocalMarketPage />} />
+                <Route path="/industrial-park-near-sanand" element={<LocalMarketPage />} />
 
-              {/* ── New SEO routes: Investment ── */}
-              <Route path="/industrial-property-investment-ahmedabad" element={<LocalMarketPage />} />
-              <Route path="/industrial-land-for-sale-moraiya-changodar" element={<LocalMarketPage />} />
-              <Route path="/high-return-investment-gujarat" element={<LocalMarketPage />} />
+                {/* ── New SEO routes: Warehouse / Rent / Sale / Godown ── */}
+                <Route path="/warehouse-for-rent-ahmedabad" element={<LocalMarketPage />} />
+                <Route path="/warehouse-for-sale-ahmedabad" element={<LocalMarketPage />} />
+                <Route path="/industrial-shed-for-rent-moraiya" element={<LocalMarketPage />} />
+                <Route path="/industrial-shed-for-sale-moraiya" element={<LocalMarketPage />} />
+                <Route path="/godown-for-rent-ahmedabad" element={<LocalMarketPage />} />
+                <Route path="/factory-shed-for-rent-changodar" element={<LocalMarketPage />} />
+                <Route path="/industrial-shed-for-rent-gujarat" element={<LocalMarketPage />} />
+                <Route path="/gidc-shed-for-rent-ahmedabad" element={<LocalMarketPage />} />
 
-              {/* ── Insight / Guide pages ── */}
-              <Route path="/guides/gst-input-credit-industrial-tenants-gujarat" element={<InsightGuidePage />} />
-              <Route path="/guides/warehousing-yield-cagr-gujarat" element={<InsightGuidePage />} />
-              <Route path="/guides/industrial-property-due-diligence-ahmedabad" element={<InsightGuidePage />} />
-              <Route path="/guides/how-to-choose-industrial-shed-gujarat" element={<InsightGuidePage />} />
+                {/* ── New SEO routes: Investment & Plotted Land ── */}
+                <Route path="/industrial-property-investment-ahmedabad" element={<LocalMarketPage />} />
+                <Route path="/industrial-land-for-sale-moraiya-changodar" element={<LocalMarketPage />} />
+                <Route path="/high-return-investment-gujarat" element={<LocalMarketPage />} />
+                <Route path="/industrial-plots-in-bavla" element={<LocalMarketPage />} />
+                <Route path="/industrial-land-for-sale-bavla" element={<LocalMarketPage />} />
 
-              {/* ── New Guide pages: Investment & Comparison ── */}
-              <Route path="/guides/industrial-investment-returns-gujarat-2026" element={<InsightGuidePage />} />
-              <Route path="/guides/rent-vs-buy-industrial-shed-ahmedabad" element={<InsightGuidePage />} />
-              <Route path="/guides/gidc-vs-private-industrial-park-gujarat" element={<InsightGuidePage />} />
+                {/* ── Insight / Guide pages ── */}
+                <Route path="/guides/gst-input-credit-industrial-tenants-gujarat" element={<InsightGuidePage />} />
+                <Route path="/guides/warehousing-yield-cagr-gujarat" element={<InsightGuidePage />} />
+                <Route path="/guides/industrial-property-due-diligence-ahmedabad" element={<InsightGuidePage />} />
+                <Route path="/guides/how-to-choose-industrial-shed-gujarat" element={<InsightGuidePage />} />
 
-              {/* ── 404 catch-all ── */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                {/* ── New Guide pages: Investment & Comparison ── */}
+                <Route path="/guides/industrial-investment-returns-gujarat-2026" element={<InsightGuidePage />} />
+                <Route path="/guides/rent-vs-buy-industrial-shed-ahmedabad" element={<InsightGuidePage />} />
+                <Route path="/guides/gidc-vs-private-industrial-park-gujarat" element={<InsightGuidePage />} />
+
+                {/* ── 404 catch-all ── */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </main>
           <Footer />
-          <ReviewPrompt />
-          <FloatingActionMenu />
-          <ChatBot />
-          <Analytics />
+          <Suspense fallback={null}>
+            <ReviewPrompt />
+            <FloatingActionMenu />
+            <ChatBot />
+          </Suspense>
         </div>
       </Router>
     </ThemeProvider>

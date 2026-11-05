@@ -18,7 +18,8 @@ import SEO from '../components/SEO/SEO';
 import {
   metroEstateSchema,
   metroEstateListingSchema,
-  metroEstateFaqSchema
+  metroEstateFaqSchema,
+  metroEstateIndividualUnitsSchema,
 } from '../utils/schemas';
 
 /* ── Section Header matching Park 1 ── */
@@ -137,6 +138,7 @@ const MetroIndustrialEstate = () => {
     { label: 'Campus Area', value: '17,545.33 sq.yards (14,670.01 SQ.MT)' },
     { label: 'Total Plots', value: '23 Industrial Plots' },
     { label: 'Plot Sizing', value: '312.16 to 1,930.90 sq.yards' },
+    { label: 'Yearly Appreciation', value: '12–15%' },
     { label: 'Concept', value: 'Build Your Own Shed' },
     { label: 'Road Network', value: 'Wide Heavy RCC Road' },
     { label: 'Street Lighting', value: 'Street Lights Installed' },
@@ -179,17 +181,17 @@ const MetroIndustrialEstate = () => {
   return (
     <>
       <SEO
-        title="Metro Industrial Park 2 (MIP 2) | Industrial Plots in Moraiya, Changodar"
-        description="Metro Industrial Park 2 (MIP 2) by Metro Developers — clear-title NA industrial plots (312 to 1,930 sq.yds) opposite Park 1 in Moraiya, Changodar. Build Your Own Shed with Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security."
+        title="Industrial Plots for Sale in Changodar, Ahmedabad | Metro Industrial Park 2"
+        description="Clear-title NA industrial plots (312 to 1,930 sq.yds) for sale in Changodar (Moraiya), Ahmedabad to Build Your Own Shed. Wide Heavy RCC roads, Street lights, Puran (Soil filling), Compound wall, and 24/7 Gated security."
         canonical="/metro-industrial-estate"
-        keywords="metro industrial park 2, industrial park 2, MIP 2, MIP-2, MIP2, metro industrial estate, MIP, MIP moraiya, build your own shed ahmedabad, industrial plots changodar, industrial land for sale moraiya, industrial plots moraiya, NA industrial land ahmedabad"
+        keywords="industrial plots in changodar, industrial land for sale changodar, industrial plots in moraiya, industrial plots ahmedabad, build your own shed ahmedabad, NA industrial plots changodar, metro industrial park 2, MIP 2, industrial land changodar ahmedabad, industrial plots near nh 47"
         ogImage="/images/metro-industrial-park-2-site-plan.jpg"
-        ogImageAlt="Industrial Park 2 Site Plan Moraiya Changodar Ahmedabad"
-        structuredData={[metroEstateSchema, metroEstateListingSchema, metroEstateFaqSchema]}
+        ogImageAlt="Industrial Park 2 Site Plan Changodar Moraiya Ahmedabad"
+        structuredData={[metroEstateSchema, metroEstateListingSchema, metroEstateIndividualUnitsSchema, metroEstateFaqSchema]}
       />
 
       <h1 className="sr-only">
-        Metro Industrial Park 2 (MIP 2) — Industrial Plots for Sale in Moraiya, Changodar, Ahmedabad
+        Metro Industrial Park 2 (MIP 2) — Industrial Plots for Sale in Changodar, Moraiya, Ahmedabad
       </h1>
 
       <div className="min-h-screen theme-bg-primary">
@@ -517,17 +519,17 @@ const MetroIndustrialEstate = () => {
                     <div className="flex items-center gap-3 mb-2">
                       <TrendingUp className="text-emerald-500" size={22} />
                       <h3 className="text-base font-bold theme-text-primary">
-                        Dual Asset Appreciation
+                        Yearly Land Appreciation
                       </h3>
                     </div>
                     <p
                       className="text-3xl font-extrabold text-emerald-500 mb-1"
                       style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}
                     >
-                      16–22%
+                      12–15%
                     </p>
                     <p className="theme-text-tertiary text-xs leading-relaxed">
-                      Land equity appreciation + rental yield potential upon custom shed construction in Changodar.
+                      12–15% expected yearly land appreciation in the Changodar-Moraiya industrial corridor.
                     </p>
                   </div>
 
@@ -593,6 +595,7 @@ const MetroIndustrialEstate = () => {
           close={() => setViewerOpen(false)}
           slides={viewerSlides}
           plugins={[Zoom]}
+          zoom={{ maxZoomPixelRatio: 5, scrollToZoom: true }}
         />
       </div>
     </>

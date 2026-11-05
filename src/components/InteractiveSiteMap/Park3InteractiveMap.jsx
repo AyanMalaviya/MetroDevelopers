@@ -664,11 +664,11 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
             <div className={`p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-1 text-[10px] font-bold ${
               isDark ? 'bg-gray-950/40 border-gray-800 text-gray-400' : 'bg-gray-100/70 border-gray-200 text-gray-600'
             }`}>
-              <span>✓ Heavy RCC Road</span>
-              <span>✓ Street Light</span>
-              <span>✓ Soil Filling (Puran)</span>
-              <span>✓ Compound Wall</span>
-              <span>✓ 24/7 Security</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Heavy RCC Road</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Street Light</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Soil Filling (Puran)</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Compound Wall</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 24/7 Security</span>
             </div>
 
             {/* Action Buttons */}

@@ -6,8 +6,8 @@ const SITE_NAME = 'Metro Industrial Park';
 const INSTAGRAM_URL = 'https://www.instagram.com/metro.industrialpark/';
 const GEO_REGION = 'IN-GJ';
 const GEO_PLACENAME = 'Moraiya, Changodar, Ahmedabad, Gujarat';
-const GEO_POSITION = '22.914141879249897;72.41748307531053';
-const GEO_ICBM = '22.914141879249897, 72.41748307531053';
+const GEO_POSITION = '22.9140377;72.4206651';
+const GEO_ICBM = '22.9140377, 72.4206651';
 
 const resolveUrl = (value, baseUrl) => {
   if (!value) {

@@ -754,13 +754,15 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
             </div>
 
             {/* Park Features Strip */}
-            <div className={`p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-1 text-[10px] font-bold ${
+            <div className={`p-2.5 rounded-xl border grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[10px] font-bold ${
               isDark ? 'bg-gray-950/40 border-gray-800 text-gray-400' : 'bg-gray-100/70 border-gray-200 text-gray-600'
             }`}>
-              <span>✓ Heavy RCC Road</span>
-              <span>✓ Street Light</span>
-              <span>✓ Soil Filling</span>
-              <span>✓ 24/7 Security</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 60 Ft Heavy RCC</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 30–35 Ft Height</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Heavy Trimix Floor</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 24/7 CCTV &amp; Security</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 24/7 Water &amp; Drainage</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Weigh Bridge Facility</span>
             </div>
 
             {/* Action Buttons */}

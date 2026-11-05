@@ -132,6 +132,12 @@ export default function LocalMarketPage() {
   const visibleMarketPages = LOCAL_MARKET_PAGES.filter(e => e.showInPrimaryNavigation !== false)
   const relatedMarkets     = visibleMarketPages.filter(e => e.path !== pathname)
 
+  const targetProjectUrl   = page?.targetProjectUrl || '/metro-industrial-park'
+  const targetProjectName  = page?.targetProjectName || 'Metro Industrial Park'
+  const dynamicWhatsappUrl = `https://wa.me/919824235642?text=${encodeURIComponent(
+    `Hello, I want details regarding ${page?.focusKeyword || 'industrial space'} in ${page?.locationName || 'Ahmedabad'}.`
+  )}`
+
   /* section refs */
   const aboutRef    = useRef(null)
   const whyRef      = useRef(null)
@@ -267,15 +273,15 @@ export default function LocalMarketPage() {
               className="flex flex-wrap gap-3 mb-10"
             >
               <Link
-                to="/metro-industrial-park"
+                to={targetProjectUrl}
                 className="group inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-bold rounded-xl text-xs sm:text-sm shadow-xl shadow-brand-red/30 hover:scale-105 active:scale-95 transition-transform whitespace-nowrap"
               >
                 <Factory size={15} />
-                Explore Park
+                Explore {targetProjectName}
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <a
-                href={WHATSAPP_URL}
+                href={dynamicWhatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm border transition-all hover:scale-105 active:scale-95 whitespace-nowrap ${
@@ -412,10 +418,10 @@ export default function LocalMarketPage() {
                 </ul>
 
                 <Link
-                  to="/metro-industrial-park"
+                  to={targetProjectUrl}
                   className="inline-flex items-center gap-2 text-brand-red font-bold text-sm hover:gap-3 transition-all"
                 >
-                  Explore full park details <ArrowRight size={14} />
+                  Explore {targetProjectName} details <ArrowRight size={14} />
                 </Link>
               </motion.div>
             </motion.div>
@@ -621,11 +627,11 @@ export default function LocalMarketPage() {
 
               <motion.div variants={fadeUp} className="mt-8 text-center">
                 <Link
-                  to="/metro-industrial-park"
+                  to={targetProjectUrl}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-bold rounded-xl text-sm shadow-xl shadow-brand-red/30 hover:scale-105 transition-transform"
                 >
                   <Factory size={15} />
-                  See Full Park Details & Gallery
+                  See {targetProjectName} Details & Gallery
                   <ArrowRight size={14} />
                 </Link>
               </motion.div>
@@ -774,21 +780,21 @@ export default function LocalMarketPage() {
                 >
                   <div className={`flex items-center gap-2 mb-2 text-xs font-black uppercase tracking-widest ${isDark ? 'text-red-400' : 'text-brand-red'}`}>
                     <Factory size={14} />
-                    Metro Industrial Park
+                    {targetProjectName}
                   </div>
                   <p className={`text-sm leading-relaxed mb-4 ${textMd}`}>
-                    Get full unit listings, image gallery, interactive site map, ROI calculator, and live availability on the main park page.
+                    Get full unit listings, image gallery, interactive site map, ROI calculator, and live availability on the {targetProjectName} page.
                   </p>
                   <Link
-                    to="/metro-industrial-park"
+                    to={targetProjectUrl}
                     className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm shadow-md shadow-brand-red/30 whitespace-nowrap"
                   >
-                    Explore Metro Park
+                    Explore {targetProjectName}
                     <ArrowRight size={14} />
                   </Link>
                   <div className="mt-3 flex gap-2.5">
                     <a
-                      href={WHATSAPP_URL}
+                      href={dynamicWhatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border transition-all hover:scale-105 whitespace-nowrap ${
@@ -901,22 +907,22 @@ export default function LocalMarketPage() {
               </motion.h2>
 
               <motion.p variants={fadeUp} className={`text-sm sm:text-base mb-10 max-w-xl mx-auto leading-relaxed ${textMd}`}>
-                Browse unit listings, check the interactive site map, and schedule a free site visit at
-                Metro Industrial Park — Moraiya's premier industrial address on the Sarkhej–Bavla Highway (NH 47).
+                Browse unit listings, check the interactive site map, and schedule a free site visit at{' '}
+                {targetProjectName} — the premier industrial address on the Sarkhej–Bavla Highway (NH 47) corridor.
               </motion.p>
 
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
-                  to="/metro-industrial-park"
+                  to={targetProjectUrl}
                   className="group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-red/30 overflow-hidden text-xs sm:text-sm whitespace-nowrap"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <Factory size={16} className="relative z-10" />
-                  <span className="relative z-10">Explore Park</span>
+                  <span className="relative z-10">Explore {targetProjectName}</span>
                   <ArrowRight size={15} className="relative z-10 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <a
-                  href={WHATSAPP_URL}
+                  href={dynamicWhatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold border-2 transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm whitespace-nowrap ${
