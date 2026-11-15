@@ -434,8 +434,8 @@ const ContactPage = () => {
                     METRO INDUSTRIAL PARK
                   </p>
                   <p className="theme-text-secondary text-sm leading-relaxed" itemProp="address">
-                    Behind Siya Industrial Park, Opp. Suvas Industrial Park,<br />
-                    Moraiya, Ahmedabad, Gujarat — 382213
+                    Opp. Suvas Industrial Estate, Behind Siya Industrial Park,<br />
+                    Moraiya, Changodar, Ahmedabad – 382213, Gujarat
                   </p>
                   <p className="theme-text-secondary text-sm mt-1">
                     <a href="tel:+919824235642" itemProp="telephone" className="hover:text-brand-red transition-colors">+91 98242 35642</a>

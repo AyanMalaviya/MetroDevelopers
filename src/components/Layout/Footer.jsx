@@ -64,6 +64,10 @@ const FAQ_ITEMS = [
     a: 'Rental yield is 6–8%, yearly appreciation can add up to 10–12%, and the combined potential is 16–20% for industrial sheds at Metro Industrial Park.',
   },
   {
+    q: 'Why is industrial property a better investment than residential?',
+    a: 'Industrial properties deliver 6–8% net rental yields (nearly 3x higher than 2–3% residential yields) and 10–15% annual capital appreciation along the NH 47 corridor, totaling 16–23% annualized returns. Corporate leases run for 5–10 years under triple-net terms where tenants bear maintenance, eliminating the recurring repairs and vacancies typical in residential flats.',
+  },
+  {
     q: 'How long does possession take?',
     a: 'Possession is available within 90 days of booking.',
   },
@@ -97,6 +101,7 @@ const FAQ_ITEMS = [
 // ── Quick links ────────────────────────────────────────────────────────────────
 const QUICK_LINKS = [
   { to: '/',                                                           label: 'Home'                           },
+  { to: '/industrial-shed-for-lease-ahmedabad',                        label: 'Industrial Shed for Lease'      },
   { to: '/metro-industrial-park',                                      label: 'Industrial Park 1 (Sheds)'     },
   { to: '/metro-industrial-estate',                                    label: 'Industrial Park 2 (Plots)'     },
   { to: '/metro-industrial-park-3',                                    label: 'Industrial Park 3 (Bavla)'     },
@@ -304,7 +309,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="theme-text-secondary hover:text-brand-red transition-colors text-xs leading-relaxed"
                 >
-                  Opp. Suvas Ind Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad — 382213
+                  Opp. Suvas Industrial Estate, Behind Siya Industrial Park, Moraiya, Changodar, Ahmedabad – 382213, Gujarat
                 </a>
               </li>
               {[

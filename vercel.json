@@ -1,6 +1,31 @@
 {
   "redirects": [
     {
+      "source": "/gidc-shed-for-rent-ahmedabad",
+      "destination": "/industrial-shed-for-lease-ahmedabad",
+      "permanent": true
+    },
+    {
+      "source": "/industrial-shed-for-rent-gujarat",
+      "destination": "/industrial-shed-for-lease-ahmedabad",
+      "permanent": true
+    },
+    {
+      "source": "/high-return-investment-gujarat",
+      "destination": "/investment-in-real-estate-in-ahmedabad",
+      "permanent": true
+    },
+    {
+      "source": "/godown-for-rent-ahmedabad",
+      "destination": "/warehouse-for-rent-ahmedabad",
+      "permanent": true
+    },
+    {
+      "source": "/industrial-land-for-sale-moraiya-changodar",
+      "destination": "/metro-industrial-estate",
+      "permanent": true
+    },
+    {
       "source": "/project",
       "destination": "/404",
       "statusCode": 410

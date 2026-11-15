@@ -15,7 +15,12 @@ import {
   createLocationPageSchema,
   propertySchema,
   realEstateListingSchema,
+  metroLeaseLandingPageSchema,
+  investmentComparisonSchema,
 } from '../utils/schemas'
+import TenantSpecTable from '../components/Projects/TenantSpecTable'
+import DriveTimeMatrix from '../components/Projects/DriveTimeMatrix'
+import InvestmentComparisonTable from '../components/Projects/InvestmentComparisonTable'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -30,6 +35,13 @@ const QUICK_STATS = [
   { value: '63',   label: 'Industrial Units',  icon: Factory    },
   { value: '6–8%', label: 'Rental Yield',      icon: TrendingUp },
   { value: '90D',  label: 'Possession',        icon: Clock      },
+]
+
+const LEASE_STATS = [
+  { value: '30–35 Ft', label: 'Clear Height',       icon: Ruler  },
+  { value: '60 Ft',    label: 'RCC Internal Roads', icon: FaRoad },
+  { value: '30–90D',   label: 'Fast Possession',    icon: Clock  },
+  { value: '100%',     label: 'GST Tax Credit',     icon: Award  },
 ]
 
 const FEATURES = [
@@ -197,7 +209,13 @@ export default function LocalMarketPage() {
   const pill   = isDark ? 'bg-red-500/10 border-red-400/30 text-red-400' : 'bg-red-50 border-red-200 text-brand-red'
 
   const structuredData = [propertySchema, listingSchema, locationPageSchema, breadcrumbSchema]
+  if (page.isLeaseFocused && metroLeaseLandingPageSchema) structuredData.push(metroLeaseLandingPageSchema)
+  if ((page.showInvestmentComparison || page.path === '/investment-in-real-estate-in-ahmedabad') && investmentComparisonSchema) {
+    structuredData.push(investmentComparisonSchema)
+  }
   if (faqSchema) structuredData.push(faqSchema)
+
+  const activeQuickStats = page.isLeaseFocused ? LEASE_STATS : QUICK_STATS
 
   return (
     <>
@@ -313,7 +331,7 @@ export default function LocalMarketPage() {
               transition={{ delay: 0.25, duration: 0.5 }}
               className="grid grid-cols-2 sm:grid-cols-4 gap-3"
             >
-              {QUICK_STATS.map(({ value, label, icon: Icon }) => (
+              {activeQuickStats.map(({ value, label, icon: Icon }) => (
                 <div
                   key={label}
                   className={`rounded-xl border px-4 py-3 text-center ${
@@ -641,19 +659,57 @@ export default function LocalMarketPage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            INVESTMENT SNAPSHOT
+            INVESTMENT COMPARISON: INDUSTRIAL VS RESIDENTIAL
+        ════════════════════════════════════════════════════════════════ */}
+        {(page.showInvestmentComparison || page.path === '/investment-in-real-estate-in-ahmedabad') && (
+          <section className={`py-12 sm:py-16 ${bgAlt}`}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <InvestmentComparisonTable />
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════
+            TENANT TECHNICAL SPECIFICATIONS (FOR LEASING / SPECS PAGES)
+        ════════════════════════════════════════════════════════════════ */}
+        {(page.showTenantSpecs || page.isLeaseFocused) && (
+          <section className={`py-12 sm:py-16 ${bgAlt}`}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <TenantSpecTable />
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════
+            DRIVE-TIME MATRIX & "NEAR ME" REGIONAL CORRIDOR
+        ════════════════════════════════════════════════════════════════ */}
+        {(page.showDriveTimes || page.isLeaseFocused) && (
+          <section className={`py-12 sm:py-16 ${bg}`}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <DriveTimeMatrix locationName={page.locationName} />
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════
+            INVESTMENT / OPERATIONAL SNAPSHOT
         ════════════════════════════════════════════════════════════════ */}
         <section className={`py-10 border-y ${
           isDark ? 'bg-gradient-to-r from-gray-900 to-black border-gray-800' : 'bg-gradient-to-r from-gray-100 to-white border-gray-200'
         }`}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 divide-x divide-dashed divide-gray-500/20">
-              {[
+              {(page.isLeaseFocused ? [
+                { label: 'Floor Load',     value: '5–8 T/m²', sub: 'Heavy laser screed VDF',     color: 'text-green-500'  },
+                { label: 'Clear Height',   value: '30–35 Ft', sub: 'High-density pallet racking', color: 'text-orange-500' },
+                { label: 'Road Width',     value: '60 Ft',    sub: '40ft trailer turnaround',    color: 'text-brand-red'  },
+                { label: 'Lease Tenure',   value: '5–10 Yrs', sub: '100% GST ITC eligible',      color: text              },
+              ] : [
                 { label: 'Rental Yield',      value: '6–8%',   sub: 'Stable annual income',     color: 'text-green-500'  },
                 { label: 'Appreciation',      value: '10–12%', sub: 'Yearly capital growth',    color: 'text-orange-500' },
                 { label: 'Combined Returns',  value: '16–20%', sub: 'Total return potential',   color: 'text-brand-red'  },
                 { label: 'Lease Term',        value: '5–10Y',  sub: 'Stable long-term tenants', color: text              },
-              ].map(({ label, value, sub, color }, i) => (
+              ]).map(({ label, value, sub, color }, i) => (
                 <motion.div
                   key={label}
                   initial={{ opacity: 0, y: 16 }}

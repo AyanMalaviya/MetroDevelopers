@@ -23,6 +23,8 @@ import 'yet-another-react-lightbox/plugins/captions.css';
 import 'yet-another-react-lightbox/plugins/counter.css';
 import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
+import TenantSpecTable from './TenantSpecTable';
+import DriveTimeMatrix from './DriveTimeMatrix';
 
 // ✅ Import your schemas from the new utils file
 import { metroPark1Schema, propertySchema, faqSchema, imageObjectSchema, realEstateListingSchema, metroPark1IndividualUnitsSchema } from '../../utils/schemas';
@@ -532,6 +534,11 @@ const MetroIndustrialPark = () => {
                   </div>
                 </motion.div>
 
+                {/* ── Technical Engineering Specifications ── */}
+                <motion.div variants={fadeUp}>
+                  <TenantSpecTable />
+                </motion.div>
+
                 {/* Key Features */}
                 <motion.div ref={featuresRef} variants={containerVariants} initial="hidden" animate={featuresInView ? 'visible' : 'hidden'}>
                   <motion.div variants={fadeUp}><SectionHeader icon={<ListCheckIcon size={26} />} title="Key Features" /></motion.div>
@@ -629,6 +636,11 @@ const MetroIndustrialPark = () => {
                       </p>
                     </motion.div>
                   </AnimatePresence>
+                </motion.div>
+
+                {/* ── Regional Connectivity & Drive-Time Matrix ── */}
+                <motion.div variants={fadeUp}>
+                  <DriveTimeMatrix locationName="Moraiya, Changodar" />
                 </motion.div>
               </div>
 

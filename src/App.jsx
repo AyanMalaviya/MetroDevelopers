@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
@@ -52,6 +52,9 @@ function App() {
                 <Route path="/calculator" element={<Calculator />} />
                 <Route path="/site-map" element={<SiteMapPage />} />
 
+                {/* ── Dedicated Leasing Landing Page ── */}
+                <Route path="/industrial-shed-for-lease-ahmedabad" element={<LocalMarketPage />} />
+
                 {/* ── Programmatic Directory Hierarchies (Google AI Recommendation) ── */}
                 <Route path="/commercial/changodar/industrial-shed-for-lease" element={<LocalMarketPage />} />
                 <Route path="/commercial/changodar/industrial-shed-for-sale" element={<LocalMarketPage />} />
@@ -78,17 +81,19 @@ function App() {
                 <Route path="/warehouse-for-sale-ahmedabad" element={<LocalMarketPage />} />
                 <Route path="/industrial-shed-for-rent-moraiya" element={<LocalMarketPage />} />
                 <Route path="/industrial-shed-for-sale-moraiya" element={<LocalMarketPage />} />
-                <Route path="/godown-for-rent-ahmedabad" element={<LocalMarketPage />} />
                 <Route path="/factory-shed-for-rent-changodar" element={<LocalMarketPage />} />
-                <Route path="/industrial-shed-for-rent-gujarat" element={<LocalMarketPage />} />
-                <Route path="/gidc-shed-for-rent-ahmedabad" element={<LocalMarketPage />} />
 
                 {/* ── New SEO routes: Investment & Plotted Land ── */}
                 <Route path="/industrial-property-investment-ahmedabad" element={<LocalMarketPage />} />
-                <Route path="/industrial-land-for-sale-moraiya-changodar" element={<LocalMarketPage />} />
-                <Route path="/high-return-investment-gujarat" element={<LocalMarketPage />} />
                 <Route path="/industrial-plots-in-bavla" element={<LocalMarketPage />} />
                 <Route path="/industrial-land-for-sale-bavla" element={<LocalMarketPage />} />
+
+                {/* ── Consolidated 301 Permanent Redirects ── */}
+                <Route path="/gidc-shed-for-rent-ahmedabad" element={<Navigate to="/industrial-shed-for-lease-ahmedabad" replace />} />
+                <Route path="/industrial-shed-for-rent-gujarat" element={<Navigate to="/industrial-shed-for-lease-ahmedabad" replace />} />
+                <Route path="/high-return-investment-gujarat" element={<Navigate to="/investment-in-real-estate-in-ahmedabad" replace />} />
+                <Route path="/godown-for-rent-ahmedabad" element={<Navigate to="/warehouse-for-rent-ahmedabad" replace />} />
+                <Route path="/industrial-land-for-sale-moraiya-changodar" element={<Navigate to="/metro-industrial-estate" replace />} />
 
                 {/* ── Insight / Guide pages ── */}
                 <Route path="/guides/gst-input-credit-industrial-tenants-gujarat" element={<InsightGuidePage />} />
