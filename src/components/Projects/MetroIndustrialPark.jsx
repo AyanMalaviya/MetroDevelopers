@@ -4,7 +4,7 @@ import {
   ChevronLeft, ChevronRight, Ruler, Shield, Truck, Phone,
   CheckCircle, Maximize2, Factory, Camera, Droplets,
   TrendingUp, Clock, MapPin, ListCheckIcon, LandPlot,
-  CctvIcon, FactoryIcon, Trash, WeightIcon,
+  CctvIcon, FactoryIcon, Trash, WeightIcon, Building2,
 } from 'lucide-react';
 import { FaRoad, FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
