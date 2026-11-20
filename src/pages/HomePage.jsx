@@ -1,17 +1,17 @@
 // src/pages/HomePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import Lenis from 'lenis';
 import {
-  Phone, ArrowRight, Star, Clock, Sparkles, TrendingUp,
-  MapPin, LucideLandPlot, Factory, LucideCctv, Droplets,
-  Truck, BarChart3, Coins, Home, CheckCircle2, Banknote, Users, Globe,
-  TrendingDown, Award, Quote as QuoteIcon, Shield, X
+  Phone, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight,
+  MapPin, Play, Calculator, Check, Minus,
 } from 'lucide-react';
-import { FaRoad, FaTrash, FaWhatsapp, FaInstagram, FaPlay } from 'react-icons/fa';
+import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
+import CountUp from 'react-countup';
 import SEO from '../components/SEO/SEO';
 import { useTheme } from '../context/ThemeContext.jsx';
-import CountUp from 'react-countup';
+import FeaturesSection from '../components/Home/FeaturesSection.jsx';
 import {
   propertySchema,
   faqSchema,
@@ -24,612 +24,361 @@ import {
   metroPark3IndividualUnitsSchema,
 } from '../utils/schemas.js';
 
-
-/* ─── Hero images — light vs dark ─── */
+/* ─── Assets ─── */
 const heroImageLight = '/images/metro-industrial-park-entrance-security-moraiya.jpg';
 const heroImageDark  = '/images/metro-industrial-park-entrance-dawn.jpg';
 
+/* ─── Motion Curve (Architectural, zero bounce) ─── */
+const EASE = [0.16, 1, 0.3, 1];
 
-/* ─── Feature colors ─── */
-const featureColors = [
-  { gradient: 'from-rose-500 to-orange-500',   bg: 'from-rose-950 to-orange-950',   text: 'text-rose-400',    shadow: 'shadow-rose-500/30'    },
-  { gradient: 'from-blue-500 to-cyan-400',      bg: 'from-blue-950 to-cyan-950',      text: 'text-blue-400',    shadow: 'shadow-blue-500/30'    },
-  { gradient: 'from-violet-500 to-purple-500',  bg: 'from-violet-950 to-purple-950',  text: 'text-violet-400',  shadow: 'shadow-violet-500/30'  },
-  { gradient: 'from-amber-500 to-yellow-400',   bg: 'from-amber-950 to-yellow-950',   text: 'text-amber-400',   shadow: 'shadow-amber-500/30'   },
-  { gradient: 'from-cyan-500 to-teal-400',      bg: 'from-cyan-950 to-teal-950',      text: 'text-cyan-400',    shadow: 'shadow-cyan-500/30'    },
-  { gradient: 'from-emerald-500 to-green-400',  bg: 'from-emerald-950 to-green-950',  text: 'text-emerald-400', shadow: 'shadow-emerald-500/30' },
-];
-
-
-/* ─── Features ─── */
-const features = [
-  {
-    icon: <Factory size={26} />,
-    title: 'Modern Infrastructure',
-    description: 'World-class facilities designed for manufacturing and warehousing excellence with premium construction standards.',
-    details: ['30–35 ft high ceiling clearance', 'Reinforced flooring for heavy loads', 'RCC construction available on request'],
-    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
-    alt: 'Modern industrial shed infrastructure at Metro Industrial Park Moraiya Ahmedabad',
-  },
-  {
-    icon: <Truck size={26} />,
-    title: 'Strategic Location',
-    description: 'Prime connectivity to national highways, logistics hubs, and major ports for seamless supply chain operations.',
-    details: ['Near NH 47 (Sarkhej Bavla National Highway)', 'Easy access to GIDC industrial areas', 'Close to Ahmedabad city & airport'],
-    image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
-    alt: 'Strategic location map of Metro Industrial Park near NH 47 (Sarkhej Bavla Highway) Moraiya',
-  },
-  {
-    icon: <LucideCctv size={26} />,
-    title: '24/7 Security',
-    description: 'Advanced CCTV surveillance system combined with trained security personnel ensuring round-the-clock safety.',
-    details: ['HD CCTV cameras throughout the park', 'Security guards at main gate', 'Controlled access entry system'],
-    image: '/images/metro-industrial-park-entrance-security-moraiya.jpg',
-    alt: 'CCTV security surveillance at Metro Industrial Park entrance Moraiya Ahmedabad',
-  },
-  {
-    icon: <FaRoad size={26} />,
-    title: 'Wide Roads',
-    description: '60 ft RCC roads engineered specifically for heavy-duty vehicles ensuring smooth logistics and truck movement.',
-    details: ['60 ft wide internal road network', 'Durable RCC construction', 'Designed for heavy trucks & trailers'],
-    image: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
-    alt: '60 ft wide RCC road inside Metro Industrial Park designed for heavy vehicles Ahmedabad',
-  },
-  {
-    icon: <Droplets size={26} />,
-    title: 'Water Supply',
-    description: 'Reliable 24/7 water availability across all industrial units to support uninterrupted manufacturing operations.',
-    details: ['Round-the-clock water availability', 'Dedicated supply per industrial unit', 'Emergency water reserve system'],
-    image: '/images/feature-water-supply.jpg',
-    alt: '24x7 water supply facility at Metro Industrial Park Moraiya Changodar Ahmedabad',
-  },
-  {
-    icon: <FaTrash size={26} />,
-    title: 'Hygienic Drainage',
-    description: 'Well-planned drainage infrastructure for efficient waste management keeping the park clean and fully operational.',
-    details: ['Underground drainage network', 'Industrial waste management system', 'Eco-friendly disposal processes'],
-    image: '/images/feature-drainage-system.jpg',
-    alt: 'Hygienic drainage and waste management system at Metro Industrial Park Ahmedabad',
-  },
-];
-
-
-/* ─── Stats ─── */
+/* ─── Track Record Metrics ─── */
 const stats = [
-  { countEnd: 30,  suffix: 'k+', label: 'Sq.yards of Area',      icon: <LucideLandPlot size={24} /> },
-  { countEnd: 43,  suffix: '+',  label: 'Industrial Units Made', icon: <Factory size={24} /> },
-  { countEnd: 100, suffix: '%',  label: 'Client Satisfaction',   icon: <Star           size={24} /> },
-  { countEnd: 6,   suffix: '+',  label: 'Years of Experience',   icon: <Clock          size={24} /> },
+  { index: '01', countEnd: 30,  suffix: 'k+', label: 'Sq. Yards Developed',    note: 'Moraiya & Changodar belt' },
+  { index: '02', countEnd: 43,  suffix: '+',  label: 'Industrial Units Built', note: 'Manufacturing & warehousing' },
+  { index: '03', countEnd: 100, suffix: '%',  label: 'Client Satisfaction',    note: 'Clear title & timely handover' },
+  { index: '04', countEnd: 6,   suffix: '+',  label: 'Years in Industrial RE', note: 'Operating since 2020' },
 ];
 
+/* ─── Developments Portfolio ─── */
+const developments = [
+  {
+    code: 'MIP — 01',
+    name: 'Industrial Park 1',
+    tag: 'Ready Possession',
+    statusDot: 'bg-emerald-500',
+    location: 'Moraiya, Changodar · NH 47',
+    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    alt: 'Ready industrial sheds at Metro Industrial Park Moraiya Changodar',
+    summary:
+      '63 move-in ready industrial sheds & warehouses across 54,000+ sq. yards with 30–35 ft clear ceiling height and 60 ft heavy RCC internal roads.',
+    specs: [
+      { k: 'Unit Sizes', v: '4,000 – 50,000 sq.ft' },
+      { k: 'Inventory',  v: '63 Ready Sheds' },
+      { k: 'Est. Yield', v: '6 – 8% Rental' },
+    ],
+    primaryLink: { to: '/metro-industrial-park', label: 'Explore Sheds' },
+    mapLink: { to: '/site-map', state: undefined },
+  },
+  {
+    code: 'MIP — 02',
+    name: 'Industrial Park 2',
+    tag: 'New Launch · Build Your Own',
+    statusDot: 'bg-brand-red',
+    location: 'Opp. Metro Industrial Park, Moraiya',
+    image: '/images/metro-industrial-park-2-site-plan.jpg',
+    alt: 'Industrial plots for sale to build your own shed at Industrial Park 2 Moraiya',
+    summary:
+      '23 clear-title industrial plots designed for custom-built sheds. Delivered with wide RCC roads, street lights, puran (soil filling), compound wall, and 24/7 security.',
+    specs: [
+      { k: 'Plot Sizes', v: '300 – 1,930+ sq.yd' },
+      { k: 'Inventory',  v: '23 Clear-Title Plots' },
+      { k: 'Infra',      v: 'RCC Roads & Gated' },
+    ],
+    primaryLink: { to: '/metro-industrial-estate', label: 'Explore Plots' },
+    mapLink: { to: '/site-map', state: { activeTab: 'estate' } },
+  },
+  {
+    code: 'MIP — 03',
+    name: 'Industrial Park 3',
+    tag: 'New Launch · Leveling Ongoing',
+    statusDot: 'bg-amber-500',
+    location: 'Bavla – Rajoda Road, Ahmedabad',
+    image: '/images/metro-industrial-park-3-site-plan.jpg',
+    alt: 'Industrial plots for sale at Metro Industrial Park 3 Bavla Ahmedabad',
+    summary:
+      '77 industrial plots spread across ~60,000 sq. yards on the Bavla corridor. Complete developer infrastructure including heavy RCC roads, puran, lighting, and gated access.',
+    specs: [
+      { k: 'Plot Sizes', v: '334 – 1,643 sq.yd' },
+      { k: 'Inventory',  v: '77 Industrial Plots' },
+      { k: 'Status',     v: 'Leveling Ongoing' },
+    ],
+    primaryLink: { to: '/metro-industrial-park-3', label: 'Explore Plots' },
+    mapLink: { to: '/site-map', state: { activeTab: 'park3' } },
+  },
+];
 
-/* ─── Investment comparison ─── */
+/* ─── Investment Comparison Ledger ─── */
 const investments = [
   {
+    name: 'Residential Real Estate',
+    yieldLabel: '2 – 4%',
+    barWidth: 22,
+    incomeType: 'Low rental yield',
+    taxBenefit: 'No GST input credit',
+    notes: [
+      'Only 2–4% rental yield in Tier-1 cities',
+      'Frequent tenant turnover & high maintenance',
+      'No GST input credit available',
+    ],
+    isUs: false,
+  },
+  {
     name: 'Gold',
-    icon: Coins,
-    yield: '6–7%',
-    yieldNote: 'CAGR only, no income',
-    gradient: 'from-yellow-600 to-amber-500',
-    border: 'border-yellow-500/30',
-    textAccent: 'text-yellow-500',
-    cons: ['Zero passive income — appreciation only', 'Storage, insurance & theft risk', 'Emotionally driven, bubble-prone pricing'],
+    yieldLabel: '6 – 7%',
+    barWidth: 36,
+    incomeType: 'CAGR only, zero cashflow',
+    taxBenefit: 'Capital gains tax',
+    notes: [
+      'Zero passive income — appreciation only',
+      'Storage, insurance & custody risk',
+      'Sentiment-driven, cyclical pricing',
+    ],
     isUs: false,
   },
   {
     name: 'Fixed Deposit',
-    icon: Banknote,
-    yield: '6.5–7%',
-    yieldNote: 'Pre-tax (slab rate applies)',
-    gradient: 'from-sky-600 to-blue-500',
-    border: 'border-sky-500/30',
-    textAccent: 'text-sky-500',
-    cons: ['100% taxable at your income slab', 'Zero capital appreciation ever', 'Real return often negative post-inflation'],
+    yieldLabel: '6.5 – 7%',
+    barWidth: 38,
+    incomeType: 'Pre-tax fixed interest',
+    taxBenefit: '100% taxed at slab rate',
+    notes: [
+      '100% taxable at your income slab',
+      'Zero capital appreciation over time',
+      'Real return erodes post-inflation',
+    ],
     isUs: false,
   },
   {
-    name: 'Residential',
-    icon: Home,
-    yield: '2–4%',
-    yieldNote: 'Rental yield, high overhead',
-    gradient: 'from-purple-600 to-violet-500',
-    border: 'border-purple-500/30',
-    textAccent: 'text-purple-500',
-    cons: ['Only 2–4% yield in Tier-1 cities', 'Tenant disputes & maintenance cost', 'No GST input credit available'],
-    isUs: false,
-  },
-  {
-    name: 'Industrial Shed',
-    icon: Factory,
-    yield: '16-20%',
-    yieldNote: '6–8% rental yield + up to 10–12% appreciation',
-    gradient: 'from-red-500 via-orange-500 to-amber-500',
-    border: 'border-red-400/60',
-    textAccent: 'text-orange-500',
-    pros: [
-      'Stable 5–10 yr lease agreements',
+    name: 'Industrial Shed (MIP)',
+    yieldLabel: '16 – 20%',
+    barWidth: 96,
+    incomeType: '6–8% yield + 10–12% appreciation',
+    taxBenefit: 'Full GST input credit',
+    notes: [
+      'Stable 5–10 year corporate lease agreements',
       '5–10% built-in annual rent escalation',
-      'GST input credit benefit for tenants',
-      'Capital appreciation in industrial zones',
-      'Supports local job creation & economy',
+      'GST input credit benefit for industrial tenants',
+      'Strong land appreciation in industrial corridors',
+      'Directly supports local employment & production',
     ],
     isUs: true,
   },
 ];
 
-
-/* ─── Investment reasons ─── */
+/* ─── Structural Investment Reasons ─── */
 const investReasons = [
-  { icon: Users,      title: 'Job Creation',          gradient: 'from-emerald-500 to-teal-400',  glow: 'shadow-emerald-500/15', desc: 'Each shed lease supports 10–50 local jobs. Your capital fuels real economic activity, not just paper wealth.' },
-  { icon: Globe,      title: 'Make in India',          gradient: 'from-blue-500 to-indigo-400',   glow: 'shadow-blue-500/15',    desc: "Industrial leasing hit a record 37M sq ft in 2025 — a 28% year-on-year surge across India's top 8 cities." },
-  { icon: TrendingUp, title: 'Inflation-Proof Income', gradient: 'from-amber-500 to-orange-400',  glow: 'shadow-amber-500/15',   desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that beat inflation every year.' },
-  { icon: Shield,     title: 'Tangible Asset',         gradient: 'from-green-500 to-emerald-400', glow: 'shadow-green-500/15',   desc: "Unlike FDs or gold ETFs, you own a real, insurable, income-generating structure with enduring land value beneath it." },
-  { icon: Award,      title: 'GST Input Credit',       gradient: 'from-violet-500 to-purple-400', glow: 'shadow-violet-500/15',  desc: "Industrial lessees can claim full GST input credit — a unique fiscal advantage completely unavailable with residential leases." },
-  { icon: BarChart3,  title: 'Long-Term Stability',    gradient: 'from-rose-500 to-pink-400',     glow: 'shadow-rose-500/15',    desc: 'Industrial tenants sign 5–10 year leases vs 11-month residential agreements — predictable, compounding returns.' },
+  {
+    num: '01',
+    title: 'Job Creation',
+    desc: 'Each leased industrial shed supports 10–50 local jobs. Your capital funds real production, not idle paper wealth.',
+  },
+  {
+    num: '02',
+    title: 'Make in India Momentum',
+    desc: "Industrial leasing hit a record 37M sq.ft in 2025 — a 28% year-on-year surge across India's top 8 cities.",
+  },
+  {
+    num: '03',
+    title: 'Inflation-Indexed Income',
+    desc: 'Built-in 5–10% annual rent escalation clauses make industrial leases one of the few assets that compound ahead of inflation.',
+  },
+  {
+    num: '04',
+    title: 'Tangible Land & Structure',
+    desc: 'Unlike FDs or paper gold, you hold a physical, insurable, income-producing structure backed by appreciating industrial land.',
+  },
+  {
+    num: '05',
+    title: 'GST Input Credit',
+    desc: 'Industrial lessees can claim full GST input credit on rent — a fiscal advantage unavailable in residential leasing.',
+  },
+  {
+    num: '06',
+    title: 'Multi-Year Lease Stability',
+    desc: 'Industrial tenants typically commit to 5–10 year leases versus 11-month residential cycles, reducing vacancy friction.',
+  },
 ];
 
-
-/* ─── Quotes ─── */
+/* ─── Editorial Quotes ─── */
 const bigQuotes = [
-  { text: 'The factory is the machine that builds the machine.', author: 'Elon Musk',      role: 'CEO, Tesla & SpaceX',             gradient: 'from-red-500 via-orange-400 to-amber-400' },
-  { text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.", author: 'James Dyson',    role: 'Founder, Dyson',                  gradient: 'from-blue-500 via-cyan-400 to-teal-400'   },
-  { text: 'No country is ever successful in the long term without a really strong and vibrant manufacturing base.', author: 'Alan Mulally', role: 'Former CEO, Ford Motor Company', gradient: 'from-violet-500 via-purple-400 to-pink-400'},
+  {
+    text: 'The factory is the machine that builds the machine.',
+    author: 'Elon Musk',
+    role: 'CEO, Tesla & SpaceX',
+  },
+  {
+    text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.",
+    author: 'James Dyson',
+    role: 'Founder, Dyson',
+  },
+  {
+    text: 'No country is ever successful in the long term without a really strong and vibrant manufacturing base.',
+    author: 'Alan Mulally',
+    role: 'Former CEO, Ford Motor Company',
+  },
 ];
 
-
-/* ════════════════════════════════════════════════
-   FEATURE CARD
-════════════════════════════════════════════════ */
-const FeatureRow = ({ feat, index, isDark }) => {
-  const rowRef = useRef(null);
-  const inView = useInView(rowRef, { once: true, margin: '-80px' });
-  const color  = featureColors[index];
-
-  return (
-    <motion.article
-      ref={rowRef}
-      initial={{ opacity: 0, y: 22 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`rounded-2xl border p-4 sm:p-6 transition-colors ${
-        isDark ? 'border-gray-800 bg-black/60 backdrop-blur-sm'
-               : 'border-gray-200/80 bg-white/80 backdrop-blur-sm shadow-sm'
-      }`}
-    >
-      <div className="relative mb-5">
-        <div className={`p-[2px] rounded-2xl bg-gradient-to-br ${color.gradient}`}>
-          <div className={`rounded-[calc(1rem-2px)] overflow-hidden aspect-[16/9] relative ${isDark ? 'bg-black' : 'bg-gray-100'}`}>
-            <div className={`absolute inset-0 bg-gradient-to-br ${color.bg} flex items-center justify-center`}>
-              <div className="opacity-[0.12] scale-[3.2] text-white pointer-events-none select-none" aria-hidden="true">{feat.icon}</div>
-            </div>
-            <img
-              src={feat.image}
-              alt={feat.alt}
-              width={800}
-              height={600}
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-              onError={(e) => { e.currentTarget.style.opacity = '0'; }}
-            />
-          </div>
-        </div>
-        <div className="absolute top-3 right-3 z-10" aria-hidden="true">
-          <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${color.gradient} text-white font-extrabold text-xs shadow-md font-display`}>
-            Feature {String(index + 1).padStart(2, '0')}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-md`} aria-hidden="true">
-          {feat.icon}
-        </div>
-        <span className={`text-[10px] font-black tracking-[0.18em] uppercase ${color.text}`}>
-          Premium Infrastructure
-        </span>
-      </div>
-
-      <h3 className="text-xl sm:text-2xl font-extrabold mb-3 leading-tight font-display">
-        <span className={`bg-gradient-to-r ${color.gradient} bg-clip-text text-transparent`}>{feat.title}</span>
-      </h3>
-      <p className={`text-sm leading-relaxed mb-5 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-        {feat.description}
-      </p>
-      <ul className="space-y-2.5" aria-label={`${feat.title} details`}>
-        {feat.details.map((detail, di) => (
-          <li key={di} className="flex items-center gap-3">
-            <div className={`w-[18px] h-[18px] rounded-full flex-shrink-0 bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-sm`} aria-hidden="true">
-              <svg width="9" height="7" viewBox="0 0 10 8" fill="none">
-                <path d="M1.5 4L3.5 6.5L8.5 1.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{detail}</span>
-          </li>
-        ))}
-      </ul>
-      <div className={`h-[3px] w-14 rounded-full bg-gradient-to-r ${color.gradient} mt-5`} aria-hidden="true" />
-    </motion.article>
-  );
-};
-
-
-/* ════════════════════════════════════════════════
-   INVESTMENT SECTION
-════════════════════════════════════════════════ */
-const InvestmentSection = ({ isDark }) => {
-  const sectionRef = useRef(null);
-  const inView     = useInView(sectionRef, { once: true, margin: '-80px' });
-  const [activeQ, setActiveQ] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setActiveQ((p) => (p + 1) % bigQuotes.length), 5000);
-    return () => clearInterval(id);
-  }, []);
-
-  const headingColor = isDark ? 'text-white'    : 'text-gray-900';
-  const bodyColor    = isDark ? 'text-gray-400' : 'text-gray-600';
-  const mutedColor   = isDark ? 'text-gray-500' : 'text-gray-500';
-  const tagBg        = isDark ? 'bg-orange-500/10 border-orange-500/30 text-orange-400' : 'bg-orange-50 border-orange-300/70 text-orange-600';
-  const quoteWrap    = isDark ? 'border-gray-800 bg-black'              : 'border-gray-200 bg-white shadow-xl shadow-gray-200/60';
-  const quoteText    = isDark ? 'text-white/90'  : 'text-gray-800';
-  const quoteIconCls = isDark ? 'opacity-[0.08] text-white' : 'opacity-[0.06] text-gray-900';
-  const dotInactive  = isDark ? 'bg-white/20 hover:bg-white/40' : 'bg-gray-300 hover:bg-gray-400';
-  const cardBase     = isDark ? 'border-gray-800 bg-black' : 'border-gray-200/80 bg-white shadow-sm';
-  const cardFeat     = isDark
-    ? 'border-red-500/50 bg-gradient-to-b from-red-950/80 to-orange-950/60 shadow-2xl shadow-red-500/20'
-    : 'border-red-300 bg-gradient-to-b from-red-50 to-orange-50 shadow-xl shadow-red-200/40';
-  const cardName     = isDark ? 'text-white'    : 'text-gray-900';
-  const cardYieldN   = isDark ? 'text-gray-500' : 'text-gray-400';
-  const cardCons     = isDark ? 'text-gray-500' : 'text-gray-500';
-  const cardConsIcon = isDark ? 'text-gray-600' : 'text-gray-400';
-  const cardPros     = isDark ? 'text-gray-300' : 'text-gray-700';
-  const reasonCard   = isDark
-    ? 'border-gray-800 bg-black hover:border-gray-700'
-    : 'border-gray-200 bg-white shadow-sm hover:border-gray-300 hover:shadow-md';
-  const reasonTitle  = isDark ? 'text-white'    : 'text-gray-900';
-  const reasonDesc   = isDark ? 'text-gray-500 group-hover:text-gray-400' : 'text-gray-500 group-hover:text-gray-700';
-  const subHeading   = isDark ? 'text-white'    : 'text-gray-900';
-  const bottomText   = isDark ? 'text-gray-500' : 'text-gray-600';
-
-  return (
-    <section
-      ref={sectionRef}
-      aria-label="Industrial investment comparison"
-      className="relative py-16 sm:py-36 overflow-hidden"
-      style={{ background: isDark ? '#06060f' : '#faf9f6' }}
-    >
-      <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-red-600/10' : 'bg-red-400/8'}`} aria-hidden="true" />
-      <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-orange-500/8' : 'bg-orange-300/10'}`} aria-hidden="true" />
-      <div className={`absolute top-1/2 left-0 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-violet-600/6' : 'bg-violet-300/8'}`} aria-hidden="true" />
-
-      <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} aria-hidden="true" />
-      <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-300/50'} to-transparent pointer-events-none`} aria-hidden="true" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
-          <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-5 ${tagBg}`}>
-            <TrendingUp size={11} className="animate-pulse" aria-hidden="true" /> Smarter Investment
-          </span>
-          <h2 className="text-3xl sm:text-6xl font-black leading-tight mb-5 font-display">
-            <span className={headingColor}>Industrial Sheds </span>
-            <span className="block sm:inline bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
-              vs. Everything Else
-            </span>
-          </h2>
-          <p className={`text-base sm:text-lg max-w-2xl mx-auto leading-relaxed ${bodyColor}`}>
-            While others watch their FDs lose real value to inflation, smart investors are locking in
-            <span className="text-orange-500 font-semibold"> 6–8% rental yields</span> plus
-            <span className="text-orange-500 font-semibold"> up to 10-12% yearly appreciation</span>.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className={`relative mb-12 rounded-3xl border overflow-hidden p-6 sm:p-12 transition-colors duration-300 ${quoteWrap}`}
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/20' : 'via-gray-300/60'}`} aria-hidden="true" />
-          <QuoteIcon className={`absolute top-6 left-6 ${quoteIconCls}`} size={64} aria-hidden="true" />
-
-          <div className="relative min-h-[260px] sm:min-h-[280px]">
-            {bigQuotes.map((q, i) => (
-              <motion.div
-                key={i}
-                initial={false}
-                animate={{ opacity: i === activeQ ? 1 : 0, y: i === activeQ ? 0 : 10 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="absolute inset-0 flex items-center justify-center px-4 text-center pointer-events-none"
-                aria-hidden={i !== activeQ}
-              >
-                <div className="max-w-4xl mx-auto">
-                  <p className={`text-lg sm:text-3xl font-light italic leading-relaxed mb-6 ${quoteText} font-accent`}>
-                    "{q.text}"
-                  </p>
-                  <div className="flex flex-col items-center gap-1">
-                    <span className={`text-sm font-bold bg-gradient-to-r ${q.gradient} bg-clip-text text-transparent`}>
-                      — {q.author}
-                    </span>
-                    <span className={`text-xs tracking-wide ${mutedColor}`}>{q.role}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Quote navigation">
-            {bigQuotes.map((q, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveQ(i)}
-                role="tab"
-                aria-selected={i === activeQ}
-                aria-label={`Quote by ${q.author}`}
-                className={`rounded-full transition-all duration-300 ${
-                  i === activeQ ? 'w-6 h-1.5 bg-orange-400' : `w-1.5 h-1.5 ${dotInactive}`
-                }`}
-              />
-            ))}
-          </div>
-          <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent ${isDark ? 'via-white/10' : 'via-gray-200'}`} aria-hidden="true" />
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16" role="list" aria-label="Investment comparison">
-          {investments.map((inv, i) => {
-            const Icon = inv.icon;
-            return (
-              <motion.div
-                key={inv.name}
-                role="listitem"
-                initial={{ opacity: 0, y: 36 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.1 + i * 0.1, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                className={`relative rounded-2xl border p-6 flex flex-col gap-4 overflow-hidden transition-all duration-300 ${inv.isUs ? cardFeat : cardBase}`}
-              >
-                {inv.isUs && (
-                  <>
-                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-500 via-orange-400 to-amber-400" aria-hidden="true" />
-                    <div className="absolute -top-3 right-4">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg">
-                        ✦ Best Choice
-                      </span>
-                    </div>
-                  </>
-                )}
-
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${inv.gradient} flex items-center justify-center text-white flex-shrink-0 shadow-lg`} aria-hidden="true">
-                    <Icon size={18} />
-                  </div>
-                  <p className={`font-bold text-sm ${cardName} font-body`}>{inv.name}</p>
-                </div>
-
-                <div>
-                  <div className={`text-3xl font-black bg-gradient-to-r ${inv.gradient} bg-clip-text text-transparent font-display`} aria-label={`${inv.name} returns: ${inv.yield}`}>
-                    {inv.yield}
-                  </div>
-                  <div className={`text-[11px] mt-0.5 ${cardYieldN}`}>{inv.yieldNote}</div>
-                </div>
-
-                <ul className="space-y-2 flex-1">
-                  {inv.isUs
-                    ? inv.pros.map((p, j) => (
-                        <li key={j} className="flex items-start gap-2">
-                          <CheckCircle2 size={13} className="text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span className={`text-[12px] ${cardPros}`}>{p}</span>
-                        </li>
-                      ))
-                    : inv.cons.map((c, j) => (
-                        <li key={j} className="flex items-start gap-2">
-                          <TrendingDown size={13} className={`flex-shrink-0 mt-0.5 ${cardConsIcon}`} aria-hidden="true" />
-                          <span className={`text-[12px] ${cardCons}`}>{c}</span>
-                        </li>
-                      ))}
-                </ul>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5, duration: 0.7 }}
-          className="text-center mb-10"
-        >
-          <h3 className={`text-xl sm:text-4xl font-black mb-3 ${subHeading} font-display`}>
-            Beyond Returns:{' '}
-            <span className="bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">The Bigger Picture</span>
-          </h3>
-          <p className={`text-sm max-w-xl mx-auto ${bodyColor}`}>
-            Industrial investment isn't just financially superior — it builds real communities, real jobs and real India.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {investReasons.map((r, i) => {
-            const Icon = r.icon;
-            return (
-              <motion.div
-                key={r.title}
-                initial={{ opacity: 0, y: 28 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.55 + i * 0.08, duration: 0.6 }}
-                whileHover={{ y: -6, scale: 1.02 }}
-                className={`group relative rounded-2xl border p-6 overflow-hidden transition-all duration-300 cursor-default shadow-lg ${reasonCard} ${r.glow}`}
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${r.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500 rounded-2xl`} aria-hidden="true" />
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center text-white mb-4 shadow-lg`} aria-hidden="true">
-                  <Icon size={20} />
-                </div>
-                <h4 className={`font-bold text-base mb-2 ${reasonTitle} font-body`}>{r.title}</h4>
-                <p className={`text-sm leading-relaxed transition-colors ${reasonDesc}`}>{r.desc}</p>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.9, duration: 0.7 }}
-          className="mt-12 text-center"
-        >
-          <p className={`text-sm mb-4 ${bottomText}`}>
-            Industrial & warehousing leasing hit a{' '}
-            <span className="text-orange-500 font-semibold">record 37 million sq ft in 2025</span> — a 28% surge across India's top cities.
-          </p>
-          <Link to="/metro-industrial-park">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white font-bold text-sm shadow-xl shadow-red-500/30 hover:shadow-red-500/50 transition-shadow"
-            >
-              <Factory size={16} aria-hidden="true" />
-              Start Your Investment — Explore Units
-              <ArrowRight size={15} aria-hidden="true" />
-            </motion.button>
-          </Link>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-/* ─── Cloud-Hosted Assets Data (SEO Optimized) ─── */
+/* ─── Cloud-Hosted On-Ground Media ─── */
 const cloudUpdates = [
   {
     id: '1',
+    log: 'LOG 01',
     type: 'video',
-    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560096/METRO_INDUSTRIAL_PARK_04.mp4', 
+    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560096/METRO_INDUSTRIAL_PARK_04.mp4',
     thumbnail: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
     title: 'Complete Guide to Metro Industrial Park',
-    description: 'Watch the full walkthrough of Metro Industrial Park, showcasing its premium infrastructure, wide roads, and strategic location in Moraiya, Gujarat.',
+    description:
+      'Full walkthrough of Metro Industrial Park showcasing internal RCC roads, shed architecture, and Moraiya highway access.',
     altText: 'Full video walkthrough of Metro Industrial Park in Moraiya Ahmedabad',
     uploadDate: '2026-08-22',
   },
   {
     id: '2',
+    log: 'LOG 02',
     type: 'video',
-    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560385/Metro_industrial_park_reel_1.mov', 
+    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560385/Metro_industrial_park_reel_1.mov',
     thumbnail: '/images/post2.png',
     title: 'Phase 1 Reaching Completion',
-    description: 'On-ground construction update showing structural progress of industrial sheds.',
+    description:
+      'On-ground structural progress across Phase 1 industrial sheds and utility infrastructure.',
     altText: 'Construction progress of Phase 1 industrial sheds at Metro Industrial Park',
     uploadDate: '2026-08-20',
   },
   {
     id: '3',
+    log: 'LOG 03',
     type: 'video',
-    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560339/metro_industrial_park_pixel_art_video.mp4', 
-    thumbnail: '/images/post1.png', 
-    title: 'Warehouses, Sheds and Plots',
-    description: 'Warehouses and Plots in Metro Industrial Park',
-    altText: 'Pixel art style digital layout visualization of Industrial Park 2',
+    url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560339/metro_industrial_park_pixel_art_video.mp4',
+    thumbnail: '/images/post1.png',
+    title: 'Warehouses, Sheds & Plots Overview',
+    description:
+      'Visual breakdown of plot configurations, warehouse bays, and arterial road layout.',
+    altText: 'Digital layout visualization of Industrial Park warehouses, sheds and plots',
     uploadDate: '2026-08-24',
   },
 ];
-/* ════════════════════════════════════════════════
-   LATEST UPDATES SECTION (Native Cloud Assets - Max SEO)
-════════════════════════════════════════════════ */
-const InstagramSection = ({ isDark }) => {
-  const sectionRef = useRef(null);
-  const inView = useInView(sectionRef, { once: true, margin: '-60px' });
-  const scrollContainerRef = useRef(null);
 
-  // Define the base URL for absolute paths required by Google Schema
-  const siteUrl = 'https://metroindustrialpark.com'; 
+/* ─── Shared Theme Tokens Helper ─── */
+const getTokens = (isDark) => ({
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
+  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#ECEAE3]',
+  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
+  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
+  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
+  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
+  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+});
+
+/* ════════════════════════════════════════════════
+   SECTION HEADER (Asymmetric Editorial Pattern)
+════════════════════════════════════════════════ */
+const EditorialHeader = ({ index, kicker, title, description, rightSlot, isDark }) => {
+  const t = getTokens(isDark);
+  return (
+    <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 pb-10 sm:pb-12 border-b ${t.border}`}>
+      <div className="lg:col-span-7">
+        <div className="flex items-center gap-3 mb-4 font-mono text-[11px] tracking-[0.18em] uppercase">
+          <span className="text-brand-red font-medium sm:font-semibold">{index}</span>
+          <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+          <span className={t.textMuted}>{kicker}</span>
+        </div>
+        <h2 className={`text-3xl sm:text-5xl lg:text-[3.25rem] font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] leading-[1.08] font-sans ${t.textMain}`}>
+          {title}
+        </h2>
+      </div>
+      <div className="lg:col-span-5 flex flex-col justify-end lg:items-end lg:text-right gap-4">
+        {description && (
+          <p className={`text-sm sm:text-base leading-relaxed max-w-md ${t.textBody}`}>
+            {description}
+          </p>
+        )}
+        {rightSlot}
+      </div>
+    </div>
+  );
+};
+
+/* ════════════════════════════════════════════════
+   01. FIELD LOG / ON-GROUND UPDATES
+════════════════════════════════════════════════ */
+const FieldLogSection = ({ isDark }) => {
+  const t = getTokens(isDark);
+  const sectionRef = useRef(null);
+  const railRef    = useRef(null);
+  const inView     = useInView(sectionRef, { once: true, margin: '-60px' });
+  const siteUrl    = 'https://www.metrodevelopers.co.in';
+
+  const scrollRail = (dir) => {
+    if (!railRef.current) return;
+    railRef.current.scrollBy({ left: dir * 360, behavior: 'smooth' });
+  };
 
   return (
     <section
       ref={sectionRef}
       aria-label="Latest Updates and On-Ground Progress"
-      className="relative py-12 sm:py-20 overflow-hidden border-b"
-      style={{
-        background: isDark ? '#08080d' : '#fcfbfa',
-        borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-      }}
+      className={`py-16 sm:py-24 border-b ${t.bgPage} ${t.border}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        
-        {/* ── Section Header ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-          >
-            <span
-              className={`inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-3 ${
-                isDark
-                  ? 'bg-pink-500/10 text-pink-400 border-pink-500/30'
-                  : 'bg-pink-50 text-pink-600 border-pink-300/60'
-              }`}
-            >
-              <FaInstagram size={13} className="text-pink-500" aria-hidden="true" />
-              @metro.industrialpark
-            </span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <EditorialHeader
+          index="01"
+          kicker="Site Progress · @metro.industrialpark"
+          title="On-Ground Updates"
+          description="Unfiltered walkthroughs, road work, and phase-wise construction reels directly from Moraiya and Bavla."
+          isDark={isDark}
+          rightSlot={
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollRail(-1)}
+                aria-label="Scroll updates left"
+                className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollRail(1)}
+                aria-label="Scroll updates right"
+                className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
+              >
+                <ChevronRight size={16} />
+              </button>
+              <a
+                href="https://www.instagram.com/metro.industrialpark/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`h-10 px-4 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center gap-2 text-xs font-medium sm:font-semibold tracking-wide uppercase hover:border-brand-red hover:text-brand-red transition-colors`}
+              >
+                <FaInstagram size={13} aria-hidden="true" />
+                <span>Instagram</span>
+                <ArrowUpRight size={13} aria-hidden="true" />
+              </a>
+            </div>
+          }
+        />
 
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight font-display">
-              <span className={isDark ? 'text-white' : 'text-gray-900'}>Catch the </span>
-              <span className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
-                Live Action
-              </span>
-              <span className={isDark ? 'text-white' : 'text-gray-900'}> & </span>
-              <span className="bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">
-                Latest Updates
-              </span>
-            </h2>
-          </motion.div>
-
-          <div className="flex items-center gap-3">
-            <a
-              href="https://www.instagram.com/metro.industrialpark/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold text-xs shadow-md hover:scale-105 transition-transform"
-            >
-              <FaInstagram size={14} aria-hidden="true" /> Follow on Instagram
-            </a>
-          </div>
-        </div>
-
-        {/* ── Side Scrollable Native Feed ── */}
+        {/* Horizontal Editorial Filmstrip */}
         <div
-          ref={scrollContainerRef}
-          className="flex gap-5 sm:gap-6 overflow-x-auto pb-8 pt-2 scrollbar-none snap-x snap-mandatory scroll-smooth items-start"
+          ref={railRef}
+          className="mt-10 grid grid-flow-col auto-cols-[82%] sm:auto-cols-[46%] lg:auto-cols-[31.5%] gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {cloudUpdates.map((post, idx) => (
             <motion.article
               key={post.id}
-              initial={{ opacity: 0, x: 30 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="flex flex-col gap-3 flex-none w-[280px] sm:w-[320px] snap-start group"
-              // ── SCHEMA.ORG MICRODATA FOR MAXIMUM SEO ──
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, delay: idx * 0.08, ease: EASE }}
+              className="snap-start flex flex-col group"
               itemScope
-              itemType={post.type === 'video' ? "https://schema.org/VideoObject" : "https://schema.org/ImageObject"}
+              itemType={post.type === 'video' ? 'https://schema.org/VideoObject' : 'https://schema.org/ImageObject'}
             >
-              {/* Invisible Meta Tags specifically for Google Crawlers */}
               <meta itemProp="name" content={post.title} />
               <meta itemProp="description" content={post.description} />
               <meta itemProp="contentUrl" content={post.url} />
               {post.thumbnail && <meta itemProp="thumbnailUrl" content={`${siteUrl}${post.thumbnail}`} />}
               {post.uploadDate && <meta itemProp="uploadDate" content={post.uploadDate} />}
 
-              {/* Media Container (Maintains 4:5 Aspect Ratio) */}
-              <div className={`relative rounded-2xl overflow-hidden border shadow-sm aspect-[4/5] bg-gray-900 ${
-                isDark ? 'border-gray-800' : 'border-gray-200'
-              }`}>
-                
+              {/* Top Metadata Bar */}
+              <div className={`flex items-center justify-between py-2.5 border-t border-x px-3.5 font-mono text-[10px] tracking-[0.16em] uppercase ${t.border} ${t.bgSurface} ${t.textMuted}`}>
+                <span>{post.log}</span>
+                <span>{post.uploadDate}</span>
+              </div>
+
+              {/* 4:5 Media Frame */}
+              <div className={`relative aspect-[4/5] border ${t.border} bg-black overflow-hidden`}>
                 {post.type === 'video' ? (
                   <>
                     <video
@@ -644,9 +393,11 @@ const InstagramSection = ({ isDark }) => {
                       <source src={post.url} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
-                    {/* Visual Play Button Overlay (Disappears on hover/play) */}
-                    <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md p-2 rounded-full pointer-events-none border border-white/10 group-hover:opacity-0 transition-opacity">
-                      <FaPlay size={10} className="text-white ml-0.5" aria-hidden="true" />
+                    <div
+                      aria-hidden="true"
+                      className="absolute top-3 right-3 w-8 h-8 bg-black/75 border border-white/20 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-opacity"
+                    >
+                      <Play size={12} className="text-white fill-white ml-0.5" />
                     </div>
                   </>
                 ) : (
@@ -656,17 +407,17 @@ const InstagramSection = ({ isDark }) => {
                     title={post.title}
                     loading="lazy"
                     itemProp="image"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
                 )}
               </div>
 
-              {/* Text Context */}
-              <div className="px-1 mt-1">
-                <h3 className={`text-sm font-bold mb-1 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              {/* Caption */}
+              <div className="pt-4 pr-2">
+                <h3 className={`text-base font-medium sm:font-semibold tracking-tight mb-1.5 font-sans ${t.textMain}`}>
                   {post.title}
                 </h3>
-                <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
                   {post.description}
                 </p>
               </div>
@@ -678,6 +429,363 @@ const InstagramSection = ({ isDark }) => {
   );
 };
 
+/* ════════════════════════════════════════════════
+   02. DEVELOPMENTS PORTFOLIO (Swiss 3-Column Index)
+════════════════════════════════════════════════ */
+const DevelopmentsSection = ({ isDark }) => {
+  const t = getTokens(isDark);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  return (
+    <section
+      ref={ref}
+      aria-label="Flagship Industrial Developments by Metro Developers"
+      className={`py-16 sm:py-28 border-b ${t.bgSurface} ${t.border}`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <EditorialHeader
+          index="02"
+          kicker="Active Portfolio · Ahmedabad Corridor"
+          title={
+            <>
+              Ready Sheds or <span className="text-brand-red">Build Your Own</span>
+            </>
+          }
+          description="Three planned industrial parks across Moraiya, Changodar, and Bavla—engineered with heavy RCC internal roads, clear titles, and 24/7 gated infrastructure."
+          isDark={isDark}
+        />
+
+        {/* Border-Collapsed Architectural 3-Column Ledger */}
+        <div className={`mt-10 border ${t.border} grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x ${t.divide}`}>
+          {developments.map((dev, i) => (
+            <motion.article
+              key={dev.code}
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: i * 0.1, ease: EASE }}
+              className={`group flex flex-col justify-between ${t.bgSurface}`}
+            >
+              <div>
+                {/* Top Project Header */}
+                <div className={`flex items-center justify-between px-6 py-4 border-b ${t.border}`}>
+                  <span className={`font-mono text-xs font-medium sm:font-semibold tracking-[0.14em] ${t.textMain}`}>
+                    {dev.code}
+                  </span>
+                  <span className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase ${t.textMuted}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${dev.statusDot}`} aria-hidden="true" />
+                    {dev.tag}
+                  </span>
+                </div>
+
+                {/* Crisp Architectural Photo */}
+                <div className={`relative aspect-[16/10] overflow-hidden border-b ${t.border} bg-neutral-950`}>
+                  <img
+                    src={dev.image}
+                    alt={dev.alt}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
+                </div>
+
+                {/* Body */}
+                <div className="p-6 sm:p-7">
+                  <div className={`flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider mb-2.5 ${t.textMuted}`}>
+                    <MapPin size={12} className="text-brand-red shrink-0" aria-hidden="true" />
+                    <span>{dev.location}</span>
+                  </div>
+
+                  <h3 className={`text-xl sm:text-2xl font-medium sm:font-semibold tracking-tight mb-3 font-sans ${t.textMain}`}>
+                    {dev.name}
+                  </h3>
+
+                  <p className={`text-sm leading-relaxed mb-6 ${t.textBody}`}>
+                    {dev.summary}
+                  </p>
+
+                  {/* Key-Value Specification Rows */}
+                  <dl className={`border-t ${t.border} divide-y ${t.divide}`}>
+                    {dev.specs.map((row) => (
+                      <div key={row.k} className="flex items-center justify-between py-2.5 text-xs">
+                        <dt className={`font-mono uppercase tracking-wider ${t.textMuted}`}>{row.k}</dt>
+                        <dd className={`font-medium sm:font-semibold tabular-nums ${t.textMain}`}>{row.v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </div>
+
+              {/* Action Footer */}
+              <div className={`grid grid-cols-5 border-t ${t.border} divide-x ${t.divide}`}>
+                <Link
+                  to={dev.primaryLink.to}
+                  className="col-span-3 py-4 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
+                >
+                  <span>{dev.primaryLink.label}</span>
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
+                <Link
+                  to={dev.mapLink.to}
+                  state={dev.mapLink.state}
+                  className={`col-span-2 py-4 px-4 ${t.bgPage} ${t.textMain} hover:text-brand-red text-xs font-medium sm:font-semibold uppercase tracking-[0.1em] inline-flex items-center justify-center gap-1.5 transition-colors`}
+                >
+                  <MapPin size={13} aria-hidden="true" />
+                  <span>Map</span>
+                </Link>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ════════════════════════════════════════════════
+   04. INVESTMENT THESIS & ASSET LEDGER
+════════════════════════════════════════════════ */
+const InvestmentSection = ({ isDark }) => {
+  const t = getTokens(isDark);
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
+  const [activeQ, setActiveQ] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setActiveQ((p) => (p + 1) % bigQuotes.length), 6500);
+    return () => clearInterval(id);
+  }, []);
+
+  const prevQ = () => setActiveQ((p) => (p - 1 + bigQuotes.length) % bigQuotes.length);
+  const nextQ = () => setActiveQ((p) => (p + 1) % bigQuotes.length);
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-label="Industrial investment comparison"
+      className={`py-16 sm:py-28 border-b ${t.bgPage} ${t.border}`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <EditorialHeader
+          index="04"
+          kicker="Capital Performance · Investor Memorandum"
+          title={
+            <>
+              Industrial Sheds <span className="text-brand-red">vs.</span> Traditional Assets
+            </>
+          }
+          description="While fixed deposits lose real purchasing power to tax and inflation, industrial sheds in Ahmedabad combine 6–8% rental yields with 10–12% corridor land appreciation."
+          isDark={isDark}
+          rightSlot={
+            <Link
+              to="/calculator"
+              className={`h-11 px-5 border ${t.border} ${t.bgSurface} ${t.textMain} hover:border-brand-red hover:text-brand-red inline-flex items-center gap-2.5 text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] transition-colors`}
+            >
+              <Calculator size={14} className="text-brand-red" aria-hidden="true" />
+              <span>Open ROI Calculator</span>
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </Link>
+          }
+        />
+
+        {/* ── Institutional Comparison Ledger ── */}
+        <div className={`mt-12 border ${t.border} ${t.bgSurface}`} role="list" aria-label="Investment comparison">
+          {/* Desktop Column Headers */}
+          <div className={`hidden lg:grid lg:grid-cols-12 gap-6 px-7 py-3.5 border-b ${t.border} font-mono text-[10px] tracking-[0.18em] uppercase ${t.textMuted}`}>
+            <div className="col-span-3">Asset Class</div>
+            <div className="col-span-3">Total Annual Return</div>
+            <div className="col-span-2">Fiscal / Tax Profile</div>
+            <div className="col-span-4">Structural Realities</div>
+          </div>
+
+          <div className={`divide-y ${t.divide}`}>
+            {investments.map((inv, idx) => (
+              <motion.div
+                key={inv.name}
+                role="listitem"
+                initial={{ opacity: 0, y: 18 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: idx * 0.08, ease: EASE }}
+                className={`relative grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 px-5 sm:px-7 py-6 sm:py-7 transition-colors ${
+                  inv.isUs
+                    ? isDark
+                      ? 'bg-[#171213]'
+                      : 'bg-[#FBF6F5]'
+                    : ''
+                }`}
+              >
+                {/* Left Red Indicator Bar on Industrial Shed */}
+                {inv.isUs && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
+                )}
+
+                {/* Asset Name */}
+                <div className="lg:col-span-3 flex flex-col justify-center">
+                  <div className="flex items-center gap-2.5">
+                    <span className={`font-mono text-[10px] ${inv.isUs ? 'text-brand-red font-medium sm:font-semibold' : t.textMuted}`}>
+                      0{idx + 1}
+                    </span>
+                    <h3 className={`text-base sm:text-lg font-medium sm:font-semibold tracking-tight font-sans ${t.textMain}`}>
+                      {inv.name}
+                    </h3>
+                  </div>
+                  {inv.isUs && (
+                    <span className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-brand-red font-medium sm:font-semibold">
+                      Featured Asset Class
+                    </span>
+                  )}
+                </div>
+
+                {/* Yield + Proportional Bar */}
+                <div className="lg:col-span-3 flex flex-col justify-center">
+                  <div
+                    className={`text-2xl sm:text-3xl font-semibold sm:font-bold tracking-tight tabular-nums ${
+                      inv.isUs ? 'text-brand-red' : t.textMain
+                    }`}
+                    aria-label={`${inv.name} returns: ${inv.yieldLabel}`}
+                  >
+                    {inv.yieldLabel}
+                  </div>
+                  <div className={`w-full h-1.5 mt-2.5 mb-2 ${isDark ? 'bg-white/10' : 'bg-black/10'}`}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={inView ? { width: `${inv.barWidth}%` } : { width: 0 }}
+                      transition={{ duration: 0.9, delay: 0.2 + idx * 0.1, ease: EASE }}
+                      className={`h-full ${inv.isUs ? 'bg-brand-red' : isDark ? 'bg-white/35' : 'bg-black/35'}`}
+                    />
+                  </div>
+                  <span className={`font-mono text-[11px] ${t.textMuted}`}>{inv.incomeType}</span>
+                </div>
+
+                {/* Fiscal Profile */}
+                <div className="lg:col-span-2 flex flex-col justify-center">
+                  <span className={`lg:hidden font-mono text-[10px] uppercase tracking-widest mb-1 ${t.textMuted}`}>
+                    Fiscal Profile
+                  </span>
+                  <span className={`text-xs sm:text-sm font-medium sm:font-semibold ${inv.isUs ? t.textMain : t.textBody}`}>
+                    {inv.taxBenefit}
+                  </span>
+                </div>
+
+                {/* Key Notes */}
+                <div className="lg:col-span-4 flex flex-col justify-center">
+                  <ul className="space-y-1.5">
+                    {inv.notes.map((line, j) => (
+                      <li key={j} className="flex items-start gap-2.5 text-xs sm:text-[13px] leading-snug">
+                        {inv.isUs ? (
+                          <Check size={14} className="text-brand-red shrink-0 mt-0.5" aria-hidden="true" />
+                        ) : (
+                          <Minus size={14} className={`${t.textMuted} shrink-0 mt-0.5`} aria-hidden="true" />
+                        )}
+                        <span className={inv.isUs ? t.textMain : t.textBody}>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Six Structural Advantages (Border-Collapsed 3x2 Architectural Grid) ── */}
+        <div className="mt-16 sm:mt-24">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+            <div>
+              <span className={`font-mono text-[11px] uppercase tracking-[0.18em] ${t.textMuted}`}>
+                Beyond Financial Returns
+              </span>
+              <h3 className={`text-xl sm:text-2xl lg:text-3xl font-medium sm:font-semibold lg:font-bold tracking-tight mt-1 font-sans ${t.textMain}`}>
+                Six Structural Advantages
+              </h3>
+            </div>
+            <p className={`font-mono text-xs ${t.textMuted}`}>
+              37M SQ.FT LEASED IN INDIA (2025) · +28% YOY
+            </p>
+          </div>
+
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l ${t.border}`}>
+            {investReasons.map((r) => (
+              <div
+                key={r.num}
+                className={`p-6 sm:p-8 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
+                  isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-5">
+                  <span className="font-mono text-xs font-medium sm:font-semibold text-brand-red tracking-widest">
+                    {r.num}
+                  </span>
+                  <span className={`w-8 h-px ${isDark ? 'bg-white/15' : 'bg-black/15'}`} aria-hidden="true" />
+                </div>
+                <h4 className={`text-base sm:text-lg font-medium sm:font-semibold tracking-tight mb-2.5 font-sans ${t.textMain}`}>
+                  {r.title}
+                </h4>
+                <p className={`text-sm leading-relaxed ${t.textBody}`}>
+                  {r.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Quiet Editorial Pull-Quote ── */}
+        <div
+          className={`mt-16 sm:mt-24 border-y ${t.border} py-12 sm:py-16`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-9 min-h-[150px] sm:min-h-[130px] flex items-center">
+              <AnimatePresence mode="wait">
+                <motion.blockquote
+                  key={activeQ}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.45, ease: EASE }}
+                >
+                  <p
+                    className={`text-2xl sm:text-4xl lg:text-[2.5rem] italic leading-[1.22] mb-5 ${t.textMain}`}
+                    style={{ fontFamily: '"Instrument Serif", Georgia, serif' }}
+                  >
+                    “{bigQuotes[activeQ].text}”
+                  </p>
+                  <footer className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.14em]">
+                    <span className={`font-medium sm:font-semibold ${t.textMain}`}>{bigQuotes[activeQ].author}</span>
+                    <span className="text-brand-red" aria-hidden="true">/</span>
+                    <span className={t.textMuted}>{bigQuotes[activeQ].role}</span>
+                  </footer>
+                </motion.blockquote>
+              </AnimatePresence>
+            </div>
+
+            <div className="lg:col-span-3 flex items-center lg:justify-end gap-3">
+              <span className={`font-mono text-xs tabular-nums mr-2 ${t.textMuted}`}>
+                0{activeQ + 1} / 0{bigQuotes.length}
+              </span>
+              <button
+                type="button"
+                onClick={prevQ}
+                aria-label="Previous quote"
+                className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={nextQ}
+                aria-label="Next quote"
+                className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 /* ════════════════════════════════════════════════
    MAIN PAGE
@@ -685,30 +793,50 @@ const InstagramSection = ({ isDark }) => {
 const HomePage = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const t = getTokens(isDark);
 
   const heroImage = isDark ? heroImageDark : heroImageLight;
   const heroAlt   = isDark
     ? 'Metro Industrial Park entrance at dawn — industrial sheds in Moraiya, Ahmedabad'
     : 'Metro Industrial Park entrance security gate — industrial sheds for sale in Moraiya, Ahmedabad';
 
-  
+  const heroRef  = useRef(null);
+  const statsRef = useRef(null);
+  const ctaRef   = useRef(null);
 
-    const featuresRef = useRef(null);
-  const statsRef    = useRef(null);
-  const ctaRef      = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: '-80px' });
+  const ctaInView   = useInView(ctaRef,   { once: true, margin: '-80px' });
 
-  const featuresInView = useInView(featuresRef, { once: true, margin: '-80px' });
-  const statsInView    = useInView(statsRef,    { once: true, margin: '-80px' });
-  const ctaInView      = useInView(ctaRef,      { once: true, margin: '-80px' });
+  // Subtle architectural scroll parallax on hero image
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroImgY = useTransform(heroScroll, [0, 1], ['0%', '14%']);
 
-  // Pre-written WhatsApp message
+  // Lenis inertial smooth scroll
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const lenis = new Lenis({
+      duration: 1.05,
+      easing: (x) => Math.min(1, 1.001 - Math.pow(2, -10 * x)),
+      smoothWheel: true,
+    });
+    let rafId;
+    const raf = (time) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
+  }, []);
+
   const whatsappMessage = encodeURIComponent(
     'Hello, I am interested in industrial sheds at Metro Industrial Park, Moraiya. Please share availability and pricing.'
   );
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const homeSchemas = [
     websiteSchema,
@@ -738,151 +866,147 @@ const HomePage = () => {
         Metro Developers — Industrial Parks (MIP 1, 2, 3), Sheds, Warehouses &amp; Plots in Ahmedabad, Gujarat
       </h1>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Instrument+Serif:ital@0;1&display=swap');
-        @keyframes kenBurns { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
-      `}</style>
-
-      <div className="min-h-screen theme-bg-primary overflow-hidden"
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
-
-        {/* ════════ HERO ════════ */}
-        <section aria-label="Hero — Metro Industrial Park, Moraiya, Ahmedabad" className="relative pt-16">
-          <div className="relative h-[26svh] sm:h-[60svh] lg:h-[70svh] overflow-hidden">
-            <img
+      <div
+        className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+      >
+        {/* ════════ ARCHITECTURAL HERO ════════ */}
+        <section
+          ref={heroRef}
+          aria-label="Hero — Metro Industrial Park, Moraiya, Ahmedabad"
+          className="relative pt-16"
+        >
+          {/* Full-bleed Parallax Media Frame */}
+          <div className="relative h-[52svh] sm:h-[66svh] lg:h-[76svh] overflow-hidden bg-black">
+            <motion.img
               src={heroImage}
               alt={heroAlt}
               width={1600}
               height={900}
-              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+              style={{ y: heroImgY, scale: 1.06 }}
+              className="absolute inset-0 w-full h-full object-cover"
               loading="eager"
               fetchPriority="high"
               decoding="async"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/70" aria-hidden="true" />
-            <div className="absolute inset-y-0 left-0 w-[55%] sm:w-[48%] lg:w-[42%] bg-gradient-to-r from-black/85 via-black/60 to-transparent pointer-events-none" aria-hidden="true" />
 
-            {/* Compact #1 Badge — repositioned to top-right to prevent overlap with hero text */}
-            <div className="absolute top-3 sm:top-5 right-3 sm:right-6 z-10">
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 0.4 }}
-                className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 rounded-full border border-brand-red/50 bg-black/60 backdrop-blur-md shadow-md"
-                role="status"
-              >
-                <Sparkles className="text-brand-red w-3 h-3 animate-pulse shrink-0" aria-hidden="true" />
-                <span className="text-[9px] sm:text-xs font-extrabold tracking-wider text-white uppercase whitespace-nowrap">
-                  <span className="sm:hidden">#1 Industrial Park</span>
-                  <span className="hidden sm:inline">#1 Industrial Park in Ahmedabad</span>
+            {/* Clean Directional Photographic Scrim */}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/25 pointer-events-none"
+              aria-hidden="true"
+            />
+            <div
+              className="absolute inset-y-0 left-0 w-full sm:w-3/5 bg-gradient-to-r from-black/75 via-black/35 to-transparent pointer-events-none"
+              aria-hidden="true"
+            />
+
+            {/* Top Coordinate Strip */}
+            <div className="absolute top-0 inset-x-0 z-10 border-b border-white/15">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between font-mono text-[10px] sm:text-[11px] tracking-[0.16em] uppercase text-white/80">
+                <span className="inline-flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-brand-red" aria-hidden="true" />
+                  <span>Moraiya · Changodar · Bavla</span>
                 </span>
-              </motion.div>
+                <span className="hidden sm:inline text-white/65">
+                  22.9141° N, 72.4207° E · AHMEDABAD
+                </span>
+              </div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -18 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.35, duration: 0.6 }}
-              className="absolute bottom-4 sm:bottom-10 lg:bottom-10 left-4 sm:left-6 lg:left-8 max-w-[62%] sm:max-w-[46%] lg:max-w-[360px]"
-              aria-hidden="true"
-            >
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-brand-red mb-1.5">
-                <span className="w-3 sm:w-5 h-[1.5px] bg-brand-red rounded-full" />
-                Industrial Opportunity
-              </span>
-              {/* High-contrast solid typography for effortless scannability (no hollow/blurry stroke text) */}
-              <p
-                style={{ fontFamily: '"Bebas Neue", sans-serif', lineHeight: 1.04, letterSpacing: '0.02em' }}
-                className="text-[1.35rem] sm:text-[2.2rem] lg:text-[3.1rem] drop-shadow-md"
-              >
-                <span className="block text-white/90">A Space Built for</span>
-                <span className="block text-white">Manufacturing</span>
-                <span className="block bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent font-black">
-                  Growth
-                </span>
-              </p>
-              <p className="hidden sm:block text-gray-300 text-[10px] sm:text-[11px] lg:text-xs leading-relaxed mt-2 max-w-[240px] lg:max-w-[260px]">
-                From small-scale production to expanding industrial operations, the right
-                facility creates the environment for efficiency, quality, and long-term
-                business growth.
-              </p>
-            </motion.div>
+            {/* Bottom-Left Editorial Statement */}
+            <div className="absolute inset-x-0 bottom-0 z-10">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8 sm:pb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.75, ease: EASE }}
+                    className="lg:col-span-8"
+                  >
+                    <p className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase text-white/75 mb-3">
+                      Metro Enterprise · Industrial Real Estate
+                    </p>
+                    <p
+                      aria-hidden="true"
+                      className="text-3xl sm:text-5xl lg:text-[4.25rem] font-medium sm:font-semibold lg:font-bold text-white tracking-[-0.025em] leading-[1.06] font-sans"
+                    >
+                      Built for Manufacturing
+                      <span className="block text-white/90">
+                        Scale<span className="text-brand-red">.</span>
+                      </span>
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.75, delay: 0.12, ease: EASE }}
+                    className="hidden sm:block lg:col-span-4"
+                  >
+                    <p className="text-sm text-white/80 leading-relaxed border-l-2 border-brand-red pl-4">
+                      High-clearance industrial sheds and clear-title plots engineered for heavy manufacturing, logistics, and long-term capital growth across Ahmedabad.
+                    </p>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div
-            className="relative overflow-hidden border-t"
-            style={{
-              background: isDark ? '#0a0a0f' : '#fdfcfa',
-              borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)',
-            }}
-          >
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/25 to-transparent pointer-events-none" aria-hidden="true" />
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
-              <div className="flex flex-col items-center gap-4">
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-3 w-full max-w-lg mb-2" role="list" aria-label="Key metrics">
+          {/* ── Architect's Title Block (Metrics + Direct Actions) ── */}
+          <div className={`border-y ${t.border} ${t.bgSurface}`}>
+            <div className="max-w-7xl mx-auto">
+              <div className={`grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${t.divide}`}>
+                {/* Key Metrics (3 cells) */}
+                <div
+                  className={`lg:col-span-7 grid grid-cols-3 divide-x ${t.divide}`}
+                  role="list"
+                  aria-label="Key metrics"
+                >
                   {[
-                    { icon: <TrendingUp size={16} aria-hidden="true" />, value: '6-8%', label: 'Rental Yield', color: 'text-green-400', border: 'border-green-500/30 hover:border-green-400' },
-                    { icon: <Factory size={16} aria-hidden="true" />, value: '63', label: 'Industrial Units', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
-                    { icon: <LucideLandPlot size={16} aria-hidden="true" />, value: '54K+', label: 'Sq.yards Area', color: isDark ? 'text-white' : 'text-gray-900', border: isDark ? 'border-white/20 hover:border-brand-red/60' : 'border-gray-300 hover:border-brand-red/60' },
-                  ].map(({ icon, value, label, color, border }) => (
-                    <motion.div
-                      key={label}
-                      role="listitem"
-                      whileHover={{ scale: 1.04, y: -3 }}
-                      className={`p-2.5 sm:p-4 rounded-xl border ${border} transition-all duration-300 text-center shadow-sm cursor-default ${
-                        isDark ? 'bg-black' : 'bg-white/90'
-                      }`}
-                    >
-                      <span className={`${color} flex justify-center mb-1`}>{icon}</span>
-                      <div className={`text-base sm:text-2xl font-black ${color}`} style={{ fontFamily: '"Bebas Neue", sans-serif' }}>
-                        {value}
+                    { value: '6–8%', label: 'Rental Yield',     accent: true },
+                    { value: '63',   label: 'Ready Units',      accent: false },
+                    { value: '54K+', label: 'Sq. Yards Area',   accent: false },
+                  ].map((m) => (
+                    <div key={m.label} role="listitem" className="px-4 sm:px-7 py-5 sm:py-6">
+                      <div className={`text-xl sm:text-3xl font-medium sm:font-semibold lg:font-bold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
+                        {m.value}
                       </div>
-                      <div className={`text-[8px] sm:text-[11px] font-semibold ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
-                        {label}
+                      <div className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
+                        {m.label}
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
-                {/* ── CTA Buttons with 1 Full / 2 Half layout on mobile ── */}
-                <div className="w-full max-w-[360px] sm:max-w-none grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2.5 mx-auto">
+                {/* Direct Actions */}
+                <div className={`lg:col-span-5 grid grid-cols-2 sm:grid-cols-3 divide-x ${t.divide}`}>
                   <Link
                     to="/metro-industrial-park"
                     aria-label="Explore industrial shed units at Metro Industrial Park"
-                    className="col-span-2 sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 bg-gradient-to-r from-red-600 via-brand-red to-rose-600 text-white font-extrabold rounded-xl text-[13px] sm:text-sm tracking-wide shadow-xl shadow-red-500/30 hover:scale-[1.02] transition-transform whitespace-nowrap"
+                    className="col-span-2 sm:col-span-1 py-4 sm:py-0 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 transition-colors"
                   >
-                    <Factory size={16} aria-hidden="true" />
-                    Explore Now
-                    <ArrowRight size={16} aria-hidden="true" />
+                    <span>Explore</span>
+                    <ArrowRight size={14} aria-hidden="true" />
                   </Link>
-                  
+
                   <Link
                     to="/site-map"
                     aria-label="Check industrial shed availability at Metro Industrial Park"
-                    className={`col-span-1 sm:w-auto inline-flex items-center justify-center gap-1.5 px-1 sm:px-5 py-3 sm:py-2.5 border font-bold rounded-xl text-[11px] sm:text-sm transition-colors text-center ${
-                      isDark
-                        ? 'border-brand-red/50 bg-black text-red-300 hover:border-brand-red hover:text-red-200'
-                        : 'border-brand-red/50 bg-white text-brand-red hover:border-brand-red hover:text-red-700'
-                    }`}
+                    className={`py-4 sm:py-0 px-4 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-1.5 transition-colors border-t sm:border-t-0 ${t.border}`}
                   >
-                    <MapPin size={13} className="shrink-0" aria-hidden="true" />
-                    <span className="whitespace-nowrap">Availability</span>
+                    <MapPin size={13} className="text-brand-red shrink-0" aria-hidden="true" />
+                    <span>Availability</span>
                   </Link>
-                  
+
                   <a
                     href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WhatsApp Metro Industrial Park"
-                    className={`col-span-1 sm:w-auto inline-flex items-center justify-center gap-1.5 px-1 sm:px-5 py-3 sm:py-2.5 border font-bold rounded-xl text-[11px] sm:text-sm transition-colors text-center ${
-                      isDark
-                        ? 'border-white/25 bg-black text-white hover:border-green-400/60 hover:text-green-300'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-green-500/60 hover:text-green-700'
-                    }`}
+                    className={`py-4 sm:py-0 px-4 ${t.bgSurface} ${t.textMain} hover:text-emerald-600 text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-1.5 transition-colors border-t sm:border-t-0 ${t.border}`}
                   >
-                    <FaWhatsapp size={13} className="text-green-500 shrink-0" aria-hidden="true" />
-                    <span className="whitespace-nowrap">WhatsApp</span>
+                    <FaWhatsapp size={14} className="text-emerald-600 shrink-0" aria-hidden="true" />
+                    <span>WhatsApp</span>
                   </a>
                 </div>
               </div>
@@ -890,293 +1014,67 @@ const HomePage = () => {
           </div>
         </section>
 
-        <InstagramSection isDark={isDark} />
+        {/* ════════ 01. FIELD LOG / ON-GROUND UPDATES ════════ */}
+        <FieldLogSection isDark={isDark} />
 
+        {/* ════════ 02. DEVELOPMENTS PORTFOLIO ════════ */}
+        <DevelopmentsSection isDark={isDark} />
 
-        {/* ════════ FLAGSHIP DEVELOPMENTS ════════ */}
-        <section
-          aria-label="Flagship Industrial Developments by Metro Developers"
-          className="relative py-14 sm:py-20 overflow-hidden"
-          style={{ background: isDark ? '#08080f' : '#ffffff' }}
-        >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-            <div className="text-center mb-12 sm:mb-16">
-              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-3 ${
-                isDark ? 'bg-red-500/10 text-red-400 border-red-500/30' : 'bg-red-50 text-red-600 border-red-200'
-              }`}>
-                <Factory size={13} /> Our Developments
-              </span>
-              <h2 className="text-2xl sm:text-5xl font-black leading-tight"
-                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                <span className={isDark ? 'text-white' : 'text-gray-900'}>Ready Sheds or </span>
-                <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
-                  Build Your Own
-                </span>
-              </h2>
-              <p className={`text-xs sm:text-base max-w-2xl mx-auto mt-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Choose between move-in ready high-clearance industrial sheds or clear-title industrial plots with developer-provided 24/7 security & wide heavy RCC roads.
-              </p>
-            </div>
+        {/* ════════ INFRASTRUCTURE FEATURES (EXISTING COMPONENT) ════════ */}
+        <FeaturesSection isDark={isDark} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Card 1: Metro Industrial Park */}
-              <div className={`rounded-3xl border overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl ${
-                isDark ? 'bg-gray-900/40 border-gray-800 hover:border-red-500/40' : 'bg-white border-gray-200 hover:border-red-300 shadow-md'
-              }`}>
-                <div>
-                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-950">
-                    <img
-                      src="/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg"
-                      alt="Ready industrial sheds at Metro Industrial Park Moraiya Changodar"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-4 left-4 bg-brand-red text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                      Ready Possession
-                    </div>
-                  </div>
-                  <div className="p-6 sm:p-8">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-brand-red mb-2">
-                      <MapPin size={14} /> Moraiya, Changodar (Near NH 47)
-                    </div>
-                    <h3 className={`text-xl sm:text-2xl font-black mb-2 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      Industrial Park 1 <span className="text-xs font-bold text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-md align-middle">MIP 1</span>
-                    </h3>
-                    <p className={`text-xs sm:text-sm leading-relaxed mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                      63 premium ready-to-move industrial sheds & warehouses across 54,000+ sq.yards. 30–35 ft ceiling clearance, 60 ft heavy RCC internal roads, and proven 6–8% rental yield.
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs font-semibold mb-6">
-                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
-                        <span className="block text-brand-red font-black text-sm">4K–50K Sq.ft</span> Units
-                      </div>
-                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
-                        <span className="block text-green-500 font-black text-sm">6–8%</span> Rental Yield
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6 sm:p-8 pt-0 flex items-center gap-3">
-                  <Link
-                    to="/metro-industrial-park"
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] transition-transform whitespace-nowrap"
-                  >
-                    <span>Explore Sheds</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                  <Link
-                    to="/site-map"
-                    className={`inline-flex items-center justify-center py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm border transition-colors whitespace-nowrap ${
-                      isDark ? 'bg-black border-gray-800 text-gray-300 hover:border-brand-red' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <MapPin size={14} className="mr-1" /> View Map
-                  </Link>
-                </div>
-              </div>
-
-              {/* Card 2: Industrial Park 2 */}
-              <div className={`rounded-3xl border overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl ${
-                isDark ? 'bg-gray-900/40 border-gray-800 hover:border-orange-500/40' : 'bg-white border-gray-200 hover:border-orange-300 shadow-md'
-              }`}>
-                <div>
-                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-950">
-                    <img
-                      src="/images/metro-industrial-park-2-site-plan.jpg"
-                      alt="Industrial plots for sale to build your own shed at Industrial Park 2 Moraiya"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                      Build Your Own Shed
-                    </div>
-                    <div className="absolute top-4 right-4 bg-green-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                      New Launch
-                    </div>
-                  </div>
-                  <div className="p-6 sm:p-8">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-orange-500 mb-2">
-                      <MapPin size={14} /> Opp. Metro Industrial Park, Moraiya
-                    </div>
-                    <h3 className={`text-xl sm:text-2xl font-black mb-2 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      Industrial Park 2 <span className="text-xs font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-md align-middle">MIP 2</span>
-                    </h3>
-                    <p className={`text-xs sm:text-sm leading-relaxed mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                      23 clear-title industrial plots to "Build Your Own Shed". Developer infrastructure: Wide Heavy RCC Roads, Street Lights, Puran (Soil Filling), Compound Wall, and 24/7 Gated Security.
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs font-semibold mb-6">
-                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
-                        <span className="block text-orange-500 font-black text-sm">300–1,930+ Yd</span> Plots
-                      </div>
-                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
-                        <span className="block text-green-500 font-black text-sm">24/7 Security</span> & RCC Roads
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6 sm:p-8 pt-0 flex items-center gap-3">
-                  <Link
-                    to="/metro-industrial-estate"
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] transition-transform whitespace-nowrap"
-                  >
-                    <span>Explore Plots</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                  <Link
-                    to="/site-map"
-                    state={{ activeTab: 'estate' }}
-                    className={`inline-flex items-center justify-center py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm border transition-colors whitespace-nowrap ${
-                      isDark ? 'bg-black border-gray-800 text-gray-300 hover:border-orange-500' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <MapPin size={14} className="mr-1" /> View Map
-                  </Link>
-                </div>
-              </div>
-
-              {/* Card 3: Metro Industrial Park 3 */}
-              <div className={`rounded-3xl border overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl ${
-                isDark ? 'bg-gray-900/40 border-gray-800 hover:border-amber-500/40' : 'bg-white border-gray-200 hover:border-amber-300 shadow-md'
-              }`}>
-                <div>
-                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-950">
-                    <img
-                      src="/images/metro-industrial-park-3-site-plan.jpg"
-                      alt="Industrial plots for sale at Metro Industrial Park 3 Bavla Ahmedabad"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                      Build Your Own Shed
-                    </div>
-                    <div className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md animate-pulse">
-                      New Launch
-                    </div>
-                  </div>
-                  <div className="p-6 sm:p-8">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-amber-500 mb-2">
-                      <MapPin size={14} /> Bavla – Rajoda Road, Ahmedabad
-                    </div>
-                    <h3 className={`text-xl sm:text-2xl font-black mb-2 font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      Industrial Park 3 <span className="text-xs font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md align-middle">MIP 3</span>
-                    </h3>
-                    <p className={`text-xs sm:text-sm leading-relaxed mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                      77 industrial plots across ~60,000 sq.yards in Bavla. Developer infrastructure: Wide Heavy RCC Roads, Street Lights, Puran (Soil Filling), Compound Wall, and 24/7 Gated Security.
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs font-semibold mb-6">
-                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
-                        <span className="block text-amber-500 font-black text-sm">334–1,643 Yd</span> 77 Plots
-                      </div>
-                      <div className={`p-2.5 rounded-xl border ${isDark ? 'bg-black/40 border-gray-800 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
-                        <span className="block text-green-500 font-black text-sm">Leveling</span> Ongoing
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6 sm:p-8 pt-0 flex items-center gap-3">
-                  <Link
-                    to="/metro-industrial-park-3"
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] transition-transform whitespace-nowrap"
-                  >
-                    <span>Explore Plots</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                  <Link
-                    to="/site-map"
-                    state={{ activeTab: 'park3' }}
-                    className={`inline-flex items-center justify-center py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm border transition-colors whitespace-nowrap ${
-                      isDark ? 'bg-black border-gray-800 text-gray-300 hover:border-amber-500' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <MapPin size={14} className="mr-1" /> View Map
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ════════ FEATURES ════════ */}
-        <section
-          ref={featuresRef}
-          aria-label="Metro Industrial Park features and infrastructure"
-          className="relative py-14 sm:py-28 overflow-hidden"
-          style={{ background: isDark ? '#0d0d18' : '#f4f2ed' }}
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] pointer-events-none" aria-hidden="true" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.04),transparent_60%)] pointer-events-none" aria-hidden="true" />
-          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-red-500/20' : 'via-orange-400/30'} to-transparent pointer-events-none`} aria-hidden="true" />
-          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/8' : 'via-gray-400/20'} to-transparent pointer-events-none`} aria-hidden="true" />
-
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7 }} className="text-center mb-14 sm:mb-20">
-              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase border mb-4 ${
-                isDark ? 'bg-white/10 text-red-300 border-red-400/40' : 'bg-brand-red/10 text-brand-red border-brand-red/30'
-              }`}>
-                <Sparkles size={11} className="animate-pulse" aria-hidden="true" /> Why Choose Us
-              </span>
-              <h2 className="text-2xl sm:text-5xl font-black mt-3 mb-4 leading-tight"
-                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                <span className={isDark ? 'text-white' : 'text-gray-900'}>Everything Your Business </span>
-                <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">Needs</span>
-              </h2>
-              <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" aria-hidden="true" />
-            </motion.div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-              {features.map((feat, i) => (
-                <FeatureRow key={i} feat={feat} index={i} isDark={isDark} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ════════ STATS ════════ */}
+        {/* ════════ 03. TRACK RECORD (MONUMENTAL SWISS BAND) ════════ */}
         <section
           ref={statsRef}
           aria-label="Metro Industrial Park by the numbers"
-          className="relative py-14 sm:py-28 overflow-hidden"
-          style={{ background: isDark ? '#090909' : '#f0f1f5' }}
+          className={`py-16 sm:py-24 border-y ${t.bgSurface} ${t.border}`}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.06),transparent_70%)] pointer-events-none" aria-hidden="true" />
-          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} aria-hidden="true" />
-          <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} aria-hidden="true" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+              <div>
+                <div className="flex items-center gap-3 mb-3 font-mono text-[11px] tracking-[0.18em] uppercase">
+                  <span className="text-brand-red font-medium sm:font-semibold">03</span>
+                  <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+                  <span className={t.textMuted}>Track Record</span>
+                </div>
+                <h2 className={`text-3xl sm:text-5xl font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] font-sans ${t.textMain}`}>
+                  Delivered on Ground
+                </h2>
+              </div>
+              <p className={`font-mono text-xs uppercase tracking-[0.14em] ${t.textMuted}`}>
+                Audited Execution · Since 2020
+              </p>
+            </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7 }} className="text-center mb-14">
-              <h2 className="text-2xl sm:text-5xl font-black mb-4"
-                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                <span className={isDark ? 'text-white' : 'text-gray-900'}>Experience by </span>
-                <span className="bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">Numbers</span>
-              </h2>
-              <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto" aria-hidden="true" />
-            </motion.div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className={`grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
               {stats.map((stat, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, y: 32 }} animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.55, delay: i * 0.12 }}
-                  whileHover={{ scale: 1.05, y: -4 }}
-                  className={`group relative text-center p-8 sm:p-10 rounded-2xl border transition-all duration-300 cursor-default overflow-hidden ${
-                    isDark
-                      ? 'bg-gray-900/80 border-gray-800 hover:border-brand-red/50 hover:shadow-lg hover:shadow-brand-red/20'
-                      : 'bg-white/90 border-gray-200 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/10'
-                  }`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-brand-red/0 to-brand-red/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" aria-hidden="true" />
-                  <div className={`w-12 h-12 mx-auto mb-5 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-brand-red/20 group-hover:text-brand-red group-hover:scale-110 group-hover:rotate-6 ${
-                    isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-200 text-gray-500'
-                  }`} aria-hidden="true">{stat.icon}</div>
+                <motion.div
+                  key={stat.index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={statsInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: i * 0.08, ease: EASE }}
+                  className={`p-6 sm:p-9 border-r border-b ${t.border} ${t.bgPage}`}
+                >
+                  <div className={`font-mono text-[11px] mb-6 ${t.textMuted}`}>
+                    {stat.index}
+                  </div>
                   <div
-                    className={`text-3xl sm:text-5xl font-extrabold mb-2 group-hover:text-brand-red transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}
-                    style={{ fontFamily: '"Bebas Neue", sans-serif' }}
+                    className={`text-4xl sm:text-6xl font-medium sm:font-semibold lg:font-bold tracking-[-0.03em] tabular-nums mb-2 ${t.textMain}`}
                     aria-label={`${stat.countEnd}${stat.suffix} ${stat.label}`}
                   >
-                    <CountUp end={stat.countEnd} suffix={stat.suffix} duration={2.5} enableScrollSpy scrollSpyOnce />
+                    <CountUp
+                      end={stat.countEnd}
+                      suffix={stat.suffix}
+                      duration={2.2}
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
                   </div>
-                  <div className={`text-xs sm:text-sm font-semibold uppercase tracking-wider group-hover:text-brand-red/80 transition-colors ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <div className={`text-xs sm:text-sm font-medium sm:font-semibold tracking-tight ${t.textMain}`}>
                     {stat.label}
+                  </div>
+                  <div className={`text-xs mt-1 ${t.textMuted}`}>
+                    {stat.note}
                   </div>
                 </motion.div>
               ))}
@@ -1184,88 +1082,97 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* ════════ INVESTMENT ════════ */}
+        {/* ════════ 04. INVESTMENT THESIS ════════ */}
         <InvestmentSection isDark={isDark} />
 
-        {/* ════════ CTA ════════ */}
+        {/* ════════ 05. SITE VISIT & DIRECT CONSULTATION ════════ */}
         <section
           ref={ctaRef}
           aria-label="Contact Metro Industrial Park — book a site visit"
-          className="relative py-14 sm:py-32 overflow-hidden"
-          style={{ background: isDark ? '#111118' : '#eef0f4' }}
+          className={`py-16 sm:py-28 ${t.bgSurface}`}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.07),transparent_70%)] pointer-events-none" aria-hidden="true" />
-          <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[100px] pointer-events-none ${isDark ? 'bg-red-600/8' : 'bg-red-300/14'}`} aria-hidden="true" />
-          <div className={`absolute -top-24 -left-24 w-72 h-72 rounded-full blur-[80px] pointer-events-none hidden sm:block ${isDark ? 'bg-orange-600/6' : 'bg-orange-300/10'}`} aria-hidden="true" />
-          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${isDark ? 'via-white/10' : 'via-gray-400/25'} to-transparent pointer-events-none`} aria-hidden="true" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, ease: EASE }}
+              className={`border ${t.border} grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${t.divide}`}
+            >
+              {/* Left 7 Cols — Statement & Site Coordinates */}
+              <div className="lg:col-span-7 p-7 sm:p-12 lg:p-14 flex flex-col justify-between gap-8">
+                <div>
+                  <div className="flex items-center gap-3 mb-5 font-mono text-[11px] tracking-[0.18em] uppercase">
+                    <span className="text-brand-red font-medium sm:font-semibold">05</span>
+                    <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+                    <span className={t.textMuted}>Direct Site Office</span>
+                  </div>
 
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
-            <motion.div initial={{ opacity: 0, y: 32 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7 }}
-              className={`p-10 sm:p-16 rounded-3xl border shadow-2xl transition-colors duration-500 ${
-                isDark
-                  ? 'bg-black/80 border-gray-800 hover:border-brand-red/30 backdrop-blur-sm'
-                  : 'bg-white/95 border-gray-200 hover:border-brand-red/30 backdrop-blur-sm'
-              }`}>
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-red/10 border border-brand-red/30 rounded-full mb-8">
-                <Sparkles className="text-brand-red" size={14} aria-hidden="true" />
-                <span className="text-xs font-bold text-brand-red tracking-wide">Get Started Today</span>
-              </motion.div>
+                  <h2 className={`text-3xl sm:text-5xl font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] leading-[1.08] mb-5 font-sans ${t.textMain}`}>
+                    Schedule a site visit in Moraiya<span className="text-brand-red">.</span>
+                  </h2>
 
-              <motion.h2 initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.3 }}
-                className="text-2xl sm:text-5xl font-black mb-5 leading-tight"
-                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                <span className={isDark ? 'text-white' : 'text-gray-900'}>Ready to Find Your </span>
-                <br className="hidden sm:block" />
-                <span className="bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
-                  Perfect Industrial Space?
-                </span>
-              </motion.h2>
+                  <p className={`text-sm sm:text-base leading-relaxed max-w-lg ${t.textBody}`}>
+                    Speak directly with the developers for current unit availability, plot dimensions, and customised RCC or lease terms.
+                  </p>
+                </div>
 
-              <motion.p initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.4 }}
-                className={`text-base sm:text-lg mb-10 max-w-xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Contact us today to discuss your requirements and schedule a site visit in Moraiya, Ahmedabad.
-              </motion.p>
+                <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t ${t.border} font-mono text-xs`}>
+                  <div>
+                    <div className={`uppercase tracking-[0.14em] mb-1 ${t.textMuted}`}>Site Office</div>
+                    <div className={t.textMain}>
+                      Opp. Suvas Ind. Estate, b/h Siya Logistics Park, Moraiya, Ahmedabad 382213
+                    </div>
+                  </div>
+                  <div>
+                    <div className={`uppercase tracking-[0.14em] mb-1 ${t.textMuted}`}>Hours</div>
+                    <div className={t.textMain}>Mon – Sun · 11:00 AM – 7:00 PM</div>
+                  </div>
+                </div>
+              </div>
 
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center">
+              {/* Right 5 Cols — Stacked Direct Actions */}
+              <div className={`lg:col-span-5 p-7 sm:p-12 lg:p-14 flex flex-col justify-center gap-4 ${t.bgPage}`}>
                 <a
                   href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="WhatsApp Metro Industrial Park to enquire about industrial sheds"
-                  className="group relative inline-flex items-center justify-center gap-3 px-9 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-brand-red/40 overflow-hidden"
+                  className="w-full py-4 px-6 bg-brand-red hover:bg-red-700 text-white text-xs sm:text-sm font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" aria-hidden="true" />
-                  <FaWhatsapp size={20} className="relative z-10" aria-hidden="true" />
-                  <span className="relative z-10">WhatsApp Us</span>
-                  <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-3">
+                    <FaWhatsapp size={18} aria-hidden="true" />
+                    <span>WhatsApp Site Office</span>
+                  </span>
+                  <ArrowRight size={16} aria-hidden="true" />
                 </a>
+
                 <a
                   href="tel:+919824235642"
                   aria-label="Call Metro Industrial Park at +91 98242 35642"
-                  className={`group inline-flex items-center justify-center gap-3 px-9 py-4 border-2 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg ${
-                    isDark
-                      ? 'border-gray-700 text-gray-200 hover:border-brand-red/50 bg-black'
-                      : 'border-gray-200 text-gray-700 hover:border-brand-red/50 bg-white'
-                  }`}
+                  className={`w-full py-4 px-6 border ${t.border} ${t.bgSurface} ${t.textMain} hover:border-brand-red hover:text-brand-red text-xs sm:text-sm font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
                 >
-                  <Phone size={18} className="group-hover:scale-110 transition-transform" aria-hidden="true" />
-                  <span>Call: +91 98242 35642</span>
+                  <span className="inline-flex items-center gap-3">
+                    <Phone size={16} className="text-brand-red" aria-hidden="true" />
+                    <span className="tabular-nums">+91 98242 35642</span>
+                  </span>
+                  <ArrowUpRight size={16} aria-hidden="true" />
                 </a>
-              </motion.div>
+
+                <Link
+                  to="/site-map"
+                  className={`w-full py-4 px-6 border ${t.border} ${t.bgSurface} ${t.textMain} hover:border-brand-red hover:text-brand-red text-xs sm:text-sm font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <MapPin size={16} className="text-brand-red" aria-hidden="true" />
+                    <span>Interactive Plot Map</span>
+                  </span>
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
             </motion.div>
           </div>
         </section>
-
       </div>
-
-      
     </>
   );
 };

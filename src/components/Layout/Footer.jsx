@@ -1,57 +1,12 @@
 // src/components/Footer/Footer.jsx
 import { useState } from 'react';
-import { MapPin, Phone, Mail, ChevronDown, HelpCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Plus, Minus, ArrowUp, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 
-
-// ── FAQ sub-component ──────────────────────────────────────────────────────────
-const FaqRow = ({ item, isDark }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      onClick={() => setOpen(!open)}
-      className={`rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
-        isDark
-          ? open ? 'border-brand-red/30 bg-gray-900' : 'border-gray-800 bg-gray-900/40 hover:border-gray-700'
-          : open ? 'border-brand-red/20 bg-white'   : 'border-gray-100 bg-gray-50 hover:border-gray-200'
-      }`}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <span className={`text-xs font-semibold leading-snug ${
-          open ? 'text-brand-red' : isDark ? 'text-gray-200' : 'text-gray-800'
-        }`}>
-          {item.q}
-        </span>
-        <motion.div
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="flex-shrink-0"
-        >
-          <ChevronDown size={13} className={open ? 'text-brand-red' : isDark ? 'text-gray-500' : 'text-gray-400'} />
-        </motion.div>
-      </div>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.p
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className={`text-xs mt-2 leading-relaxed overflow-hidden ${
-              isDark ? 'text-gray-400' : 'text-gray-500'
-            }`}
-          >
-            {item.a}
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
+const EASE = [0.16, 1, 0.3, 1];
 
 // ── FAQ data — numbers aligned with schemas.js ─────────────────────────────────
 const FAQ_ITEMS = [
@@ -97,25 +52,24 @@ const FAQ_ITEMS = [
   },
 ];
 
-
 // ── Quick links ────────────────────────────────────────────────────────────────
 const QUICK_LINKS = [
-  { to: '/',                                                           label: 'Home'                           },
-  { to: '/industrial-shed-for-lease-ahmedabad',                        label: 'Industrial Shed for Lease'      },
-  { to: '/metro-industrial-park',                                      label: 'Industrial Park 1 (Sheds)'     },
-  { to: '/metro-industrial-estate',                                    label: 'Industrial Park 2 (Plots)'     },
-  { to: '/metro-industrial-park-3',                                    label: 'Industrial Park 3 (Bavla)'     },
-  { to: '/metro-arcade',                                               label: 'Metro Arcade'                   },
-  { to: '/warehouses-in-changodar',                                    label: 'Warehouses in Changodar'        },
-  { to: '/industrial-sheds-in-changodar',                              label: 'Industrial Sheds in Changodar'  },
-  { to: '/industrial-sheds-near-sarkhej-bavla-highway',               label: 'Sheds Near NH 47'               },
-  { to: '/industrial-sheds-in-ahmedabad',                              label: 'Industrial Sheds in Ahmedabad'  },
-  { to: '/investment-in-real-estate-in-ahmedabad',                     label: 'Investment in Real Estate in Ahmedabad' },
-  { to: '/guides/gst-input-credit-industrial-tenants-gujarat',         label: 'GST Input Credit Guide'         },
-  { to: '/guides/warehousing-yield-cagr-gujarat',                      label: 'Warehousing Yield Guide'        },
-  { to: '/site-map',                                                   label: 'Site Map'                       },
-  { to: '/calculator',                                                 label: 'ROI Calculator'                 },
-  { to: '/contact',                                                    label: 'Contact Us'                     },
+  { to: '/',                                                   label: 'Home'                                   },
+  { to: '/industrial-shed-for-lease-ahmedabad',                label: 'Industrial Shed for Lease'              },
+  { to: '/metro-industrial-park',                              label: 'Industrial Park 1 (Sheds)'              },
+  { to: '/metro-industrial-estate',                            label: 'Industrial Park 2 (Plots)'              },
+  { to: '/metro-industrial-park-3',                            label: 'Industrial Park 3 (Bavla)'              },
+  { to: '/metro-arcade',                                       label: 'Metro Arcade'                           },
+  { to: '/warehouses-in-changodar',                            label: 'Warehouses in Changodar'                },
+  { to: '/industrial-sheds-in-changodar',                      label: 'Industrial Sheds in Changodar'          },
+  { to: '/industrial-sheds-near-sarkhej-bavla-highway',        label: 'Sheds Near NH 47'                       },
+  { to: '/industrial-sheds-in-ahmedabad',                      label: 'Industrial Sheds in Ahmedabad'          },
+  { to: '/investment-in-real-estate-in-ahmedabad',             label: 'Investment in Real Estate in Ahmedabad' },
+  { to: '/guides/gst-input-credit-industrial-tenants-gujarat', label: 'GST Input Credit Guide'                 },
+  { to: '/guides/warehousing-yield-cagr-gujarat',              label: 'Warehousing Yield Guide'                },
+  { to: '/site-map',                                           label: 'Site Map'                               },
+  { to: '/calculator',                                         label: 'ROI Calculator'                         },
+  { to: '/contact',                                            label: 'Contact Us'                             },
   {
     href: 'https://g.page/r/CfbFhZSjMaH1EBI/review',
     label: 'Write a Review',
@@ -123,57 +77,123 @@ const QUICK_LINKS = [
   },
 ];
 
+// ── Accessible FAQ Row ─────────────────────────────────────────────────────────
+const FaqRow = ({ item, index, isDark }) => {
+  const [open, setOpen] = useState(false);
+
+  const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
+  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+
+  return (
+    <div className={`border-r border-b ${border} ${bgSurface}`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={`w-full flex items-start justify-between gap-4 px-5 py-4 text-left transition-colors ${
+          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+        }`}
+      >
+        <div className="flex items-start gap-3">
+          <span className="font-mono text-[10px] font-semibold text-brand-red pt-0.5 tabular-nums">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className={`text-xs sm:text-[13px] font-bold leading-snug ${open ? 'text-brand-red' : textMain}`}>
+            {item.q}
+          </span>
+        </div>
+        <span
+          aria-hidden="true"
+          className={`w-6 h-6 border ${border} flex items-center justify-center shrink-0 transition-colors ${
+            open ? 'border-brand-red text-brand-red' : textMuted
+          }`}
+        >
+          {open ? <Minus size={12} /> : <Plus size={12} />}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: EASE }}
+            className="overflow-hidden"
+          >
+            <p className={`px-5 pb-4 pl-11 text-xs leading-relaxed ${textBody}`}>
+              {item.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 // ── Main Footer ────────────────────────────────────────────────────────────────
 const Footer = () => {
   const { theme } = useTheme();
-  const isDark     = theme === 'dark';
+  const isDark      = theme === 'dark';
   const currentYear = new Date().getFullYear();
   const [faqOpen, setFaqOpen] = useState(false);
 
   const mapsUrl   = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
   const mapsQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(mapsUrl)}`;
 
-  const pill = isDark
-    ? 'bg-gray-800/70 hover:bg-brand-red text-gray-300'
-    : 'bg-gray-100 hover:bg-brand-red text-gray-600';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
+  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <footer className={`border-t ${
-      isDark
-        ? 'bg-gradient-to-b from-black to-gray-950 border-gray-800'
-        : 'bg-gradient-to-b from-gray-50 to-gray-100 border-gray-200'
-    }`}>
-
-      {/* ── Collapsible FAQ bar ── */}
-      <div className={`mt-6 border-y ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
+    <footer
+      className={`border-t ${border} ${bgPage} ${textMain}`}
+      style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+    >
+      {/* ── Collapsible FAQ Index Bar ── */}
+      <div className={`border-b ${border} ${bgSurface}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-          {/* Toggle header */}
           <button
             type="button"
-            onClick={() => setFaqOpen(!faqOpen)}
+            onClick={() => setFaqOpen((v) => !v)}
             aria-expanded={faqOpen}
             aria-controls="footer-faq-panel"
-            className={`w-full flex items-center justify-between py-4 text-left transition-colors ${
-              isDark ? 'hover:bg-gray-900/40' : 'hover:bg-gray-50/60'
-            }`}
+            className="w-full flex items-center justify-between py-4 sm:py-5 text-left group"
           >
-            <div className="flex items-center gap-2.5">
-              <HelpCircle size={14} className="text-brand-red flex-shrink-0" />
-              <span className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-red">
+                FAQ
+              </span>
+              <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+              <span className={`text-sm sm:text-base font-extrabold tracking-tight group-hover:text-brand-red transition-colors ${textMain}`}>
                 Frequently Asked Questions
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-red/10 text-brand-red border border-brand-red/20">
-                {FAQ_ITEMS.length} Questions
+              <span className={`font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border ${border} ${bgPage} ${textMuted}`}>
+                {FAQ_ITEMS.length} Topics
               </span>
             </div>
-            <motion.div animate={{ rotate: faqOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
-              <ChevronDown size={16} className={isDark ? 'text-gray-400' : 'text-gray-500'} />
-            </motion.div>
+
+            <span
+              aria-hidden="true"
+              className={`w-8 h-8 border ${border} flex items-center justify-center shrink-0 transition-colors ${
+                faqOpen ? 'bg-brand-red border-brand-red text-white' : `${bgPage} ${textMain} group-hover:border-brand-red group-hover:text-brand-red`
+              }`}
+            >
+              {faqOpen ? <Minus size={14} /> : <Plus size={14} />}
+            </span>
           </button>
 
-          {/* Dropdown panel */}
           <AnimatePresence initial={false}>
             {faqOpen && (
               <motion.div
@@ -181,184 +201,194 @@ const Footer = () => {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                transition={{ duration: 0.3, ease: EASE }}
                 className="overflow-hidden"
               >
-                <div className="pb-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className={`pb-8 grid grid-cols-1 md:grid-cols-2 border-t border-l ${border}`}>
                   {FAQ_ITEMS.map((item, i) => (
-                    <FaqRow key={i} item={item} isDark={isDark} />
+                    <FaqRow key={i} item={item} index={i} isDark={isDark} />
                   ))}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </div>
 
-      {/* ── Main 3-col grid ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-        <div className="grid sm:grid-cols-3 gap-8">
+      {/* ── Main 12-Col Border-Collapsed Footer Ledger ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className={`grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${divide}`}>
 
-          {/* Col 1 — Brand + socials */}
-          <div>
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden flex-shrink-0 p-1 transition-all duration-300 ${
-                isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'
-              }`}>
-                <img
-                  src="/MDLogo.png"
-                  alt="Metro Developers logo"
-                  width={36}
-                  height={36}
-                  loading="lazy"
-                  className="w-full h-full object-contain"
-                />
+          {/* Col 1 (3 cols) — Brand, Socials & Google Rating */}
+          <div className="lg:col-span-3 py-10 lg:pr-8 flex flex-col justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-10 h-10 border ${border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0`}>
+                  <img
+                    src="/MDLogo.png"
+                    alt="Metro Developers logo"
+                    width={36}
+                    height={36}
+                    loading="lazy"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="leading-tight">
+                  <span className={`block text-base font-extrabold tracking-tight ${textMain}`}>
+                    Metro Developers
+                  </span>
+                  <span className={`block font-mono text-[10px] uppercase tracking-[0.12em] ${textMuted}`}>
+                    Ahmedabad · Gujarat
+                  </span>
+                </div>
               </div>
-              <div className="leading-tight">
-                <span className="block text-base font-bold theme-text-primary font-display">Metro Developers</span>
-                <span className="block text-[11px] theme-text-secondary">Metro Industrial Park · Ahmedabad</span>
+
+              <p className={`text-xs sm:text-[13px] leading-relaxed mb-6 ${textBody}`}>
+                Industrial &amp; warehousing parks across Moraiya, Changodar, and Bavla. Ready sheds and clear-title NA plots built for manufacturing scale.
+              </p>
+
+              {/* Sharp Square Social Buttons */}
+              <div className="flex items-center gap-2">
+                {[
+                  { href: 'https://wa.me/919824235642',                     icon: <FaWhatsapp size={15} />,  label: 'WhatsApp'  },
+                  { href: 'https://www.instagram.com/metro.industrialpark/',icon: <FaInstagram size={15} />, label: 'Instagram' },
+                  { href: 'https://www.facebook.com/metroindustrialpark1',  icon: <FaFacebook size={15} />,  label: 'Facebook'  },
+                ].map(({ href, icon, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className={`w-9 h-9 border ${border} ${bgSurface} ${textMain} hover:bg-brand-red hover:border-brand-red hover:text-white flex items-center justify-center transition-colors`}
+                  >
+                    {icon}
+                  </a>
+                ))}
               </div>
-            </div>
-            <p className="theme-text-secondary text-xs leading-relaxed mb-4">
-              Premium industrial &amp; warehousing infrastructure in Ahmedabad. Building spaces for growing businesses.
-            </p>
-            <div className="flex gap-2">
-              {[
-                { href: 'https://wa.me/919824235642',                       icon: <FaWhatsapp size={17} />,  label: 'WhatsApp'  },
-                { href: 'https://www.instagram.com/metro.industrialpark/',   icon: <FaInstagram size={17} />, label: 'Instagram' },
-                { href: 'https://www.facebook.com/metroindustrialpark1',     icon: <FaFacebook size={17} />,  label: 'Facebook'  },
-              ].map(({ href, icon, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  title={label}
-                  className={`w-9 h-9 ${pill} rounded-full flex items-center justify-center transition-all hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-red/50`}
-                >
-                  {icon}
-                </a>
-              ))}
             </div>
 
-            {/* Google Business Profile Review Widget / Authority Signal */}
-            <div className="mt-4 pt-3 border-t theme-border">
-              <a
-                href="https://g.page/r/CfbFhZSjMaH1EBI/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Google Business Profile Reviews for Metro Industrial Park"
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-xs transition-all hover:scale-105 ${
-                  isDark
-                    ? 'border-amber-500/30 bg-amber-950/20 text-amber-300 hover:border-amber-400'
-                    : 'border-amber-200 bg-amber-50 text-amber-900 hover:border-amber-300'
-                }`}
-              >
-                <span className="text-amber-400 text-xs tracking-tighter">★★★★★</span>
-                <span className="font-bold">5.0 on Google</span>
-                <span className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>· Write Review</span>
-              </a>
-            </div>
+            {/* Google Business Authority Block */}
+            <a
+              href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Google Business Profile Reviews for Metro Industrial Park"
+              className={`block border ${border} ${bgSurface} hover:border-brand-red p-3.5 transition-colors group`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-amber-500 text-xs tracking-widest" aria-hidden="true">★★★★★</span>
+                <ArrowUpRight size={13} className={`${textMuted} group-hover:text-brand-red transition-colors`} aria-hidden="true" />
+              </div>
+              <div className="flex items-baseline justify-between gap-2">
+                <span className={`text-xs font-extrabold ${textMain}`}>5.0 on Google</span>
+                <span className={`font-mono text-[10px] uppercase tracking-wider ${textMuted}`}>Write Review</span>
+              </div>
+            </a>
           </div>
 
-          {/* Col 2 — Quick links */}
-          <nav aria-label="Footer quick links">
-            <h3 className="theme-text-primary font-bold text-sm uppercase tracking-widest mb-4">
-              Quick Links
-            </h3>
-            <ul className="space-y-2.5">
-              {QUICK_LINKS.map(({ to, href, label, external }) =>
-                external ? (
-                  <li key={label}>
+          {/* Col 2 (5 cols) — Directory / Quick Links in 2 Sub-Columns */}
+          <nav aria-label="Footer quick links" className="lg:col-span-5 py-10 lg:px-8">
+            <div className="flex items-center gap-2.5 mb-5 font-mono text-[11px] uppercase tracking-[0.18em]">
+              <span className="text-brand-red font-semibold">01</span>
+              <span className={textMuted}>Directory</span>
+            </div>
+
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+              {QUICK_LINKS.map(({ to, href, label, external }) => (
+                <li key={label}>
+                  {external ? (
                     <a
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
+                      className={`inline-flex items-center gap-1 text-xs font-medium ${textBody} hover:text-brand-red transition-colors`}
                     >
-                      {label}
+                      <span>{label}</span>
+                      <ArrowUpRight size={11} aria-hidden="true" />
                     </a>
-                  </li>
-                ) : (
-                  <li key={label}>
+                  ) : (
                     <Link
                       to={to}
-                      className="theme-text-secondary hover:text-brand-red transition-colors text-xs"
+                      className={`text-xs font-medium ${textBody} hover:text-brand-red transition-colors`}
                     >
                       {label}
                     </Link>
-                  </li>
-                )
-              )}
+                  )}
+                </li>
+              ))}
             </ul>
           </nav>
 
-          {/* Col 3 — Contact */}
-          <div>
-            <h3 className="theme-text-primary font-bold text-sm uppercase tracking-widest mb-4">
-              Contact Us
-            </h3>
-            <ul className="space-y-2.5">
+          {/* Col 3 (4 cols) — Site Office Contact & QR */}
+          <div className="lg:col-span-4 py-10 lg:pl-8">
+            <div className="flex items-center gap-2.5 mb-5 font-mono text-[11px] uppercase tracking-[0.18em]">
+              <span className="text-brand-red font-semibold">02</span>
+              <span className={textMuted}>Site Office</span>
+            </div>
+
+            <ul className="space-y-3">
               <li className="flex items-start gap-2.5">
                 <MapPin className="text-brand-red flex-shrink-0 mt-0.5" size={14} aria-hidden="true" />
                 <a
                   href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-xs leading-relaxed"
+                  className={`text-xs leading-relaxed ${textBody} hover:text-brand-red transition-colors`}
                 >
                   Opp. Suvas Industrial Estate, Behind Siya Industrial Park, Moraiya, Changodar, Ahmedabad – 382213, Gujarat
                 </a>
               </li>
+
               {[
                 { href: 'tel:+919824235642', label: '+91 98242 35642' },
                 { href: 'tel:+916356776767', label: '+91 63567 76767' },
                 { href: 'tel:+916356766767', label: '+91 63567 66767' },
               ].map(({ href, label }) => (
                 <li key={href} className="flex items-center gap-2.5">
-                  <Phone className="text-brand-red flex-shrink-0" size={14} aria-hidden="true" />
-                  <a href={href} className="theme-text-secondary hover:text-brand-red transition-colors text-xs">
+                  <Phone className="text-brand-red flex-shrink-0" size={13} aria-hidden="true" />
+                  <a href={href} className={`font-mono text-xs tabular-nums ${textMain} hover:text-brand-red transition-colors`}>
                     {label}
                   </a>
                 </li>
               ))}
+
               <li className="flex items-center gap-2.5">
-                <Mail className="text-brand-red flex-shrink-0" size={14} aria-hidden="true" />
+                <Mail className="text-brand-red flex-shrink-0" size={13} aria-hidden="true" />
                 <a
                   href="mailto:metrodevelopers26@gmail.com"
-                  className="theme-text-secondary hover:text-brand-red transition-colors text-xs break-all"
+                  className={`text-xs break-all ${textBody} hover:text-brand-red transition-colors`}
                 >
                   metrodevelopers26@gmail.com
                 </a>
               </li>
             </ul>
 
-            {/* QR card — desktop only */}
-            <div className={`hidden lg:flex mt-5 items-center gap-3 rounded-xl border p-3 ${
-              isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white'
-            }`}>
+            {/* Desktop Maps QR Block */}
+            <div className={`hidden lg:flex mt-6 items-center gap-3.5 border ${border} ${bgSurface} p-3`}>
               <a
                 href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block flex-shrink-0"
+                className="block flex-shrink-0 bg-white p-1 border border-black/10"
                 aria-label="Open Metro Industrial Park in Google Maps"
               >
                 <img
                   src={mapsQrUrl}
                   alt="Scan QR code to open Metro Industrial Park in Google Maps"
-                  width={92}
-                  height={92}
+                  width={84}
+                  height={84}
                   loading="lazy"
-                  className={`w-[92px] h-[92px] rounded-md border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}
+                  className="w-[84px] h-[84px] block"
                 />
               </a>
               <div>
-                <p className="theme-text-primary text-xs font-semibold mb-1">Scan For Directions</p>
-                <p className="theme-text-secondary text-[11px] leading-relaxed">
-                  Open Google Maps on your phone by scanning this QR code.
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-red mb-1">
+                  Scan for Directions
+                </p>
+                <p className={`text-[11px] leading-relaxed ${textBody}`}>
+                  Open Metro Industrial Park directly in Google Maps on your phone.
                 </p>
               </div>
             </div>
@@ -367,26 +397,30 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ── Bottom bar ── */}
-      <div className={`border-t ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className={`text-xs text-center sm:text-left ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+      {/* ── Bottom Copyright Bar ── */}
+      <div className={`border-t ${border} ${bgSurface}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px]">
+          <p className={textMuted}>
             © {currentYear} Metro Developers. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <a
-              href="#top"
-              className={`text-xs transition-colors hover:text-brand-red ${isDark ? 'text-gray-600' : 'text-gray-400'}`}
+
+          <div className="flex items-center gap-5">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className={`inline-flex items-center gap-1.5 uppercase tracking-wider ${textMuted} hover:text-brand-red transition-colors`}
             >
-              ↑ Back to top
-            </a>
-            <span className={`text-xs ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+              <ArrowUp size={12} aria-hidden="true" />
+              <span>Top</span>
+            </button>
+
+            <span className={textMuted}>
               Developed by{' '}
               <a
                 href="https://www.instagram.com/ayanmalaviya"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-red font-semibold hover:underline underline-offset-2 transition-opacity hover:opacity-80"
+                className="text-brand-red font-semibold hover:underline underline-offset-2"
               >
                 Ayan Malaviya
               </a>
@@ -394,7 +428,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
     </footer>
   );
 };

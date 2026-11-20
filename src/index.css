@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* ===== THEME VARIABLES ===== */
 :root {
   color-scheme: light;
@@ -78,19 +79,74 @@
   #root {
     min-height: 100%;
   }
+
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  .font-mono {
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+
+  .font-serif-editorial {
+    font-family: "Instrument Serif", Georgia, serif;
+  }
   
   body {
     @apply antialiased;
     margin: 0;
     font-family: var(--font-body);
+    font-weight: 400;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3 {
-    font-family: var(--font-display);
-    letter-spacing: 0.03em;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  /* Responsive weight dampening for ultra-legibility on mobile, tablets & desktop */
+  .font-black {
+    font-weight: 700;
+  }
+  .font-extrabold {
+    font-weight: 600;
+  }
+
+  @media (max-width: 1024px) {
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 500;
+    }
+    .font-black {
+      font-weight: 600 !important;
+    }
+    .font-extrabold {
+      font-weight: 600 !important;
+    }
+    .font-bold {
+      font-weight: 500 !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 500;
+    }
+    .font-black {
+      font-weight: 600 !important;
+    }
+    .font-extrabold {
+      font-weight: 500 !important;
+    }
+    .font-bold {
+      font-weight: 500 !important;
+    }
   }
 
   a, button, input, textarea, select, summary, [role='button'], .theme-transition {
@@ -129,7 +185,7 @@
   .theme-overlay-dark { background-color: var(--overlay-dark); }
 
   .font-body { font-family: var(--font-body); }
-  .font-display { font-family: var(--font-display); letter-spacing: 0.03em; }
+  .font-display { font-family: var(--font-display); letter-spacing: 0.03em; font-weight: 400; }
   .font-accent { font-family: var(--font-accent); font-style: italic; }
 }
 

@@ -1,36 +1,64 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, X, Phone, CheckCircle, Maximize2, Building2, Home, MapPin, TrendingUp, Users, Package, Car } from 'lucide-react';
+// MetroArcade.jsx
+import { useState, useEffect, useCallback } from 'react';
+import {
+  ChevronLeft, ChevronRight, X, Phone, Maximize2,
+  Building2, Home, MapPin, TrendingUp, Users, Car, Check, ArrowRight, ArrowUpRight,
+} from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
 
+const getTokens = (isDark) => ({
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
+  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
+  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
+  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
+  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
+  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+});
+
+const SectionHeading = ({ index, kicker, title, isDark }) => {
+  const t = getTokens(isDark);
+  return (
+    <div className={`pb-5 mb-6 border-b ${t.border}`}>
+      <div className="flex items-center gap-3 mb-2 font-mono text-[11px] tracking-[0.18em] uppercase">
+        <span className="text-brand-red font-semibold">{index}</span>
+        <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+        <span className={t.textMuted}>{kicker}</span>
+      </div>
+      <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] ${t.textMain}`}>
+        {title}
+      </h2>
+    </div>
+  );
+};
 
 const MetroArcade = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const t = getTokens(isDark);
+
+  const [currentSlide, setCurrentSlide]   = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-
   const images = [
-    { url: '/images/arcade-top.jpeg', alt: 'Metro Arcade Front View', title: 'Metro Arcade', description: 'Modern commercial arcade on main road' },
-    { url: '/images/arcade-shops.jpeg', alt: 'Shop Units', title: 'Commercial Units', description: 'Prime retail and office spaces' },
-    { url: '/images/arcade-3.jpg', alt: 'Metro Arcade Interior', title: 'Interior View', description: 'Well-designed commercial spaces with strong visibility' }
+    { url: '/images/arcade-top.jpeg',   alt: 'Metro Arcade Front View', title: 'Metro Arcade',     description: 'Modern commercial arcade on main road, Moraiya' },
+    { url: '/images/arcade-shops.jpeg', alt: 'Shop Units',              title: 'Commercial Units', description: 'Prime retail and office spaces with personal parking' },
+    { url: '/images/arcade-3.jpg',      alt: 'Metro Arcade Interior',   title: 'Interior View',    description: 'Well-designed G+1 RCC commercial units with main road visibility' },
   ];
-
 
   const specifications = [
-    { label: 'Location', value: 'Main Road, Moraiya' },
-    { label: 'Total Area', value: '15,000 sq.ft' },
-    { label: 'Total Units', value: '20 Commercial Shops' },
-    { label: 'Unit Size', value: '15x45 ft' },
+    { label: 'Location',      value: 'Main Road, Moraiya' },
+    { label: 'Total Area',    value: '15,000 sq.ft' },
+    { label: 'Total Units',   value: '20 Commercial Shops' },
+    { label: 'Unit Size',     value: '15 × 45 ft' },
     { label: 'Building Type', value: 'G+1 Floors' },
-    { label: 'Construction', value: 'RCC Structure' },
-    { label: 'Parking', value: 'Personal Parking' },
-    { label: 'Status', value: 'Taking Investor Bookings' }
+    { label: 'Construction',  value: 'RCC Structure' },
+    { label: 'Parking',       value: 'Personal Parking' },
+    { label: 'Status',        value: 'Taking Investor Bookings' },
   ];
-
 
   const amenities = [
     'RCC Construction',
@@ -40,17 +68,23 @@ const MetroArcade = () => {
     'Modern Design',
     'Prime Visibility',
     'High Rental Yield',
-    'Investment Opportunity'
+    'Investment Opportunity',
   ];
 
-
   const features = [
-    { icon: <Building2 size={24} />, title: 'RCC Construction', description: 'Solid reinforced concrete structure' },
-    { icon: <Home size={24} />, title: 'G+1 Building', description: 'Ground + First Floor configuration' },
-    { icon: <MapPin size={24} />, title: 'Prime Location', description: 'Main road frontage with high visibility' },
-    { icon: <Car size={24} />, title: 'Personal Parking', description: 'Individual parking spaces for each unit' },
-    { icon: <TrendingUp size={24} />, title: 'Investment Ready', description: 'High rental yield potential' },
-    { icon: <Users size={24} />, title: 'Commercial Hub', description: 'Ideal for retail and offices' }
+    { code: '01', icon: <Building2 size={18} aria-hidden="true" />, title: 'RCC Construction', description: 'Solid reinforced concrete structure built for long-term commercial durability' },
+    { code: '02', icon: <Home size={18} aria-hidden="true" />,      title: 'G+1 Building',     description: 'Ground + First Floor commercial shop and office configuration' },
+    { code: '03', icon: <MapPin size={18} aria-hidden="true" />,    title: 'Prime Location',   description: 'Direct main road frontage with uninterrupted business visibility' },
+    { code: '04', icon: <Car size={18} aria-hidden="true" />,       title: 'Personal Parking', description: 'Dedicated individual parking spaces allotted for each commercial unit' },
+    { code: '05', icon: <TrendingUp size={18} aria-hidden="true" />,title: 'Investment Ready', description: 'High rental yield potential driven by surrounding industrial activity' },
+    { code: '06', icon: <Users size={18} aria-hidden="true" />,     title: 'Commercial Hub',   description: 'Ideal layout for retail outlets, showrooms, clinics, and offices' },
+  ];
+
+  const benefits = [
+    { title: 'High Rental Yield',       desc: 'Main-road location supports strong recurring rental demand.' },
+    { title: 'Capital Appreciation',    desc: 'Commercial highway-corridor property values appreciate steadily.' },
+    { title: 'Easy Tenant Availability',desc: 'Consistent commercial demand from Moraiya & Changodar businesses.' },
+    { title: 'Flexible Usage',          desc: 'Suitable for retail shops, showrooms, branch offices, or clinics.' },
   ];
 
   const metroArcadePageSchema = {
@@ -65,38 +99,37 @@ const MetroArcade = () => {
     },
   };
 
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % images.length);
+    setIsAutoPlaying(false);
+  }, [images.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+    setIsAutoPlaying(false);
+  }, [images.length]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (!isAutoPlaying || isGalleryOpen) return;
-    
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
     }, 5000);
-
     return () => clearInterval(interval);
   }, [isAutoPlaying, isGalleryOpen, images.length]);
 
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length);
-    setIsAutoPlaying(false);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
-    setIsAutoPlaying(false);
-  };
-
-  const openGallery = (index) => {
-    setCurrentSlide(index);
-    setIsGalleryOpen(true);
-    setIsAutoPlaying(false);
-  };
-
-  const closeGallery = () => {
-    setIsGalleryOpen(false);
-  };
-
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape' && isGalleryOpen) setIsGalleryOpen(false);
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft')  prevSlide();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isGalleryOpen, nextSlide, prevSlide]);
 
   return (
     <>
@@ -110,382 +143,411 @@ const MetroArcade = () => {
         structuredData={metroArcadePageSchema}
       />
 
-      <div className="relative min-h-screen theme-bg-primary">
-      {/* ===== Hero Section with Slideshow ===== */}
-      <section className="relative h-[54vh] sm:h-[62vh] lg:h-[70vh] overflow-hidden pt-16">
-        <div className="relative w-full h-full">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <img
-                src={image.url}
-                alt={image.alt}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10"></div>
+      <div
+        className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+      >
+        {/* ════════ ARCHITECTURAL HERO SLIDESHOW ════════ */}
+        <section className="relative pt-16">
+          <div className="relative h-[52svh] sm:h-[64svh] lg:h-[72svh] overflow-hidden bg-black">
+            {images.map((image, index) => (
+              <div
+                key={image.url}
+                aria-hidden={index !== currentSlide}
+                className={`absolute inset-0 transition-opacity duration-700 ${
+                  index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
+              >
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  className="w-full h-full object-cover"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/25" aria-hidden="true" />
+              </div>
+            ))}
+
+            {/* Top Coordinate & Status Bar */}
+            <div className="absolute top-0 inset-x-0 z-10 border-b border-white/15">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em] text-white/85">
+                <span className="inline-flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" aria-hidden="true" />
+                  <span>Commercial Complex · Taking Investor Bookings</span>
+                </span>
+                <span className="tabular-nums text-white/70">
+                  0{currentSlide + 1} / 0{images.length}
+                </span>
+              </div>
             </div>
-          ))}
-        </div>
 
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all z-10"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={24} />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all z-10"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={24} />
-        </button>
-
-        <div className="absolute bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {images.map((_, index) => (
+            {/* Crisp Architectural Slide Controls */}
             <button
-              key={index}
-              onClick={() => {
-                setCurrentSlide(index);
-                setIsAutoPlaying(false);
-              }}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentSlide ? 'bg-brand-red w-8' : 'bg-white/70'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+              type="button"
+              onClick={prevSlide}
+              aria-label="Previous slide"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/65 hover:bg-brand-red border border-white/20 text-white flex items-center justify-center transition-colors"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={nextSlide}
+              aria-label="Next slide"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/65 hover:bg-brand-red border border-white/20 text-white flex items-center justify-center transition-colors"
+            >
+              <ChevronRight size={18} />
+            </button>
 
-        <div className="absolute inset-0 flex items-end">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-7 sm:pb-10 w-full">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 mb-2 px-2.5 py-1 bg-amber-300/95 border border-amber-100 rounded-full shadow-lg">
-                <Package size={13} className="text-black" />
-                <span className="text-[10px] sm:text-xs text-black font-semibold">Taking Investor Bookings</span>
-              </div>
-              
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold mb-2 sm:mb-3 text-white drop-shadow-2xl leading-tight">
-                Metro Arcade
-              </h1>
-              
-              <p className="text-xs sm:text-base mb-3 sm:mb-4 text-white/95 drop-shadow-lg max-w-2xl">
-                {images[currentSlide].description}
-              </p>
-
-              <div className="flex flex-wrap gap-2.5">
-                <a
-                  href="https://wa.me/919624965017"
-                  className="inline-flex items-center gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-xs sm:text-sm"
-                >
-                  <FaWhatsapp size={16} />
-                  <span>Book Now</span>
-                </a>
-                <button
-                  onClick={() => openGallery(currentSlide)}
-                  className="inline-flex items-center gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 bg-black/45 hover:bg-black/65 border border-white/40 font-bold rounded-lg transition-all text-xs sm:text-sm text-white"
-                >
-                  <Maximize2 size={15} />
-                  <span>View Gallery</span>
-                </button>
-              </div>
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                {['Main Road Frontage', 'RCC G+1 Build', '20 Commercial Units', 'Personal Parking'].map((item) => (
-                  <span
-                    key={item}
-                    className="px-2.5 py-1 rounded-full border border-white/30 bg-black/45 text-white text-[10px] sm:text-[11px] font-semibold"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Quick Stats Bar ===== */}
-      <section className={`${theme === 'dark' ? 'bg-gradient-to-r from-gray-900 to-black border-gray-800' : 'bg-gradient-to-r from-gray-100 to-gray-50 border-gray-200'} border-y`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-brand-red mb-0.5">15,000</div>
-              <div className={`text-[11px] sm:text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Sq.ft Total Area</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-brand-red mb-0.5">20</div>
-              <div className={`text-[11px] sm:text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Commercial Units</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-brand-red mb-0.5">G+1</div>
-              <div className={`text-[11px] sm:text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Floors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-3xl font-bold text-brand-red mb-0.5">15x45</div>
-              <div className={`text-[11px] sm:text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Unit Size (ft)</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Main Content ===== */}
-      <section className={`py-8 sm:py-12 lg:py-14 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-3 gap-5 lg:gap-7">
-            {/* Left Column - Main Info */}
-            <div className="lg:col-span-2 space-y-7">
-              {/* Booking Notice */}
-              <div className={`${theme === 'dark' ? 'bg-gradient-to-r from-yellow-500/20 to-transparent border-yellow-500/30' : 'bg-gradient-to-r from-yellow-100 to-transparent border-yellow-300'} rounded-xl p-4 sm:p-5 border`}>
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Package className="text-yellow-500" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-base sm:text-lg font-bold theme-text-primary mb-1.5">Now Taking Investor Bookings</h3>
-                    <p className="theme-text-secondary text-sm leading-relaxed mb-2">
-                      Metro Arcade is currently in the booking phase. This is an excellent opportunity for investors to secure prime commercial spaces on the main road in Moraiya.
+            {/* Bottom-Left Editorial Title */}
+            <div className="absolute inset-x-0 bottom-0 z-10">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8 sm:pb-10">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                  <div className="max-w-2xl">
+                    <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-white/75 mb-2">
+                      Main Road · Moraiya, Changodar
                     </p>
-                    <p className="theme-text-secondary text-sm leading-relaxed">
-                      Be among the first to invest in this promising commercial development. Contact us today for special pre-launch offers and detailed investment information.
+                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-[-0.035em] leading-[1.03] mb-3">
+                      Metro Arcade<span className="text-brand-red">.</span>
+                    </h1>
+                    <p className="text-sm sm:text-base text-white/85 max-w-xl">
+                      {images[currentSlide].description}
                     </p>
                   </div>
-                </div>
-              </div>
 
-              {/* Overview Section */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold theme-text-primary mb-3.5 flex items-center gap-2">
-                  <Building2 className="text-brand-red" size={22} />
-                  Project Overview
-                </h2>
-                <div className="theme-bg-card rounded-xl p-4 sm:p-5 border theme-border">
-                  <p className="theme-text-secondary text-sm leading-relaxed mb-2.5">
-                    Metro Arcade is a modern commercial development strategically located on the main road in Moraiya. 
-                    This G+1 floor building offers 20 commercial units, each measuring 15x45 feet, perfect for retail shops, showrooms, or offices.
-                  </p>
-                  <p className="theme-text-secondary text-sm leading-relaxed mb-2.5">
-                    Built with RCC (Reinforced Cement Concrete) construction, the arcade ensures durability and longevity. 
-                    Each unit comes with personal parking space, adding tremendous value for business owners and customers alike.
-                  </p>
-                  <p className="theme-text-secondary text-sm leading-relaxed">
-                    With its prime location on the main road, Metro Arcade offers excellent visibility and footfall, 
-                    making it an ideal investment for those seeking high rental yields and capital appreciation.
-                  </p>
-                </div>
-              </div>
-
-              {/* Features Grid Section */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold theme-text-primary mb-3.5 flex items-center gap-2">
-                  <CheckCircle className="text-brand-red" size={22} />
-                  Key Features
-                </h2>
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
-                  {features.map((feature, index) => (
-                    <div
-                      key={index}
-                      className="theme-bg-card p-3 sm:p-4 rounded-xl border theme-border hover:border-brand-red/60 transition-all"
+                  {/* Right Gallery & Slide Bars */}
+                  <div className="flex flex-col sm:items-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => { setIsGalleryOpen(true); setIsAutoPlaying(false); }}
+                      className="py-2.5 px-4 bg-black/70 hover:bg-brand-red border border-white/25 text-white font-mono text-[11px] uppercase tracking-[0.14em] inline-flex items-center gap-2 transition-colors w-fit"
                     >
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-red/20 rounded-lg flex items-center justify-center mb-2.5 text-brand-red mx-auto">
-                        {feature.icon}
+                      <Maximize2 size={13} aria-hidden="true" />
+                      <span>Full Gallery</span>
+                    </button>
+
+                    <div className="flex items-center gap-2">
+                      {images.map((_, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
+                          aria-label={`Go to slide ${index + 1}`}
+                          className={`h-[3px] transition-all duration-300 ${
+                            index === currentSlide ? 'w-10 bg-brand-red' : 'w-4 bg-white/40 hover:bg-white/80'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Title Block Strip: Quick Specs + Actions ── */}
+          <div className={`border-y ${t.border} ${t.bgSurface}`}>
+            <div className="max-w-7xl mx-auto">
+              <div className={`grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${t.divide}`}>
+                <div className={`lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 divide-x ${t.divide}`}>
+                  {[
+                    { value: '15,000', label: 'Sq.ft Total Area', accent: false },
+                    { value: '20',     label: 'Commercial Units', accent: false },
+                    { value: 'G+1',    label: 'RCC Structure',    accent: false },
+                    { value: '15×45',  label: 'Unit Size (ft)',   accent: true  },
+                  ].map((s) => (
+                    <div key={s.label} className="px-5 py-5">
+                      <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums ${s.accent ? 'text-brand-red' : t.textMain}`}>
+                        {s.value}
                       </div>
-                      <h3 className="text-xs sm:text-sm font-bold theme-text-primary mb-1.5 text-center leading-snug">{feature.title}</h3>
-                      <p className="theme-text-secondary text-[11px] sm:text-xs text-center leading-snug">{feature.description}</p>
+                      <div className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
+                        {s.label}
+                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
 
-              {/* Amenities Checklist Section */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold theme-text-primary mb-3.5 flex items-center gap-2">
-                  <Home className="text-brand-red" size={22} />
-                  Amenities & Facilities
-                </h2>
-                <div className="theme-bg-card rounded-xl p-4 sm:p-5 border theme-border">
-                  <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-                    {amenities.map((amenity, index) => (
-                      <div key={index} className="flex items-center gap-3 theme-text-secondary">
-                        <CheckCircle size={14} className="text-brand-red flex-shrink-0" />
-                        <span className="text-[11px] sm:text-xs leading-snug">{amenity}</span>
+                <div className={`lg:col-span-4 grid grid-cols-2 divide-x ${t.divide}`}>
+                  <a
+                    href="https://wa.me/919624965017"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-4 lg:py-0 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <FaWhatsapp size={15} aria-hidden="true" />
+                    <span>Book Now</span>
+                  </a>
+                  <a
+                    href="tel:+919624965017"
+                    className={`py-4 lg:py-0 px-5 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 transition-colors`}
+                  >
+                    <Phone size={14} className="text-brand-red" aria-hidden="true" />
+                    <span>Call Desk</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════ MAIN 12-COL ARCHITECTURAL SPLIT ════════ */}
+        <section className="py-14 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+
+              {/* Left 8 Cols */}
+              <div className="lg:col-span-8 space-y-14">
+
+                {/* Investor Booking Notice */}
+                <div className={`relative border ${t.border} ${t.bgSurface} p-6 sm:p-8`}>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500" aria-hidden="true" />
+                  <div className="pl-2">
+                    <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-500 mb-2">
+                      Pre-Launch Investor Phase
+                    </div>
+                    <h2 className={`text-lg sm:text-xl font-extrabold tracking-tight mb-2 ${t.textMain}`}>
+                      Now Taking Investor Bookings
+                    </h2>
+                    <p className={`text-sm leading-relaxed mb-2 ${t.textBody}`}>
+                      Metro Arcade is currently open for early-stage investor bookings — securing main-road commercial units in Moraiya before completion.
+                    </p>
+                    <p className={`text-sm leading-relaxed ${t.textBody}`}>
+                      Contact our desk directly for pre-launch pricing, floor plans, and investment projections.
+                    </p>
+                  </div>
+                </div>
+
+                {/* 01. Project Overview */}
+                <div>
+                  <SectionHeading index="01" kicker="Commercial Brief" title="Project Overview" isDark={isDark} />
+                  <div className={`border ${t.border} ${t.bgSurface} p-6 sm:p-8 space-y-4 text-sm sm:text-base leading-relaxed ${t.textBody}`}>
+                    <p>
+                      Metro Arcade is a modern commercial development strategically located on the main road in Moraiya.
+                      This G+1 floor building offers <strong className={t.textMain}>20 commercial units</strong>, each measuring 15×45 feet, built for retail shops, showrooms, or offices.
+                    </p>
+                    <p>
+                      Constructed with a full RCC (Reinforced Cement Concrete) structure for long-term durability, every unit includes personal parking space for owners and visiting customers.
+                    </p>
+                    <p>
+                      Direct main-road frontage provides strong daily visibility and steady commercial footfall, supporting consistent rental demand and capital appreciation.
+                    </p>
+                  </div>
+                </div>
+
+                {/* 02. Key Features */}
+                <div>
+                  <SectionHeading index="02" kicker="Core Specifications" title="Key Features" isDark={isDark} />
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
+                    {features.map((feature) => (
+                      <article
+                        key={feature.code}
+                        className={`p-6 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
+                          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
+                            FEAT {feature.code}
+                          </span>
+                          <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
+                            {feature.icon}
+                          </span>
+                        </div>
+                        <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                          {feature.title}
+                        </h3>
+                        <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
+                          {feature.description}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 03. Amenities & Facilities */}
+                <div>
+                  <SectionHeading index="03" kicker="Included Utilities" title="Amenities & Facilities" isDark={isDark} />
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
+                    {amenities.map((amenity) => (
+                      <div
+                        key={amenity}
+                        className={`px-5 py-4 border-r border-b ${t.border} ${t.bgSurface} flex items-center gap-3`}
+                      >
+                        <Check size={14} className="text-brand-red shrink-0" aria-hidden="true" />
+                        <span className={`text-sm font-medium ${t.textMain}`}>{amenity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 04. Investment Benefits */}
+                <div>
+                  <SectionHeading index="04" kicker="Commercial Thesis" title="Investment Benefits" isDark={isDark} />
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
+                    {benefits.map((b, i) => (
+                      <div key={b.title} className={`p-6 border-r border-b ${t.border} ${t.bgSurface}`}>
+                        <span className="font-mono text-[10px] font-bold text-brand-red block mb-2">
+                          0{i + 1}
+                        </span>
+                        <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                          {b.title}
+                        </h3>
+                        <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>{b.desc}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* Investment Benefits Section */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold theme-text-primary mb-3.5 flex items-center gap-2">
-                  <TrendingUp className="text-brand-red" size={22} />
-                  Investment Benefits
-                </h2>
-                <div className="theme-bg-card rounded-xl p-4 sm:p-5 border theme-border">
-                  <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle size={16} className="text-green-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="theme-text-primary text-xs sm:text-sm font-semibold mb-0.5">High Rental Yield</h4>
-                        <p className="theme-text-secondary text-[11px] sm:text-xs leading-snug">Prime location ensures strong rental income potential</p>
-                      </div>
+              {/* Right 4 Cols Sticky Sidebar */}
+              <aside className="lg:col-span-4">
+                <div className="sticky top-24 space-y-6">
+                  {/* Specifications Ledger */}
+                  <div className={`border ${t.border} ${t.bgSurface}`}>
+                    <div className={`px-6 py-4 border-b ${t.border} flex items-center justify-between`}>
+                      <h3 className={`font-mono text-xs font-bold uppercase tracking-[0.16em] ${t.textMain}`}>
+                        Specifications
+                      </h3>
+                      <span className="font-mono text-[10px] text-brand-red font-semibold">ARCADE</span>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle size={16} className="text-green-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="theme-text-primary text-xs sm:text-sm font-semibold mb-0.5">Capital Appreciation</h4>
-                        <p className="theme-text-secondary text-[11px] sm:text-xs leading-snug">Main road property values continue to rise steadily</p>
-                      </div>
+                    <dl className={`divide-y ${t.divide} px-6`}>
+                      {specifications.map((spec) => (
+                        <div key={spec.label} className="flex justify-between items-start gap-4 py-3 text-xs">
+                          <dt className={`font-mono uppercase tracking-wider shrink-0 ${t.textMuted}`}>
+                            {spec.label}
+                          </dt>
+                          <dd className={`font-semibold text-right tabular-nums ${
+                            spec.label === 'Status' ? 'text-amber-500' : t.textMain
+                          }`}>
+                            {spec.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+
+                  {/* Booking Status */}
+                  <div className={`relative border ${t.border} ${t.bgSurface} p-6`}>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500" aria-hidden="true" />
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
+                      Booking Status
                     </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle size={16} className="text-green-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="theme-text-primary text-xs sm:text-sm font-semibold mb-0.5">Easy Tenant Availability</h4>
-                        <p className="theme-text-secondary text-[11px] sm:text-xs leading-snug">High demand for commercial spaces in this location</p>
-                      </div>
+                    <div className={`text-xl font-extrabold tracking-tight mb-1 ${t.textMain}`}>
+                      Open for Investors
                     </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle size={16} className="text-green-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="theme-text-primary text-xs sm:text-sm font-semibold mb-0.5">Flexible Usage</h4>
-                        <p className="theme-text-secondary text-[11px] sm:text-xs leading-snug">Suitable for retail, showrooms, offices, or clinics</p>
-                      </div>
+                    <p className={`text-xs leading-relaxed ${t.textBody}`}>
+                      Limited main-road units available — book early to secure corner and front-facing shops.
+                    </p>
+                  </div>
+
+                  {/* Direct Contact */}
+                  <div className={`border ${t.border} ${t.bgSurface} p-6`}>
+                    <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                      Interested in Metro Arcade?
+                    </h3>
+                    <p className={`text-xs leading-relaxed mb-5 ${t.textBody}`}>
+                      Contact us for booking terms, commercial pricing, and site visits.
+                    </p>
+                    <div className="space-y-2.5">
+                      <a
+                        href="https://wa.me/919624965017"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-3.5 px-4 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <FaWhatsapp size={15} aria-hidden="true" />
+                          <span>WhatsApp Desk</span>
+                        </span>
+                        <ArrowRight size={14} aria-hidden="true" />
+                      </a>
+                      <a
+                        href="tel:+919624965017"
+                        className={`w-full py-3.5 px-4 border ${t.border} ${t.bgPage} ${t.textMain} hover:border-brand-red hover:text-brand-red text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <Phone size={14} className="text-brand-red" aria-hidden="true" />
+                          <span className="tabular-nums">+91 96249 65017</span>
+                        </span>
+                        <ArrowUpRight size={14} aria-hidden="true" />
+                      </a>
                     </div>
                   </div>
+
+                  {/* Investment Highlights */}
+                  <div className={`border ${t.border} ${t.bgSurface} p-6`}>
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-4 ${t.textMuted}`}>
+                      Investment Highlights
+                    </div>
+                    <ul className="space-y-2.5 text-xs">
+                      {[
+                        'Prime main road location',
+                        'High commercial footfall area',
+                        'Personal parking included per shop',
+                        'Strong local rental demand',
+                      ].map((item) => (
+                        <li key={item} className="flex items-start gap-2.5">
+                          <Check size={13} className="text-brand-red shrink-0 mt-0.5" aria-hidden="true" />
+                          <span className={t.textMain}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════ FULL-SCREEN GALLERY MODAL ════════ */}
+        {isGalleryOpen && (
+          <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
+            <button
+              type="button"
+              onClick={() => setIsGalleryOpen(false)}
+              className="absolute top-4 right-4 w-10 h-10 bg-black border border-white/25 hover:border-brand-red hover:text-brand-red text-white flex items-center justify-center transition-colors"
+              aria-label="Close gallery"
+            >
+              <X size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={prevSlide}
+              className="absolute left-4 w-10 h-10 bg-black border border-white/25 hover:bg-brand-red text-white flex items-center justify-center transition-colors"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <div className="max-w-5xl mx-auto px-6 text-center">
+              <img
+                src={images[currentSlide].url}
+                alt={images[currentSlide].alt}
+                className="w-full h-auto max-h-[78vh] object-contain border border-white/15"
+              />
+              <div className="mt-4">
+                <h3 className="text-white text-base font-bold">{images[currentSlide].title}</h3>
+                <p className="text-neutral-400 text-xs mt-1">{images[currentSlide].description}</p>
+                <p className="font-mono text-neutral-500 text-[11px] mt-2 tabular-nums">
+                  0{currentSlide + 1} / 0{images.length}
+                </p>
               </div>
             </div>
 
-            {/* Right Column - Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-20 space-y-4">
-                {/* Specifications Card */}
-                <div className="theme-bg-card rounded-xl p-4 border theme-border">
-                  <h3 className="text-base sm:text-lg font-bold theme-text-primary mb-4">Specifications</h3>
-                  <div className="space-y-2.5">
-                    {specifications.map((spec, index) => (
-                      <div key={index} className={`flex justify-between items-start border-b ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'} pb-2`}>
-                        <span className="theme-text-secondary text-xs">{spec.label}</span>
-                        <span className="theme-text-primary font-semibold text-xs text-right">{spec.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Booking Status */}
-                <div className={`${theme === 'dark' ? 'bg-gradient-to-br from-yellow-500/20 to-transparent border-yellow-500/30' : 'bg-gradient-to-br from-yellow-100 to-transparent border-yellow-300'} rounded-xl p-4 border`}>
-                  <div className="flex items-center gap-2.5 mb-2.5">
-                    <Package className="text-yellow-500" size={22} />
-                    <h3 className="text-base sm:text-lg font-bold theme-text-primary">Booking Status</h3>
-                  </div>
-                  <p className="text-lg sm:text-xl font-bold text-yellow-500 mb-1.5">Open for Investors</p>
-                  <p className="theme-text-secondary text-xs">Limited units available - Book early to secure best locations</p>
-                </div>
-
-                {/* Quick Contact */}
-                <div className="theme-bg-card rounded-xl p-4 border theme-border">
-                  <h3 className="text-base sm:text-lg font-bold theme-text-primary mb-3">Interested?</h3>
-                  <p className="theme-text-secondary text-xs mb-4">
-                    Contact us for booking details, investment plans, and site visits
-                  </p>
-                  <div className="space-y-2.5">
-                    <a
-                      href="https://wa.me/919624965017"
-                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm"
-                    >
-                      <FaWhatsapp size={17} />
-                      <span>WhatsApp</span>
-                    </a>
-                    <a
-                      href="tel:+919624965017"
-                      className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 border-2 ${theme === 'dark' ? 'border-gray-700' : 'border-gray-300'} hover:border-brand-red theme-text-primary font-bold rounded-lg transition-all text-sm`}
-                    >
-                      <Phone size={17} />
-                      <span>Call Now</span>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Investment Highlights */}
-                <div className={`${theme === 'dark' ? 'bg-gradient-to-br from-green-500/20 to-transparent border-green-500/30' : 'bg-gradient-to-br from-green-100 to-transparent border-green-300'} rounded-xl p-4 border`}>
-                  <h3 className="text-base font-bold theme-text-primary mb-2.5">Investment Opportunity</h3>
-                  <ul className="space-y-1.5 text-xs theme-text-secondary">
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500">✓</span>
-                      <span>Prime main road location</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500">✓</span>
-                      <span>High footfall area</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500">✓</span>
-                      <span>Personal parking included</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500">✓</span>
-                      <span>Strong rental demand</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={nextSlide}
+              className="absolute right-4 w-10 h-10 bg-black border border-white/25 hover:bg-brand-red text-white flex items-center justify-center transition-colors"
+              aria-label="Next image"
+            >
+              <ChevronRight size={20} />
+            </button>
           </div>
-        </div>
-      </section>
-
-      {/* ===== Hero Gallery Modal ===== */}
-      {isGalleryOpen && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
-          <button
-            onClick={closeGallery}
-            className="absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-            aria-label="Close gallery"
-          >
-            <X size={20} />
-          </button>
-
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-            aria-label="Previous image"
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <div className="max-w-6xl mx-auto px-4">
-            <img
-              src={images[currentSlide].url}
-              alt={images[currentSlide].alt}
-              className="w-full h-auto max-h-[80vh] object-contain"
-            />
-            <div className="text-center mt-4">
-              <h3 className="text-white text-lg font-bold mb-1">{images[currentSlide].title}</h3>
-              <p className="text-gray-400 text-sm">{images[currentSlide].description}</p>
-              <p className="text-gray-500 text-xs mt-1.5">
-                {currentSlide + 1} / {images.length}
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all"
-            aria-label="Next image"
-          >
-            <ChevronRight size={24} />
-          </button>
-        </div>
-      )}
+        )}
       </div>
     </>
   );
 };
-
 
 export default MetroArcade;

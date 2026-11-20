@@ -1,8 +1,8 @@
 // src/pages/ContactPage.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Mail, Phone, MapPin, User, Clock,
-  ExternalLink, Star, X, MessageSquare, ChevronRight,
+  ExternalLink, Star, X, ArrowRight, ArrowUpRight,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
@@ -10,52 +10,64 @@ import { useTheme } from '../context/ThemeContext';
 import SeoHead from '../seo/SeoHead';
 import { createBreadcrumbSchema, propertySchema, directorSchemas } from '../utils/schemas.js';
 
-/* ─── Motion variants ─── */
-const fadeUp = {
-  hidden:  { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-};
-const stagger = {
-  hidden:  {},
-  visible: { transition: { staggerChildren: 0.12 } },
-};
-const scaleIn = {
-  hidden:  { opacity: 0, scale: 0.88 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
-};
+const EASE = [0.16, 1, 0.3, 1];
 
-const Section = ({ children, refProp, className = '' }) => {
-  const inView = useInView(refProp, { once: true, margin: '-60px' });
+const getTokens = (isDark) => ({
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
+  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
+  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
+  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
+  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
+  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+});
+
+const EditorialHeading = ({ index, kicker, title, description, isDark }) => {
+  const t = getTokens(isDark);
   return (
-    <motion.div
-      variants={stagger}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <div className={`grid grid-cols-1 lg:grid-cols-12 gap-5 pb-8 sm:pb-10 border-b ${t.border}`}>
+      <div className="lg:col-span-7">
+        <div className="flex items-center gap-3 mb-3 font-mono text-[11px] tracking-[0.18em] uppercase">
+          <span className="text-brand-red font-semibold">{index}</span>
+          <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+          <span className={t.textMuted}>{kicker}</span>
+        </div>
+        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] leading-[1.06] ${t.textMain}`}>
+          {title}
+        </h2>
+      </div>
+      {description && (
+        <div className="lg:col-span-5 flex items-end lg:justify-end lg:text-right">
+          <p className={`text-sm sm:text-base leading-relaxed max-w-md ${t.textBody}`}>
+            {description}
+          </p>
+        </div>
+      )}
+    </div>
   );
 };
 
 const ContactPage = () => {
   const { theme } = useTheme();
   const isDark    = theme === 'dark';
+  const t         = getTokens(isDark);
 
   const [showPrompt, setShowPrompt]           = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
 
-  const heroRef     = useRef(null);
   const partnersRef = useRef(null);
   const locationRef = useRef(null);
   const reviewsRef  = useRef(null);
 
-  const heroInView     = useInView(heroRef,     { once: true });
   const partnersInView = useInView(partnersRef, { once: true, margin: '-60px' });
   const locationInView = useInView(locationRef, { once: true, margin: '-60px' });
   const reviewsInView  = useInView(reviewsRef,  { once: true, margin: '-60px' });
 
-  /* ─── Schema: ContactPage + LocalBusiness reference + directors + breadcrumb ─ */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  /* ─── Schema: ContactPage + LocalBusiness + Directors + Breadcrumb ─── */
   const contactPageSchema = {
     '@context': 'https://schema.org',
     '@type': 'ContactPage',
@@ -81,12 +93,12 @@ const ContactPage = () => {
     { name: 'Contact Metro Industrial Park', path: '/contact' },
   ]);
 
-  // Spread director Person schemas into the array
   const schemas = [contactPageSchema, propertySchema, ...directorSchemas, breadcrumbSchema];
 
   /* ─── Partners ─── */
   const partners = [
     {
+      code: '01',
       name: 'Amir Malaviya',
       role: 'Director',
       phone: '+91 98242 35642',
@@ -96,6 +108,7 @@ const ContactPage = () => {
       image: '/images/amir.png',
     },
     {
+      code: '02',
       name: 'Nazim Kazani',
       role: 'Director',
       phone: '+91 63567 66767',
@@ -105,28 +118,18 @@ const ContactPage = () => {
       image: '/images/nazim.png',
     },
     {
+      code: '03',
       name: 'Kaushar Kalyani',
       role: 'Director',
     },
   ];
 
-  // Pre-written WhatsApp message — concise, professional, includes park name
   const whatsappMsg = encodeURIComponent(
     'Hello, I am interested in industrial sheds at Metro Industrial Park, Moraiya. Please share availability and pricing.'
   );
 
-  const card = `theme-bg-card border theme-border rounded-2xl`;
-
   return (
     <>
-      {/*
-        ── SEO HEAD ──────────────────────────────────────────────────────────────
-        Title: 55 chars — primary keyword first, brand at end
-        Description: 155 chars — action-oriented, mentions both phones + hours
-        ogImage: office/contact photo (distinct from homepage shed photo)
-        canonical: /contact (prevents /?… variants from splitting link equity)
-        schemas: ContactPage + LocalBusiness + 2× Person (E-E-A-T) + Breadcrumb
-        ──────────────────────────────────────────────────────────────────────── */}
       <SeoHead
         title="Contact Metro Industrial Park | Industrial Sheds Moraiya, Ahmedabad"
         description="Inquire about industrial sheds for sale or lease in Moraiya, Changodar, Ahmedabad. Call or WhatsApp +91 98242 35642 or +91 63567 66767 — Mon to Sun, 11 AM–7 PM."
@@ -135,319 +138,327 @@ const ContactPage = () => {
         schema={schemas}
       />
 
-      {/*
-        Visually hidden h1 that reinforces the page keyword for crawler + A11Y.
-        The page uses a decorative "Get In Touch" heading in the hero — this
-        sr-only h1 carries the full target phrase for structured SEO context.
-      */}
       <h1 className="sr-only">
         Contact Metro Industrial Park — Industrial Sheds and Warehouses in Moraiya, Ahmedabad
       </h1>
 
-      <div className="relative overflow-hidden min-h-screen theme-bg-primary">
-
+      <div
+        className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+      >
         {/* ══════════════════════════════════
-            HERO
+            HERO — DIRECT DESK BRIEF
             ══════════════════════════════════ */}
-        <section
-          ref={heroRef}
-          aria-label="Contact hero"
-          className={`relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-20 ${
-            isDark
-              ? 'bg-gradient-to-b from-gray-950 via-black to-black'
-              : 'bg-gradient-to-b from-gray-50 via-white to-gray-100'
-          }`}
-        >
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-brand-red/5 rounded-full blur-3xl" />
-            <div className="absolute -bottom-32 -right-32 w-[400px] h-[400px] bg-brand-red/4 rounded-full blur-3xl" />
+        <section aria-label="Contact hero" className={`pt-20 sm:pt-24 border-b ${t.border} ${t.bgSurface}`}>
+          {/* Top Coordinate & Response Strip */}
+          <div className={`border-y ${t.border} ${t.bgPage}`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em]">
+              <span className="inline-flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                <span className={t.textMain}>We Reply Within 1 Hour</span>
+              </span>
+              <span className={t.textMuted}>
+                Mon – Sun · 11:00 AM – 7:00 PM · Moraiya, Ahmedabad
+              </span>
+            </div>
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center relative z-10">
-
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-10 sm:pb-14">
             <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-red/10 border border-brand-red/20 rounded-full text-brand-red text-xs font-bold tracking-widest uppercase mb-6"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: EASE }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end"
             >
-              <MessageSquare size={13} />
-              We reply within 1 hour
+              <div className="lg:col-span-8">
+                <div className="flex items-center gap-3 mb-4 font-mono text-[11px] tracking-[0.18em] uppercase">
+                  <span className="text-brand-red font-semibold">DESK</span>
+                  <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+                  <span className={t.textMuted}>Metro Enterprise · Site Office</span>
+                </div>
+
+                {/* Decorative h2 — SEO h1 is sr-only above */}
+                <h2 className={`text-4xl sm:text-5xl lg:text-[4rem] font-extrabold tracking-[-0.035em] leading-[1.03] mb-4 ${t.textMain}`}>
+                  Get In Touch<span className="text-brand-red">.</span>
+                </h2>
+
+                <p className={`text-sm sm:text-base max-w-2xl leading-relaxed ${t.textBody}`}>
+                  Connect directly with our directors for site visits, current shed or plot availability, lease terms, and industrial investment opportunities in Moraiya, Changodar, Ahmedabad.
+                </p>
+              </div>
+
+              {/* Action Stack */}
+              <div className="lg:col-span-4 flex flex-col gap-2.5">
+                <a
+                  href={`https://wa.me/919824235642?text=${whatsappMsg}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp Metro Industrial Park"
+                  className="w-full py-3.5 px-5 bg-brand-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
+                >
+                  <span className="inline-flex items-center gap-2.5">
+                    <FaWhatsapp size={16} aria-hidden="true" />
+                    <span>WhatsApp Site Office</span>
+                  </span>
+                  <ArrowRight size={15} aria-hidden="true" />
+                </a>
+
+                <a
+                  href="mailto:metrodevelopers26@gmail.com"
+                  aria-label="Email Metro Industrial Park"
+                  className={`w-full py-3.5 px-5 border ${t.border} ${t.bgPage} ${t.textMain} hover:border-brand-red hover:text-brand-red font-mono text-xs inline-flex items-center justify-between gap-2 transition-colors`}
+                >
+                  <span className="inline-flex items-center gap-2.5 truncate">
+                    <Mail size={14} className="text-brand-red shrink-0" aria-hidden="true" />
+                    <span className="truncate">metrodevelopers26@gmail.com</span>
+                  </span>
+                  <ArrowUpRight size={14} className="shrink-0" aria-hidden="true" />
+                </a>
+              </div>
             </motion.div>
 
-            {/* Decorative h2 — SEO h1 is sr-only above */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold theme-text-primary mb-4"
-            >
-              Get In <span className="text-brand-red">Touch</span>
-            </motion.h2>
-
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={heroInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-24 h-1 bg-gradient-to-r from-transparent via-brand-red to-transparent mx-auto mb-5"
-            />
-
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="theme-text-tertiary text-base sm:text-lg max-w-2xl mx-auto mb-8"
-            >
-              Contact our team for site visits, pricing, or investment opportunities in Moraiya, Changodar, Ahmedabad
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="flex flex-wrap justify-center gap-3"
-            >
-              <a
-                href="mailto:metrodevelopers26@gmail.com"
-                aria-label="Email Metro Industrial Park"
-                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all hover:scale-105 hover:border-brand-red/50 whitespace-nowrap ${
-                  isDark ? 'bg-gray-900 border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-800 shadow-sm'
-                }`}
-              >
-                <Mail size={15} className="text-brand-red" />
-                metrodevelopers26@gmail.com
-              </a>
-              <a
-                href={`https://wa.me/919824235642?text=${whatsappMsg}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="WhatsApp Metro Industrial Park"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-red hover:bg-red-700 text-white text-sm font-bold transition-all hover:scale-105 shadow-lg shadow-brand-red/25 whitespace-nowrap"
-              >
-                <FaWhatsapp size={16} />
-                WhatsApp Us
-              </a>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={heroInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.5 }}
-              className={`mt-10 flex flex-wrap justify-center gap-6 text-xs font-semibold ${isDark ? 'text-gray-600' : 'text-gray-400'}`}
-            >
+            {/* 4-Cell Trust Strip */}
+            <div className={`mt-10 grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
               {[
-                '✓ 100+ Industrial Sheds',
-                '✓ Since 2020',
-                '✓ 12–16% Rental + Appreciation Potential',
-                '✓ 90 Day Possession Guarantee',
-              ].map((t) => (
-                <span key={t}>{t}</span>
+                { code: '01', value: '100+',    label: 'Industrial Sheds & Plots', accent: false },
+                { code: '02', value: '2020',    label: 'Operating Since',          accent: false },
+                { code: '03', value: '12–16%',  label: 'Yield + Appreciation',     accent: true  },
+                { code: '04', value: '90 Days', label: 'Possession Guarantee',     accent: false },
+              ].map((m) => (
+                <div key={m.code} className={`p-5 border-r border-b ${t.border} ${t.bgPage}`}>
+                  <div className={`font-mono text-[10px] mb-2.5 ${t.textMuted}`}>{m.code}</div>
+                  <div className={`text-xl sm:text-2xl font-extrabold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
+                    {m.value}
+                  </div>
+                  <div className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
+                    {m.label}
+                  </div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════
-            DIRECTORS
+            01. DIRECTORS LEDGER
             ══════════════════════════════════ */}
         <section
           ref={partnersRef}
           aria-label="Meet our directors"
-          className={`py-14 sm:py-20 ${isDark ? 'bg-black' : 'bg-white'}`}
+          className={`py-16 sm:py-24 border-b ${t.border} ${t.bgPage}`}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <EditorialHeading
+              index="01"
+              kicker="Leadership Desk"
+              title={
+                <>
+                  Meet Our <span className="text-brand-red">Directors</span>
+                </>
+              }
+              description="Direct decision-maker access — no middlemen, no brokerage layers."
+              isDark={isDark}
+            />
 
             <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate={partnersInView ? 'visible' : 'hidden'}
-              className="text-center mb-10 sm:mb-14"
+              initial={{ opacity: 0, y: 20 }}
+              animate={partnersInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, ease: EASE }}
+              className={`mt-10 border ${t.border} grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x ${t.divide} ${t.bgSurface}`}
             >
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold theme-text-primary mb-3">
-                Meet Our <span className="text-brand-red">Directors</span>
-              </h2>
-              <p className="theme-text-tertiary text-sm sm:text-base max-w-xl mx-auto">
-                Connect directly with our leadership for personalised assistance
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              animate={partnersInView ? 'visible' : 'hidden'}
-              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-5xl mx-auto"
-            >
-              {partners.map((partner, i) => (
-                <motion.article
-                  key={i}
-                  variants={fadeUp}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className={`group relative ${card} overflow-hidden hover:border-brand-red/40 transition-colors duration-300`}
-                  // itemscope for on-page Person microdata reinforces director identity
+              {partners.map((partner) => (
+                <article
+                  key={partner.code}
                   itemScope
                   itemType="https://schema.org/Person"
+                  className="flex flex-col justify-between"
                 >
-                  <div className="h-1.5 w-full bg-gradient-to-r from-brand-red to-red-400" />
-
-                  <div className="p-6 sm:p-7">
-                    <div className="flex justify-center mb-4">
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:ring-2 group-hover:ring-brand-red ${
-                        isDark ? 'bg-gray-800' : 'bg-gray-100'
-                      }`}>
-                        {partner.image ? (
-                          <img
-                            src={partner.image}
-                            alt={`${partner.name}, ${partner.role} at Metro Industrial Park`}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                            width={80}
-                            height={80}
-                            itemProp="image"
-                          />
-                        ) : (
-                          <User size={30} className={`transition-colors duration-300 group-hover:text-brand-red ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="text-center mb-5">
-                      <h3
-                        className="text-lg sm:text-xl font-extrabold theme-text-primary group-hover:text-brand-red transition-colors duration-300 mb-0.5"
-                        itemProp="name"
-                      >
-                        {partner.name}
-                      </h3>
-                      <span
-                        className={`text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${
-                          isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-500'
-                        }`}
-                        itemProp="jobTitle"
-                      >
+                  <div>
+                    {/* Top Index Strip */}
+                    <div className={`flex items-center justify-between px-6 py-3.5 border-b ${t.border} font-mono text-[10px] uppercase tracking-[0.16em]`}>
+                      <span className="text-brand-red font-semibold">DIR {partner.code}</span>
+                      <span itemProp="jobTitle" className={t.textMuted}>
                         {partner.role}
                       </span>
                     </div>
 
-                    <div className="space-y-2 mb-5">
-                      {partner.tel && (
-                        <a
-                          href={`tel:${partner.tel}`}
-                          aria-label={`Call ${partner.name}`}
-                          itemProp="telephone"
-                          className={`flex items-center justify-center gap-2 text-sm font-medium rounded-xl px-3 py-2 transition-all hover:text-brand-red ${
-                            isDark ? 'bg-gray-800/60 text-gray-300 hover:bg-gray-800' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                          }`}
-                        >
-                          <Phone size={13} className="text-brand-red flex-shrink-0" />
-                          {partner.phone}
-                        </a>
-                      )}
+                    {/* Portrait + Identity */}
+                    <div className="p-6 sm:p-7">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className={`w-16 h-16 border ${t.border} ${t.bgPage} overflow-hidden flex items-center justify-center shrink-0`}>
+                          {partner.image ? (
+                            <img
+                              src={partner.image}
+                              alt={`${partner.name}, ${partner.role} at Metro Industrial Park`}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              width={64}
+                              height={64}
+                              itemProp="image"
+                            />
+                          ) : (
+                            <User size={24} className={t.textMuted} aria-hidden="true" />
+                          )}
+                        </div>
+                        <div>
+                          <h3
+                            itemProp="name"
+                            className={`text-xl font-extrabold tracking-tight ${t.textMain}`}
+                          >
+                            {partner.name}
+                          </h3>
+                          <p className={`font-mono text-[11px] uppercase tracking-wider mt-0.5 ${t.textMuted}`}>
+                            Metro Enterprise
+                          </p>
+                        </div>
+                      </div>
 
-                      {partner.email && (
-                        <a
-                          href={`mailto:${partner.email}`}
-                          aria-label={`Email ${partner.name}`}
-                          itemProp="email"
-                          className={`flex items-center justify-center gap-2 text-xs font-medium rounded-xl px-3 py-2 transition-all hover:text-brand-red ${
-                            isDark ? 'bg-gray-800/60 text-gray-300 hover:bg-gray-800' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                          }`}
-                        >
-                          <Mail size={12} className="text-brand-red flex-shrink-0" />
-                          <span className="break-all">{partner.email}</span>
-                        </a>
-                      )}
+                      {/* Contact Details */}
+                      <div className={`border-t ${t.border} divide-y ${t.divide}`}>
+                        {partner.tel ? (
+                          <a
+                            href={`tel:${partner.tel}`}
+                            aria-label={`Call ${partner.name}`}
+                            itemProp="telephone"
+                            className={`flex items-center justify-between py-3 text-xs font-mono tabular-nums ${t.textMain} hover:text-brand-red transition-colors`}
+                          >
+                            <span className="inline-flex items-center gap-2.5">
+                              <Phone size={13} className="text-brand-red shrink-0" aria-hidden="true" />
+                              <span>{partner.phone}</span>
+                            </span>
+                            <ArrowUpRight size={13} className={t.textMuted} aria-hidden="true" />
+                          </a>
+                        ) : (
+                          <div className={`py-3 font-mono text-xs ${t.textMuted}`}>
+                            Available via site office
+                          </div>
+                        )}
+
+                        {partner.email && (
+                          <a
+                            href={`mailto:${partner.email}`}
+                            aria-label={`Email ${partner.name}`}
+                            itemProp="email"
+                            className={`flex items-center justify-between gap-2 py-3 text-xs ${t.textBody} hover:text-brand-red transition-colors`}
+                          >
+                            <span className="inline-flex items-center gap-2.5 min-w-0">
+                              <Mail size={13} className="text-brand-red shrink-0" aria-hidden="true" />
+                              <span className="truncate">{partner.email}</span>
+                            </span>
+                            <ArrowUpRight size={13} className={`${t.textMuted} shrink-0`} aria-hidden="true" />
+                          </a>
+                        )}
+                      </div>
                     </div>
+                  </div>
 
+                  {/* Bottom Edge-to-Edge Action Bar */}
+                  <div className={`border-t ${t.border}`}>
                     {partner.whatsapp ? (
                       <a
                         href={`https://wa.me/${partner.whatsapp}?text=${whatsappMsg}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`WhatsApp ${partner.name}`}
-                        className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/20 whitespace-nowrap"
+                        className="w-full py-4 px-6 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
                       >
-                        <FaWhatsapp size={16} /> WhatsApp
+                        <span className="inline-flex items-center gap-2">
+                          <FaWhatsapp size={15} aria-hidden="true" />
+                          <span>WhatsApp {partner.name.split(' ')[0]}</span>
+                        </span>
+                        <ArrowRight size={14} aria-hidden="true" />
                       </a>
                     ) : (
-                      <div className={`text-center text-xs py-2.5 rounded-xl ${isDark ? 'text-gray-600 bg-gray-800/40' : 'text-gray-400 bg-gray-50'}`}>
-                        Contact via office
+                      <div className={`py-4 px-6 ${t.bgPage} font-mono text-[11px] uppercase tracking-[0.14em] text-center ${t.textMuted}`}>
+                        Contact via Site Office
                       </div>
                     )}
                   </div>
-                </motion.article>
+                </article>
               ))}
             </motion.div>
           </div>
         </section>
 
         {/* ══════════════════════════════════
-            LOCATION
+            02. SITE LOCATION & HOURS
             ══════════════════════════════════ */}
         <section
           ref={locationRef}
           aria-label="Office location and map"
-          className={`py-14 sm:py-20 ${
-            isDark
-              ? 'bg-gradient-to-b from-black via-gray-950 to-black'
-              : 'bg-gradient-to-b from-white via-gray-50 to-white'
-          }`}
+          className={`py-16 sm:py-24 border-b ${t.border} ${t.bgSurface}`}
         >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <EditorialHeading
+              index="02"
+              kicker="Moraiya · Changodar · NH 47"
+              title={
+                <>
+                  Visit Our <span className="text-brand-red">Site Office</span>
+                </>
+              }
+              description="Inspect ready sheds, internal 60 ft RCC roads, and live plot boundaries in person."
+              isDark={isDark}
+            />
 
             <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate={locationInView ? 'visible' : 'hidden'}
-              className="text-center mb-10 sm:mb-14"
+              initial={{ opacity: 0, y: 20 }}
+              animate={locationInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, ease: EASE }}
+              className={`mt-10 border ${t.border} ${t.bgPage}`}
             >
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold theme-text-primary mb-3">
-                Visit Us <span className="text-brand-red">Today</span>
-              </h2>
-              <p className="theme-text-tertiary text-sm sm:text-base max-w-xl mx-auto">
-                Click the map below to get directions straight to our site
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate={locationInView ? 'visible' : 'hidden'}
-              className={`${card} overflow-hidden shadow-xl mb-5`}
-            >
-              {/* Address strip — itemscope reinforces LocalBusiness address for crawlers */}
+              {/* Address Strip with LocalBusiness Microdata */}
               <address
-                className="p-5 sm:p-6 flex items-start gap-4 not-italic"
+                className={`p-6 sm:p-8 border-b ${t.border} ${t.bgSurface} flex flex-col sm:flex-row sm:items-center justify-between gap-6 not-italic`}
                 itemScope
                 itemType="https://schema.org/LocalBusiness"
               >
-                <div className={`w-20 h-20 rounded-xl border flex items-center justify-center flex-shrink-0 p-2.5 transition-all duration-300 ${isDark ? 'bg-black border-gray-800' : 'bg-white border-gray-200'}`}>
-                  <img
-                    src="/MDLogo.png"
-                    alt="Metro Industrial Park Logo"
-                    className="w-full h-full object-contain drop-shadow-sm"
-                    width={80}
-                    height={80}
-                    loading="lazy"
-                  />
+                <div className="flex items-start gap-4 sm:gap-5">
+                  <div className={`w-16 h-16 sm:w-20 sm:h-20 border ${t.border} ${t.bgPage} flex items-center justify-center flex-shrink-0 p-2.5`}>
+                    <img
+                      src="/MDLogo.png"
+                      alt="Metro Industrial Park Logo"
+                      className="w-full h-full object-contain"
+                      width={80}
+                      height={80}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <p className={`text-lg sm:text-xl font-extrabold tracking-tight mb-1 ${t.textMain}`} itemProp="name">
+                      METRO INDUSTRIAL PARK
+                    </p>
+                    <p className={`text-sm leading-relaxed ${t.textBody}`} itemProp="address">
+                      Opp. Suvas Industrial Estate, Behind Siya Industrial Park,
+                      <br className="hidden sm:inline" /> Moraiya, Changodar, Ahmedabad – 382213, Gujarat
+                    </p>
+                    <p className="font-mono text-xs mt-2 tabular-nums">
+                      <a href="tel:+919824235642" itemProp="telephone" className={`${t.textMain} hover:text-brand-red transition-colors`}>
+                        +91 98242 35642
+                      </a>
+                      <span className={`mx-2 ${t.textMuted}`}>/</span>
+                      <a href="tel:+916356766767" className={`${t.textMain} hover:text-brand-red transition-colors`}>
+                        +91 63567 66767
+                      </a>
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-base sm:text-lg font-extrabold theme-text-primary mb-1" itemProp="name">
-                    METRO INDUSTRIAL PARK
-                  </p>
-                  <p className="theme-text-secondary text-sm leading-relaxed" itemProp="address">
-                    Opp. Suvas Industrial Estate, Behind Siya Industrial Park,<br />
-                    Moraiya, Changodar, Ahmedabad – 382213, Gujarat
-                  </p>
-                  <p className="theme-text-secondary text-sm mt-1">
-                    <a href="tel:+919824235642" itemProp="telephone" className="hover:text-brand-red transition-colors">+91 98242 35642</a>
-                    {' · '}
-                    <a href="tel:+916356766767" className="hover:text-brand-red transition-colors">+91 63567 66767</a>
-                  </p>
-                </div>
+
+                <a
+                  href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Get directions to Metro Industrial Park on Google Maps"
+                  className="py-3.5 px-6 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 shrink-0 transition-colors"
+                >
+                  <MapPin size={14} aria-hidden="true" />
+                  <span>Get Directions</span>
+                  <ExternalLink size={12} aria-hidden="true" />
+                </a>
               </address>
 
-              <div className={`h-px w-full ${isDark ? 'bg-gray-800' : 'bg-gray-200'}`} />
-
-              <div className="w-full h-64 sm:h-80 lg:h-96">
+              {/* Map Frame */}
+              <div className="w-full h-72 sm:h-96">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.9819206766047!2d72.41809017647694!3d22.914037679249986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20Industrial%20Park!5e0!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin"
                   className="w-full h-full border-0"
@@ -458,156 +469,114 @@ const ContactPage = () => {
                 />
               </div>
 
-              <div className={`p-4 flex justify-center ${isDark ? 'bg-gray-900/50' : 'bg-gray-50'}`}>
-                <a
-                  href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Get directions to Metro Industrial Park on Google Maps"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 text-sm shadow-md shadow-brand-red/20"
-                >
-                  <MapPin size={15} /> Get Directions <ExternalLink size={13} />
-                </a>
-              </div>
-            </motion.div>
-
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              animate={locationInView ? 'visible' : 'hidden'}
-              className="grid sm:grid-cols-2 gap-4 sm:gap-5"
-            >
-              {/* Office hours */}
-              <motion.div variants={fadeUp} className={`${card} p-5 sm:p-6`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
-                    <Clock className="text-brand-red" size={18} />
+              {/* Bottom 2-Col Hours & Direct Call Ledger */}
+              <div className={`grid grid-cols-1 md:grid-cols-2 border-t ${t.border} divide-y md:divide-y-0 md:divide-x ${t.divide} ${t.bgSurface}`}>
+                {/* Hours */}
+                <div className="p-6 sm:p-8 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] mb-4">
+                      <Clock size={13} className="text-brand-red" aria-hidden="true" />
+                      <span className={t.textMuted}>Office Hours</span>
+                    </div>
+                    <div className={`flex items-center justify-between py-3.5 border-y ${t.border} text-sm`}>
+                      <span className={t.textBody}>Monday – Sunday</span>
+                      <span className={`font-mono font-bold tabular-nums ${t.textMain}`}>11:00 AM – 7:00 PM</span>
+                    </div>
                   </div>
-                  <h3 className="text-base font-extrabold theme-text-primary">Office Hours</h3>
+                  <p className={`text-xs mt-4 ${t.textMuted}`}>
+                    Private site inspections available by appointment outside regular hours.
+                  </p>
                 </div>
-                <div className={`flex justify-between items-center p-3 rounded-xl text-sm ${isDark ? 'bg-gray-800/60' : 'bg-gray-50'}`}>
-                  <span className="theme-text-secondary">Mon – Sun</span>
-                  <span className="font-bold theme-text-primary">11:00 AM – 7:00 PM</span>
-                </div>
-                <p className={`text-xs mt-3 ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-                  Site visits available by appointment outside hours
-                </p>
-              </motion.div>
 
-              {/* Direct call */}
-              <motion.div variants={fadeUp} className={`${card} p-5 sm:p-6`}>
-                <h3 className="text-base font-extrabold theme-text-primary mb-1">Need Immediate Help?</h3>
-                <p className="theme-text-tertiary text-xs mb-4">
-                  Call our directors directly for urgent inquiries
-                </p>
-                <div className="space-y-2">
-                  {[
-                    { label: '+91 98242 35642', href: 'tel:+919824235642' },
-                    { label: '+91 63567 66767', href: 'tel:+916356766767' },
-                  ].map(({ label, href }) => (
-                    <a
-                      key={href}
-                      href={href}
-                      aria-label={`Call ${label}`}
-                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/20 whitespace-nowrap"
-                    >
-                      <Phone size={15} /> {label}
-                    </a>
-                  ))}
+                {/* Urgent Direct Lines */}
+                <div className="p-6 sm:p-8">
+                  <div className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] mb-2">
+                    <Phone size={13} className="text-brand-red" aria-hidden="true" />
+                    <span className={t.textMuted}>Direct Lines</span>
+                  </div>
+                  <p className={`text-xs mb-4 ${t.textBody}`}>
+                    Call our directors directly for urgent shed or plot inquiries.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {[
+                      { label: '+91 98242 35642', href: 'tel:+919824235642' },
+                      { label: '+91 63567 66767', href: 'tel:+916356766767' },
+                    ].map(({ label, href }) => (
+                      <a
+                        key={href}
+                        href={href}
+                        aria-label={`Call ${label}`}
+                        className="py-3 px-4 bg-brand-red hover:bg-red-700 text-white font-mono text-xs font-bold tabular-nums inline-flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
+                      >
+                        <Phone size={13} aria-hidden="true" />
+                        <span>{label}</span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </section>
 
         {/* ══════════════════════════════════
-            REVIEWS
+            03. GOOGLE REVIEWS BAND
             ══════════════════════════════════ */}
         <section
           ref={reviewsRef}
           aria-label="Leave a Google review"
-          className={`py-14 sm:py-20 ${
-            isDark
-              ? 'bg-gradient-to-b from-black to-gray-950'
-              : 'bg-gradient-to-b from-gray-50 to-white'
-          }`}
+          className={`py-16 sm:py-24 ${t.bgPage}`}
         >
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <motion.div
-              variants={scaleIn}
-              initial="hidden"
-              animate={reviewsInView ? 'visible' : 'hidden'}
-              className="flex justify-center mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={reviewsInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, ease: EASE }}
+              className={`border ${t.border} ${t.bgSurface} grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${t.divide}`}
             >
-              <div className="relative">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-brand-red/10 rounded-full flex items-center justify-center border-2 border-brand-red/20">
-                  <Star size={38} className="text-brand-red fill-brand-red" />
+              <div className="lg:col-span-8 p-7 sm:p-12">
+                <div className="flex items-center gap-3 mb-4 font-mono text-[11px] uppercase tracking-[0.18em]">
+                  <span className="text-brand-red font-semibold">03</span>
+                  <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+                  <span className={t.textMuted}>Client Feedback</span>
                 </div>
-                {[0, 60, 120, 180, 240, 300].map((deg) => (
-                  <div
-                    key={deg}
-                    className="absolute w-2 h-2 rounded-full bg-brand-red/30"
-                    style={{
-                      top: '50%', left: '50%',
-                      transform: `rotate(${deg}deg) translateX(44px) translateY(-50%)`,
-                    }}
-                  />
-                ))}
+
+                <h2 className={`text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] mb-4 ${t.textMain}`}>
+                  Share Your Experience<span className="text-brand-red">.</span>
+                </h2>
+
+                <p className={`text-sm sm:text-base max-w-xl leading-relaxed ${t.textBody}`}>
+                  Your review helps other businesses evaluate the right industrial space — and strengthens Metro Industrial Park&apos;s verified reputation on Google.
+                </p>
               </div>
-            </motion.div>
 
-            <motion.h2
-              variants={fadeUp}
-              initial="hidden"
-              animate={reviewsInView ? 'visible' : 'hidden'}
-              className="text-2xl sm:text-4xl font-extrabold theme-text-primary mb-3"
-            >
-              Share Your <span className="text-brand-red">Experience</span>
-            </motion.h2>
+              <div className={`lg:col-span-4 p-7 sm:p-12 flex flex-col justify-between gap-6 ${t.bgPage}`}>
+                <div>
+                  <div className="flex items-center gap-1 mb-2" aria-hidden="true">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={16} className="text-amber-500 fill-amber-500" />
+                    ))}
+                  </div>
+                  <div className={`text-3xl font-extrabold tracking-tight tabular-nums ${t.textMain}`}>
+                    5.0 <span className={`text-sm font-mono font-normal ${t.textMuted}`}>/ 5.0</span>
+                  </div>
+                  <p className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
+                    Trusted Across Ahmedabad
+                  </p>
+                </div>
 
-            <motion.p
-              variants={fadeUp}
-              initial="hidden"
-              animate={reviewsInView ? 'visible' : 'hidden'}
-              className="theme-text-tertiary text-sm sm:text-base mb-8 max-w-lg mx-auto"
-            >
-              Your review helps other businesses find the right industrial space — and strengthens Metro Industrial Park&apos;s local reputation on Google.
-            </motion.p>
-
-            <motion.a
-              variants={scaleIn}
-              initial="hidden"
-              animate={reviewsInView ? 'visible' : 'hidden'}
-              href="https://g.page/r/CfbFhZSjMaH1EBI/review"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Leave a Google review for Metro Industrial Park"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-2xl transition-colors shadow-xl shadow-brand-red/25 text-sm sm:text-base"
-              onClick={() => { if (!promptDismissed) setPromptDismissed(true); }}
-            >
-              <Star size={18} className="fill-white" />
-              Leave a Google Review
-              <ChevronRight size={16} />
-            </motion.a>
-
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate={reviewsInView ? 'visible' : 'hidden'}
-              className={`mt-8 inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-xs font-semibold ${
-                isDark ? 'border-gray-800 bg-gray-900 text-gray-400' : 'border-gray-200 bg-white text-gray-500 shadow-sm'
-              }`}
-            >
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} className="text-yellow-500 fill-yellow-500" />
-                ))}
+                <a
+                  href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Leave a Google review for Metro Industrial Park"
+                  onClick={() => { if (!promptDismissed) setPromptDismissed(true); }}
+                  className="w-full py-4 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
+                >
+                  <span>Leave a Google Review</span>
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </a>
               </div>
-              <span>·</span>
-              <span>Trusted by businesses across Ahmedabad</span>
             </motion.div>
           </div>
         </section>
@@ -618,57 +587,54 @@ const ContactPage = () => {
         <AnimatePresence>
           {showPrompt && !promptDismissed && (
             <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 16, scale: 0.95 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.25, ease: EASE }}
               className="fixed bottom-5 right-4 sm:right-6 z-50 w-72 sm:w-80"
               role="dialog"
               aria-label="Leave a review"
             >
-              <div className={`rounded-2xl shadow-2xl border-2 overflow-hidden ${
-                isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-brand-red/20'
-              }`}>
-                <div className="h-1.5 bg-gradient-to-r from-brand-red to-red-400 w-full" />
-                <div className="p-4 sm:p-5">
+              <div className={`relative border ${t.border} ${t.bgSurface} shadow-2xl`}>
+                <div className="h-[2px] bg-brand-red w-full" aria-hidden="true" />
+                <div className="p-5">
                   <button
+                    type="button"
                     onClick={() => { setShowPrompt(false); setPromptDismissed(true); }}
-                    className={`absolute top-4 right-4 p-1 rounded-lg transition-colors ${isDark ? 'text-gray-500 hover:text-white hover:bg-gray-800' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+                    className={`absolute top-3.5 right-3.5 p-1 ${t.textMuted} hover:text-brand-red transition-colors`}
                     aria-label="Close review prompt"
                   >
                     <X size={15} />
                   </button>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Star size={18} className="text-white fill-white" />
-                    </div>
-                    <div>
-                      <p className={`font-extrabold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Enjoying our service?
-                      </p>
-                      <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-                        A quick review means the world to us!
-                      </p>
-                    </div>
+
+                  <div className="flex items-center gap-1 mb-2" aria-hidden="true">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={12} className="text-amber-500 fill-amber-500" />
+                    ))}
                   </div>
+                  <p className={`font-extrabold text-sm ${t.textMain}`}>Enjoying our service?</p>
+                  <p className={`text-xs mt-1 mb-4 ${t.textBody}`}>
+                    A quick Google review helps other businesses find us.
+                  </p>
+
                   <a
                     href="https://g.page/r/CfbFhZSjMaH1EBI/review"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => { setShowPrompt(false); setPromptDismissed(true); }}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-brand-red hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all"
+                    className="w-full py-2.5 px-4 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
                   >
-                    <Star size={14} className="fill-white" /> Write a Review
+                    <span>Write a Review</span>
+                    <ArrowUpRight size={14} aria-hidden="true" />
                   </a>
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
     </>
   );
 };
 
-export default ContactPage;
+export default ContactPage; 

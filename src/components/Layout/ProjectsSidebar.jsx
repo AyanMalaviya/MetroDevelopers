@@ -1,75 +1,53 @@
 // src/components/Layout/ProjectsSidebar.jsx
-import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { Building2, CheckCircle2 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
+
+const SIDEBAR_LINKS = [
+  { to: '/projects/ongoing', label: 'Ongoing', icon: Building2    },
+  { to: '/projects/past',    label: 'Past',    icon: CheckCircle2 },
+];
 
 const ProjectsSidebar = () => {
-  return (
-    <aside className="fixed right-6 top-1/2 -translate-y-1/2 z-30">
-      <nav
-        className="rounded-xl p-[2px]"
-        style={{
-          background: 'linear-gradient(135deg, #b3261e 0%, #2b2b2b 50%, #050509 100%)',
-        }}
-      >
-        <div className="bg-gradient-to-br from-[#1a1a1a] via-[#0f0f0f] to-[#050509] rounded-xl p-2 space-y-2">
-          {/* Ongoing Projects Link */}
-          <NavLink
-            to="/projects/ongoing"
-            className={({ isActive }) =>
-              `block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isActive
-                  ? 'bg-brand-red text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white hover:bg-brand-grey'
-              }`
-            }
-          >
-            <div className="flex flex-col items-center gap-1">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-              <span className="text-xs whitespace-nowrap">Ongoing</span>
-            </div>
-          </NavLink>
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
-          {/* Past Projects Link */}
+  const bgSurface = isDark ? 'bg-[#121215]/95' : 'bg-[#FFFFFF]/95';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-black/[0.12]';
+  const divide    = isDark ? 'divide-white/[0.12]' : 'divide-black/[0.12]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textMuted = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+
+  return (
+    <aside
+      aria-label="Project status navigation"
+      className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30"
+    >
+      <nav
+        className={`border ${border} ${bgSurface} backdrop-blur-md divide-y ${divide} shadow-xl`}
+      >
+        {SIDEBAR_LINKS.map(({ to, label, icon: Icon }) => (
           <NavLink
-            to="/projects/past"
+            key={to}
+            to={to}
             className={({ isActive }) =>
-              `block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              `relative flex flex-col items-center justify-center gap-1.5 px-3.5 py-3.5 transition-colors ${
                 isActive
-                  ? 'bg-brand-red text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white hover:bg-brand-grey'
+                  ? 'bg-brand-red text-white'
+                  : `${textMuted} hover:${isDark ? 'bg-[#17171B]' : 'bg-[#FAF9F6]'} hover:${textMain}`
               }`
             }
           >
-            <div className="flex flex-col items-center gap-1">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span className="text-xs whitespace-nowrap">Past</span>
-            </div>
+            {({ isActive }) => (
+              <>
+                <Icon size={16} className={isActive ? 'text-white' : 'text-brand-red'} aria-hidden="true" />
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] whitespace-nowrap">
+                  {label}
+                </span>
+              </>
+            )}
           </NavLink>
-        </div>
+        ))}
       </nav>
     </aside>
   );

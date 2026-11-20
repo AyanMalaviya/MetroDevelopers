@@ -1,15 +1,16 @@
 // src/components/Layout/Navbar.jsx
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
   Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
-  Settings2, ArrowUp, Type, Map,
+  Settings2, ArrowUp, Type, Map, ArrowUpRight,
   LucideLandPlot, Star,
 } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
+const EASE = [0.16, 1, 0.3, 1];
 const FONT_SIZE_STORAGE_KEY = 'metro-font-size';
 const FONT_SIZE_VALUES = { normal: '16px', large: '18px', xlarge: '20px' };
 
@@ -29,19 +30,31 @@ const Navbar = () => {
   const isDark = theme === 'dark';
   const navigate = useNavigate();
 
-  const [isMenuOpen,    setIsMenuOpen]    = useState(false);
-  const [isVisible,     setIsVisible]     = useState(true);
-  const [scrolled,      setScrolled]      = useState(false);
-  const [contactOpen,   setContactOpen]   = useState(false);
-  const [settingsOpen,  setSettingsOpen]  = useState(false);
-  const [fontSize,      setFontSize]      = useState('normal');
+  const [isMenuOpen,   setIsMenuOpen]   = useState(false);
+  const [isVisible,    setIsVisible]    = useState(true);
+  const [scrolled,     setScrolled]     = useState(false);
+  const [contactOpen,  setContactOpen]  = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [fontSize,     setFontSize]     = useState('normal');
 
   const lastScrollYRef = useRef(0);
   const contactRef     = useRef(null);
   const settingsRef    = useRef(null);
 
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+
+  /* ── Shared theme tokens ── */
+  const bgHeader  = isDark
+    ? scrolled ? 'bg-[#0B0B0D]/95 backdrop-blur-md' : 'bg-[#0B0B0D]'
+    : scrolled ? 'bg-[#F5F3EE]/95 backdrop-blur-md' : 'bg-[#F5F3EE]';
+  const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
 
   // Restore saved font size on mount
   useEffect(() => {
@@ -54,15 +67,14 @@ const Navbar = () => {
     } catch { /* ignore */ }
   }, []);
 
-  // Optimized, non-blocking scroll handler with rAF throttling & ref tracking
+  // Scroll hide/reveal with rAF throttling
   useEffect(() => {
     let ticking = false;
-
     const control = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const y = window.scrollY;
-          const isPastTop = y > 50;
+          const isPastTop = y > 40;
           setScrolled((prev) => (prev !== isPastTop ? isPastTop : prev));
 
           const lastY = lastScrollYRef.current;
@@ -88,14 +100,25 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', control);
   }, []);
 
-  // Close dropdowns on outside click
+  // Close dropdowns on outside click or Escape
   useEffect(() => {
-    const handler = (e) => {
-      if (contactRef.current && !contactRef.current.contains(e.target))  setContactOpen(false);
+    const onMouseDown = (e) => {
+      if (contactRef.current && !contactRef.current.contains(e.target))   setContactOpen(false);
       if (settingsRef.current && !settingsRef.current.contains(e.target)) setSettingsOpen(false);
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setContactOpen(false);
+        setSettingsOpen(false);
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
   }, []);
 
   useEffect(() => {
@@ -104,7 +127,7 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   const closeMenu  = useCallback(() => setIsMenuOpen(false), []);
-  const toggleMenu = useCallback(() => setIsMenuOpen(v => !v), []);
+  const toggleMenu = useCallback(() => setIsMenuOpen((v) => !v), []);
 
   const toggleFontSize = useCallback(() => {
     setFontSize((prev) => {
@@ -115,290 +138,304 @@ const Navbar = () => {
     });
   }, []);
 
-  const navItems = NAV_ITEMS;
-
-  // Settings quick-actions (no theme toggle — that's already in the navbar)
   const settingsItems = [
     {
       icon: ArrowUp,
       label: 'Back to Top',
+      meta: 'Scroll',
       action: () => { window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
-      accent: isDark ? 'text-blue-400' : 'text-blue-600',
-      bg: isDark ? 'hover:bg-blue-950/40' : 'hover:bg-blue-50',
     },
     {
       icon: Type,
-      label: `Font: ${ fontSize === 'normal' ? 'Normal' : fontSize === 'large' ? 'Large' : 'X-Large' }`,
+      label: 'Text Size',
+      meta: fontSize === 'normal' ? '16px' : fontSize === 'large' ? '18px' : '20px',
       action: () => { toggleFontSize(); },
-      accent: isDark ? 'text-green-400' : 'text-green-600',
-      bg: isDark ? 'hover:bg-green-950/40' : 'hover:bg-green-50',
     },
     {
       icon: Factory,
-      label: 'Explore Project',
+      label: 'Explore Park 1',
+      meta: 'MIP 01',
       action: () => { navigate('/metro-industrial-park'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
-      accent: isDark ? 'text-orange-400' : 'text-orange-600',
-      bg: isDark ? 'hover:bg-orange-950/40' : 'hover:bg-orange-50',
     },
     {
       icon: Map,
       label: 'Plan & Availability',
+      meta: 'Live Map',
       action: () => { navigate('/site-map'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
-      accent: isDark ? 'text-teal-400' : 'text-teal-600',
-      bg: isDark ? 'hover:bg-teal-950/40' : 'hover:bg-teal-50',
     },
   ];
-
-  const headerBg = scrolled
-    ? isDark
-      ? 'bg-black shadow-2xl border-b border-gray-800/90'
-      : 'bg-white shadow-xl border-b border-gray-200'
-    : isDark
-      ? 'bg-black border-b border-gray-900'
-      : 'bg-white border-b border-gray-200';
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 right-0 z-50 border-b ${border} ${bgHeader} transition-transform duration-300 ease-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
-        } ${headerBg}`}
+        }`}
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
-        <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-3.5">
+        <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
 
-          {/* ── Logo ── */}
-          <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 flex-shrink-0 group">
-            <div className={`relative flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl border flex items-center justify-center p-1 transition-all duration-300 ${
-              isDark ? 'bg-black border-gray-800' : 'bg-white border-gray-200'
-            }`}>
+          {/* ── Brand Mark ── */}
+          <Link to="/" onClick={closeMenu} className="flex items-center gap-3 flex-shrink-0 group">
+            <div className={`w-9 h-9 border ${border} ${bgSurface} flex items-center justify-center p-1.5 transition-colors group-hover:border-brand-red`}>
               <img
                 src="/MDLogo.png"
                 alt="Metro Developers Logo"
-                width={36}
-                height={36}
+                width={32}
+                height={32}
                 onError={(e) => { e.currentTarget.src = '/icons/icon-192x192.png'; }}
-                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                className="w-full h-full object-contain"
               />
-              <div className="absolute inset-0 rounded-xl bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10" />
             </div>
             <div className="leading-tight">
-              <span className={`block text-sm sm:text-base font-extrabold font-display transition-colors ${
-                isDark ? 'text-white' : 'text-gray-900'
-              }`}>
+              <span className={`block text-sm font-extrabold tracking-tight ${textMain}`}>
                 Metro Developers
               </span>
-              <span className={`block text-[10px] font-medium transition-colors ${
-                isDark ? 'text-gray-400' : 'text-gray-600'
-              }`}>
+              <span className={`block font-mono text-[9px] uppercase tracking-[0.14em] ${textMuted}`}>
                 Industrial Sheds · Lease &amp; Sale
               </span>
             </div>
           </Link>
 
-          {/* ── Desktop nav ── */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-3 py-2 text-xs font-bold tracking-wide rounded-xl transition-all duration-200 ${
-                    isActive
-                      ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                      : isDark
-                        ? 'text-gray-400 hover:text-white hover:bg-gray-900'
-                        : 'text-gray-600 hover:text-brand-red hover:bg-gray-100'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />
-                    <span className="whitespace-nowrap">{item.label}</span>
-
-                  </>
-                )}
-              </NavLink>
-            ))}
-
-            {/* ── Contact Dropdown ── */}
-            <div className="relative ml-1" ref={contactRef}>
-              <button
-                type="button"
-                onClick={() => { setContactOpen(v => !v); setSettingsOpen(false); }}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl transition-all duration-200 ${
-                  contactOpen
-                    ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                    : isDark
-                      ? 'text-gray-400 hover:text-white hover:bg-gray-900'
-                      : 'text-gray-600 hover:text-brand-red hover:bg-gray-100'
-                }`}
-              >
-                <span className="relative flex h-2 w-2 flex-shrink-0">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    contactOpen ? 'bg-white' : 'bg-green-400'
-                  }`} />
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${
-                    contactOpen ? 'bg-white' : 'bg-green-500'
-                  }`} />
-                </span>
-                <span className="hidden lg:inline">Reach Us</span>
-                <motion.div animate={{ rotate: contactOpen ? 180 : 0 }} transition={{ duration: 0.22 }}>
-                  <ChevronDown size={12} />
-                </motion.div>
-              </button>
-
-              <AnimatePresence>
-                {contactOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                    transition={{ duration: 0.2 }}
-                    className={`absolute right-0 top-full mt-2 w-64 rounded-2xl border shadow-2xl overflow-hidden z-50 ${
-                      isDark ? 'bg-black border-gray-800 shadow-black/70' : 'bg-white border-gray-200 shadow-gray-200/80'
-                    }`}
-                  >
-                    <div className={`px-4 py-3 border-b ${isDark ? 'border-gray-800 bg-black' : 'border-gray-100 bg-white'}`}>
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
-                        </span>
-                        <p className={`text-xs font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Available for site visits</p>
-                      </div>
-                      <p className={`text-[10px] mt-0.5 ml-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Mon–Sun · 9 AM to 7 PM</p>
-                    </div>
-                    <div className={`p-3 flex flex-col gap-2 ${isDark ? 'bg-black' : 'bg-white'}`}>
-                      <a href="tel:+919824235642" onClick={() => setContactOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-red text-white text-xs font-semibold hover:bg-red-700 active:scale-95 transition-all shadow-sm shadow-red-500/20">
-                        <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0"><Phone size={11} /></div>
-                        <div><p className="font-bold text-[11px]">Call Now</p><p className="text-[10px] text-red-200">+91 98242 35642</p></div>
-                      </a>
-                      <a href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
-                        target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-green-500 text-white text-xs font-semibold hover:bg-green-600 active:scale-95 transition-all shadow-sm shadow-green-500/20">
-                        <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0"><MessageCircle size={11} /></div>
-                        <div><p className="font-bold text-[11px]">WhatsApp</p><p className="text-[10px] text-green-200">Chat instantly</p></div>
-                      </a>
-                      <a href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
-                        target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border text-xs font-semibold active:scale-95 transition-all ${
-                          isDark ? 'border-gray-700 bg-black text-gray-300 hover:bg-gray-900' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                        }`}>
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
-                          <MapPin size={11} className="text-brand-red" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-[11px]">Get Directions</p>
-                          <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Moraiya, Ahmedabad</p>
-                        </div>
-                      </a>
-                      <a href="https://g.page/r/CfbFhZSjMaH1EBI/review"
-                        target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border text-xs font-semibold active:scale-95 transition-all ${
-                          isDark ? 'border-amber-500/30 bg-amber-950/20 text-amber-300 hover:bg-amber-900/30' : 'border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100'
-                        }`}>
-                        <div className="w-6 h-6 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                          <Star size={11} className="text-amber-500 fill-amber-500" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-[11px] flex items-center gap-1.5">Google Reviews <span className="text-[10px] px-1 py-0.5 bg-amber-500 text-white rounded font-mono font-bold">5.0 ★</span></p>
-                          <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Read & write verified reviews</p>
-                        </div>
-                      </a>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+          {/* ── Desktop Navigation ── */}
+          <div className="hidden lg:flex items-center h-full">
+            <div className="flex items-center h-full">
+              {NAV_ITEMS.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.path === '/'}
+                  className={({ isActive }) =>
+                    `relative h-full px-3 flex items-center text-xs font-semibold tracking-wide transition-colors whitespace-nowrap ${
+                      isActive
+                        ? textMain
+                        : `${textBody} hover:${isDark ? 'text-white' : 'text-black'}`
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span>{item.label}</span>
+                      {isActive && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute bottom-0 inset-x-2 h-[2px] bg-brand-red"
+                        />
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              ))}
             </div>
 
-            {/* ── Theme toggle (existing, unchanged) ── */}
-            {toggleTheme && (
-              <button
-                type="button"
-                onClick={toggleTheme}
-                title="Toggle theme"
-                className={`ml-1 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
-                  isDark
-                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
-                }`}
-              >
-                {isDark ? <Sun size={15} /> : <Moon size={15} />}
-              </button>
-            )}
+            {/* ── Utility Controls Cluster ── */}
+            <div className={`ml-3 pl-3 border-l ${border} flex items-center gap-1.5`}>
+              {/* Reach Us Dropdown */}
+              <div className="relative" ref={contactRef}>
+                <button
+                  type="button"
+                  onClick={() => { setContactOpen((v) => !v); setSettingsOpen(false); }}
+                  aria-expanded={contactOpen}
+                  className={`h-9 px-3 border text-xs font-bold uppercase tracking-[0.1em] inline-flex items-center gap-2 transition-colors ${
+                    contactOpen
+                      ? 'bg-brand-red border-brand-red text-white'
+                      : `${border} ${bgSurface} ${textMain} hover:border-brand-red hover:text-brand-red`
+                  }`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${contactOpen ? 'bg-white' : 'bg-emerald-500'}`}
+                    aria-hidden="true"
+                  />
+                  <span>Reach Us</span>
+                  <ChevronDown
+                    size={12}
+                    className={`transition-transform duration-200 ${contactOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
 
-            {/* ── Settings / Tuning Dropdown ── */}
-            <div className="relative ml-1" ref={settingsRef}>
-              <button
-                type="button"
-                onClick={() => { setSettingsOpen(v => !v); setContactOpen(false); }}
-                title="Quick settings"
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
-                  settingsOpen
-                    ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
-                    : isDark
-                      ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
-                }`}
-                aria-label="Quick settings"
-                aria-expanded={settingsOpen}
-              >
-                <motion.div animate={{ rotate: settingsOpen ? 60 : 0 }} transition={{ duration: 0.3 }}>
-                  <Settings2 size={15} />
-                </motion.div>
-              </button>
+                <AnimatePresence>
+                  {contactOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.18, ease: EASE }}
+                      className={`absolute right-0 top-full mt-2 w-72 border ${border} ${bgSurface} shadow-2xl z-50`}
+                    >
+                      <div className={`px-4 py-3 border-b ${border} ${bgPage}`}>
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                          <p className={`text-xs font-bold ${textMain}`}>Available for site visits</p>
+                        </div>
+                        <p className={`font-mono text-[10px] uppercase tracking-wider mt-0.5 ml-3.5 ${textMuted}`}>
+                          Mon–Sun · 9 AM to 7 PM
+                        </p>
+                      </div>
 
-              <AnimatePresence>
-                {settingsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                    transition={{ duration: 0.18 }}
-                    className={`absolute right-0 top-full mt-2 w-52 rounded-2xl border shadow-2xl overflow-hidden z-50 ${
-                      isDark ? 'bg-black border-gray-800 shadow-black/70' : 'bg-white border-gray-200 shadow-gray-200/80'
-                    }`}
-                  >
-                    <div className={`px-4 py-2.5 border-b text-[10px] font-bold uppercase tracking-widest ${
-                      isDark ? 'border-gray-800 text-gray-500' : 'border-gray-100 text-gray-400'
-                    }`}>
-                      Quick Actions
-                    </div>
-                    <div className={`p-2 flex flex-col gap-0.5 ${isDark ? 'bg-black' : 'bg-white'}`}>
-                      {settingsItems.map((item) => (
-                        <button
-                          key={item.label}
-                          type="button"
-                          onClick={item.action}
-                          className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
-                            isDark ? 'text-gray-300' : 'text-gray-700'
-                          } ${item.bg}`}
+                      <div className={`divide-y ${divide}`}>
+                        <a
+                          href="tel:+919824235642"
+                          onClick={() => setContactOpen(false)}
+                          className="flex items-center justify-between px-4 py-3 bg-brand-red hover:bg-red-700 text-white transition-colors"
                         >
-                          <item.icon size={14} className={item.accent} />
-                          <span>{item.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                          <div className="flex items-center gap-3">
+                            <Phone size={14} aria-hidden="true" />
+                            <div>
+                              <p className="text-xs font-bold uppercase tracking-wider">Call Now</p>
+                              <p className="font-mono text-[11px] text-white/85 tabular-nums">+91 98242 35642</p>
+                            </div>
+                          </div>
+                          <ArrowUpRight size={14} aria-hidden="true" />
+                        </a>
+
+                        <a
+                          href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setContactOpen(false)}
+                          className={`flex items-center justify-between px-4 py-3 transition-colors ${
+                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <MessageCircle size={14} className="text-emerald-600" aria-hidden="true" />
+                            <div>
+                              <p className={`text-xs font-bold ${textMain}`}>WhatsApp</p>
+                              <p className={`text-[11px] ${textMuted}`}>Chat instantly</p>
+                            </div>
+                          </div>
+                          <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
+                        </a>
+
+                        <a
+                          href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setContactOpen(false)}
+                          className={`flex items-center justify-between px-4 py-3 transition-colors ${
+                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <MapPin size={14} className="text-brand-red" aria-hidden="true" />
+                            <div>
+                              <p className={`text-xs font-bold ${textMain}`}>Get Directions</p>
+                              <p className={`text-[11px] ${textMuted}`}>Moraiya, Ahmedabad</p>
+                            </div>
+                          </div>
+                          <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
+                        </a>
+
+                        <a
+                          href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setContactOpen(false)}
+                          className={`flex items-center justify-between px-4 py-3 transition-colors ${
+                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Star size={14} className="text-amber-500 fill-amber-500" aria-hidden="true" />
+                            <div>
+                              <p className={`text-xs font-bold flex items-center gap-2 ${textMain}`}>
+                                <span>Google Reviews</span>
+                                <span className="font-mono text-[10px] text-brand-red">5.0 ★</span>
+                              </p>
+                              <p className={`text-[11px] ${textMuted}`}>Read &amp; write verified reviews</p>
+                            </div>
+                          </div>
+                          <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Theme Toggle */}
+              {toggleTheme && (
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  title="Toggle theme"
+                  aria-label="Toggle color theme"
+                  className={`w-9 h-9 border ${border} ${bgSurface} ${textMain} hover:border-brand-red hover:text-brand-red flex items-center justify-center transition-colors`}
+                >
+                  {isDark ? <Sun size={14} /> : <Moon size={14} />}
+                </button>
+              )}
+
+              {/* Settings / Quick Actions Dropdown */}
+              <div className="relative" ref={settingsRef}>
+                <button
+                  type="button"
+                  onClick={() => { setSettingsOpen((v) => !v); setContactOpen(false); }}
+                  title="Quick settings"
+                  aria-label="Quick settings"
+                  aria-expanded={settingsOpen}
+                  className={`w-9 h-9 border flex items-center justify-center transition-colors ${
+                    settingsOpen
+                      ? 'bg-brand-red border-brand-red text-white'
+                      : `${border} ${bgSurface} ${textMain} hover:border-brand-red hover:text-brand-red`
+                  }`}
+                >
+                  <Settings2
+                    size={14}
+                    className={`transition-transform duration-300 ${settingsOpen ? 'rotate-45' : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {settingsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.16, ease: EASE }}
+                      className={`absolute right-0 top-full mt-2 w-60 border ${border} ${bgSurface} shadow-2xl z-50`}
+                    >
+                      <div className={`px-4 py-2.5 border-b ${border} ${bgPage} font-mono text-[10px] uppercase tracking-[0.16em] ${textMuted}`}>
+                        Quick Actions
+                      </div>
+                      <div className={`divide-y ${divide}`}>
+                        {settingsItems.map((item) => (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={item.action}
+                            className={`flex items-center justify-between w-full px-4 py-3 text-left text-xs font-semibold transition-colors ${textMain} ${
+                              isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                            }`}
+                          >
+                            <span className="inline-flex items-center gap-2.5">
+                              <item.icon size={13} className="text-brand-red" aria-hidden="true" />
+                              <span>{item.label}</span>
+                            </span>
+                            <span className={`font-mono text-[10px] uppercase ${textMuted}`}>
+                              {item.meta}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
-          {/* ── Mobile right side: theme toggle + hamburger ── */}
-          <div className="md:hidden flex items-center gap-2">
+          {/* ── Mobile / Tablet Right Controls ── */}
+          <div className="lg:hidden flex items-center gap-2">
             {toggleTheme && (
               <button
                 type="button"
                 onClick={toggleTheme}
                 title="Toggle theme"
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
-                  isDark
-                    ? 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700'
-                    : 'bg-gray-100 text-gray-700 hover:text-gray-900'
-                }`}
+                aria-label="Toggle color theme"
+                className={`w-9 h-9 border ${border} ${bgSurface} ${textMain} flex items-center justify-center transition-colors`}
               >
                 {isDark ? <Sun size={15} /> : <Moon size={15} />}
               </button>
@@ -409,174 +446,174 @@ const Navbar = () => {
               onClick={toggleMenu}
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+              className={`w-9 h-9 border flex items-center justify-center transition-colors ${
                 isMenuOpen
-                  ? 'bg-brand-red text-white'
-                  : isDark
-                    ? 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700'
-                    : 'bg-gray-100 text-gray-700 hover:text-brand-red hover:bg-gray-200'
+                  ? 'bg-brand-red border-brand-red text-white'
+                  : `${border} ${bgSurface} ${textMain} hover:border-brand-red`
               }`}
             >
-              <motion.div initial={false} animate={{ rotate: isMenuOpen ? 90 : 0 }} transition={{ duration: 0.25 }}>
-                {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
-              </motion.div>
+              {isMenuOpen ? <X size={17} /> : <Menu size={17} />}
             </button>
           </div>
         </nav>
 
-        {/* ── Scroll progress bar ── */}
+        {/* ── 2px Signal Red Reading Progress Line ── */}
         <motion.div
-          className="h-[2px] bg-gradient-to-r from-brand-red via-red-400 to-brand-red"
+          className="h-[2px] bg-brand-red"
           style={{ scaleX, transformOrigin: '0%' }}
         />
       </header>
 
       {/* ══════════════════════════════════
-          MOBILE MENU
+          MOBILE / TABLET DRAWER
       ══════════════════════════════════ */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="fixed inset-0 bg-black/60 z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              className="fixed inset-0 bg-black/70 z-40 lg:hidden"
               onClick={closeMenu}
             />
 
-            <motion.div
-              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-              className={`fixed top-[61px] sm:top-[65px] right-0 bottom-0 w-[272px] sm:w-[300px] z-40 md:hidden overflow-y-auto ${
-                isDark ? 'bg-black border-l border-gray-800' : 'bg-white border-l border-gray-200'
-              }`}
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.32, ease: EASE }}
+              className={`fixed top-[66px] right-0 bottom-0 w-[290px] sm:w-[320px] z-40 lg:hidden overflow-y-auto border-l ${border} ${bgPage}`}
+              style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
             >
-              <div className="flex flex-col p-4 gap-1">
-
-                <div className={`px-2 pb-4 mb-2 border-b ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
-                  <p className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Navigation</p>
-                </div>
-
-                {navItems.map((item, i) => (
-                  <motion.div
-                    key={item.path}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                  >
-                    <NavLink
-                      to={item.path}
-                      onClick={closeMenu}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 ${
-                          isActive
-                            ? 'bg-brand-red text-white shadow-md shadow-brand-red/25'
-                            : isDark
-                              ? 'text-gray-300 hover:text-white hover:bg-gray-900/70'
-                              : 'text-gray-700 hover:text-brand-red hover:bg-gray-100'
-                        }`
-                      }
-                    >
-                      {({ isActive }) => (
-                        <>
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
-                            isActive ? 'bg-white/20' : isDark ? 'bg-gray-900' : 'bg-gray-100'
-                          }`}>
-                            <item.icon className="w-4 h-4" />
-                          </div>
-                          <span>{item.label}</span>
-                          {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/70" />}
-                        </>
-                      )}
-                    </NavLink>
-                  </motion.div>
-                ))}
-
-                {/* ── Mobile Quick Actions ── */}
-                <motion.div
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.05 + 0.05, duration: 0.3 }}
-                  className={`mt-3 pt-3 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}
-                >
-                  <p className={`text-[10px] font-bold uppercase tracking-widest px-2 mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Quick Actions</p>
-                  <div className="flex flex-col gap-1">
-                    {settingsItems.map((item) => (
-                      <button
-                        key={item.label}
-                        type="button"
-                        onClick={() => { item.action(); closeMenu(); }}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                          isDark ? 'text-gray-300 hover:bg-gray-900/70' : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                      >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          isDark ? 'bg-gray-900' : 'bg-gray-100'
-                        }`}>
-                          <item.icon size={16} className={item.accent} />
-                        </div>
-                        <span>{item.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* ── Mobile Contact Strip ── */}
-                <motion.div
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (navItems.length + settingsItems.length) * 0.05 + 0.05, duration: 0.3 }}
-                  className={`mt-3 pt-3 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}
-                >
-                  <p className={`text-[10px] font-bold uppercase tracking-widest px-2 mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Reach Us</p>
-                  <div className="flex flex-col gap-2">
-                    <a href="tel:+919824235642" onClick={closeMenu}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-red text-white text-sm font-semibold active:scale-95 transition-all">
-                      <Phone size={15} />
-                      <div><p className="text-xs font-bold">Call Now</p><p className="text-[10px] text-red-200">+91 98242 35642</p></div>
-                    </a>
-                    <a href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
-                      target="_blank" rel="noopener noreferrer" onClick={closeMenu}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-green-500 text-white text-sm font-semibold active:scale-95 transition-all">
-                      <MessageCircle size={15} />
-                      <div><p className="text-xs font-bold">WhatsApp</p><p className="text-[10px] text-green-200">Chat instantly</p></div>
-                    </a>
-                    <a href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
-                      target="_blank" rel="noopener noreferrer" onClick={closeMenu}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold active:scale-95 transition-all ${
-                        isDark ? 'border-gray-700 text-gray-300 hover:bg-gray-800' : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                      }`}>
-                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
-                        <MapPin size={13} className="text-brand-red" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold">Get Directions</p>
-                        <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Moraiya, Ahmedabad</p>
-                      </div>
-                    </a>
-                    <a href="https://g.page/r/CfbFhZSjMaH1EBI/review"
-                      target="_blank" rel="noopener noreferrer" onClick={closeMenu}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold active:scale-95 transition-all ${
-                        isDark ? 'border-amber-500/30 bg-amber-950/20 text-amber-300 hover:bg-amber-900/30' : 'border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100'
-                      }`}>
-                      <div className="w-6 h-6 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <Star size={13} className="text-amber-500 fill-amber-500" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold flex items-center gap-1.5">Google Reviews <span className="text-[10px] px-1 py-0.5 bg-amber-500 text-white rounded font-mono font-bold">5.0 ★</span></p>
-                        <p className={`text-[10px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Read & write verified reviews</p>
-                      </div>
-                    </a>
-                  </div>
-                </motion.div>
-
-                <div className={`mt-4 pt-4 border-t text-center ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
-                  <p className={`text-[10px] font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Metro Industrial Park · Moraiya, Ahmedabad
-                  </p>
-                </div>
+              {/* Navigation Index */}
+              <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>
+                01 / Navigation
               </div>
-            </motion.div>
+
+              <div className={`divide-y ${divide} border-b ${border}`}>
+                {NAV_ITEMS.map((item, i) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    end={item.path === '/'}
+                    onClick={closeMenu}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-5 py-3.5 text-sm font-semibold transition-colors ${
+                        isActive
+                          ? 'bg-brand-red text-white'
+                          : `${bgSurface} ${textMain} ${isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'}`
+                      }`
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <span className="inline-flex items-center gap-3">
+                          <span className={`font-mono text-[10px] tabular-nums ${isActive ? 'text-white/80' : 'text-brand-red'}`}>
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <span>{item.label}</span>
+                        </span>
+                        <item.icon size={15} className={isActive ? 'text-white' : textMuted} aria-hidden="true" />
+                      </>
+                    )}
+                  </NavLink>
+                ))}
+              </div>
+
+              {/* Quick Actions */}
+              <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>
+                02 / Quick Actions
+              </div>
+
+              <div className={`divide-y ${divide} border-b ${border}`}>
+                {settingsItems.map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => {
+                      item.action();
+                      if (item.label !== 'Text Size') closeMenu();
+                    }}
+                    className={`w-full flex items-center justify-between px-5 py-3 text-left text-xs font-semibold ${bgSurface} ${textMain} transition-colors ${
+                      isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                    }`}
+                  >
+                    <span className="inline-flex items-center gap-3">
+                      <item.icon size={14} className="text-brand-red" aria-hidden="true" />
+                      <span>{item.label}</span>
+                    </span>
+                    <span className={`font-mono text-[10px] uppercase ${textMuted}`}>{item.meta}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Direct Site Office */}
+              <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>
+                03 / Reach Us
+              </div>
+
+              <div className="p-4 space-y-2.5">
+                <a
+                  href="tel:+919824235642"
+                  onClick={closeMenu}
+                  className="w-full py-3 px-4 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
+                >
+                  <span className="inline-flex items-center gap-2.5">
+                    <Phone size={14} aria-hidden="true" />
+                    <span className="tabular-nums">+91 98242 35642</span>
+                  </span>
+                  <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+
+                <a
+                  href="https://wa.me/919824235642?text=Hi%2C%20I%27m%20interested%20in%20Metro%20Industrial%20Park%20sheds."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMenu}
+                  className={`w-full py-3 px-4 border ${border} ${bgSurface} ${textMain} text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
+                >
+                  <span className="inline-flex items-center gap-2.5">
+                    <MessageCircle size={14} className="text-emerald-600" aria-hidden="true" />
+                    <span>WhatsApp Chat</span>
+                  </span>
+                  <ArrowUpRight size={14} className={textMuted} aria-hidden="true" />
+                </a>
+
+                <a
+                  href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMenu}
+                  className={`w-full py-3 px-4 border ${border} ${bgSurface} ${textMain} text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
+                >
+                  <span className="inline-flex items-center gap-2.5">
+                    <MapPin size={14} className="text-brand-red" aria-hidden="true" />
+                    <span>Directions · Moraiya</span>
+                  </span>
+                  <ArrowUpRight size={14} className={textMuted} aria-hidden="true" />
+                </a>
+
+                <a
+                  href="https://g.page/r/CfbFhZSjMaH1EBI/review"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMenu}
+                  className={`w-full py-3 px-4 border ${border} ${bgSurface} ${textMain} text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
+                >
+                  <span className="inline-flex items-center gap-2.5">
+                    <Star size={14} className="text-amber-500 fill-amber-500" aria-hidden="true" />
+                    <span>Google Reviews · 5.0</span>
+                  </span>
+                  <ArrowUpRight size={14} className={textMuted} aria-hidden="true" />
+                </a>
+              </div>
+
+              <div className={`px-5 py-4 border-t ${border} font-mono text-[10px] uppercase tracking-wider text-center ${textMuted}`}>
+                Metro Industrial Park · Moraiya, Ahmedabad
+              </div>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>

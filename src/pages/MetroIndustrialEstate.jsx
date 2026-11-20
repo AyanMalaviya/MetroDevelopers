@@ -1,13 +1,12 @@
 // src/pages/MetroIndustrialEstate.jsx
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import {
-  MapPin, Phone, ShieldCheck, Truck, Factory, Droplets,
-  ArrowRight, Ruler, Hammer, Building2, Zap, HelpCircle,
-  ChevronDown, Maximize2, Layers, CheckCircle, ExternalLink,
-  Clock, TrendingUp, Compass, Check, Filter, Lightbulb
+  MapPin, Phone, ShieldCheck, ArrowRight, ArrowUpRight,
+  Building2, Maximize2, Layers, ExternalLink, Lightbulb,
+  Plus, Minus,
 } from 'lucide-react';
 import { FaRoad, FaWhatsapp } from 'react-icons/fa';
 import Lightbox from 'yet-another-react-lightbox';
@@ -22,51 +21,82 @@ import {
   metroEstateIndividualUnitsSchema,
 } from '../utils/schemas';
 
-/* ── Section Header matching Park 1 ── */
-const SectionHeader = ({ icon, title }) => (
-  <div className="flex items-center gap-2.5 mb-5">
-    <div className="text-brand-red">{icon}</div>
-    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold theme-text-primary tracking-tight font-display">
-      {title}
-    </h2>
-  </div>
-);
+const EASE = [0.16, 1, 0.3, 1];
 
-/* ── ImageCard matching Park 1 with zoom and Lightbox trigger ── */
-const ImageCard = ({ src, alt, title, onOpen, theme, tall = false }) => (
-  <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden shadow-sm">
-    <div className={`${tall ? 'min-h-[480px]' : 'min-h-[360px]'} w-full ${
-      theme === 'dark' ? 'bg-gray-950' : 'bg-gray-100'
-    } flex flex-col items-center justify-center p-4`}>
-      <img
-        src={src}
-        alt={alt}
-        width={1200}
-        height={800}
-        loading="lazy"
-        decoding="async"
-        className="max-w-full h-auto cursor-zoom-in hover:scale-[1.02] transition-transform duration-300 rounded-lg shadow"
-        onClick={onOpen}
-        onError={(e) => {
-          e.target.style.display = 'none';
-          e.target.parentElement.innerHTML = `<div class="text-gray-500 text-center p-8"><p class="text-lg mb-2">${title}</p><p class="text-sm">Image coming soon</p></div>`;
-        }}
-      />
-      <button
-        onClick={onOpen}
-        className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-red hover:bg-red-700 text-white rounded-xl transition-all text-xs sm:text-sm font-semibold hover:scale-105 shadow-md shadow-brand-red/25 whitespace-nowrap"
-      >
-        <Maximize2 size={14} /> View Full Size
-      </button>
+const getTokens = (isDark) => ({
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
+  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#ECEAE3]',
+  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
+  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
+  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
+  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
+  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+});
+
+/* ── Editorial Section Heading ── */
+const SectionHeader = ({ index, kicker, title, isDark }) => {
+  const t = getTokens(isDark);
+  return (
+    <div className={`pb-5 mb-6 border-b ${t.border}`}>
+      <div className="flex items-center gap-3 mb-2 font-mono text-[11px] tracking-[0.18em] uppercase">
+        <span className="text-brand-red font-semibold">{index}</span>
+        <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+        <span className={t.textMuted}>{kicker}</span>
+      </div>
+      <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] ${t.textMain}`}>
+        {title}
+      </h2>
     </div>
-  </div>
-);
+  );
+};
+
+/* ── Technical Blueprint / Schedule Frame ── */
+const ImageCard = ({ src, alt, title, onOpen, isDark, tall = false }) => {
+  const t = getTokens(isDark);
+  return (
+    <div className={`border ${t.border} ${t.bgSurface}`}>
+      <div className={`flex items-center justify-between px-4 sm:px-5 py-3 border-b ${t.border} font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em]`}>
+        <span className={t.textMuted}>{title}</span>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex items-center gap-1.5 text-brand-red font-semibold hover:underline"
+        >
+          <Maximize2 size={12} aria-hidden="true" />
+          <span>Expand</span>
+        </button>
+      </div>
+      <div
+        className={`${tall ? 'min-h-[420px]' : 'min-h-[320px]'} w-full ${
+          isDark ? 'bg-[#09090B]' : 'bg-[#EFECE6]'
+        } flex flex-col items-center justify-center p-4 sm:p-6`}
+      >
+        <img
+          src={src}
+          alt={alt}
+          width={1200}
+          height={800}
+          loading="lazy"
+          decoding="async"
+          className={`max-w-full h-auto cursor-zoom-in border ${t.border}`}
+          onClick={onOpen}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentElement.innerHTML = `<div class="text-gray-500 text-center p-8"><p class="text-base font-semibold mb-1">${title}</p><p class="text-xs font-mono uppercase">Drawing coming soon</p></div>`;
+          }}
+        />
+      </div>
+    </div>
+  );
+};
 
 const MetroIndustrialEstate = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const t = getTokens(isDark);
 
-  const [activeTab, setActiveTab] = useState('areaTables'); // 'areaTables' | 'siteMap'
+  const [activeTab, setActiveTab] = useState('areaTables');
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerSlides, setViewerSlides] = useState([]);
   const [openFaq, setOpenFaq] = useState(0);
@@ -81,12 +111,11 @@ const MetroIndustrialEstate = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  /* ── Layout images matching Park 1 ── */
   const layoutImages = {
     areaTable: {
       src: '/images/metro-industrial-park-2-area-table.png',
       alt: 'Industrial Park 2 Official Area Details Table — 23 Sub Plots Area Breakdown Moraiya Changodar',
-      title: 'Area Details Table (23 Plots Schedule)',
+      title: 'Area Details Table — 23 Plots Schedule',
     },
     siteMap: {
       src: '/images/metro-industrial-park-2-site-plan.jpg',
@@ -95,61 +124,70 @@ const MetroIndustrialEstate = () => {
     },
   };
 
-  const openViewer = useCallback((src, title) => {
-    setViewerSlides([
-      { src, title, description: 'Click zoom icon or scroll to zoom · Pinch on mobile' },
-      { src: layoutImages.areaTable.src, title: layoutImages.areaTable.title },
-      { src: layoutImages.siteMap.src, title: layoutImages.siteMap.title },
-    ].filter((s, idx, arr) => arr.findIndex(t => t.src === s.src) === idx));
-    setViewerOpen(true);
-  }, [layoutImages.areaTable.src, layoutImages.areaTable.title, layoutImages.siteMap.src, layoutImages.siteMap.title]);
+  const openViewer = useCallback(
+    (src, title) => {
+      setViewerSlides(
+        [
+          { src, title, description: 'Click zoom icon or scroll to zoom · Pinch on mobile' },
+          { src: layoutImages.areaTable.src, title: layoutImages.areaTable.title },
+          { src: layoutImages.siteMap.src, title: layoutImages.siteMap.title },
+        ].filter((s, idx, arr) => arr.findIndex((item) => item.src === s.src) === idx)
+      );
+      setViewerOpen(true);
+    },
+    [layoutImages.areaTable.src, layoutImages.areaTable.title, layoutImages.siteMap.src, layoutImages.siteMap.title]
+  );
 
   const features = [
     {
-      icon: <FaRoad size={22} />,
+      code: 'INFRA 01',
+      icon: <FaRoad size={18} aria-hidden="true" />,
       title: 'Wide Heavy RCC Road',
       description: 'Reinforced cement concrete internal roads built for multi-axle freight trailers and container movement.',
     },
     {
-      icon: <Lightbulb size={22} />,
+      code: 'INFRA 02',
+      icon: <Lightbulb size={18} aria-hidden="true" />,
       title: 'Street Lights',
       description: 'Systematically installed street lighting along all internal roads for round-the-clock visibility and security.',
     },
     {
-      icon: <Layers size={22} />,
+      code: 'INFRA 03',
+      icon: <Layers size={18} aria-hidden="true" />,
       title: 'Puran (Soil Filling & Leveling)',
       description: 'Completed high-grade soil filling (puran) and precision mechanical leveling for immediate foundation casting.',
     },
     {
-      icon: <Building2 size={22} />,
+      code: 'INFRA 04',
+      icon: <Building2 size={18} aria-hidden="true" />,
       title: 'Compound Wall',
       description: 'Robust perimeter boundary compound wall securing the entire 17,545 sq.yard industrial campus.',
     },
     {
-      icon: <ShieldCheck size={22} />,
+      code: 'INFRA 05',
+      icon: <ShieldCheck size={18} aria-hidden="true" />,
       title: '24/7 Gated Security',
       description: 'Dedicated security entrance cabin and round-the-clock trained security personnel on duty (no CCTV).',
     },
   ];
 
   const specifications = [
-    { label: 'Project', value: 'Industrial Park 2' },
-    { label: 'Location', value: 'Moraiya, Changodar (Opp. Park 1)' },
-    { label: 'Campus Area', value: '17,545.33 sq.yards (14,670.01 SQ.MT)' },
-    { label: 'Total Plots', value: '23 Industrial Plots' },
-    { label: 'Plot Sizing', value: '312.16 to 1,930.90 sq.yards' },
+    { label: 'Project',             value: 'Industrial Park 2 (MIP 2)' },
+    { label: 'Location',            value: 'Moraiya, Changodar (Opp. Park 1)' },
+    { label: 'Campus Area',         value: '17,545.33 sq.yd (14,670.01 sq.m)' },
+    { label: 'Total Plots',         value: '23 Industrial Plots' },
+    { label: 'Plot Sizing',         value: '312.16 – 1,930.90 sq.yd' },
     { label: 'Yearly Appreciation', value: '12–15%' },
-    { label: 'Concept', value: 'Build Your Own Shed' },
-    { label: 'Road Network', value: 'Wide Heavy RCC Road' },
-    { label: 'Street Lighting', value: 'Street Lights Installed' },
-    { label: 'Ground Status', value: 'Puran (Soil Filling Done)' },
-    { label: 'Boundary', value: 'Compound Wall' },
-    { label: 'Security', value: '24/7 Gated Security (No CCTV)' },
-    { label: 'Title Status', value: '100% Clear Title, NA Industrial' },
-    { label: 'Possession', value: 'Immediate' },
-    { label: 'Status', value: 'Plots Available' },
+    { label: 'Concept',             value: 'Build Your Own Shed' },
+    { label: 'Road Network',        value: 'Wide Heavy RCC Road' },
+    { label: 'Street Lighting',     value: 'Street Lights Installed' },
+    { label: 'Ground Status',       value: 'Puran (Soil Filling Done)' },
+    { label: 'Boundary',            value: 'Compound Wall' },
+    { label: 'Security',            value: '24/7 Gated Security (No CCTV)' },
+    { label: 'Title Status',        value: '100% Clear Title, NA Industrial' },
+    { label: 'Possession',          value: 'Immediate' },
+    { label: 'Status',              value: 'Plots Available' },
   ];
-
 
   const faqs = [
     {
@@ -190,171 +228,184 @@ const MetroIndustrialEstate = () => {
         structuredData={[metroEstateSchema, metroEstateListingSchema, metroEstateIndividualUnitsSchema, metroEstateFaqSchema]}
       />
 
-      <h1 className="sr-only">
-        Metro Industrial Park 2 (MIP 2) — Industrial Plots for Sale in Changodar, Moraiya, Ahmedabad
-      </h1>
-
-      <div className="min-h-screen theme-bg-primary">
-        {/* ════════ HERO ════════ */}
-        <section className="relative pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 border-b theme-border overflow-hidden">
-          <div className="max-w-6xl mx-auto">
-            {/* Top Pill */}
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-brand-red/30 bg-brand-red/10 text-brand-red">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-red" />
-                </span>
-                <span>Industrial Park 2 • 23 Industrial Plots</span>
+      <div
+        className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+      >
+        {/* ════════ HERO — ARCHITECTURAL DOSSIER HEADER ════════ */}
+        <section className={`pt-20 sm:pt-24 border-b ${t.border} ${t.bgSurface}`}>
+          {/* Top Coordinate & Status Bar */}
+          <div className={`border-y ${t.border} ${t.bgPage}`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em]">
+              <span className="inline-flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-brand-red" aria-hidden="true" />
+                <span className={`font-semibold ${t.textMain}`}>MIP — 02</span>
+                <span className={t.textMuted}>/</span>
+                <span className={t.textMuted}>23 Industrial Plots · Build Your Own Shed</span>
               </span>
-
-              <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border ${
-                isDark ? 'bg-gray-800/60 border-gray-700 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'
-              }`}>
-                <CheckCircle size={12} className="text-green-500" />
-                <span>100% NA Land • Immediate Possession</span>
+              <span className={`inline-flex items-center gap-2 ${t.textMuted}`}>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                100% NA Industrial · Immediate Possession
               </span>
             </div>
+          </div>
 
-            {/* Title */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display tracking-tight theme-text-primary mb-2 leading-[1.15]">
-              Metro{' '}
-              <span className="bg-gradient-to-r from-red-500 via-orange-500 to-amber-400 bg-clip-text text-transparent">
-                Industrial Park 2
-              </span>
-            </h1>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-10 sm:pb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: EASE }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end"
+            >
+              <div className="lg:col-span-8">
+                <a
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] mb-4 ${t.textMuted} hover:text-brand-red transition-colors`}
+                >
+                  <MapPin size={13} className="text-brand-red shrink-0" aria-hidden="true" />
+                  <span>Opp. Industrial Park 1, Moraiya, Changodar (Near NH 47)</span>
+                  <ExternalLink size={11} aria-hidden="true" />
+                </a>
 
-            {/* Location Pill */}
-            <div className="mb-4 sm:mb-5">
-              <a
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs sm:text-sm font-semibold transition-colors ${
-                  isDark
-                    ? 'bg-gray-900/60 border-gray-800 text-gray-300 hover:border-red-500/50 hover:text-white'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-red-500/50 hover:text-gray-900 shadow-sm'
-                }`}
-              >
-                <MapPin size={15} className="text-brand-red shrink-0" />
-                <span>Directly Opposite Industrial Park 1, Moraiya, Changodar (Near NH 47)</span>
-                <ExternalLink size={12} className="text-gray-400 group-hover:text-brand-red transition-colors" />
-              </a>
-            </div>
+                <h1 className={`text-3xl sm:text-5xl lg:text-[3.75rem] font-extrabold tracking-[-0.035em] leading-[1.04] mb-5 ${t.textMain}`}>
+                  Metro Industrial Park 2<span className="text-brand-red">.</span>
+                </h1>
 
-            {/* Subtitle / Lead Paragraph */}
-            <p className="theme-text-secondary text-xs sm:text-sm md:text-base max-w-3xl leading-relaxed mb-6">
-              We provide clear-title industrial plots for you to <strong className="theme-text-primary">"Build Your Own Shed"</strong> with developer-provided infrastructure: <strong className="text-red-500">Wide Heavy RCC Roads</strong>, <strong className="text-orange-500">Street Lights</strong>, <strong className="text-amber-500">Puran (Soil Filling &amp; Leveling)</strong>, <strong className="text-emerald-500">Compound Wall</strong>, and <strong className="text-blue-500">24/7 Gated Security</strong>. Own the valuable land and custom-build your factory or warehouse without architectural compromises.
-            </p>
+                <p className={`text-sm sm:text-base max-w-3xl leading-relaxed ${t.textBody}`}>
+                  Clear-title industrial plots engineered for the{' '}
+                  <strong className={t.textMain}>“Build Your Own Shed”</strong> model. Delivered with
+                  Wide Heavy RCC Roads, Street Lights, Puran (Soil Filling &amp; Leveling), Compound Wall,
+                  and 24/7 Gated Security — so you own the land and build to your exact operational specs.
+                </p>
+              </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-6 sm:mb-8">
-              <a
-                href={`https://wa.me/919824235642?text=${whatsappMessage}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-green-600/20 transition-transform hover:scale-105 whitespace-nowrap"
-              >
-                <FaWhatsapp size={16} />
-                <span>Enquire on WhatsApp</span>
-              </a>
-
-              <Link
-                to="/site-map"
-                state={{ activeTab: 'estate' }}
-                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-red-600 via-brand-red to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-500/20 transition-transform hover:scale-105 whitespace-nowrap"
-              >
-                <MapPin size={15} />
-                <span>Interactive Map</span>
-                <ArrowRight size={13} />
-              </Link>
-
-              <a
-                href="tel:+919824235642"
-                className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all hover:scale-105 whitespace-nowrap ${
-                  isDark
-                    ? 'border-gray-700 hover:border-brand-red text-white'
-                    : 'border-gray-300 hover:border-brand-red text-gray-900 bg-white'
-                }`}
-              >
-                <Phone size={15} />
-                <span>Call Now</span>
-              </a>
-            </div>
-
-            {/* Quick Metrics Bar */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-6 border-t theme-border">
-              {[
-                { value: '23', unit: 'Plots', label: 'Blocks A, B & C' },
-                { value: '17,545', unit: 'SQYD', label: '14,670 SQ.MTR Total' },
-                { value: '100%', unit: 'NA', label: 'Clear Marketable Title' },
-                { value: '24/7', unit: 'Security', label: 'Gated Security (No CCTV)' },
-              ].map((m, i) => (
-                <div key={i} className="theme-bg-card p-4 rounded-xl border theme-border">
-                  <span className="text-xl sm:text-2xl font-black font-display text-brand-red block leading-tight">
-                    {m.value} <span className="text-xs font-bold text-gray-400">{m.unit}</span>
+              {/* Action Stack */}
+              <div className="lg:col-span-4 flex flex-col gap-2.5">
+                <Link
+                  to="/site-map"
+                  state={{ activeTab: 'estate' }}
+                  className="w-full py-3.5 px-5 bg-brand-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <MapPin size={15} aria-hidden="true" />
+                    <span>Open Interactive Plot Map</span>
                   </span>
-                  <span className="text-xs theme-text-secondary font-medium">{m.label}</span>
+                  <ArrowRight size={15} aria-hidden="true" />
+                </Link>
+
+                <div className="grid grid-cols-2 gap-2.5">
+                  <a
+                    href={`https://wa.me/919824235642?text=${whatsappMessage}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`py-3 px-4 border ${t.border} ${t.bgPage} ${t.textMain} hover:border-emerald-600 hover:text-emerald-600 font-bold text-xs uppercase tracking-[0.1em] inline-flex items-center justify-center gap-2 transition-colors`}
+                  >
+                    <FaWhatsapp size={14} className="text-emerald-600" aria-hidden="true" />
+                    <span>WhatsApp</span>
+                  </a>
+
+                  <a
+                    href="tel:+919824235642"
+                    className={`py-3 px-4 border ${t.border} ${t.bgPage} ${t.textMain} hover:border-brand-red hover:text-brand-red font-bold text-xs uppercase tracking-[0.1em] inline-flex items-center justify-center gap-2 transition-colors`}
+                  >
+                    <Phone size={13} className="text-brand-red" aria-hidden="true" />
+                    <span>Call Now</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 4-Column Architectural Metrics Band */}
+            <div className={`mt-10 grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
+              {[
+                { code: '01', value: '23',     unit: 'PLOTS',    label: 'Blocks A, B & C',          accent: false },
+                { code: '02', value: '17,545', unit: 'SQ.YD',    label: '14,670 SQ.MT Total Area',  accent: false },
+                { code: '03', value: '100%',   unit: 'NA TITLE', label: 'Clear Marketable Title',   accent: true  },
+                { code: '04', value: '24/7',   unit: 'GATED',    label: 'Security (No CCTV)',       accent: false },
+              ].map((m) => (
+                <div key={m.code} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgPage}`}>
+                  <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{m.code}</div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
+                      {m.value}
+                    </span>
+                    <span className={`font-mono text-[10px] font-semibold ${t.textMuted}`}>{m.unit}</span>
+                  </div>
+                  <div className={`text-xs mt-1 ${t.textBody}`}>{m.label}</div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ════════ MAIN CONTENT: 2-COLUMN GRID MATCHING PARK 1 ════════ */}
-        <section className="py-12 sm:py-16 px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* ════════ MAIN CONTENT: 12-COL ARCHITECTURAL SPLIT ════════ */}
+        <section className="py-14 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
 
-              {/* ── LEFT COLUMN (2 COLS): Features, Facilities, Layout & FAQ ── */}
-              <div className="lg:col-span-2 space-y-12">
+              {/* ── LEFT 8 COLS: Infrastructure, Drawings, Live Map, FAQ ── */}
+              <div className="lg:col-span-8 space-y-16">
 
-                {/* 1. Key Features Grid */}
+                {/* 01. Developer Infrastructure */}
                 <div>
-                  <SectionHeader icon={<ShieldCheck size={26} />} title="Developer Infrastructure" />
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <SectionHeader
+                    index="01"
+                    kicker="Delivered on Site"
+                    title="Developer Infrastructure"
+                    isDark={isDark}
+                  />
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
                     {features.map((feat, i) => (
-                      <div
-                        key={i}
-                        className="group relative theme-bg-card p-5 rounded-2xl border theme-border hover:border-brand-red/50 transition-all duration-300 overflow-hidden"
+                      <article
+                        key={feat.code}
+                        className={`p-6 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
+                          i === features.length - 1 ? 'sm:col-span-2' : ''
+                        } ${isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'}`}
                       >
-                        <div className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-red-600 to-orange-500 transition-all duration-500 pointer-events-none" />
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3 text-brand-red bg-brand-red/10 group-hover:bg-brand-red group-hover:text-white transition-colors duration-300">
-                          {feat.icon}
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
+                            {feat.code}
+                          </span>
+                          <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
+                            {feat.icon}
+                          </span>
                         </div>
-                        <h3 className="text-base font-bold theme-text-primary mb-1.5 group-hover:text-brand-red transition-colors">
+                        <h3 className={`text-base sm:text-lg font-extrabold tracking-tight mb-2 ${t.textMain}`}>
                           {feat.title}
                         </h3>
-                        <p className="theme-text-secondary text-xs sm:text-sm leading-relaxed">
+                        <p className={`text-sm leading-relaxed ${t.textBody}`}>
                           {feat.description}
                         </p>
-                      </div>
+                      </article>
                     ))}
                   </div>
                 </div>
 
-
-
-                {/* 3. Layout & Site Plan Section matching Park 1 with Area Details */}
+                {/* 02. Layout & Area Details */}
                 <div>
-                  <SectionHeader icon={<MapPin size={26} />} title="Layout & Area Details" />
+                  <SectionHeader
+                    index="02"
+                    kicker="Technical Drawings"
+                    title="Layout & Area Details"
+                    isDark={isDark}
+                  />
 
-                  {/* Tabs matching Park 1 */}
-                  <div className="flex gap-2 sm:gap-3 mb-6 flex-wrap">
+                  {/* Sharp Segmented Tab Bar */}
+                  <div className={`inline-grid grid-cols-2 border ${t.border} divide-x ${t.divide} mb-6`}>
                     {[
                       { key: 'areaTables', label: 'Area Details' },
-                      { key: 'siteMap', label: 'Site Map' },
+                      { key: 'siteMap',    label: 'Site Map' },
                     ].map((tab) => (
                       <button
                         key={tab.key}
                         type="button"
                         onClick={() => setActiveTab(tab.key)}
-                        className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 ${
+                        className={`px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] transition-colors ${
                           activeTab === tab.key
-                            ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30'
-                            : isDark
-                              ? 'bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-white'
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-brand-red text-white'
+                            : `${t.bgSurface} ${t.textBody} hover:text-brand-red`
                         }`}
                       >
                         {tab.label}
@@ -362,15 +413,14 @@ const MetroIndustrialEstate = () => {
                     ))}
                   </div>
 
-                  {/* Tab Content */}
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.28 }}
-                      className="space-y-6"
+                      transition={{ duration: 0.25, ease: EASE }}
+                      className="space-y-4"
                     >
                       {activeTab === 'areaTables' ? (
                         <ImageCard
@@ -378,7 +428,7 @@ const MetroIndustrialEstate = () => {
                           alt={layoutImages.areaTable.alt}
                           title={layoutImages.areaTable.title}
                           onOpen={() => openViewer(layoutImages.areaTable.src, layoutImages.areaTable.title)}
-                          theme={theme}
+                          isDark={isDark}
                         />
                       ) : (
                         <ImageCard
@@ -386,205 +436,200 @@ const MetroIndustrialEstate = () => {
                           alt={layoutImages.siteMap.alt}
                           title={layoutImages.siteMap.title}
                           onOpen={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.title)}
-                          theme={theme}
+                          isDark={isDark}
                           tall
                         />
                       )}
-                      <p className={`text-xs text-center ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                        Click image or button to zoom · Pinch on mobile
+                      <p className={`font-mono text-[11px] uppercase tracking-wider text-center ${t.textMuted}`}>
+                        Click drawing to inspect full resolution · Pinch to zoom on mobile
                       </p>
                     </motion.div>
                   </AnimatePresence>
                 </div>
 
-                {/* 4. Interactive Live Site Map Banner */}
-                <div className={`p-6 sm:p-8 rounded-2xl border relative overflow-hidden ${
-                  isDark
-                    ? 'bg-gradient-to-r from-red-950/40 via-gray-900 to-black border-brand-red/30'
-                    : 'bg-gradient-to-r from-red-50 via-orange-50 to-white border-red-200'
-                }`}>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                {/* Live Plot Selector Strip */}
+                <div className={`relative border ${t.border} ${t.bgSurface} p-6 sm:p-8`}>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pl-2">
                     <div>
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand-red block mb-1">
-                        Live Plot Selector • Moraiya Campus
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red block mb-2">
+                        Live Plot Selector · Moraiya Campus
                       </span>
-                      <h3 className="text-xl font-black font-display theme-text-primary mb-1">
+                      <h3 className={`text-xl font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
                         Check Live Plot Availability for Industrial Park 2
                       </h3>
-                      <p className="theme-text-secondary text-xs sm:text-sm">
-                        Explore available plots across Block A, B, and C with live status and direct enquiry on our interactive map.
+                      <p className={`text-sm leading-relaxed ${t.textBody}`}>
+                        Inspect available plots across Block A, B, and C with real-time status and direct enquiry.
                       </p>
                     </div>
 
                     <Link
                       to="/site-map"
                       state={{ activeTab: 'estate' }}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold text-xs uppercase tracking-wider shrink-0 shadow-lg shadow-red-500/25 transition-transform hover:scale-105"
+                      className="py-3.5 px-6 bg-brand-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 shrink-0 transition-colors"
                     >
-                      <MapPin size={15} />
-                      <span>Open Interactive Map</span>
-                      <ArrowRight size={13} />
+                      <MapPin size={14} aria-hidden="true" />
+                      <span>Open Map</span>
+                      <ArrowRight size={14} aria-hidden="true" />
                     </Link>
                   </div>
                 </div>
 
-                {/* 5. FAQ Accordion */}
+                {/* 03. FAQ Accordion */}
                 <div>
-                  <SectionHeader icon={<HelpCircle size={26} />} title="Frequently Asked Questions" />
-                  <div className="space-y-3">
-                    {faqs.map((faq, index) => (
-                      <div
-                        key={index}
-                        className={`rounded-2xl border transition-colors ${
-                          isDark ? 'bg-gray-900/40 border-gray-800' : 'bg-white border-gray-200'
-                        }`}
-                      >
-                        <button
-                          onClick={() => setOpenFaq(openFaq === index ? -1 : index)}
-                          className="w-full text-left p-5 flex items-center justify-between gap-4 focus:outline-none"
-                        >
-                          <span className={`font-bold text-sm sm:text-base font-display ${
-                            isDark ? 'text-white' : 'text-gray-900'
-                          }`}>
-                            {faq.q}
-                          </span>
-                          <ChevronDown
-                            size={18}
-                            className={`shrink-0 transition-transform duration-300 text-brand-red ${
-                              openFaq === index ? 'rotate-180' : ''
+                  <SectionHeader
+                    index="03"
+                    kicker="Buyer Clarifications"
+                    title="Frequently Asked Questions"
+                    isDark={isDark}
+                  />
+                  <div className={`border ${t.border} divide-y ${t.divide}`}>
+                    {faqs.map((faq, index) => {
+                      const isOpen = openFaq === index;
+                      return (
+                        <div key={index} className={t.bgSurface}>
+                          <button
+                            type="button"
+                            onClick={() => setOpenFaq(isOpen ? -1 : index)}
+                            aria-expanded={isOpen}
+                            className={`w-full text-left px-5 sm:px-6 py-5 flex items-center justify-between gap-4 transition-colors ${
+                              isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
                             }`}
-                          />
-                        </button>
-
-                        <AnimatePresence>
-                          {openFaq === index && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.25 }}
-                              className="overflow-hidden"
+                          >
+                            <div className="flex items-start gap-4">
+                              <span className="font-mono text-xs text-brand-red font-semibold pt-0.5 tabular-nums">
+                                {String(index + 1).padStart(2, '0')}
+                              </span>
+                              <span className={`font-bold text-sm sm:text-base tracking-tight ${t.textMain}`}>
+                                {faq.q}
+                              </span>
+                            </div>
+                            <span
+                              aria-hidden="true"
+                              className={`w-7 h-7 border ${t.border} flex items-center justify-center shrink-0 transition-colors ${
+                                isOpen ? 'border-brand-red text-brand-red' : t.textMuted
+                              }`}
                             >
-                              <div className={`px-5 pb-5 text-xs sm:text-sm leading-relaxed border-t pt-3 ${
-                                isDark ? 'text-gray-400 border-gray-800' : 'text-gray-600 border-gray-100'
-                              }`}>
-                                {faq.a}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ))}
+                              {isOpen ? <Minus size={14} /> : <Plus size={14} />}
+                            </span>
+                          </button>
+
+                          <AnimatePresence initial={false}>
+                            {isOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.25, ease: EASE }}
+                                className="overflow-hidden"
+                              >
+                                <div className={`px-5 sm:px-6 pb-5 pl-12 sm:pl-14 text-sm leading-relaxed ${t.textBody}`}>
+                                  {faq.a}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-
               </div>
 
-              {/* ── RIGHT COLUMN (1 COL): STICKY SIDEBAR SPECIFICATIONS MATCHING PARK 1 ── */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-24 space-y-5">
+              {/* ── RIGHT 4 COLS: STICKY SPECIFICATION LEDGER ── */}
+              <aside className="lg:col-span-4">
+                <div className="sticky top-24 space-y-6">
 
-                  {/* 1. Specifications Card on the Side */}
-                  <div className="theme-bg-card rounded-2xl p-6 border theme-border shadow-sm">
-                    <h3 className="text-lg font-bold theme-text-primary mb-5 pb-3 border-b theme-border font-display">
-                      Specifications
-                    </h3>
-                    <div className="space-y-3">
+                  {/* 1. Specifications Ledger */}
+                  <div className={`border ${t.border} ${t.bgSurface}`}>
+                    <div className={`px-6 py-4 border-b ${t.border} flex items-center justify-between`}>
+                      <h3 className={`font-mono text-xs font-bold uppercase tracking-[0.16em] ${t.textMain}`}>
+                        Specifications
+                      </h3>
+                      <span className="font-mono text-[10px] text-brand-red font-semibold">MIP 02</span>
+                    </div>
+                    <dl className={`divide-y ${t.divide} px-6`}>
                       {specifications.map((spec, i) => (
-                        <div
-                          key={i}
-                          className={`flex justify-between items-start gap-3 pb-3 border-b last:border-0 last:pb-0 ${
-                            isDark ? 'border-gray-800' : 'border-gray-100'
-                          }`}
-                        >
-                          <span className="theme-text-tertiary text-xs sm:text-sm shrink-0">
+                        <div key={i} className="flex justify-between items-start gap-4 py-3 text-xs">
+                          <dt className={`font-mono uppercase tracking-wider shrink-0 ${t.textMuted}`}>
                             {spec.label}
-                          </span>
-                          <span className={`font-semibold text-xs sm:text-sm text-right ${
-                            spec.label === 'Status' ? 'text-green-500' : 'theme-text-primary'
+                          </dt>
+                          <dd className={`font-semibold text-right tabular-nums ${
+                            spec.label === 'Status' ? 'text-emerald-500' : t.textMain
                           }`}>
                             {spec.value}
-                          </span>
+                          </dd>
                         </div>
                       ))}
-                    </div>
+                    </dl>
                   </div>
 
-                  {/* 2. ROI & Appreciation Potential Card */}
-                  <div className={`rounded-2xl p-6 border ${
-                    isDark
-                      ? 'bg-gradient-to-br from-emerald-950/40 via-gray-900 to-transparent border-emerald-500/30'
-                      : 'bg-gradient-to-br from-emerald-50 via-lime-50 to-white border-emerald-200'
-                  }`}>
-                    <div className="flex items-center gap-3 mb-2">
-                      <TrendingUp className="text-emerald-500" size={22} />
-                      <h3 className="text-base font-bold theme-text-primary">
-                        Yearly Land Appreciation
-                      </h3>
+                  {/* 2. Land Appreciation Card */}
+                  <div className={`relative border ${t.border} ${t.bgSurface} p-6`}>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
+                      Capital Trajectory
                     </div>
-                    <p
-                      className="text-3xl font-extrabold text-emerald-500 mb-1"
-                      style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}
-                    >
+                    <div className="text-4xl font-extrabold tracking-tight tabular-nums text-brand-red mb-1">
                       12–15%
-                    </p>
-                    <p className="theme-text-tertiary text-xs leading-relaxed">
-                      12–15% expected yearly land appreciation in the Changodar-Moraiya industrial corridor.
+                    </div>
+                    <div className={`text-xs font-bold uppercase tracking-wider mb-2 ${t.textMain}`}>
+                      Expected Yearly Land Appreciation
+                    </div>
+                    <p className={`text-xs leading-relaxed ${t.textBody}`}>
+                      Historical industrial land appreciation across the Changodar–Moraiya NH 47 corridor.
                     </p>
                   </div>
 
-                  {/* 3. Interested? Contact Card */}
-                  <div className="theme-bg-card rounded-2xl p-6 border theme-border shadow-sm">
-                    <h3 className="text-base font-bold theme-text-primary mb-1 font-display">
+                  {/* 3. Direct Directors Desk */}
+                  <div className={`border ${t.border} ${t.bgSurface} p-6`}>
+                    <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
                       Interested in Plots?
                     </h3>
-                    <p className="theme-text-tertiary text-xs mb-5 leading-relaxed">
-                      Contact us for plot rates, contiguous land parcel merging, and guided site visits.
+                    <p className={`text-xs leading-relaxed mb-5 ${t.textBody}`}>
+                      Contact us for current plot rates, contiguous parcel merging, and guided site visits.
                     </p>
                     <div className="space-y-2.5">
                       <a
                         href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-brand-red/30 text-xs sm:text-sm whitespace-nowrap"
+                        className="w-full py-3.5 px-4 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
                       >
-                        <FaWhatsapp size={16} /> WhatsApp Directors
+                        <span className="inline-flex items-center gap-2">
+                          <FaWhatsapp size={15} aria-hidden="true" />
+                          <span>WhatsApp Directors</span>
+                        </span>
+                        <ArrowRight size={14} aria-hidden="true" />
                       </a>
                       <a
                         href="tel:+919824235642"
-                        className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 border-2 font-bold rounded-xl transition-all hover:scale-105 text-xs sm:text-sm whitespace-nowrap ${
-                          isDark
-                            ? 'border-gray-700 hover:border-brand-red text-white'
-                            : 'border-gray-300 hover:border-brand-red text-gray-900'
-                        }`}
+                        className={`w-full py-3.5 px-4 border ${t.border} ${t.bgPage} ${t.textMain} hover:border-brand-red hover:text-brand-red text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
                       >
-                        <Phone size={16} /> Call Now
+                        <span className="inline-flex items-center gap-2">
+                          <Phone size={14} className="text-brand-red" aria-hidden="true" />
+                          <span className="tabular-nums">+91 98242 35642</span>
+                        </span>
+                        <ArrowUpRight size={14} aria-hidden="true" />
                       </a>
                     </div>
                   </div>
 
-                  {/* 4. Possession Status Card */}
-                  <div className="theme-bg-card rounded-2xl p-6 border theme-border shadow-sm">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Clock className="text-brand-red" size={22} />
-                      <h3 className="text-base font-bold theme-text-primary font-display">
-                        Quick Possession
-                      </h3>
+                  {/* 4. Possession Status */}
+                  <div className={`border ${t.border} ${t.bgSurface} p-6`}>
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
+                      Possession Status
                     </div>
-                    <p
-                      className="text-2xl font-extrabold theme-text-primary mb-1"
-                      style={{ fontFamily: "'Bebas Neue','Oswald',sans-serif" }}
-                    >
+                    <div className={`text-xl font-extrabold tracking-tight mb-1 ${t.textMain}`}>
                       Immediate Handover
-                    </p>
-                    <p className="theme-text-tertiary text-xs">
-                      Ready for immediate custom construction · Clear title
+                    </div>
+                    <p className={`text-xs ${t.textBody}`}>
+                      Ready for immediate custom construction · 100% Clear NA Title
                     </p>
                   </div>
 
                 </div>
-              </div>
-
+              </aside>
             </div>
           </div>
         </section>

@@ -1,7 +1,11 @@
+// FAQ.jsx
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, MessageCircleQuestion } from 'lucide-react';
+import { Plus, Minus, ArrowRight } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+
+const EASE = [0.16, 1, 0.3, 1];
 
 const faqs = [
   {
@@ -38,10 +42,10 @@ const faqs = [
   },
   {
     question: 'Can I build my own custom structure on the shed premises?',
-    answer: 'Generally, no. All sheds are delivered as standard, move-in-ready industrial units. Custom structures are not offered for leasees because a bespoke structure can increase costs significantly and reduce the shed\'s usability for future tenants or buyers — which is not in anyone\'s long-term interest. However, early investors purchasing a shed may discuss custom Build-to-Suit (BTS) options with our team on a case-by-case basis.',
+    answer: "Generally, no. All sheds are delivered as standard, move-in-ready industrial units. Custom structures are not offered for leasees because a bespoke structure can increase costs significantly and reduce the shed's usability for future tenants or buyers — which is not in anyone's long-term interest. However, early investors purchasing a shed may discuss custom Build-to-Suit (BTS) options with our team on a case-by-case basis.",
   },
   {
-    question: 'Why doesn\'t Metro Industrial Park allow custom structures for lease?',
+    question: "Why doesn't Metro Industrial Park allow custom structures for lease?",
     answer: 'Custom or highly specialised structures are tailored to one specific use case and can make it very difficult to re-lease or resell the unit in the future. To protect asset value for all stakeholders — investors, future occupants, and the park — we only allow standard, versatile shed configurations that suit a wide range of industrial businesses.',
   },
   {
@@ -54,87 +58,109 @@ const faqs = [
   },
 ];
 
-const FAQItem = ({ faq, isOpen, onToggle, isDark }) => (
-  <div className={`border rounded-xl overflow-hidden transition-colors duration-200 ${
-    isDark
-      ? isOpen
-        ? 'border-brand-red/40 bg-gray-900'
-        : 'border-gray-800 bg-gray-900/50 hover:border-gray-700'
-      : isOpen
-        ? 'border-brand-red/30 bg-white'
-        : 'border-gray-200 bg-gray-50 hover:border-gray-300'
-  }`}>
-    <button
-      onClick={onToggle}
-      className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
-      aria-expanded={isOpen}
-    >
-      <span className={`text-sm sm:text-base font-semibold leading-snug ${
-        isOpen ? 'text-brand-red' : isDark ? 'text-white' : 'text-gray-900'
-      }`}>
-        {faq.question}
-      </span>
-      <motion.div
-        animate={{ rotate: isOpen ? 180 : 0 }}
-        transition={{ duration: 0.25 }}
-        className="flex-shrink-0"
-      >
-        <ChevronDown size={18} className={isOpen ? 'text-brand-red' : isDark ? 'text-gray-400' : 'text-gray-500'} />
-      </motion.div>
-    </button>
+const FAQItem = ({ faq, index, isOpen, onToggle, isDark }) => {
+  const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
+  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
 
-    <AnimatePresence initial={false}>
-      {isOpen && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.28, ease: 'easeInOut' }}
-          className="overflow-hidden"
+  return (
+    <div className={bgSurface}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className={`w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-5 text-left transition-colors ${
+          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+        }`}
+      >
+        <div className="flex items-start gap-4">
+          <span className="font-mono text-xs font-semibold text-brand-red pt-0.5 tabular-nums">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className={`text-sm sm:text-base font-bold tracking-tight leading-snug ${isOpen ? 'text-brand-red' : textMain}`}>
+            {faq.question}
+          </span>
+        </div>
+
+        <span
+          aria-hidden="true"
+          className={`w-7 h-7 border ${border} flex items-center justify-center shrink-0 transition-colors ${
+            isOpen ? 'border-brand-red text-brand-red' : textMuted
+          }`}
         >
-          <p className={`px-5 pb-4 text-sm leading-relaxed ${
-            isDark ? 'text-gray-400' : 'text-gray-600'
-          }`}>
-            {faq.answer}
-          </p>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
-);
+          {isOpen ? <Minus size={14} /> : <Plus size={14} />}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: EASE }}
+            className="overflow-hidden"
+          >
+            <p className={`px-5 sm:px-6 pb-5 pl-12 sm:pl-14 text-sm leading-relaxed ${textBody}`}>
+              {faq.answer}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const FAQ = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(0);
+
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
+  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
 
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
   return (
-    <section className={`py-14 sm:py-20 border-t ${
-      isDark ? 'bg-gray-950 border-gray-800' : 'bg-gray-50 border-gray-200'
-    }`}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase bg-brand-red/10 text-brand-red border border-brand-red/30 mb-4">
-            <MessageCircleQuestion size={11} /> Frequently Asked Questions
+    <section
+      aria-label="Frequently Asked Questions"
+      className={`py-16 sm:py-24 border-t ${border} ${bgPage}`}
+      style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Asymmetric Editorial Header */}
+        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 pb-10 border-b ${border}`}>
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-3 mb-3 font-mono text-[11px] tracking-[0.18em] uppercase">
+              <span className="text-brand-red font-semibold">FAQ</span>
+              <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+              <span className={textMuted}>Investor &amp; Tenant Clarifications</span>
+            </div>
+            <h2 className={`text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] leading-[1.06] ${textMain}`}>
+              Frequently Asked <span className="text-brand-red">Questions</span>
+            </h2>
           </div>
-          <h2 className={`text-2xl sm:text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Got <span className="text-brand-red">Questions?</span>
-          </h2>
-          <p className={`mt-3 text-sm sm:text-base ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Everything you need to know about Metro Industrial Park.
-          </p>
+          <div className="lg:col-span-5 flex items-end lg:justify-end lg:text-right">
+            <p className={`text-sm sm:text-base leading-relaxed max-w-md ${textBody}`}>
+              Direct answers on shed pricing, possession timelines, Build-to-Suit eligibility, and utilities at Metro Industrial Park.
+            </p>
+          </div>
         </div>
 
-        {/* Accordion */}
-        <div className="space-y-3">
+        {/* Border-Collapsed Accordion Ledger */}
+        <div className={`mt-10 border ${border} divide-y ${divide}`}>
           {faqs.map((faq, i) => (
             <FAQItem
-              key={i}
+              key={faq.question}
               faq={faq}
+              index={i}
               isOpen={openIndex === i}
               onToggle={() => toggle(i)}
               isDark={isDark}
@@ -142,11 +168,19 @@ const FAQ = () => {
           ))}
         </div>
 
-        {/* CTA below */}
-        <p className={`text-center text-sm mt-8 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-          Still have questions?{' '}
-          <a href="/contact" className="text-brand-red hover:underline font-semibold">Contact our team →</a>
-        </p>
+        {/* Bottom Direct Contact Strip */}
+        <div className={`mt-8 border ${border} ${bgSurface} px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+          <p className={`text-sm ${textBody}`}>
+            Still have questions about unit sizing, lease terms, or site visits?
+          </p>
+          <Link
+            to="/contact"
+            className="py-3 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 shrink-0 transition-colors"
+          >
+            <span>Contact Site Office</span>
+            <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </section>
   );

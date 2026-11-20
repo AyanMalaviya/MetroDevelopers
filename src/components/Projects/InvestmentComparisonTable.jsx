@@ -1,49 +1,35 @@
 // src/components/Projects/InvestmentComparisonTable.jsx
-import { useTheme } from '../../context/ThemeContext';
-import {
-  TrendingUp,
-  Percent,
-  Clock,
-  Wrench,
-  ShieldCheck,
-  Receipt,
-  Building2,
-  Home,
-  Factory,
-  ArrowRight,
-  CheckCircle2,
-  XCircle,
-  Sparkles,
-} from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  TrendingUp, Percent, Clock, Wrench, ShieldCheck, Receipt,
+  Building2, Home, Factory, ArrowRight, ArrowUpRight, Check, Minus,
+} from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const COMPARISON_METRICS = [
   {
     feature: 'Annual Rental Yield',
     icon: Percent,
     industrial: '6% to 8% Net Yield',
-    industrialHighlight: 'Nearly 3x Higher Rental Income',
-    industrialPositive: true,
+    industrialHighlight: 'Nearly 3× higher rental cashflow',
     residential: '2% to 3% Gross Yield',
     residentialDetail: 'Often diluted to 1.5–2% after maintenance & property taxes',
-    verdict: 'Industrial sheds yield ~3x more regular monthly cash flow than flats.',
+    verdict: 'Industrial sheds yield ~3× more regular monthly cash flow than flats.',
   },
   {
     feature: 'Annual Capital Appreciation',
     icon: TrendingUp,
     industrial: '10% to 15% Yearly Growth',
-    industrialHighlight: 'High Industrial Corridor Demand',
-    industrialPositive: true,
+    industrialHighlight: 'High industrial corridor demand',
     residential: '5% to 7% Yearly Growth',
     residentialDetail: 'Constrained by large oversupply in residential suburbs',
     verdict: 'Scarcity of prime NA industrial land on NH-47 drives faster equity growth.',
   },
   {
     feature: 'Total Annualized Return (ROI)',
-    icon: Sparkles,
+    icon: TrendingUp,
     industrial: '16% to 23% Total Return',
-    industrialHighlight: 'Yield + Capital Appreciation',
-    industrialPositive: true,
+    industrialHighlight: 'Yield + capital appreciation',
     residential: '7% to 10% Total Return',
     residentialDetail: 'Barely beats inflation after taxes and wear-and-tear',
     verdict: 'Industrial real estate compounds total investor wealth more than twice as fast.',
@@ -52,8 +38,7 @@ const COMPARISON_METRICS = [
     feature: 'Lease Agreement Tenure',
     icon: Clock,
     industrial: '5 to 10 Year Corporate Leases',
-    industrialHighlight: '5% Annual Structured Escalation',
-    industrialPositive: true,
+    industrialHighlight: '5% annual structured escalation',
     residential: '11-Month Rental Agreements',
     residentialDetail: 'Frequent tenant turnover, re-negotiations, and broker fees',
     verdict: 'Corporate lock-ins provide long-term income predictability.',
@@ -62,8 +47,7 @@ const COMPARISON_METRICS = [
     feature: 'Maintenance & Upkeep',
     icon: Wrench,
     industrial: 'Triple Net (NNN) — Tenant Borne',
-    industrialHighlight: 'Zero Maintenance Burden for Owner',
-    industrialPositive: true,
+    industrialHighlight: 'Zero maintenance burden for owner',
     residential: '100% Landlord Borne',
     residentialDetail: 'Frequent painting, woodwork, plumbing, and wear repairs',
     verdict: 'Industrial tenants maintain their own shop floor; true hands-off passive asset.',
@@ -72,8 +56,7 @@ const COMPARISON_METRICS = [
     feature: 'Tenant Vacancy & Default Risk',
     icon: ShieldCheck,
     industrial: 'Minimal / Near-Zero Vacancy',
-    industrialHighlight: 'High Relocation Barriers',
-    industrialPositive: true,
+    industrialHighlight: 'High relocation barriers',
     residential: 'High Recurring Vacancy Risk',
     residentialDetail: '1–2 months vacancy between tenants + 1 month brokerage every cycle',
     verdict: 'Manufacturers invest heavily in machinery and logistics lines; moving is disruptive.',
@@ -82,18 +65,16 @@ const COMPARISON_METRICS = [
     feature: 'GST & Tax Efficiency',
     icon: Receipt,
     industrial: '100% GST Input Tax Credit (ITC)',
-    industrialHighlight: 'Full 18% GST Offset Eligible',
-    industrialPositive: true,
+    industrialHighlight: 'Full 18% GST offset eligible',
     residential: 'Zero GST Benefit',
-    residentialDetail: 'No business tax write-offs for residential residential tenants',
-    verdict: 'Commercial tenants readily pay GST as it directly offsets their business output tax.',
+    residentialDetail: 'No business tax write-offs for residential tenants',
+    verdict: 'Commercial tenants readily pay GST as it directly offsets business output tax.',
   },
   {
     feature: 'Title Security & Financing',
     icon: Building2,
     industrial: '100% NA Industrial Clear Title',
-    industrialHighlight: 'Fast Bank Project Financing',
-    industrialPositive: true,
+    industrialHighlight: 'Fast bank project financing',
     residential: 'Variable / Developer Delays',
     residentialDetail: 'Undivided land share (UDS) risks and possession delays',
     verdict: 'Clear-title NA Industrial plots and sheds at Metro provide clean freehold security.',
@@ -104,125 +85,134 @@ export default function InvestmentComparisonTable({ className = '' }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
+  const bgTint    = isDark ? 'bg-[#171213]' : 'bg-[#FBF6F5]';
+  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
+  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
+  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
+  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+
   return (
-    <div
-      className={`rounded-3xl border overflow-hidden transition-all duration-300 ${
-        isDark ? 'bg-black border-gray-800' : 'bg-white border-gray-200 shadow-xl'
-      } ${className}`}
-    >
+    <div className={`border ${border} ${bgSurface} ${className}`}>
       {/* Header Banner */}
-      <div
-        className={`p-6 sm:p-8 border-b ${
-          isDark
-            ? 'bg-gradient-to-r from-red-950/40 via-gray-900 to-black border-gray-800'
-            : 'bg-gradient-to-r from-red-50 via-rose-50/50 to-white border-gray-200'
-        }`}
-      >
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-brand-red/10 text-brand-red border border-brand-red/20 mb-3">
-              <Sparkles size={12} /> Investment Benchmark Analysis
-            </span>
-            <h2 className={`text-2xl sm:text-3xl font-black ${isDark ? 'text-white' : 'text-gray-900'} leading-tight`}>
-              Why Industrial Real Estate Beats Residential Properties in Ahmedabad
+      <div className={`p-6 sm:p-8 border-b ${border} ${bgPage}`}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-2.5 mb-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.18em]">
+              <span className="text-brand-red font-semibold">Benchmark Analysis</span>
+              <span className={textMuted}>/</span>
+              <span className={textMuted}>Ahmedabad Real Estate</span>
+            </div>
+            <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] leading-tight ${textMain}`}>
+              Industrial Real Estate vs. Residential Property
             </h2>
-            <p className={`text-xs sm:text-sm mt-2 leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              A comprehensive financial and operational comparison showing why high-net-worth investors and business owners achieve superior risk-adjusted wealth creation with industrial sheds and NA plots over residential apartments.
+            <p className={`text-xs sm:text-sm mt-2 leading-relaxed max-w-2xl ${textBody}`}>
+              A direct financial and operational comparison showing why investors and business owners achieve higher risk-adjusted returns with industrial sheds and NA plots over apartments.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className={`p-4 rounded-2xl border text-center ${isDark ? 'bg-gray-950 border-gray-800' : 'bg-white border-gray-200 shadow-sm'}`}>
-              <div className="text-xs uppercase font-extrabold text-green-500 tracking-wider">Industrial ROI</div>
-              <div className="text-2xl font-black text-brand-red mt-0.5" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                16% – 23%
+          {/* 2-Cell ROI Summary Box */}
+          <div className={`lg:col-span-5 grid grid-cols-2 border ${border} divide-x ${divide} ${bgSurface}`}>
+            <div className={`p-4 sm:p-5 relative ${bgTint}`}>
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
+              <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-red font-semibold">
+                Industrial ROI
               </div>
-              <div className="text-[10px] text-gray-400 font-medium">Combined Annual Yield + Growth</div>
+              <div className="text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums text-brand-red mt-1">
+                16–23%
+              </div>
+              <div className={`text-[11px] mt-0.5 ${textMuted}`}>Yield + Appreciation</div>
             </div>
-            <div className={`p-4 rounded-2xl border text-center ${isDark ? 'bg-gray-950/60 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
-              <div className="text-xs uppercase font-extrabold text-gray-400 tracking-wider">Residential ROI</div>
-              <div className="text-2xl font-black text-gray-500 mt-0.5" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-                7% – 10%
+            <div className="p-4 sm:p-5">
+              <div className={`font-mono text-[10px] uppercase tracking-[0.14em] ${textMuted}`}>
+                Residential ROI
               </div>
-              <div className="text-[10px] text-gray-400 font-medium">Before Vacancy &amp; Repairs</div>
+              <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums mt-1 ${textBody}`}>
+                7–10%
+              </div>
+              <div className={`text-[11px] mt-0.5 ${textMuted}`}>Before Repairs &amp; Vacancy</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Comparison Grid / Table */}
+      {/* Institutional Comparison Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs sm:text-sm">
           <thead>
-            <tr
-              className={`border-b text-[11px] uppercase tracking-wider font-extrabold ${
-                isDark ? 'bg-gray-950 border-gray-800 text-gray-400' : 'bg-gray-50 border-gray-200 text-gray-600'
-              }`}
-            >
-              <th className="py-4 px-4 sm:px-6 w-1/4">Evaluation Metric</th>
-              <th className="py-4 px-4 sm:px-6 w-3/8 text-brand-red bg-brand-red/5">
-                <span className="flex items-center gap-1.5">
-                  <Factory size={15} /> Industrial Property (Metro Industrial Park)
+            <tr className={`border-b ${border} ${bgPage} font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em]`}>
+              <th className={`py-4 px-5 sm:px-6 w-1/4 font-semibold ${textMuted}`}>
+                Evaluation Metric
+              </th>
+              <th className={`py-4 px-5 sm:px-6 w-[37.5%] font-bold text-brand-red border-x ${border} ${bgTint}`}>
+                <span className="inline-flex items-center gap-2">
+                  <Factory size={14} aria-hidden="true" />
+                  Industrial Property (MIP)
                 </span>
               </th>
-              <th className="py-4 px-4 sm:px-6 w-3/8 text-gray-500">
-                <span className="flex items-center gap-1.5">
-                  <Home size={15} /> Residential Property (Flats / Villas)
+              <th className={`py-4 px-5 sm:px-6 w-[37.5%] font-semibold ${textMuted}`}>
+                <span className="inline-flex items-center gap-2">
+                  <Home size={14} aria-hidden="true" />
+                  Residential (Flats / Villas)
                 </span>
               </th>
             </tr>
           </thead>
-          <tbody className={`divide-y ${isDark ? 'divide-gray-800/80' : 'divide-gray-200'}`}>
+
+          <tbody className={`divide-y ${divide}`}>
             {COMPARISON_METRICS.map((row, idx) => {
               const Icon = row.icon;
               return (
                 <tr
-                  key={idx}
-                  className={`transition-colors ${
-                    isDark ? 'hover:bg-gray-900/50' : 'hover:bg-red-50/20'
-                  }`}
+                  key={row.feature}
+                  className={`transition-colors ${isDark ? 'hover:bg-[#17171B]/60' : 'hover:bg-[#FAF9F6]'}`}
                 >
-                  {/* Metric Label */}
-                  <td className="py-4 px-4 sm:px-6 font-semibold align-top">
-                    <div className="flex items-start gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-brand-red/10 text-brand-red flex items-center justify-center shrink-0 mt-0.5">
-                        <Icon size={14} />
-                      </div>
+                  {/* Metric */}
+                  <td className="py-5 px-5 sm:px-6 align-top">
+                    <div className="flex items-start gap-3">
+                      <span className={`w-7 h-7 border ${border} ${bgPage} flex items-center justify-center shrink-0 mt-0.5 text-brand-red`}>
+                        <Icon size={13} aria-hidden="true" />
+                      </span>
                       <div>
-                        <div className={`font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
+                        <div className={`font-bold text-xs sm:text-sm ${textMain}`}>
+                          <span className={`font-mono text-[10px] mr-1.5 ${textMuted}`}>
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
                           {row.feature}
                         </div>
-                        <div className={`text-[11px] mt-0.5 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        <p className={`text-[11px] mt-1 leading-relaxed ${textMuted}`}>
                           {row.verdict}
-                        </div>
+                        </p>
                       </div>
                     </div>
                   </td>
 
-                  {/* Industrial Cell (Metro) */}
-                  <td className="py-4 px-4 sm:px-6 align-top bg-brand-red/5 font-medium">
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={16} className="text-green-500 shrink-0 mt-0.5" />
+                  {/* Industrial */}
+                  <td className={`py-5 px-5 sm:px-6 align-top border-x ${border} ${bgTint}`}>
+                    <div className="flex items-start gap-2.5">
+                      <Check size={15} className="text-brand-red shrink-0 mt-0.5" aria-hidden="true" />
                       <div>
-                        <span className={`font-extrabold text-sm sm:text-base ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-extrabold text-sm sm:text-base tracking-tight ${textMain}`}>
                           {row.industrial}
-                        </span>
-                        <div className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/10 text-green-500 border border-green-500/20">
+                        </div>
+                        <div className="font-mono text-[10px] uppercase tracking-wider text-brand-red mt-1">
                           {row.industrialHighlight}
                         </div>
                       </div>
                     </div>
                   </td>
 
-                  {/* Residential Cell */}
-                  <td className="py-4 px-4 sm:px-6 align-top text-gray-500">
-                    <div className="flex items-start gap-2">
-                      <XCircle size={16} className="text-gray-400 shrink-0 mt-0.5" />
+                  {/* Residential */}
+                  <td className="py-5 px-5 sm:px-6 align-top">
+                    <div className="flex items-start gap-2.5">
+                      <Minus size={14} className={`${textMuted} shrink-0 mt-0.5`} aria-hidden="true" />
                       <div>
-                        <span className={`font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <div className={`font-semibold ${textBody}`}>
                           {row.residential}
-                        </span>
-                        <p className={`text-[11px] mt-0.5 leading-relaxed ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        </div>
+                        <p className={`text-[11px] mt-1 leading-relaxed ${textMuted}`}>
                           {row.residentialDetail}
                         </p>
                       </div>
@@ -235,42 +225,31 @@ export default function InvestmentComparisonTable({ className = '' }) {
         </table>
       </div>
 
-      {/* Footer Call-to-Action */}
-      <div
-        className={`p-5 sm:p-6 border-t flex flex-wrap items-center justify-between gap-4 ${
-          isDark ? 'bg-gray-950 border-gray-800' : 'bg-gray-50 border-gray-200'
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-brand-red text-white flex items-center justify-center font-black">
-            M
-          </div>
-          <div>
-            <h4 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Looking to deploy capital for maximum rental yield &amp; growth?
-            </h4>
-            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              Explore ready sheds (MIP 1), plots to build your own shed (MIP 2), or Bavla industrial plots (MIP 3).
-            </p>
-          </div>
+      {/* Footer Action Bar */}
+      <div className={`p-5 sm:p-6 border-t ${border} ${bgPage} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+        <div>
+          <h4 className={`text-sm font-extrabold tracking-tight ${textMain}`}>
+            Deploy capital for higher rental yield &amp; land appreciation
+          </h4>
+          <p className={`text-xs mt-0.5 ${textBody}`}>
+            Compare ready sheds (MIP 1), Moraiya plots (MIP 2), or Bavla plots (MIP 3).
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link
             to="/calculator"
-            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
-              isDark
-                ? 'border-gray-700 text-gray-200 hover:border-brand-red hover:text-white'
-                : 'border-gray-300 text-gray-700 hover:border-brand-red hover:text-gray-900'
-            }`}
+            className={`py-2.5 px-4 border ${border} ${bgSurface} ${textMain} hover:border-brand-red hover:text-brand-red text-xs font-bold uppercase tracking-[0.1em] inline-flex items-center gap-1.5 transition-colors`}
           >
-            Calculate Your ROI <ArrowRight size={13} />
+            <span>ROI Calculator</span>
+            <ArrowUpRight size={13} aria-hidden="true" />
           </Link>
           <Link
             to="/metro-industrial-park"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-brand-red hover:bg-red-700 text-white shadow-md transition-all hover:scale-105"
+            className="py-2.5 px-4 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.1em] inline-flex items-center gap-1.5 transition-colors"
           >
-            Explore Metro Industrial Park <ArrowRight size={13} />
+            <span>Explore MIP 1</span>
+            <ArrowRight size={13} aria-hidden="true" />
           </Link>
         </div>
       </div>

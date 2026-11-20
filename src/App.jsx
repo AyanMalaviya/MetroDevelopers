@@ -17,9 +17,8 @@ const LocalMarketPage = lazy(() => import('./pages/LocalMarketPage'));
 const InsightGuidePage = lazy(() => import('./pages/InsightGuidePage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PWAInstallPrompt = lazy(() => import('./components/PWAInstallPrompt'));
-const ReviewPrompt = lazy(() => import('./components/Review'));
-const FloatingActionMenu = lazy(() => import('./components/FloatingActionMenu'));
 const ChatBot = lazy(() => import('./components/Chatbot/ChatBot'));
+import MobileTabBar from './components/Layout/MobileTabBar';
 
 const PageLoader = () => (
   <div className="min-h-[70vh] flex items-center justify-center theme-bg-primary">
@@ -111,10 +110,10 @@ function App() {
               </Routes>
             </Suspense>
           </main>
+          <MobileTabBar />
           <Footer />
+          
           <Suspense fallback={null}>
-            <ReviewPrompt />
-            <FloatingActionMenu />
             <ChatBot />
           </Suspense>
         </div>

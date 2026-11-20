@@ -1,12 +1,12 @@
 // src/pages/SiteMapPage.jsx
-import { useState, useMemo, useCallback, lazy, Suspense } from 'react';
+import { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import {
-  ArrowLeft, Map, Table, Layers, Search, Maximize2,
-  ExternalLink, Factory, Phone, CheckCircle, ShieldCheck, Box
+  ArrowLeft, Map, Table, Search, Maximize2,
+  ExternalLink, Factory, Box, ArrowRight,
 } from 'lucide-react';
-import { FaWhatsapp, FaRoad } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
@@ -20,115 +20,156 @@ import SEO from '../components/SEO/SEO';
 import { estatePlotsSchedule, estateTotalStats } from '../data/estatePlotCoordinates';
 import { park3Plots } from '../data/park3PlotsData';
 
+const EASE = [0.16, 1, 0.3, 1];
+
 // Hoisted static image references
 const PARK1_IMAGES = {
-  table1: { src: '/images/metro-industrial-park-area-details-table-1.jpg', title: 'Industrial Park 1 — Area Details Table 1' },
-  table2: { src: '/images/metro-industrial-park-area-details-table-2.jpg', title: 'Industrial Park 1 — Area Details Table 2' },
+  table1: { src: '/images/metro-industrial-park-area-details-table-1.jpg', title: 'Industrial Park 1 — Area Details Table 1 (Units 1–32)' },
+  table2: { src: '/images/metro-industrial-park-area-details-table-2.jpg', title: 'Industrial Park 1 — Area Details Table 2 (Units 33–63)' },
 };
 
 const PARK2_IMAGES = {
-  table: { src: '/images/metro-industrial-park-2-area-table.png', title: 'Industrial Park 2 — 23 Plots Engineering Schedule' },
+  table: { src: '/images/metro-industrial-park-2-area-table.png', title: 'Industrial Park 2 — Official 23 Plots Engineering Schedule' },
 };
 
 const PARK3_IMAGES = {
-  table1: { src: '/images/metro-industrial-park-3-area-table-1.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 1 to 39)' },
-  table2: { src: '/images/metro-industrial-park-3-area-table-2.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 40 to 77)' },
+  table1: { src: '/images/metro-industrial-park-3-area-table-1.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 1–39)' },
+  table2: { src: '/images/metro-industrial-park-3-area-table-2.png', title: 'Industrial Park 3 — Plot Area Schedule (Plots 40–77)' },
 };
 
 // Hoisted tab configurations
 const TABS = [
-  { id: 'park', label: 'Park 1 (MIP 1)', short: 'Park 1', subtitle: '63 Industrial Sheds' },
-  { id: 'estate', label: 'Park 2 (MIP 2)', short: 'Park 2', subtitle: '23 Plotted Parcels' },
-  { id: 'park3', label: 'Park 3 (MIP 3)', short: 'Park 3', subtitle: '77 Plotted Parcels' },
+  { id: 'park',   code: 'MIP 01', label: 'Park 1 (MIP 1)', short: 'Park 1', subtitle: '63 Industrial Sheds' },
+  { id: 'estate', code: 'MIP 02', label: 'Park 2 (MIP 2)', short: 'Park 2', subtitle: '23 Plotted Parcels'  },
+  { id: 'park3',  code: 'MIP 03', label: 'Park 3 (MIP 3)', short: 'Park 3', subtitle: '77 Plotted Parcels'  },
 ];
 
-// Hoisted static dataset schema
+// Hoisted dataset schema (aligned to canonical domain www.metrodevelopers.co.in)
 const TABLE_DATASET_SCHEMA = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'Dataset',
-      '@id': 'https://metroindustrialpark.com/site-map#schedule-dataset',
-      'name': 'Metro Industrial Park 1, 2 & 3 Official Area Details & Plot Schedule',
-      'alternateName': ['MIP Plot Schedule', 'Metro Developers Plot Area Table', 'MIP 1 2 3 Dimensions'],
-      'description': 'Comprehensive engineering area schedules for Metro Industrial Park 1 (63 sheds in Moraiya), Metro Industrial Park 2 (23 plotted parcels in Moraiya), and Metro Industrial Park 3 (77 plotted parcels on Bavla-Rajoda Road), Ahmedabad, Gujarat.',
-      'creator': {
+      '@id': 'https://www.metrodevelopers.co.in/site-map#schedule-dataset',
+      name: 'Metro Industrial Park 1, 2 & 3 Official Area Details & Plot Schedule',
+      alternateName: ['MIP Plot Schedule', 'Metro Developers Plot Area Table', 'MIP 1 2 3 Dimensions'],
+      description:
+        'Comprehensive engineering area schedules for Metro Industrial Park 1 (63 sheds in Moraiya), Metro Industrial Park 2 (23 plotted parcels in Moraiya), and Metro Industrial Park 3 (77 plotted parcels on Bavla-Rajoda Road), Ahmedabad, Gujarat.',
+      creator: {
         '@type': 'RealEstateAgent',
-        'name': 'Metro Developers',
-        'url': 'https://metroindustrialpark.com'
+        name: 'Metro Developers',
+        url: 'https://www.metrodevelopers.co.in',
       },
-      'spatialCoverage': {
+      spatialCoverage: {
         '@type': 'Place',
-        'name': 'Ahmedabad Industrial Belt (Moraiya, Changodar, Bavla), Gujarat, India',
-        'geo': {
+        name: 'Ahmedabad Industrial Belt (Moraiya, Changodar, Bavla), Gujarat, India',
+        geo: {
           '@type': 'GeoCoordinates',
-          'latitude': 22.9039,
-          'longitude': 72.4419
-        }
-      }
+          latitude: 22.9039,
+          longitude: 72.4419,
+        },
+      },
     },
     {
       '@type': 'ItemList',
-      '@id': 'https://metroindustrialpark.com/site-map#park2-plots-list',
-      'name': 'Metro Industrial Park 2 (MIP 2) - 23 Clear Title Plotted Parcels',
-      'numberOfItems': estatePlotsSchedule.length,
-      'itemListElement': estatePlotsSchedule.map((p, idx) => ({
+      '@id': 'https://www.metrodevelopers.co.in/site-map#park2-plots-list',
+      name: 'Metro Industrial Park 2 (MIP 2) - 23 Clear Title Plotted Parcels',
+      numberOfItems: estatePlotsSchedule.length,
+      itemListElement: estatePlotsSchedule.map((p, idx) => ({
         '@type': 'ListItem',
-        'position': idx + 1,
-        'name': `Plot #${p.plotNo} (Block ${p.section}) - Metro Industrial Park 2`,
-        'description': `Sub Plot Area: ${p.subPlotAreaSqYd.toFixed(2)} SQ.YD (${p.subPlotAreaSqMt.toFixed(2)} SQ.MT), Net Plot Area: ${p.netPlotAreaSqYd.toFixed(2)} SQ.YD (${p.netPlotAreaSqMt.toFixed(2)} SQ.MT), Total Plot Area: ${p.totalPlotAreaSqYd.toFixed(2)} SQ.YD (${p.totalPlotAreaSqMt.toFixed(2)} SQ.MT). Clear title industrial land in Moraiya, Ahmedabad by Metro Developers.`
-      }))
+        position: idx + 1,
+        name: `Plot #${p.plotNo} (Block ${p.section}) - Metro Industrial Park 2`,
+        description: `Sub Plot Area: ${p.subPlotAreaSqYd.toFixed(2)} SQ.YD (${p.subPlotAreaSqMt.toFixed(2)} SQ.MT), Net Plot Area: ${p.netPlotAreaSqYd.toFixed(2)} SQ.YD (${p.netPlotAreaSqMt.toFixed(2)} SQ.MT), Total Plot Area: ${p.totalPlotAreaSqYd.toFixed(2)} SQ.YD (${p.totalPlotAreaSqMt.toFixed(2)} SQ.MT). Clear title industrial land in Moraiya, Ahmedabad by Metro Developers.`,
+      })),
     },
     {
       '@type': 'ItemList',
-      '@id': 'https://metroindustrialpark.com/site-map#park3-plots-list',
-      'name': 'Metro Industrial Park 3 (MIP 3) - 77 Clear Title Plotted Parcels',
-      'numberOfItems': park3Plots.length,
-      'itemListElement': park3Plots.map((p, idx) => ({
+      '@id': 'https://www.metrodevelopers.co.in/site-map#park3-plots-list',
+      name: 'Metro Industrial Park 3 (MIP 3) - 77 Clear Title Plotted Parcels',
+      numberOfItems: park3Plots.length,
+      itemListElement: park3Plots.map((p, idx) => ({
         '@type': 'ListItem',
-        'position': idx + 1,
-        'name': `Plot #${p.id} - Metro Industrial Park 3`,
-        'description': `Carpet Area: ${p.carpetSqmt?.toFixed(2) || 'N/A'} SQ.MT, Total Area: ${p.totalSqmt?.toFixed(2) || 'N/A'} SQ.MT (${p.area} SQ.YD), Super Loading: ${p.superPct || '23.39%'}. Clear title industrial land on Bavla-Rajoda Road, Ahmedabad by Metro Developers.`
-      }))
-    }
-  ]
+        position: idx + 1,
+        name: `Plot #${p.id} - Metro Industrial Park 3`,
+        description: `Carpet Area: ${p.carpetSqmt?.toFixed(2) || 'N/A'} SQ.MT, Total Area: ${p.totalSqmt?.toFixed(2) || 'N/A'} SQ.MT (${p.area} SQ.YD), Super Loading: ${p.superPct || '23.39%'}. Clear title industrial land on Bavla-Rajoda Road, Ahmedabad by Metro Developers.`,
+      })),
+    },
+  ],
+};
+
+const getTokens = (isDark) => ({
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
+  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#EFECE6]',
+  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
+  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
+  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
+  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
+  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+});
+
+/* ─── Technical Drawing Card ─── */
+const DrawingCard = ({ src, alt, title, onOpen, isDark }) => {
+  const t = getTokens(isDark);
+  return (
+    <div className={`border ${t.border} ${t.bgSurface}`}>
+      <div className={`flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b ${t.border} font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em]`}>
+        <span className={t.textMuted}>{title}</span>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex items-center gap-1.5 text-brand-red font-semibold hover:underline shrink-0"
+        >
+          <Maximize2 size={12} aria-hidden="true" />
+          <span>Expand</span>
+        </button>
+      </div>
+      <div className={`p-4 ${t.bgSubtle}`}>
+        <img
+          src={src}
+          alt={alt}
+          className={`w-full h-auto cursor-zoom-in border ${t.border}`}
+          onClick={onOpen}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  );
 };
 
 const SiteMapPage = () => {
   const { theme } = useTheme();
-  const navigate = useNavigate();
-  const isDark = theme === 'dark';
-  const location = useLocation();
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const isDark    = theme === 'dark';
+  const t         = getTokens(isDark);
 
-  // Active park tab ('park' = Park 1, 'estate' = Park 2, 'park3' = Park 3)
-  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'park');
-  // View mode ('map' = Interactive Map, 'table' = Area Details Table)
-  const [viewMode, setViewMode] = useState(location.state?.viewMode || 'map');
-  // Dimension view for Park 1 ('2d' = 2D Map, '3d' = 3D Architectural Model) - Default '2d'
+  const [activeTab, setActiveTab]       = useState(location.state?.activeTab || 'park');
+  const [viewMode, setViewMode]         = useState(location.state?.viewMode || 'map');
   const [mapDimension, setMapDimension] = useState(location.state?.mapDimension || '2d');
 
-  // Table filters & controls
   const [park2Filter, setPark2Filter] = useState('ALL');
   const [park3Filter, setPark3Filter] = useState('ALL');
-  const [unitMode, setUnitMode] = useState('both'); // 'both' | 'yd' | 'mt'
+  const [unitMode, setUnitMode]       = useState('both'); // 'both' | 'yd' | 'mt'
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Lightbox viewer
-  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerOpen, setViewerOpen]     = useState(false);
   const [viewerSlides, setViewerSlides] = useState([]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleTabSwitch = (id) => {
+    setActiveTab(id);
+    setSearchQuery('');
+  };
 
   const openViewer = useCallback((src, title) => {
     setViewerSlides([{ src, title, description: 'Click zoom icon or scroll to zoom · Pinch on mobile' }]);
     setViewerOpen(true);
   }, []);
 
-  const park1Images = PARK1_IMAGES;
-  const park2Images = PARK2_IMAGES;
-  const park3Images = PARK3_IMAGES;
-  const tabs = TABS;
-  const tableDatasetSchema = TABLE_DATASET_SCHEMA;
-
-  // Filtered Park 2 plots
   const filteredPark2Plots = useMemo(() => {
     return estatePlotsSchedule.filter((p) => {
       if (park2Filter !== 'ALL' && p.section !== park2Filter) return false;
@@ -137,17 +178,18 @@ const SiteMapPage = () => {
     });
   }, [park2Filter, searchQuery]);
 
-  // Filtered Park 3 plots
   const filteredPark3Plots = useMemo(() => {
     return park3Plots.filter((p) => {
       if (searchQuery && !p.id.toLowerCase().includes(searchQuery.trim().toLowerCase())) return false;
       const ydNum = parseFloat(p.area.replace(/[^0-9.]/g, '')) || 0;
       if (park3Filter === 'SMALL') return ydNum < 500;
-      if (park3Filter === 'MID') return ydNum >= 500 && ydNum <= 1000;
+      if (park3Filter === 'MID')   return ydNum >= 500 && ydNum <= 1000;
       if (park3Filter === 'LARGE') return ydNum > 1000;
       return true;
     });
   }, [park3Filter, searchQuery]);
+
+  const activeTabMeta = TABS.find((tab) => tab.id === activeTab);
 
   return (
     <>
@@ -157,200 +199,151 @@ const SiteMapPage = () => {
         canonical="/site-map"
         ogImage="/images/metro-industrial-map.jpg"
         ogImageAlt="Industrial shed and plot availability map in Moraiya Changodar Bavla Ahmedabad"
-      />
-      
-      {/* External AI Knowledge Graph & Search Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(tableDatasetSchema) }}
+        structuredData={TABLE_DATASET_SCHEMA}
       />
 
-      <h1 className="sr-only">Metro Developers — Industrial Park 1, 2 &amp; 3 (MIP 1, 2, 3) Interactive Site Maps &amp; Area Schedules</h1>
+      <h1 className="sr-only">
+        Metro Developers — Industrial Park 1, 2 &amp; 3 (MIP 1, 2, 3) Interactive Site Maps &amp; Area Schedules
+      </h1>
 
-      <div className={`relative overflow-hidden min-h-screen pt-16 sm:pt-24 pb-12 sm:pb-16 ${
-        isDark
-          ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-black'
-          : 'bg-gradient-to-br from-slate-50 via-white to-gray-100'
-      }`}>
-
-        <div className="max-w-7xl mx-auto px-3 sm:px-6">
-          
-          {/* ── Top Navigation & View Mode Pill ── */}
-          <motion.div 
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="flex items-center justify-between gap-2 sm:gap-3 mb-3 sm:mb-6"
-          >
+      <div
+        className={`min-h-screen pt-16 pb-16 ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
+        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
+      >
+        {/* ════════ TOP ARCHITECTURAL CONTROL BAR ════════ */}
+        <div className={`border-b ${t.border} ${t.bgSurface}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-95 whitespace-nowrap ${
-                isDark
-                  ? 'text-gray-300 bg-gray-800/80 hover:text-white hover:bg-gray-700 ring-1 ring-white/10'
-                  : 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-50 ring-1 ring-black/5 shadow-sm'
-              }`}
+              className={`inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] ${t.textMuted} hover:text-brand-red transition-colors`}
             >
-              <ArrowLeft size={14} className="sm:w-4 sm:h-4" />
+              <ArrowLeft size={14} aria-hidden="true" />
               <span>Back</span>
             </button>
 
-            {/* View Mode Controls: 2D/3D Selector (Park 1) & Map/Table Toggle */}
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
-              {/* Park 1 Dimension Switcher: 2D vs 3D (visible only in map view and Park 1) */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Park 1 2D / 3D Switcher */}
               {viewMode === 'map' && activeTab === 'park' && (
-                <div className={`flex items-center p-1 rounded-2xl border shadow-sm ${
-                  isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white border-gray-200'
-                }`}>
+                <div className={`inline-grid grid-cols-2 border ${t.border} divide-x ${t.divide}`}>
                   <button
                     type="button"
                     onClick={() => setMapDimension('2d')}
-                    className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
                       mapDimension === '2d'
-                        ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                        : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-brand-red text-white'
+                        : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                     }`}
                   >
-                    <Map size={13} />
                     <span>2D Map</span>
                   </button>
-
                   <button
                     type="button"
                     onClick={() => setMapDimension('3d')}
-                    className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
                       mapDimension === '3d'
-                        ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                        : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-brand-red text-white'
+                        : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                     }`}
                   >
-                    <Box size={13} />
+                    <Box size={12} aria-hidden="true" />
                     <span>3D View</span>
-                    <span className="hidden sm:inline-block ml-0.5 px-1.5 py-0.2 text-[9px] font-black uppercase rounded-full bg-white/20 text-white">3D</span>
                   </button>
                 </div>
               )}
 
-              {/* View Mode Toggle: Map View vs Area Table */}
-              <div className={`flex items-center p-1 rounded-2xl border shadow-sm ${
-                isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white border-gray-200'
-              }`}>
+              {/* Map / Area Table Mode Switcher */}
+              <div className={`inline-grid grid-cols-2 border ${t.border} divide-x ${t.divide}`}>
                 <button
                   type="button"
                   onClick={() => setViewMode('map')}
-                  className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                  className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
                     viewMode === 'map'
-                      ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                      : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-brand-red text-white'
+                      : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                   }`}
                 >
-                  <Map size={13} />
                   <span>Interactive Map</span>
                 </button>
-
                 <button
                   type="button"
                   onClick={() => setViewMode('table')}
-                  className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                  className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
                     viewMode === 'table'
-                      ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                      : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-brand-red text-white'
+                      : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                   }`}
                 >
-                  <Table size={13} />
+                  <Table size={12} aria-hidden="true" />
                   <span>Area Table</span>
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* ── Title & Segmented Project Tabs (1, 2, 3) ── */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-6 mb-4 sm:mb-6">
-            <motion.div
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.05 }}
-            >
-              <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight ${
-                isDark ? 'text-white' : 'text-gray-900'
-              }`}>
-                {viewMode === 'table' ? 'Area Details' : 'Shed & Plot'}{' '}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10">
+          {/* ── Editorial Title & 3-Park Switcher ── */}
+          <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 pb-7 mb-7 border-b ${t.border} items-end`}>
+            <div className="lg:col-span-6">
+              <div className="flex items-center gap-3 mb-3 font-mono text-[11px] tracking-[0.18em] uppercase">
+                <span className="text-brand-red font-semibold">{activeTabMeta?.code}</span>
+                <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
+                <span className={t.textMuted}>{activeTabMeta?.subtitle}</span>
+              </div>
+              <h2 className={`text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.06] ${t.textMain}`}>
+                {viewMode === 'table' ? 'Area Details ' : 'Shed & Plot '}
                 <span className="text-brand-red">
                   {viewMode === 'table' ? 'Schedule' : 'Availability'}
                 </span>
               </h2>
-              <p className={`text-xs sm:text-sm mt-1 font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className={`text-xs sm:text-sm mt-2 ${t.textBody}`}>
                 Industrial Park 1, 2 &amp; 3 · Moraiya, Changodar &amp; Bavla, Ahmedabad
               </p>
-            </motion.div>
+            </div>
 
-            {/* High-Visibility Responsive Tab Bar for 1, 2 & 3 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className={`flex items-center justify-center p-1 sm:p-1.5 rounded-2xl w-full md:w-auto shrink-0 shadow-sm overflow-x-auto ${
-                isDark ? 'bg-gray-800/90 ring-1 ring-white/10' : 'bg-gray-200/90 ring-1 ring-black/5'
-              }`}
-            >
-              {tabs.map((tab) => {
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`relative flex-1 md:flex-none flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors duration-200 z-10 whitespace-nowrap ${
-                      isActive
-                        ? 'text-white' 
-                        : isDark
-                          ? 'text-gray-400 hover:text-white'
-                          : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeTabIndicator"
-                        className="absolute inset-0 bg-brand-red rounded-xl shadow-md shadow-red-500/40"
-                        transition={{ type: 'spring', stiffness: 450, damping: 32 }}
-                      />
-                    )}
-                    
-                    <span className="relative z-20 flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap">
-                      {viewMode === 'table' ? (
-                        <Table size={13} className={isActive ? 'text-white' : 'opacity-70'} />
-                      ) : (
-                        <Map size={13} className={isActive ? 'text-white' : 'opacity-70'} />
-                      )}
-                      <span className="hidden sm:inline">{tab.label}</span>
-                      <span className="sm:hidden">{tab.short}</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </motion.div>
+            {/* Sharp 3-Park Tab Bar */}
+            <div className="lg:col-span-6">
+              <div className={`grid grid-cols-3 border ${t.border} divide-x ${t.divide} ${t.bgSurface}`}>
+                {TABS.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => handleTabSwitch(tab.id)}
+                      className={`px-3 sm:px-4 py-3 text-left transition-colors ${
+                        isActive
+                          ? 'bg-brand-red text-white'
+                          : `${t.bgSurface} ${t.textMain} ${isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'}`
+                      }`}
+                    >
+                      <span className={`block font-mono text-[9px] uppercase tracking-[0.16em] ${isActive ? 'text-white/80' : 'text-brand-red'}`}>
+                        {tab.code}
+                      </span>
+                      <span className="block text-xs sm:text-sm font-extrabold tracking-tight mt-0.5 truncate">
+                        <span className="hidden sm:inline">{tab.label}</span>
+                        <span className="sm:hidden">{tab.short}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* ════════ MAIN VIEW CONTAINER (MAP OR AREA TABLE) ════════ */}
           {viewMode === 'map' ? (
             <>
-              {/* ── Interactive Map View ── */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className={`relative rounded-3xl overflow-hidden shadow-2xl border transition-colors duration-300 min-h-[600px] ${
-                  isDark
-                    ? 'border-gray-800 shadow-black/60 bg-gray-800'
-                    : 'border-gray-200 shadow-gray-300/50 bg-white'
-                }`}
-              >
+              {/* Interactive Map / 3D Canvas Container */}
+              <div className={`relative border ${t.border} ${t.bgSurface} min-h-[600px] overflow-hidden`}>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`${activeTab}-${activeTab === 'park' ? mapDimension : '2d'}`}
-                    initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
-                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25, ease: EASE }}
                     className="h-full w-full"
                   >
                     {activeTab === 'park' ? (
@@ -358,8 +351,10 @@ const SiteMapPage = () => {
                         <Suspense
                           fallback={
                             <div className="flex flex-col items-center justify-center min-h-[600px] w-full gap-3">
-                              <div className="w-9 h-9 border-3 border-brand-red border-t-transparent rounded-full animate-spin" />
-                              <p className="text-xs font-bold text-gray-400">Loading 3D Architectural Model...</p>
+                              <div className="w-8 h-8 border-2 border-brand-red border-t-transparent rounded-full animate-spin" />
+                              <p className={`font-mono text-xs uppercase tracking-[0.16em] ${t.textMuted}`}>
+                                Loading 3D Architectural Model...
+                              </p>
                             </div>
                           }
                         >
@@ -375,130 +370,102 @@ const SiteMapPage = () => {
                     )}
                   </motion.div>
                 </AnimatePresence>
-              </motion.div>
+              </div>
 
-              {/* ── Quick Priority Banner: Switch directly to Area Table ── */}
-              <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl border theme-bg-card theme-border shadow-sm">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-brand-red/10 text-brand-red flex items-center justify-center shrink-0">
-                    <Table size={15} />
-                  </div>
-                  <div>
-                    <p className="text-xs sm:text-sm font-bold theme-text-primary">
-                      Looking for precise plot area, SQ.YD measurements, or engineering tables?
-                    </p>
-                    <p className="text-[11px] theme-text-tertiary">
-                      Official dimensions schedule available for {tabs.find(t => t.id === activeTab)?.label}.
-                    </p>
-                  </div>
+              {/* Quick Switch Strip to Area Table */}
+              <div className={`relative mt-5 border ${t.border} ${t.bgSurface} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
+                <div className="pl-2">
+                  <p className={`text-sm font-extrabold tracking-tight ${t.textMain}`}>
+                    Need exact SQ.YD, SQ.MT measurements, or official engineering schedules?
+                  </p>
+                  <p className={`text-xs mt-0.5 ${t.textBody}`}>
+                    Full dimensions ledger available for {activeTabMeta?.label}.
+                  </p>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setViewMode('table')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-brand-red hover:bg-red-700 text-white rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md shadow-brand-red/25 whitespace-nowrap hover:scale-105 shrink-0"
+                  className="py-3 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 shrink-0 transition-colors"
                 >
-                  <Table size={13} />
+                  <Table size={13} aria-hidden="true" />
                   <span>View Area Table</span>
+                  <ArrowRight size={13} aria-hidden="true" />
                 </button>
               </div>
             </>
           ) : (
-            /* ════════ AREA TABLE VIEW (PRIORITY DISPLAY) ════════ */
+            /* ════════ AREA TABLE VIEW ════════ */
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              key={`table-${activeTab}`}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="space-y-6"
+              transition={{ duration: 0.35, ease: EASE }}
+              className="space-y-8"
             >
               {/* ── PARK 1: Sheds Area Details ── */}
               {activeTab === 'park' && (
                 <div className="space-y-6">
-                  {/* Summary Bar */}
-                  <div className="theme-bg-card rounded-2xl p-4 sm:p-6 border theme-border shadow-sm">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 pb-3 sm:pb-4 border-b theme-border">
+                  <div className={`border ${t.border} ${t.bgSurface}`}>
+                    <div className={`p-5 sm:p-6 border-b ${t.border} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-red block mb-1">
-                          Ready-to-Move Shed Inventory
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red block mb-1.5">
+                          Ready-to-Move Shed Inventory · MIP 01
                         </span>
-                        <h3 className="text-base sm:text-xl font-black font-display theme-text-primary">
+                        <h3 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
                           Industrial Park 1 — Unit Area Schedule
                         </h3>
-                        <p className="theme-text-secondary text-xs sm:text-sm mt-0.5">
+                        <p className={`text-xs sm:text-sm mt-1 ${t.textBody}`}>
                           63 industrial sheds &amp; warehouse units across 54,000+ sq.yards in Moraiya, Changodar.
                         </p>
                       </div>
 
                       <Link
                         to="/metro-industrial-park"
-                        className="inline-flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs sm:text-sm transition-transform hover:scale-105 whitespace-nowrap self-start sm:self-auto shrink-0 shadow-md shadow-brand-red/25"
+                        className="py-3 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center gap-2 shrink-0 transition-colors self-start sm:self-auto"
                       >
-                        <Factory size={14} />
+                        <Factory size={14} aria-hidden="true" />
                         <span>Explore Park 1</span>
-                        <ExternalLink size={12} />
+                        <ExternalLink size={12} aria-hidden="true" />
                       </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                    <div className={`grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 ${t.divide} ${t.bgPage}`}>
                       {[
-                        { label: 'Campus Area', value: '54,000 SQ.YD', sub: 'Moraiya Hub' },
-                        { label: 'Total Units', value: '63 Sheds', sub: 'Ready Possession' },
-                        { label: 'Size Range', value: '4K – 50K Sq.ft', sub: 'Customizable' },
-                        { label: 'Road Width', value: '60 Ft Heavy RCC', sub: 'Trailer Friendly' },
-                      ].map((item, idx) => (
-                        <div key={idx} className={`p-2.5 sm:p-3 rounded-xl border flex flex-col justify-between ${isDark ? 'bg-gray-900/60 border-gray-800' : 'bg-gray-50 border-gray-200'}`}>
-                          <span className="text-[10px] font-bold text-gray-400 uppercase block">{item.label}</span>
-                          <span className="text-xs sm:text-sm font-black text-brand-red block">{item.value}</span>
-                          <span className="text-[10px] text-gray-400">{item.sub}</span>
+                        { label: 'Campus Area', value: '54,000 SQ.YD', sub: 'Moraiya Hub'      },
+                        { label: 'Total Units', value: '63 Sheds',     sub: 'Ready Possession' },
+                        { label: 'Size Range',  value: '4K–50K Sq.ft', sub: 'Customizable'     },
+                        { label: 'Road Width',  value: '60 Ft RCC',    sub: 'Trailer Friendly' },
+                      ].map((item) => (
+                        <div key={item.label} className="p-4 sm:p-5">
+                          <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>
+                            {item.label}
+                          </span>
+                          <span className={`text-sm sm:text-base font-extrabold tabular-nums block mt-1 ${t.textMain}`}>
+                            {item.value}
+                          </span>
+                          <span className={`text-[11px] block mt-0.5 ${t.textMuted}`}>{item.sub}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Scanned Official Drawings with Zoom */}
-                  <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
-                    <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden p-3.5 sm:p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-xs sm:text-sm font-bold theme-text-primary">
-                          Area Details Table 1 (Units 1–32)
-                        </h4>
-                        <button
-                          type="button"
-                          className="text-[11px] sm:text-xs text-brand-red font-semibold hover:underline"
-                          onClick={() => openViewer(park1Images.table1.src, park1Images.table1.title)}
-                        >
-                          Click to Zoom
-                        </button>
-                      </div>
-                      <img
-                        src={park1Images.table1.src}
-                        alt="Industrial Park 1 Area Table 1"
-                        className="w-full h-auto rounded-lg cursor-zoom-in hover:scale-[1.01] transition-transform duration-300"
-                        onClick={() => openViewer(park1Images.table1.src, park1Images.table1.title)}
-                        loading="lazy"
-                      />
-                    </div>
-
-                    <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden p-3.5 sm:p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-xs sm:text-sm font-bold theme-text-primary">
-                          Area Details Table 2 (Units 33–63)
-                        </h4>
-                        <button
-                          type="button"
-                          className="text-[11px] sm:text-xs text-brand-red font-semibold hover:underline"
-                          onClick={() => openViewer(park1Images.table2.src, park1Images.table2.title)}
-                        >
-                          Click to Zoom
-                        </button>
-                      </div>
-                      <img
-                        src={park1Images.table2.src}
-                        alt="Industrial Park 1 Area Table 2"
-                        className="w-full h-auto rounded-lg cursor-zoom-in hover:scale-[1.01] transition-transform duration-300"
-                        onClick={() => openViewer(park1Images.table2.src, park1Images.table2.title)}
-                        loading="lazy"
-                      />
-                    </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <DrawingCard
+                      src={PARK1_IMAGES.table1.src}
+                      alt="Industrial Park 1 Area Table 1"
+                      title="Area Details Table 1 (Units 1–32)"
+                      onOpen={() => openViewer(PARK1_IMAGES.table1.src, PARK1_IMAGES.table1.title)}
+                      isDark={isDark}
+                    />
+                    <DrawingCard
+                      src={PARK1_IMAGES.table2.src}
+                      alt="Industrial Park 1 Area Table 2"
+                      title="Area Details Table 2 (Units 33–63)"
+                      onOpen={() => openViewer(PARK1_IMAGES.table2.src, PARK1_IMAGES.table2.title)}
+                      isDark={isDark}
+                    />
                   </div>
                 </div>
               )}
@@ -506,63 +473,56 @@ const SiteMapPage = () => {
               {/* ── PARK 2: 23 Industrial Plots Area Schedule ── */}
               {activeTab === 'estate' && (
                 <div className="space-y-6">
-                  <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden shadow-sm">
-                    <div className="p-3.5 sm:p-5 border-b theme-border flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                  <div className={`border ${t.border} ${t.bgSurface}`}>
+                    {/* Toolbar Header */}
+                    <div className={`p-5 sm:p-6 border-b ${t.border} flex flex-col lg:flex-row lg:items-end justify-between gap-4`}>
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-red/10 text-brand-red border border-brand-red/30">
-                            Build Your Own Shed
-                          </span>
-                          <span className="text-[11px] text-gray-400 font-semibold">23 Clear-Title Plots</span>
+                        <div className="flex items-center gap-2.5 mb-1.5 font-mono text-[10px] uppercase tracking-[0.16em]">
+                          <span className="text-brand-red font-bold">MIP 02 · Build Your Own Shed</span>
+                          <span className={t.textMuted}>/</span>
+                          <span className={t.textMuted}>23 Clear-Title Plots</span>
                         </div>
-                        <h3 className="text-base sm:text-lg font-black font-display theme-text-primary">
+                        <h3 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
                           Industrial Park 2 — Engineering Area Schedule
                         </h3>
-                        <p className="theme-text-secondary text-[11px] sm:text-xs mt-0.5">
-                          Sub Plot Area, Extra Land CP, Net Plot Area, Road Area, and Total SQ.YD calculations.
+                        <p className={`text-xs mt-1 ${t.textBody}`}>
+                          Sub Plot Area, Extra Land CP, Net Plot Area, Road Area, and Total SQ.YD / SQ.MT calculations.
                         </p>
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 sm:gap-2">
-                        {/* Block Filter */}
-                        <div className={`flex items-center gap-0.5 p-1 rounded-xl border ${
-                          isDark ? 'bg-gray-900 border-gray-800' : 'bg-gray-100 border-gray-200'
-                        }`}>
+                      {/* Controls: Block Filter + Unit Switcher + Search */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className={`inline-flex border ${t.border} divide-x ${t.divide}`}>
                           {['ALL', 'A', 'B', 'C'].map((sec) => (
                             <button
                               key={sec}
+                              type="button"
                               onClick={() => setPark2Filter(sec)}
-                              className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
+                              className={`px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase transition-colors ${
                                 park2Filter === sec
-                                  ? 'bg-brand-red text-white shadow-sm'
-                                  : isDark
-                                    ? 'text-gray-400 hover:text-white'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                  ? 'bg-brand-red text-white'
+                                  : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                               }`}
                             >
-                              {sec === 'ALL' ? 'All' : `Block ${sec}`}
+                              {sec === 'ALL' ? 'All' : `Blk ${sec}`}
                             </button>
                           ))}
                         </div>
 
-                        {/* Unit Switcher */}
-                        <div className={`flex items-center gap-0.5 p-1 rounded-xl border ${
-                          isDark ? 'bg-gray-900 border-gray-800' : 'bg-gray-100 border-gray-200'
-                        }`}>
+                        <div className={`inline-flex border ${t.border} divide-x ${t.divide}`}>
                           {[
-                            { id: 'both', label: 'Both' },
-                            { id: 'yd', label: 'SQ.YD' },
-                            { id: 'mt', label: 'SQ.MT' },
+                            { id: 'both', label: 'Both'  },
+                            { id: 'yd',   label: 'SQ.YD' },
+                            { id: 'mt',   label: 'SQ.MT' },
                           ].map((u) => (
                             <button
                               key={u.id}
+                              type="button"
                               onClick={() => setUnitMode(u.id)}
-                              className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
+                              className={`px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase transition-colors ${
                                 unitMode === u.id
-                                  ? 'bg-brand-red text-white shadow-sm'
-                                  : isDark
-                                    ? 'text-gray-400 hover:text-white'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                  ? 'bg-brand-red text-white'
+                                  : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                               }`}
                             >
                               {u.label}
@@ -570,183 +530,180 @@ const SiteMapPage = () => {
                           ))}
                         </div>
 
-                        {/* Search */}
                         <div className="relative">
-                          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                          <Search size={12} className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${t.textMuted}`} aria-hidden="true" />
                           <input
                             type="text"
                             placeholder="Plot #..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className={`pl-7 pr-2.5 py-1 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-medium border focus:outline-none focus:ring-1 focus:ring-brand-red w-24 sm:w-28 ${
-                              isDark ? 'bg-gray-900 border-gray-800 text-white placeholder-gray-500' : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
-                            }`}
+                            aria-label="Filter Park 2 by plot number"
+                            className={`pl-8 pr-3 py-1.5 border ${t.border} ${t.bgPage} ${t.textMain} font-mono text-xs focus:outline-none focus:border-brand-red w-28`}
                           />
                         </div>
                       </div>
                     </div>
 
-                    {/* Responsive Data Table */}
-                    <div className="overflow-x-auto max-h-[520px] scrollbar-thin">
+                    {/* Data Table */}
+                    <div className="overflow-x-auto max-h-[540px]">
                       <table
-                        className="w-full text-left text-[11px] sm:text-xs tabular-nums"
+                        className="w-full text-left text-xs tabular-nums border-collapse"
                         aria-label="Official Industrial Park 2 (MIP 2) Engineering Plot Area Schedule"
                       >
                         <caption className="sr-only">
                           Official engineering plot schedule for Metro Industrial Park 2 (MIP 2) located in Moraiya, Changodar, Ahmedabad by Metro Developers. 23 clear-title industrial plotted parcels with Sub Plot Area, Extra Land Common Plot (CP), Net Plotted Area, Road Area, and Total Plot Area in Square Meters (SQ.MT) and Square Yards (SQ.YD / Gaj).
                         </caption>
-                        <thead className={`text-[10px] sm:text-[11px] uppercase tracking-wider font-extrabold border-b sticky top-0 z-10 backdrop-blur-md ${
-                          isDark ? 'bg-gray-950/95 text-gray-400 border-gray-800' : 'bg-gray-50/95 text-gray-600 border-gray-200'
-                        }`}>
+                        <thead className={`font-mono text-[10px] uppercase tracking-[0.12em] border-b ${t.border} sticky top-0 z-10 ${t.bgPage}`}>
                           <tr>
-                            <th scope="col" className="py-2.5 px-3 whitespace-nowrap">Plot #</th>
-                            <th scope="col" className="py-2.5 px-2.5 whitespace-nowrap">Block</th>
+                            <th scope="col" className={`py-3 px-4 whitespace-nowrap ${t.textMuted}`}>Plot #</th>
+                            <th scope="col" className={`py-3 px-3 whitespace-nowrap ${t.textMuted}`}>Block</th>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Sub Plot Area in Square Meters">Sub Plot (SQ.MT)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Sub Plot (SQ.MT)</th>
                             )}
-                            <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Extra Land Common Plot in Square Meters">Extra CP (SQ.MT)</th>
+                            <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Extra CP (SQ.MT)</th>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Net Plotted Area in Square Meters">Net Plot (SQ.MT)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Net Plot (SQ.MT)</th>
                             )}
-                            <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Road Area Loading in Square Meters">Road (SQ.MT)</th>
+                            <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Road (SQ.MT)</th>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Total Plot Area in Square Meters">Total (SQ.MT)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Total (SQ.MT)</th>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Sub Plot Area in Square Yards">Sub Plot (SQ.YD)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Sub Plot (SQ.YD)</th>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Net Plotted Area in Square Yards">Net Plot (SQ.YD)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Net Plot (SQ.YD)</th>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <th scope="col" className="py-2.5 px-3 text-right text-brand-red font-black whitespace-nowrap" title="Total Plot Area in Square Yards">Total (SQ.YD)</th>
+                              <th scope="col" className="py-3 px-4 text-right text-brand-red font-bold whitespace-nowrap">Total (SQ.YD)</th>
                             )}
-                            <th scope="col" className="py-2.5 px-2.5 text-center whitespace-nowrap">Enquire</th>
+                            <th scope="col" className={`py-3 px-3 text-center whitespace-nowrap ${t.textMuted}`}>Enquire</th>
                           </tr>
                         </thead>
-                        <tbody className={`divide-y ${isDark ? 'divide-gray-800' : 'divide-gray-100'}`}>
-                          {filteredPark2Plots.map((plot) => (
-                            <tr
-                              key={plot.plotNo}
-                              className={`transition-colors hover:bg-brand-red/5 ${
-                                isDark ? 'odd:bg-gray-900/30' : 'odd:bg-gray-50/60'
-                              }`}
-                            >
-                              <td className="py-2.5 px-3 font-black text-brand-red whitespace-nowrap" data-label="Plot Number">
-                                Plot #{plot.plotNo}
-                              </td>
-                              <td className="py-2.5 px-2.5 whitespace-nowrap" data-label="Block">
-                                <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                                  plot.section === 'A'
-                                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                                    : plot.section === 'B'
-                                      ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-                                      : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                }`}>
-                                  Block {plot.section}
-                                </span>
-                              </td>
-                              {(unitMode === 'both' || unitMode === 'mt') && (
-                                <td className="py-2.5 px-2.5 text-right font-medium theme-text-primary whitespace-nowrap" data-label="Sub Plot SQ.MT">
-                                  {plot.subPlotAreaSqMt.toFixed(2)}
-                                </td>
-                              )}
-                              <td className="py-2.5 px-2.5 text-right whitespace-nowrap" data-label="Extra CP SQ.MT">
-                                {plot.extraLandCpSqMt ? (
-                                  <span className="font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded text-[10px]">
-                                    {plot.extraLandCpSqMt.toFixed(2)}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-500">-</span>
-                                )}
-                              </td>
-                              {(unitMode === 'both' || unitMode === 'mt') && (
-                                <td className="py-2.5 px-2.5 text-right font-medium theme-text-primary whitespace-nowrap" data-label="Net Plot SQ.MT">
-                                  {plot.netPlotAreaSqMt.toFixed(2)}
-                                </td>
-                              )}
-                              <td className="py-2.5 px-2.5 text-right font-medium theme-text-secondary whitespace-nowrap" data-label="Road Area SQ.MT">
-                                {plot.roadAreaSqMt.toFixed(2)}
-                              </td>
-                              {(unitMode === 'both' || unitMode === 'mt') && (
-                                <td className="py-2.5 px-2.5 text-right font-bold theme-text-primary whitespace-nowrap" data-label="Total SQ.MT">
-                                  {plot.totalPlotAreaSqMt.toFixed(2)}
-                                </td>
-                              )}
-                              {(unitMode === 'both' || unitMode === 'yd') && (
-                                <td className="py-2.5 px-2.5 text-right font-medium theme-text-primary whitespace-nowrap" data-label="Sub Plot SQ.YD">
-                                  {plot.subPlotAreaSqYd.toFixed(2)}
-                                </td>
-                              )}
-                              {(unitMode === 'both' || unitMode === 'yd') && (
-                                <td className="py-2.5 px-2.5 text-right font-medium theme-text-primary whitespace-nowrap" data-label="Net Plot SQ.YD">
-                                  {plot.netPlotAreaSqYd.toFixed(2)}
-                                </td>
-                              )}
-                              {(unitMode === 'both' || unitMode === 'yd') && (
-                                <td className="py-2.5 px-3 text-right font-black text-brand-red whitespace-nowrap" data-label="Total SQ.YD">
-                                  {plot.totalPlotAreaSqYd.toFixed(2)}
-                                </td>
-                              )}
-                              <td className="py-2.5 px-2.5 text-center whitespace-nowrap" data-label="Enquire">
-                                <a
-                                  href={`https://wa.me/919824235642?text=${encodeURIComponent(`Hello, I would like to inquire about Plot #${plot.plotNo} (${plot.totalPlotAreaSqYd.toFixed(2)} sq.yds / ${plot.totalPlotAreaSqMt.toFixed(2)} sq.mtr) in Industrial Park 2.`)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  title={`Inquire about Plot #${plot.plotNo}`}
-                                  className="inline-flex items-center justify-center p-1.5 rounded-lg text-emerald-500 hover:bg-emerald-500/10 transition-colors"
-                                >
-                                  <FaWhatsapp size={15} />
-                                </a>
+
+                        <tbody className={`divide-y ${t.divide}`}>
+                          {filteredPark2Plots.length === 0 ? (
+                            <tr>
+                              <td colSpan={11} className={`py-10 text-center font-mono text-xs uppercase tracking-wider ${t.textMuted}`}>
+                                No matching plots found for “{searchQuery}”
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            filteredPark2Plots.map((plot) => (
+                              <tr
+                                key={plot.plotNo}
+                                className={`transition-colors ${isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'}`}
+                              >
+                                <td className="py-3 px-4 font-mono font-bold text-brand-red whitespace-nowrap">
+                                  Plot #{plot.plotNo}
+                                </td>
+                                <td className="py-3 px-3 whitespace-nowrap">
+                                  <span className={`font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border ${t.border} ${t.bgPage} ${t.textMain}`}>
+                                    Block {plot.section}
+                                  </span>
+                                </td>
+                                {(unitMode === 'both' || unitMode === 'mt') && (
+                                  <td className={`py-3 px-3 text-right font-mono ${t.textMain} whitespace-nowrap`}>
+                                    {plot.subPlotAreaSqMt.toFixed(2)}
+                                  </td>
+                                )}
+                                <td className="py-3 px-3 text-right font-mono whitespace-nowrap">
+                                  {plot.extraLandCpSqMt ? (
+                                    <span className="font-semibold text-amber-500">
+                                      {plot.extraLandCpSqMt.toFixed(2)}
+                                    </span>
+                                  ) : (
+                                    <span className={t.textMuted}>—</span>
+                                  )}
+                                </td>
+                                {(unitMode === 'both' || unitMode === 'mt') && (
+                                  <td className={`py-3 px-3 text-right font-mono ${t.textMain} whitespace-nowrap`}>
+                                    {plot.netPlotAreaSqMt.toFixed(2)}
+                                  </td>
+                                )}
+                                <td className={`py-3 px-3 text-right font-mono ${t.textBody} whitespace-nowrap`}>
+                                  {plot.roadAreaSqMt.toFixed(2)}
+                                </td>
+                                {(unitMode === 'both' || unitMode === 'mt') && (
+                                  <td className={`py-3 px-3 text-right font-mono font-bold ${t.textMain} whitespace-nowrap`}>
+                                    {plot.totalPlotAreaSqMt.toFixed(2)}
+                                  </td>
+                                )}
+                                {(unitMode === 'both' || unitMode === 'yd') && (
+                                  <td className={`py-3 px-3 text-right font-mono ${t.textMain} whitespace-nowrap`}>
+                                    {plot.subPlotAreaSqYd.toFixed(2)}
+                                  </td>
+                                )}
+                                {(unitMode === 'both' || unitMode === 'yd') && (
+                                  <td className={`py-3 px-3 text-right font-mono ${t.textMain} whitespace-nowrap`}>
+                                    {plot.netPlotAreaSqYd.toFixed(2)}
+                                  </td>
+                                )}
+                                {(unitMode === 'both' || unitMode === 'yd') && (
+                                  <td className="py-3 px-4 text-right font-mono font-bold text-brand-red whitespace-nowrap">
+                                    {plot.totalPlotAreaSqYd.toFixed(2)}
+                                  </td>
+                                )}
+                                <td className="py-3 px-3 text-center whitespace-nowrap">
+                                  <a
+                                    href={`https://wa.me/919824235642?text=${encodeURIComponent(`Hello, I would like to inquire about Plot #${plot.plotNo} (${plot.totalPlotAreaSqYd.toFixed(2)} sq.yds / ${plot.totalPlotAreaSqMt.toFixed(2)} sq.mtr) in Industrial Park 2.`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={`Inquire about Plot #${plot.plotNo}`}
+                                    aria-label={`WhatsApp inquiry for Plot ${plot.plotNo}`}
+                                    className={`inline-flex items-center justify-center w-7 h-7 border ${t.border} text-emerald-600 hover:border-emerald-600 transition-colors`}
+                                  >
+                                    <FaWhatsapp size={13} aria-hidden="true" />
+                                  </a>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
-                        <tfoot className={`border-t-2 font-black text-[11px] sm:text-xs ${
-                          isDark ? 'bg-gray-950/95 border-brand-red/40 theme-text-primary' : 'bg-red-50/60 border-brand-red/40 text-gray-900'
-                        }`}>
+
+                        <tfoot className={`border-t-2 border-brand-red/60 font-mono text-xs font-bold ${t.bgPage}`}>
                           <tr>
-                            <td className="py-3 px-3 text-brand-red font-black whitespace-nowrap" colSpan={2}>
-                              TOTAL (23 Plots)
+                            <td className="py-3.5 px-4 text-brand-red whitespace-nowrap" colSpan={2}>
+                              TOTAL (23 PLOTS)
                             </td>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <td className="py-3 px-2.5 text-right whitespace-nowrap">
+                              <td className={`py-3.5 px-3 text-right whitespace-nowrap ${t.textMain}`}>
                                 {estateTotalStats.subPlotAreaSqMt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                               </td>
                             )}
-                            <td className="py-3 px-2.5 text-right text-amber-500 whitespace-nowrap">
+                            <td className="py-3.5 px-3 text-right text-amber-500 whitespace-nowrap">
                               {estateTotalStats.extraLandCpSqMt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                             </td>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <td className="py-3 px-2.5 text-right whitespace-nowrap">
+                              <td className={`py-3.5 px-3 text-right whitespace-nowrap ${t.textMain}`}>
                                 {estateTotalStats.netPlotAreaSqMt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                               </td>
                             )}
-                            <td className="py-3 px-2.5 text-right whitespace-nowrap">
+                            <td className={`py-3.5 px-3 text-right whitespace-nowrap ${t.textBody}`}>
                               {estateTotalStats.roadAreaSqMt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                             </td>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <td className="py-3 px-2.5 text-right text-brand-red whitespace-nowrap">
+                              <td className="py-3.5 px-3 text-right text-brand-red whitespace-nowrap">
                                 {estateTotalStats.totalPlotAreaSqMt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                               </td>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <td className="py-3 px-2.5 text-right whitespace-nowrap">
+                              <td className={`py-3.5 px-3 text-right whitespace-nowrap ${t.textMain}`}>
                                 {estateTotalStats.subPlotAreaSqYd.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                               </td>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <td className="py-3 px-2.5 text-right whitespace-nowrap">
+                              <td className={`py-3.5 px-3 text-right whitespace-nowrap ${t.textMain}`}>
                                 {estateTotalStats.netPlotAreaSqYd.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                               </td>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <td className="py-3 px-3 text-right text-brand-red font-black text-xs sm:text-sm whitespace-nowrap">
+                              <td className="py-3.5 px-4 text-right text-brand-red whitespace-nowrap">
                                 {estateTotalStats.totalPlotAreaSqYd.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                               </td>
                             )}
-                            <td className="py-3 px-2.5 text-center text-gray-400 text-[10px] whitespace-nowrap">
-                              23 Units
+                            <td className={`py-3.5 px-3 text-center text-[10px] whitespace-nowrap ${t.textMuted}`}>
+                              23 UNITS
                             </td>
                           </tr>
                         </tfoot>
@@ -754,97 +711,74 @@ const SiteMapPage = () => {
                     </div>
 
                     {/* Campus Area Summary Strip */}
-                    <div className={`p-3.5 sm:p-4 border-t grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 ${
-                      isDark ? 'bg-gray-900/60 border-gray-800' : 'bg-gray-50 border-gray-200'
-                    }`}>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Total Campus Area</span>
-                        <span className="text-xs sm:text-sm font-black text-brand-red">17,545.33 SQ.YD</span>
-                        <span className="text-[10px] text-gray-400 block">(14,670.01 SQ.MT)</span>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Net Plotted Area</span>
-                        <span className="text-xs sm:text-sm font-black theme-text-primary">13,319.64 SQ.YD</span>
-                        <span className="text-[10px] text-gray-400 block">(11,136.82 SQ.MT)</span>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Dedicated Road Area</span>
-                        <span className="text-xs sm:text-sm font-black theme-text-primary">3,533.19 SQ.MT</span>
-                        <span className="text-[10px] text-gray-400 block">Wide Heavy RCC</span>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Extra Land CP Area</span>
-                        <span className="text-xs sm:text-sm font-black text-amber-500">1,281.32 SQ.MT</span>
-                        <span className="text-[10px] text-gray-400 block">Plots 1, 2, 9, 10</span>
-                      </div>
+                    <div className={`border-t ${t.border} grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 ${t.divide} ${t.bgPage}`}>
+                      {[
+                        { label: 'Total Campus Area',   value: '17,545.33 SQ.YD', sub: '14,670.01 SQ.MT', accent: true  },
+                        { label: 'Net Plotted Area',    value: '13,319.64 SQ.YD', sub: '11,136.82 SQ.MT', accent: false },
+                        { label: 'Dedicated Road Area', value: '3,533.19 SQ.MT',  sub: 'Wide Heavy RCC',  accent: false },
+                        { label: 'Extra Land CP Area',  value: '1,281.32 SQ.MT',  sub: 'Plots 1, 2, 9, 10', accent: false },
+                      ].map((s) => (
+                        <div key={s.label} className="p-4 sm:p-5">
+                          <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>{s.label}</span>
+                          <span className={`text-sm sm:text-base font-extrabold tabular-nums block mt-1 ${s.accent ? 'text-brand-red' : t.textMain}`}>
+                            {s.value}
+                          </span>
+                          <span className={`text-[11px] block mt-0.5 ${t.textMuted}`}>{s.sub}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Scanned Official Engineering Schedule Drawing with Zoom */}
-                  <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden p-3.5 sm:p-4 shadow-sm">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-xs sm:text-sm font-bold theme-text-primary">
-                        Official Approved Architectural Plot Schedule
-                      </h4>
-                      <button
-                        type="button"
-                        className="text-[11px] sm:text-xs text-brand-red font-semibold hover:underline"
-                        onClick={() => openViewer(park2Images.table.src, park2Images.table.title)}
-                      >
-                        Click to Zoom
-                      </button>
-                    </div>
-                    <img
-                      src={park2Images.table.src}
-                      alt="Industrial Park 2 Area Table"
-                      className="w-full h-auto rounded-lg cursor-zoom-in hover:scale-[1.01] transition-transform duration-300"
-                      onClick={() => openViewer(park2Images.table.src, park2Images.table.title)}
-                      loading="lazy"
-                    />
-                  </div>
+                  <DrawingCard
+                    src={PARK2_IMAGES.table.src}
+                    alt="Industrial Park 2 Area Table"
+                    title="Official Approved Architectural Plot Schedule (MIP 2)"
+                    onOpen={() => openViewer(PARK2_IMAGES.table.src, PARK2_IMAGES.table.title)}
+                    isDark={isDark}
+                  />
                 </div>
               )}
 
               {/* ── PARK 3: 77 Industrial Plots Area Schedule ── */}
               {activeTab === 'park3' && (
                 <div className="space-y-6">
-                  <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden shadow-sm">
-                    <div className="p-3.5 sm:p-5 border-b theme-border flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                  <div className={`border ${t.border} ${t.bgSurface}`}>
+                    {/* Toolbar Header */}
+                    <div className={`p-5 sm:p-6 border-b ${t.border} flex flex-col lg:flex-row lg:items-end justify-between gap-4`}>
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/30">
-                            Bavla – Rajoda Road
+                        <div className="flex items-center gap-2.5 mb-1.5 font-mono text-[10px] uppercase tracking-[0.16em]">
+                          <span className="text-brand-red font-bold">MIP 03 · Bavla – Rajoda Road</span>
+                          <span className={t.textMuted}>/</span>
+                          <span className="inline-flex items-center gap-1.5 text-amber-500 font-semibold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+                            77 Parcels · Bookings Open
                           </span>
-                          <span className="text-[11px] text-gray-400 font-semibold">77 Plotted Parcels • Bookings Open</span>
                         </div>
-                        <h3 className="text-base sm:text-lg font-black font-display theme-text-primary">
+                        <h3 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
                           Industrial Park 3 — Official 77 Plot Area Schedule
                         </h3>
-                        <p className="theme-text-secondary text-[11px] sm:text-xs mt-0.5">
-                          Carpet SQ.MT, 23.39% super area loading, and total plot area schedule.
+                        <p className={`text-xs mt-1 ${t.textBody}`}>
+                          Carpet SQ.MT, 23.39% super area loading, and total plot dimensions.
                         </p>
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 sm:gap-2">
-                        {/* Size Filter */}
-                        <div className={`flex items-center gap-0.5 p-1 rounded-xl border ${
-                          isDark ? 'bg-gray-900 border-gray-800' : 'bg-gray-100 border-gray-200'
-                        }`}>
+                      {/* Controls: Size Filter + Unit Switcher + Search */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className={`inline-flex border ${t.border} divide-x ${t.divide}`}>
                           {[
-                            { id: 'ALL', label: 'All 77' },
-                            { id: 'SMALL', label: '< 500 YD' },
-                            { id: 'MID', label: '500–1000' },
-                            { id: 'LARGE', label: '1000+ YD' },
+                            { id: 'ALL',   label: 'All 77'   },
+                            { id: 'SMALL', label: '< 500'    },
+                            { id: 'MID',   label: '500–1000' },
+                            { id: 'LARGE', label: '1000+'    },
                           ].map((f) => (
                             <button
                               key={f.id}
+                              type="button"
                               onClick={() => setPark3Filter(f.id)}
-                              className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
+                              className={`px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase transition-colors ${
                                 park3Filter === f.id
-                                  ? 'bg-amber-500 text-white shadow-sm'
-                                  : isDark
-                                    ? 'text-gray-400 hover:text-white'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                  ? 'bg-brand-red text-white'
+                                  : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                               }`}
                             >
                               {f.label}
@@ -852,24 +786,20 @@ const SiteMapPage = () => {
                           ))}
                         </div>
 
-                        {/* Unit Switcher */}
-                        <div className={`flex items-center gap-0.5 p-1 rounded-xl border ${
-                          isDark ? 'bg-gray-900 border-gray-800' : 'bg-gray-100 border-gray-200'
-                        }`}>
+                        <div className={`inline-flex border ${t.border} divide-x ${t.divide}`}>
                           {[
-                            { id: 'both', label: 'Both' },
-                            { id: 'yd', label: 'SQ.YD' },
-                            { id: 'mt', label: 'SQ.MT' },
+                            { id: 'both', label: 'Both'  },
+                            { id: 'yd',   label: 'SQ.YD' },
+                            { id: 'mt',   label: 'SQ.MT' },
                           ].map((u) => (
                             <button
                               key={u.id}
+                              type="button"
                               onClick={() => setUnitMode(u.id)}
-                              className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
+                              className={`px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase transition-colors ${
                                 unitMode === u.id
-                                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm'
-                                  : isDark
-                                    ? 'text-gray-400 hover:text-white'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                  ? 'bg-brand-red text-white'
+                                  : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                               }`}
                             >
                               {u.label}
@@ -877,187 +807,151 @@ const SiteMapPage = () => {
                           ))}
                         </div>
 
-                        {/* Search */}
                         <div className="relative">
-                          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                          <Search size={12} className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${t.textMuted}`} aria-hidden="true" />
                           <input
                             type="text"
                             placeholder="Plot #..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className={`pl-7 pr-2.5 py-1 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-medium border focus:outline-none focus:ring-1 focus:ring-amber-500 w-24 sm:w-28 ${
-                              isDark ? 'bg-gray-900 border-gray-800 text-white placeholder-gray-500' : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
-                            }`}
+                            aria-label="Filter Park 3 by plot number"
+                            className={`pl-8 pr-3 py-1.5 border ${t.border} ${t.bgPage} ${t.textMain} font-mono text-xs focus:outline-none focus:border-brand-red w-28`}
                           />
                         </div>
                       </div>
                     </div>
 
-                    {/* Responsive Data Table */}
-                    <div className="overflow-x-auto max-h-[520px] scrollbar-thin">
+                    {/* Data Table */}
+                    <div className="overflow-x-auto max-h-[540px]">
                       <table
-                        className="w-full text-left text-[11px] sm:text-xs tabular-nums"
+                        className="w-full text-left text-xs tabular-nums border-collapse"
                         aria-label="Official Industrial Park 3 (MIP 3) Engineering Plot Area Schedule"
                       >
                         <caption className="sr-only">
                           Official engineering plot schedule for Metro Industrial Park 3 (MIP 3) located on Bavla-Rajoda Road, Ahmedabad by Metro Developers. 77 clear-title plotted industrial parcels with Carpet Area in SQ.MT, 23.39% super loading, and Total Plot Area in Square Meters and Square Yards.
                         </caption>
-                        <thead className={`text-[10px] sm:text-[11px] uppercase tracking-wider font-extrabold border-b sticky top-0 z-10 backdrop-blur-md ${
-                          isDark ? 'bg-gray-950/95 text-gray-400 border-gray-800' : 'bg-gray-50/95 text-gray-600 border-gray-200'
-                        }`}>
+                        <thead className={`font-mono text-[10px] uppercase tracking-[0.12em] border-b ${t.border} sticky top-0 z-10 ${t.bgPage}`}>
                           <tr>
-                            <th scope="col" className="py-2.5 px-3 whitespace-nowrap">Plot #</th>
+                            <th scope="col" className={`py-3 px-4 whitespace-nowrap ${t.textMuted}`}>Plot #</th>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Carpet Area in Square Meters">Carpet (SQ.MT)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Carpet (SQ.MT)</th>
                             )}
-                            <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Super Area Loading Percentage">Super Loading</th>
+                            <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Super Loading</th>
                             {(unitMode === 'both' || unitMode === 'mt') && (
-                              <th scope="col" className="py-2.5 px-2.5 text-right whitespace-nowrap" title="Total Plot Area in Square Meters">Total (SQ.MT)</th>
+                              <th scope="col" className={`py-3 px-3 text-right whitespace-nowrap ${t.textMuted}`}>Total (SQ.MT)</th>
                             )}
                             {(unitMode === 'both' || unitMode === 'yd') && (
-                              <th scope="col" className="py-2.5 px-3 text-right text-amber-500 font-black whitespace-nowrap" title="Total Plot Area in Square Yards">Total (SQ.YD)</th>
+                              <th scope="col" className="py-3 px-4 text-right text-brand-red font-bold whitespace-nowrap">Total (SQ.YD)</th>
                             )}
-                            <th scope="col" className="py-2.5 px-2.5 text-center whitespace-nowrap">Status</th>
-                            <th scope="col" className="py-2.5 px-2.5 text-center whitespace-nowrap">Enquire</th>
+                            <th scope="col" className={`py-3 px-3 text-center whitespace-nowrap ${t.textMuted}`}>Status</th>
+                            <th scope="col" className={`py-3 px-3 text-center whitespace-nowrap ${t.textMuted}`}>Enquire</th>
                           </tr>
                         </thead>
-                        <tbody className={`divide-y ${isDark ? 'divide-gray-800' : 'divide-gray-100'}`}>
-                          {filteredPark3Plots.map((plot) => (
-                            <tr
-                              key={plot.id}
-                              className={`transition-colors hover:bg-amber-500/5 ${
-                                isDark ? 'odd:bg-gray-900/30' : 'odd:bg-gray-50/60'
-                              }`}
-                            >
-                              <td className="py-2.5 px-3 font-black text-amber-500 whitespace-nowrap" data-label="Plot Number">
-                                Plot #{plot.id}
-                              </td>
-                              {(unitMode === 'both' || unitMode === 'mt') && (
-                                <td className="py-2.5 px-2.5 text-right font-medium theme-text-primary whitespace-nowrap" data-label="Carpet SQ.MT">
-                                  {plot.carpetSqmt?.toFixed(2)}
-                                </td>
-                              )}
-                              <td className="py-2.5 px-2.5 text-right font-medium theme-text-secondary whitespace-nowrap" data-label="Super Loading">
-                                {plot.superPct || '23.39%'}
-                              </td>
-                              {(unitMode === 'both' || unitMode === 'mt') && (
-                                <td className="py-2.5 px-2.5 text-right font-bold theme-text-primary whitespace-nowrap" data-label="Total SQ.MT">
-                                  {plot.totalSqmt?.toFixed(2)}
-                                </td>
-                              )}
-                              {(unitMode === 'both' || unitMode === 'yd') && (
-                                <td className="py-2.5 px-3 text-right font-black text-amber-500 whitespace-nowrap" data-label="Total SQ.YD">
-                                  {plot.area}
-                                </td>
-                              )}
-                              <td className="py-2.5 px-2.5 text-center whitespace-nowrap" data-label="Status">
-                                <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500/10 text-green-500 border border-green-500/30">
-                                  Bookings Open
-                                </span>
-                              </td>
-                              <td className="py-2.5 px-2.5 text-center whitespace-nowrap" data-label="Enquire">
-                                <a
-                                  href={`https://wa.me/919824235642?text=${encodeURIComponent(`Hello, I would like to inquire about Plot #${plot.id} (${plot.area} / ${plot.totalSqmt?.toFixed(2)} sq.mtr) in Industrial Park 3.`)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  title={`Inquire about Plot #${plot.id}`}
-                                  className="inline-flex items-center justify-center p-1.5 rounded-lg text-emerald-500 hover:bg-emerald-500/10 transition-colors"
-                                >
-                                  <FaWhatsapp size={15} />
-                                </a>
+
+                        <tbody className={`divide-y ${t.divide}`}>
+                          {filteredPark3Plots.length === 0 ? (
+                            <tr>
+                              <td colSpan={7} className={`py-10 text-center font-mono text-xs uppercase tracking-wider ${t.textMuted}`}>
+                                No matching plots found for “{searchQuery}”
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            filteredPark3Plots.map((plot) => (
+                              <tr
+                                key={plot.id}
+                                className={`transition-colors ${isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'}`}
+                              >
+                                <td className="py-3 px-4 font-mono font-bold text-brand-red whitespace-nowrap">
+                                  Plot #{plot.id}
+                                </td>
+                                {(unitMode === 'both' || unitMode === 'mt') && (
+                                  <td className={`py-3 px-3 text-right font-mono ${t.textMain} whitespace-nowrap`}>
+                                    {plot.carpetSqmt?.toFixed(2)}
+                                  </td>
+                                )}
+                                <td className={`py-3 px-3 text-right font-mono ${t.textBody} whitespace-nowrap`}>
+                                  {plot.superPct || '23.39%'}
+                                </td>
+                                {(unitMode === 'both' || unitMode === 'mt') && (
+                                  <td className={`py-3 px-3 text-right font-mono font-bold ${t.textMain} whitespace-nowrap`}>
+                                    {plot.totalSqmt?.toFixed(2)}
+                                  </td>
+                                )}
+                                {(unitMode === 'both' || unitMode === 'yd') && (
+                                  <td className="py-3 px-4 text-right font-mono font-bold text-brand-red whitespace-nowrap">
+                                    {plot.area}
+                                  </td>
+                                )}
+                                <td className="py-3 px-3 text-center whitespace-nowrap">
+                                  <span className={`inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border ${t.border} ${t.bgPage} ${t.textMain}`}>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                                    Open
+                                  </span>
+                                </td>
+                                <td className="py-3 px-3 text-center whitespace-nowrap">
+                                  <a
+                                    href={`https://wa.me/919824235642?text=${encodeURIComponent(`Hello, I would like to inquire about Plot #${plot.id} (${plot.area} / ${plot.totalSqmt?.toFixed(2)} sq.mtr) in Industrial Park 3.`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={`Inquire about Plot #${plot.id}`}
+                                    aria-label={`WhatsApp inquiry for Plot ${plot.id}`}
+                                    className={`inline-flex items-center justify-center w-7 h-7 border ${t.border} text-emerald-600 hover:border-emerald-600 transition-colors`}
+                                  >
+                                    <FaWhatsapp size={13} aria-hidden="true" />
+                                  </a>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>
 
                     {/* Campus Area Summary Strip */}
-                    <div className={`p-3.5 sm:p-4 border-t grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 ${
-                      isDark ? 'bg-gray-900/60 border-gray-800' : 'bg-gray-50 border-gray-200'
-                    }`}>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Total Campus Area</span>
-                        <span className="text-xs sm:text-sm font-black text-amber-500">59,508 SQ.YD</span>
-                        <span className="text-[10px] text-gray-400 block">(~12.3 Acres)</span>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Total Parcels</span>
-                        <span className="text-xs sm:text-sm font-black theme-text-primary">77 Plots</span>
-                        <span className="text-[10px] text-gray-400 block">300 to 2,876 YD</span>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Road Network</span>
-                        <span className="text-xs sm:text-sm font-black theme-text-primary">18m &amp; 12m Wide</span>
-                        <span className="text-[10px] text-gray-400 block">Heavy RCC Spine</span>
-                      </div>
-                      <div className="flex flex-col justify-between">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block">Common Plot</span>
-                        <span className="text-xs sm:text-sm font-black text-amber-500">851.31 SQ.MT</span>
-                        <span className="text-[10px] text-gray-400 block">(1,018 SQ.YD)</span>
-                      </div>
+                    <div className={`border-t ${t.border} grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 ${t.divide} ${t.bgPage}`}>
+                      {[
+                        { label: 'Total Campus Area', value: '59,508 SQ.YD',  sub: '~12.3 Acres',      accent: true  },
+                        { label: 'Total Parcels',     value: '77 Plots',      sub: '300 to 2,876 YD',  accent: false },
+                        { label: 'Road Network',      value: '18m & 12m Wide',sub: 'Heavy RCC Spine',  accent: false },
+                        { label: 'Common Plot',       value: '851.31 SQ.MT',  sub: '1,018 SQ.YD',      accent: false },
+                      ].map((s) => (
+                        <div key={s.label} className="p-4 sm:p-5">
+                          <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>{s.label}</span>
+                          <span className={`text-sm sm:text-base font-extrabold tabular-nums block mt-1 ${s.accent ? 'text-brand-red' : t.textMain}`}>
+                            {s.value}
+                          </span>
+                          <span className={`text-[11px] block mt-0.5 ${t.textMuted}`}>{s.sub}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Scanned Official Architectural Plot Schedule Drawings with Zoom */}
-                  <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
-                    <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden p-3.5 sm:p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-xs sm:text-sm font-bold theme-text-primary">
-                          Schedule Table 1 (Plots 1–39)
-                        </h4>
-                        <button
-                          type="button"
-                          className="text-[11px] sm:text-xs text-amber-500 font-semibold hover:underline"
-                          onClick={() => openViewer(park3Images.table1.src, park3Images.table1.title)}
-                        >
-                          Click to Zoom
-                        </button>
-                      </div>
-                      <img
-                        src={park3Images.table1.src}
-                        alt="Industrial Park 3 Area Table 1"
-                        className="w-full h-auto rounded-lg cursor-zoom-in hover:scale-[1.01] transition-transform duration-300"
-                        onClick={() => openViewer(park3Images.table1.src, park3Images.table1.title)}
-                        loading="lazy"
-                      />
-                    </div>
-
-                    <div className="theme-bg-card rounded-2xl border theme-border overflow-hidden p-3.5 sm:p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-xs sm:text-sm font-bold theme-text-primary">
-                          Schedule Table 2 (Plots 40–77)
-                        </h4>
-                        <button
-                          type="button"
-                          className="text-[11px] sm:text-xs text-amber-500 font-semibold hover:underline"
-                          onClick={() => openViewer(park3Images.table2.src, park3Images.table2.title)}
-                        >
-                          Click to Zoom
-                        </button>
-                      </div>
-                      <img
-                        src={park3Images.table2.src}
-                        alt="Industrial Park 3 Area Table 2"
-                        className="w-full h-auto rounded-lg cursor-zoom-in hover:scale-[1.01] transition-transform duration-300"
-                        onClick={() => openViewer(park3Images.table2.src, park3Images.table2.title)}
-                        loading="lazy"
-                      />
-                    </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <DrawingCard
+                      src={PARK3_IMAGES.table1.src}
+                      alt="Industrial Park 3 Area Table 1"
+                      title="Schedule Table 1 (Plots 1–39)"
+                      onOpen={() => openViewer(PARK3_IMAGES.table1.src, PARK3_IMAGES.table1.title)}
+                      isDark={isDark}
+                    />
+                    <DrawingCard
+                      src={PARK3_IMAGES.table2.src}
+                      alt="Industrial Park 3 Area Table 2"
+                      title="Schedule Table 2 (Plots 40–77)"
+                      onOpen={() => openViewer(PARK3_IMAGES.table2.src, PARK3_IMAGES.table2.title)}
+                      isDark={isDark}
+                    />
                   </div>
                 </div>
               )}
             </motion.div>
           )}
 
-          <p className={`text-center text-xs mt-6 transition-colors duration-300 ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-            <span className="opacity-80">
-              {viewMode === 'map'
-                ? 'Use zoom buttons inside the map · Scroll to navigate when zoomed · Click any plot for details'
-                : 'Click any drawing image to zoom into full resolution · Use search or filters above to find specific plots'}
-            </span>
+          <p className={`font-mono text-[11px] uppercase tracking-[0.12em] text-center mt-8 ${t.textMuted}`}>
+            {viewMode === 'map'
+              ? 'Use zoom controls inside the map · Click any shed or plot for live status & dimensions'
+              : 'Click any engineering drawing to inspect full resolution · Filter or search plots above'}
           </p>
-
         </div>
 
         {/* ════════ LIGHTBOX VIEWER ════════ */}

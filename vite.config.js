@@ -20,7 +20,11 @@ export default defineConfig({
 
     // Self-hosts Google Fonts at build time — must come before VitePWA
     webfontDownload([
-      'https://fonts.googleapis.com/css2?family=Anton&family=Bungee+Outline&display=swap',
+      'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap',
+      'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap',
+      'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap',
+      // Keep Bebas Neue / Anton only if other pages (like MetroIndustrialPark) still reference them
+      'https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap',
     ]),
 
     VitePWA({

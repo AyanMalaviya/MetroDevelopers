@@ -1112,7 +1112,7 @@ export default function Park1Model3D({ onSwitchTo2D }) {
         {/* Left: Badge + 2D/3D Selector */}
         <div className="flex items-center gap-2">
           <div
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black tracking-tight border ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium sm:font-semibold tracking-tight border ${
               isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xs'
             }`}
           >
@@ -1218,8 +1218,8 @@ export default function Park1Model3D({ onSwitchTo2D }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-black theme-text-primary">{stats.total}</div>
-          <div className="text-[10px] text-gray-400 font-bold uppercase">Total Sheds</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold theme-text-primary">{stats.total}</div>
+          <div className="text-[10px] text-gray-400 font-medium uppercase">Total Sheds</div>
         </div>
 
         <div
@@ -1232,8 +1232,8 @@ export default function Park1Model3D({ onSwitchTo2D }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-black text-emerald-500">{stats.available}</div>
-          <div className="text-[10px] text-emerald-500 font-bold uppercase">Available</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-emerald-500">{stats.available}</div>
+          <div className="text-[10px] text-emerald-500 font-medium uppercase">Available</div>
         </div>
 
         <div
@@ -1246,8 +1246,8 @@ export default function Park1Model3D({ onSwitchTo2D }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-black text-gray-400">{stats.sold}</div>
-          <div className="text-[10px] text-gray-400 font-bold uppercase">Sold</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-gray-400">{stats.sold}</div>
+          <div className="text-[10px] text-gray-400 font-medium uppercase">Sold</div>
         </div>
 
         <div
@@ -1260,13 +1260,13 @@ export default function Park1Model3D({ onSwitchTo2D }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-black text-brand-red">{stats.forLease}</div>
-          <div className="text-[10px] text-brand-red font-bold uppercase">For Lease</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-brand-red">{stats.forLease}</div>
+          <div className="text-[10px] text-brand-red font-medium uppercase">For Lease</div>
         </div>
 
         <div className="hidden sm:block p-1.5 sm:p-2 rounded-xl border bg-gray-900/20 border-gray-800">
-          <div className="text-xs sm:text-sm font-black text-blue-500">{stats.preLeased}</div>
-          <div className="text-[10px] text-blue-500 font-bold uppercase">Pre-Leased</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-blue-500">{stats.preLeased}</div>
+          <div className="text-[10px] text-blue-500 font-medium uppercase">Pre-Leased</div>
         </div>
       </div>
 
@@ -1314,17 +1314,17 @@ export default function Park1Model3D({ onSwitchTo2D }) {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${getStatusBadgeClass(
+                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium sm:font-semibold uppercase tracking-wider ${getStatusBadgeClass(
                       selectedPlotInfo.status
                     )}`}
                   >
                     {getStatusLabel(selectedPlotInfo.status)}
                   </span>
-                  <span className="text-[11px] font-bold text-gray-400">
+                  <span className="text-[11px] font-medium text-gray-400">
                     {selectedPlotInfo.block}
                   </span>
                 </div>
-                <h3 className="text-lg sm:text-xl font-extrabold tracking-tight">
+                <h3 className="text-lg sm:text-xl font-medium sm:font-semibold tracking-tight">
                   {selectedPlotInfo.title}
                 </h3>
                 <p className="text-xs text-gray-400 mt-0.5">
@@ -1348,33 +1348,33 @@ export default function Park1Model3D({ onSwitchTo2D }) {
             {/* Metrics */}
             <div className="grid grid-cols-2 gap-2 my-3 text-xs">
               <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-bold text-gray-400 uppercase block">
+                <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Dimensions
                 </span>
-                <span className="font-extrabold mt-0.5 block">{selectedPlotInfo.dimText}</span>
+                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.dimText}</span>
               </div>
 
               <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-bold text-gray-400 uppercase block">
+                <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Approx. Area
                 </span>
-                <span className="font-extrabold text-brand-red mt-0.5 block">
+                <span className="font-medium sm:font-semibold text-brand-red mt-0.5 block">
                   {selectedPlotInfo.area || `${selectedPlotInfo.approxSqFt?.toLocaleString()} SQ.FT`}
                 </span>
               </div>
 
               <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-bold text-gray-400 uppercase block">
+                <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Road Facing
                 </span>
-                <span className="font-bold mt-0.5 block">{selectedPlotInfo.roadLabel}</span>
+                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.roadLabel}</span>
               </div>
 
               <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-bold text-gray-400 uppercase block">
+                <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Unit Type
                 </span>
-                <span className="font-bold mt-0.5 block">{selectedPlotInfo.unitType}</span>
+                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.unitType}</span>
               </div>
             </div>
 
@@ -1400,7 +1400,7 @@ export default function Park1Model3D({ onSwitchTo2D }) {
                 href={`https://wa.me/919824235642?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 py-2 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-green-600/25 active:scale-95 transition-all whitespace-nowrap"
+                className="flex-1 py-2 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium sm:font-semibold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-green-600/25 active:scale-95 transition-all whitespace-nowrap"
               >
                 <FaWhatsapp size={14} />
                 <span>WhatsApp</span>
@@ -1408,7 +1408,7 @@ export default function Park1Model3D({ onSwitchTo2D }) {
 
               <a
                 href="tel:919824235642"
-                className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border transition-all active:scale-95 whitespace-nowrap ${
+                className={`py-2 px-3 rounded-xl font-medium sm:font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all active:scale-95 whitespace-nowrap ${
                   isDark
                     ? 'border-gray-700 text-gray-200 hover:border-brand-red'
                     : 'border-gray-200 text-gray-700 hover:border-brand-red'
@@ -1421,7 +1421,7 @@ export default function Park1Model3D({ onSwitchTo2D }) {
               <button
                 type="button"
                 onClick={() => focusOnEntity(selectedPlotInfo)}
-                className={`py-2 px-2.5 rounded-xl font-bold text-xs flex items-center justify-center border transition-all active:scale-95 ${
+                className={`py-2 px-2.5 rounded-xl font-medium sm:font-semibold text-xs flex items-center justify-center border transition-all active:scale-95 ${
                   isDark
                     ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
                     : 'border-gray-200 text-gray-700 hover:bg-gray-100'
