@@ -1,10 +1,10 @@
 // src/pages/SiteMapPage.jsx
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import {
   ArrowLeft, Map, Table, Layers, Search, Maximize2,
-  ExternalLink, Factory, Phone, CheckCircle, ShieldCheck
+  ExternalLink, Factory, Phone, CheckCircle, ShieldCheck, Box
 } from 'lucide-react';
 import { FaWhatsapp, FaRoad } from 'react-icons/fa';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
@@ -13,6 +13,7 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 
 import InteractiveSiteMap from '../components/InteractiveSiteMap/InteractiveSiteMap';
+const Park1Model3D = lazy(() => import('../components/InteractiveSiteMap/Park1Model3D'));
 import MetroEstateInteractiveMap from '../components/InteractiveSiteMap/MetroEstateInteractiveMap';
 import Park3InteractiveMap from '../components/InteractiveSiteMap/Park3InteractiveMap';
 import SEO from '../components/SEO/SEO';
@@ -103,6 +104,8 @@ const SiteMapPage = () => {
   const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'park');
   // View mode ('map' = Interactive Map, 'table' = Area Details Table)
   const [viewMode, setViewMode] = useState(location.state?.viewMode || 'map');
+  // Dimension view for Park 1 ('2d' = 2D Map, '3d' = 3D Architectural Model) - Default '2d'
+  const [mapDimension, setMapDimension] = useState(location.state?.mapDimension || '2d');
 
   // Table filters & controls
   const [park2Filter, setPark2Filter] = useState('ALL');
@@ -192,35 +195,72 @@ const SiteMapPage = () => {
               <span>Back</span>
             </button>
 
-            {/* View Mode Toggle: Map View vs Area Table */}
-            <div className={`flex items-center p-1 rounded-2xl border shadow-sm ${
-              isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white border-gray-200'
-            }`}>
-              <button
-                type="button"
-                onClick={() => setViewMode('map')}
-                className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
-                  viewMode === 'map'
-                    ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                    : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <Map size={13} />
-                <span>Interactive Map</span>
-              </button>
+            {/* View Mode Controls: 2D/3D Selector (Park 1) & Map/Table Toggle */}
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
+              {/* Park 1 Dimension Switcher: 2D vs 3D (visible only in map view and Park 1) */}
+              {viewMode === 'map' && activeTab === 'park' && (
+                <div className={`flex items-center p-1 rounded-2xl border shadow-sm ${
+                  isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
+                  <button
+                    type="button"
+                    onClick={() => setMapDimension('2d')}
+                    className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                      mapDimension === '2d'
+                        ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
+                        : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <Map size={13} />
+                    <span>2D Map</span>
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => setViewMode('table')}
-                className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
-                  viewMode === 'table'
-                    ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
-                    : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <Table size={13} />
-                <span>Area Table</span>
-              </button>
+                  <button
+                    type="button"
+                    onClick={() => setMapDimension('3d')}
+                    className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                      mapDimension === '3d'
+                        ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
+                        : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <Box size={13} />
+                    <span>3D View</span>
+                    <span className="hidden sm:inline-block ml-0.5 px-1.5 py-0.2 text-[9px] font-black uppercase rounded-full bg-white/20 text-white">3D</span>
+                  </button>
+                </div>
+              )}
+
+              {/* View Mode Toggle: Map View vs Area Table */}
+              <div className={`flex items-center p-1 rounded-2xl border shadow-sm ${
+                isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white border-gray-200'
+              }`}>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('map')}
+                  className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                    viewMode === 'map'
+                      ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
+                      : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <Map size={13} />
+                  <span>Interactive Map</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setViewMode('table')}
+                  className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+                    viewMode === 'table'
+                      ? 'bg-brand-red text-white shadow-md shadow-brand-red/30'
+                      : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <Table size={13} />
+                  <span>Area Table</span>
+                </button>
+              </div>
             </div>
           </motion.div>
 
@@ -306,7 +346,7 @@ const SiteMapPage = () => {
               >
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={activeTab}
+                    key={`${activeTab}-${activeTab === 'park' ? mapDimension : '2d'}`}
                     initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
                     animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
                     exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
@@ -314,7 +354,20 @@ const SiteMapPage = () => {
                     className="h-full w-full"
                   >
                     {activeTab === 'park' ? (
-                      <InteractiveSiteMap />
+                      mapDimension === '3d' ? (
+                        <Suspense
+                          fallback={
+                            <div className="flex flex-col items-center justify-center min-h-[600px] w-full gap-3">
+                              <div className="w-9 h-9 border-3 border-brand-red border-t-transparent rounded-full animate-spin" />
+                              <p className="text-xs font-bold text-gray-400">Loading 3D Architectural Model...</p>
+                            </div>
+                          }
+                        >
+                          <Park1Model3D onSwitchTo2D={() => setMapDimension('2d')} />
+                        </Suspense>
+                      ) : (
+                        <InteractiveSiteMap onSwitchTo3D={() => setMapDimension('3d')} />
+                      )
                     ) : activeTab === 'estate' ? (
                       <MetroEstateInteractiveMap />
                     ) : (

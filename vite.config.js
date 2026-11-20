@@ -123,6 +123,7 @@ export default defineConfig({
           'icons-vendor':    ['lucide-react', 'react-icons'],
           'countup-vendor':  ['react-countup'],
           'lightbox-vendor': ['yet-another-react-lightbox'],
+          'three-vendor':    ['three'],
         },
       },
     },

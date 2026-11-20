@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink, Box } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { phaseCoordinates, getShedPhase } from '../../data/phaseCoordinates';
@@ -804,6 +804,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
   loading,
   loadData,
   onOpenFullscreen,
+  onSwitchTo3D,
   isDark,
 }) {
   return (
@@ -897,6 +898,24 @@ const DashboardHeader = React.memo(function DashboardHeader({
             <Maximize2 size={12} />
             <span>Pan &amp; Zoom</span>
           </button>
+
+          {/* 3D Model Switcher Button */}
+          {onSwitchTo3D && (
+            <button
+              type="button"
+              onClick={onSwitchTo3D}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-black transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
+                isDark
+                  ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700'
+                  : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-300'
+              }`}
+              title="Switch to 3D Architectural Model"
+            >
+              <Box size={13} className="text-brand-red" />
+              <span>3D View</span>
+              <span className="hidden sm:inline-block px-1.5 py-0.2 text-[9px] font-black uppercase rounded-full bg-brand-red text-white">3D</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -974,7 +993,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
 ════════════════════════════════════════════════════════ */
-export default function InteractiveSiteMap() {
+export default function InteractiveSiteMap({ onSwitchTo3D }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -1083,6 +1102,7 @@ export default function InteractiveSiteMap() {
           loading={loading}
           loadData={loadData}
           onOpenFullscreen={handleOpenFullscreen}
+          onSwitchTo3D={onSwitchTo3D}
           isDark={isDark}
         />
 
