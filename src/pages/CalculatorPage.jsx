@@ -32,13 +32,13 @@ const CALCULATOR_SCHEMA = {
 };
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 /* ─── Hoisted Architectural Modal ─── */
@@ -129,7 +129,6 @@ const Calculator = () => {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ══════════════════════════════════
             AREA SHEET MODAL
@@ -238,8 +237,12 @@ const Calculator = () => {
                   <span className={t.textMuted}>Real-Time ROI &amp; Valuation</span>
                 </div>
 
-                <h1 className={`text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-[-0.035em] leading-[1.04] mb-4 ${t.textMain}`}>
-                  Property Calculator<span className="text-brand-red">.</span>
+                <h1 className={`text-3xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.15] mb-4 ${t.textMain}`}>
+                  Property{' '}
+                  <span className="font-calligraphy font-normal text-[1.25em] tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                    Calculator
+                  </span>
+                  <span className="text-brand-red">.</span>
                 </h1>
 
                 <p className={`text-sm sm:text-base max-w-2xl leading-relaxed ${t.textBody}`}>
@@ -279,7 +282,7 @@ const Calculator = () => {
               ].map((m) => (
                 <div key={m.code} className={`p-5 border-r border-b ${t.border} ${t.bgPage}`}>
                   <div className={`font-mono text-[10px] mb-2.5 ${t.textMuted}`}>{m.code}</div>
-                  <div className={`text-xl sm:text-2xl font-extrabold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
+                  <div className={`text-xl sm:text-2xl font-bold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
                     {m.value}
                   </div>
                   <div className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>

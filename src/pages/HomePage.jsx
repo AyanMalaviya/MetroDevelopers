@@ -1,5 +1,5 @@
 // src/pages/HomePage.jsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
@@ -192,6 +192,31 @@ const investReasons = [
 /* ─── Editorial Quotes ─── */
 const bigQuotes = [
   {
+    text: 'In a free country, freedom has to be defended; and for that, a nation must build modern industries — steel, power, and engineering.',
+    author: 'Jamsetji Tata',
+    role: 'Founder, Tata Group',
+  },
+  {
+    text: 'Industrialization, driven by infrastructure and self-reliance, is the indispensable engine that transforms a developing country into an economic superpower.',
+    author: 'Dr. A.P.J. Abdul Kalam',
+    role: '11th President of India & Scientist',
+  },
+  {
+    text: 'Between our ambition and our destiny lies one imperative: building world-class manufacturing infrastructure on the ground.',
+    author: 'Dhirubhai Ambani',
+    role: 'Founder, Reliance Industries',
+  },
+  {
+    text: "When factories open their gates, they don't just produce goods — they build regional supply networks, elevate local communities, and create generational wealth.",
+    author: 'Henry Ford',
+    role: 'Founder, Ford Motor Company',
+  },
+  {
+    text: 'No country is ever successful in the long term without a really strong and vibrant manufacturing base.',
+    author: 'Alan Mulally',
+    role: 'Former CEO, Ford Motor Company',
+  },
+  {
     text: 'The factory is the machine that builds the machine.',
     author: 'Elon Musk',
     role: 'CEO, Tesla & SpaceX',
@@ -200,11 +225,6 @@ const bigQuotes = [
     text: "Manufacturing is more than just putting parts together. It's coming up with ideas, testing principles and perfecting the engineering.",
     author: 'James Dyson',
     role: 'Founder, Dyson',
-  },
-  {
-    text: 'No country is ever successful in the long term without a really strong and vibrant manufacturing base.',
-    author: 'Alan Mulally',
-    role: 'Former CEO, Ford Motor Company',
   },
 ];
 
@@ -250,20 +270,20 @@ const cloudUpdates = [
 
 /* ─── Shared Theme Tokens Helper ─── */
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#ECEAE3]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  bgSubtle:  isDark ? 'bg-[#18181C]' : 'bg-[#F1F3F5]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 /* ════════════════════════════════════════════════
    SECTION HEADER (Asymmetric Editorial Pattern)
 ════════════════════════════════════════════════ */
-const EditorialHeader = ({ index, kicker, title, description, rightSlot, isDark }) => {
+const EditorialHeader = memo(({ index, kicker, title, description, rightSlot, isDark }) => {
   const t = getTokens(isDark);
   return (
     <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 pb-10 sm:pb-12 border-b ${t.border}`}>
@@ -273,7 +293,7 @@ const EditorialHeader = ({ index, kicker, title, description, rightSlot, isDark 
           <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
           <span className={t.textMuted}>{kicker}</span>
         </div>
-        <h2 className={`text-3xl sm:text-5xl lg:text-[3.25rem] font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] leading-[1.08] font-sans ${t.textMain}`}>
+        <h2 className={`text-3xl sm:text-5xl lg:text-[3.25rem] font-bold tracking-tight leading-[1.15] ${t.textMain}`}>
           {title}
         </h2>
       </div>
@@ -287,7 +307,8 @@ const EditorialHeader = ({ index, kicker, title, description, rightSlot, isDark 
       </div>
     </div>
   );
-};
+});
+EditorialHeader.displayName = 'EditorialHeader';
 
 /* ════════════════════════════════════════════════
    01. FIELD LOG / ON-GROUND UPDATES
@@ -299,10 +320,10 @@ const FieldLogSection = ({ isDark }) => {
   const inView     = useInView(sectionRef, { once: true, margin: '-60px' });
   const siteUrl    = 'https://www.metrodevelopers.co.in';
 
-  const scrollRail = (dir) => {
+  const scrollRail = useCallback((dir) => {
     if (!railRef.current) return;
     railRef.current.scrollBy({ left: dir * 360, behavior: 'smooth' });
-  };
+  }, []);
 
   return (
     <section
@@ -314,7 +335,14 @@ const FieldLogSection = ({ isDark }) => {
         <EditorialHeader
           index="01"
           kicker="Site Progress · @metro.industrialpark"
-          title="On-Ground Updates"
+          title={
+            <>
+              On-Ground{' '}
+              <span className="font-serif-editorial italic font-normal text-[1.22em] text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-brand-red inline-block">
+                Updates
+              </span>
+            </>
+          }
           description="Unfiltered walkthroughs, road work, and phase-wise construction reels directly from Moraiya and Bavla."
           isDark={isDark}
           rightSlot={
@@ -449,7 +477,10 @@ const DevelopmentsSection = ({ isDark }) => {
           kicker="Active Portfolio · Ahmedabad Corridor"
           title={
             <>
-              Ready Sheds or <span className="text-brand-red">Build Your Own</span>
+              Ready Sheds or{' '}
+              <span className="font-calligraphy font-normal text-[1.22em] text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-500 to-amber-500 inline-block">
+                Build Your Own
+              </span>
             </>
           }
           description="Three planned industrial parks across Moraiya, Changodar, and Bavla—engineered with heavy RCC internal roads, clear titles, and 24/7 gated infrastructure."
@@ -556,8 +587,8 @@ const InvestmentSection = ({ isDark }) => {
     return () => clearInterval(id);
   }, []);
 
-  const prevQ = () => setActiveQ((p) => (p - 1 + bigQuotes.length) % bigQuotes.length);
-  const nextQ = () => setActiveQ((p) => (p + 1) % bigQuotes.length);
+  const prevQ = useCallback(() => setActiveQ((p) => (p - 1 + bigQuotes.length) % bigQuotes.length), []);
+  const nextQ = useCallback(() => setActiveQ((p) => (p + 1) % bigQuotes.length), []);
 
   return (
     <section
@@ -571,7 +602,11 @@ const InvestmentSection = ({ isDark }) => {
           kicker="Capital Performance · Investor Memorandum"
           title={
             <>
-              Industrial Sheds <span className="text-brand-red">vs.</span> Traditional Assets
+              Industrial Sheds{' '}
+              <span className="font-serif-editorial italic font-normal text-[1.2em] text-amber-500 inline-block">
+                vs.
+              </span>{' '}
+              Traditional Assets
             </>
           }
           description="While fixed deposits lose real purchasing power to tax and inflation, industrial sheds in Ahmedabad combine 6–8% rental yields with 10–12% corridor land appreciation."
@@ -695,7 +730,11 @@ const InvestmentSection = ({ isDark }) => {
                 Beyond Financial Returns
               </span>
               <h3 className={`text-xl sm:text-2xl lg:text-3xl font-medium sm:font-semibold lg:font-bold tracking-tight mt-1 font-sans ${t.textMain}`}>
-                Six Structural Advantages
+                Six{' '}
+                <span className="font-serif-display italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-orange-500 inline-block">
+                  Structural
+                </span>{' '}
+                Advantages
               </h3>
             </div>
             <p className={`font-mono text-xs ${t.textMuted}`}>
@@ -703,28 +742,37 @@ const InvestmentSection = ({ isDark }) => {
             </p>
           </div>
 
-          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l ${t.border}`}>
-            {investReasons.map((r) => (
-              <div
-                key={r.num}
-                className={`p-6 sm:p-8 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
-                  isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-mono text-xs font-medium sm:font-semibold text-brand-red tracking-widest">
-                    {r.num}
-                  </span>
-                  <span className={`w-8 h-px ${isDark ? 'bg-white/15' : 'bg-black/15'}`} aria-hidden="true" />
-                </div>
-                <h4 className={`text-base sm:text-lg font-medium sm:font-semibold tracking-tight mb-2.5 font-sans ${t.textMain}`}>
-                  {r.title}
-                </h4>
-                <p className={`text-sm leading-relaxed ${t.textBody}`}>
-                  {r.desc}
-                </p>
-              </div>
-            ))}
+          <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {investReasons.map((r, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <motion.div
+                  key={r.num}
+                  initial={{ opacity: 0, x: isEven ? -45 : 45 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.65, ease: EASE }}
+                  className={`w-[82%] sm:w-[70%] lg:w-[58%] max-w-xl p-5 sm:p-6 border ${t.border} ${t.bgSurface} ${
+                    isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                  } transition-colors ${
+                    isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-xs font-semibold text-brand-red tracking-widest">
+                      {r.num}
+                    </span>
+                    <span className={`w-8 h-px ${isDark ? 'bg-white/15' : 'bg-black/15'}`} aria-hidden="true" />
+                  </div>
+                  <h4 className={`text-base sm:text-lg font-semibold tracking-tight mb-2 font-sans ${t.textMain}`}>
+                    {r.title}
+                  </h4>
+                  <p className={`text-sm leading-relaxed ${t.textBody}`}>
+                    {r.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
@@ -761,7 +809,7 @@ const InvestmentSection = ({ isDark }) => {
 
             <div className="lg:col-span-3 flex items-center lg:justify-end gap-3">
               <span className={`font-mono text-xs tabular-nums mr-2 ${t.textMuted}`}>
-                0{activeQ + 1} / 0{bigQuotes.length}
+                {String(activeQ + 1).padStart(2, '0')} / {String(bigQuotes.length).padStart(2, '0')}
               </span>
               <button
                 type="button"
@@ -814,9 +862,15 @@ const HomePage = () => {
   });
   const heroImgY = useTransform(heroScroll, [0, 1], ['0%', '14%']);
 
-  // Lenis inertial smooth scroll
+  // Lenis inertial smooth scroll — desktop mousewheel only, touch devices use native 120Hz smooth scrolling
   useEffect(() => {
     window.scrollTo(0, 0);
+    const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+    const isReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouch || isReducedMotion) {
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.05,
       easing: (x) => Math.min(1, 1.001 - Math.pow(2, -10 * x)),
@@ -838,7 +892,7 @@ const HomePage = () => {
     'Hello, I am interested in industrial sheds at Metro Industrial Park, Moraiya. Please share availability and pricing.'
   );
 
-  const homeSchemas = [
+  const homeSchemas = useMemo(() => [
     websiteSchema,
     propertySchema,
     realEstateListingSchema,
@@ -848,7 +902,7 @@ const HomePage = () => {
     faqSchema,
     imageObjectSchema,
     socialProfileSchema,
-  ];
+  ], []);
 
   return (
     <>
@@ -868,7 +922,6 @@ const HomePage = () => {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ════════ ARCHITECTURAL HERO ════════ */}
         <section
@@ -928,11 +981,15 @@ const HomePage = () => {
                     </p>
                     <p
                       aria-hidden="true"
-                      className="text-3xl sm:text-5xl lg:text-[4.25rem] font-medium sm:font-semibold lg:font-bold text-white tracking-[-0.025em] leading-[1.06] font-sans"
+                      className="text-3xl sm:text-5xl lg:text-[4.25rem] font-bold text-white tracking-tight leading-[1.12]"
                     >
-                      Built for Manufacturing
+                      Built for{' '}
+                      <span className="font-calligraphy font-normal text-[1.25em] tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-500 to-amber-400 inline-block mr-1.5 drop-shadow-sm">
+                        Manufacturing
+                      </span>
                       <span className="block text-white/90">
-                        Scale<span className="text-brand-red">.</span>
+                        <span className="font-serif-display italic font-semibold text-white">Scale</span>
+                        <span className="text-brand-red">.</span>
                       </span>
                     </p>
                   </motion.div>
@@ -943,7 +1000,7 @@ const HomePage = () => {
                     transition={{ duration: 0.75, delay: 0.12, ease: EASE }}
                     className="hidden sm:block lg:col-span-4"
                   >
-                    <p className="text-sm text-white/80 leading-relaxed border-l-2 border-brand-red pl-4">
+                    <p className="text-sm sm:text-base text-gray-200 leading-relaxed border-l-2 border-brand-red pl-4">
                       High-clearance industrial sheds and clear-title plots engineered for heavy manufacturing, logistics, and long-term capital growth across Ahmedabad.
                     </p>
                   </motion.div>
@@ -1037,8 +1094,11 @@ const HomePage = () => {
                   <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
                   <span className={t.textMuted}>Track Record</span>
                 </div>
-                <h2 className={`text-3xl sm:text-5xl font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] font-sans ${t.textMain}`}>
-                  Delivered on Ground
+                <h2 className={`text-3xl sm:text-5xl font-bold tracking-tight ${t.textMain}`}>
+                  Delivered on{' '}
+                  <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 inline-block">
+                    Ground
+                  </span>
                 </h2>
               </div>
               <p className={`font-mono text-xs uppercase tracking-[0.14em] ${t.textMuted}`}>
@@ -1059,7 +1119,7 @@ const HomePage = () => {
                     {stat.index}
                   </div>
                   <div
-                    className={`text-4xl sm:text-6xl font-medium sm:font-semibold lg:font-bold tracking-[-0.03em] tabular-nums mb-2 ${t.textMain}`}
+                    className={`text-4xl sm:text-6xl font-bold tracking-tight tabular-nums mb-2 ${t.textMain}`}
                     aria-label={`${stat.countEnd}${stat.suffix} ${stat.label}`}
                   >
                     <CountUp
@@ -1070,7 +1130,7 @@ const HomePage = () => {
                       scrollSpyOnce
                     />
                   </div>
-                  <div className={`text-xs sm:text-sm font-medium sm:font-semibold tracking-tight ${t.textMain}`}>
+                  <div className={`text-xs sm:text-sm font-semibold tracking-tight ${t.textMain}`}>
                     {stat.label}
                   </div>
                   <div className={`text-xs mt-1 ${t.textMuted}`}>
@@ -1107,8 +1167,12 @@ const HomePage = () => {
                     <span className={t.textMuted}>Direct Site Office</span>
                   </div>
 
-                  <h2 className={`text-3xl sm:text-5xl font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] leading-[1.08] mb-5 font-sans ${t.textMain}`}>
-                    Schedule a site visit in Moraiya<span className="text-brand-red">.</span>
+                  <h2 className={`text-3xl sm:text-5xl font-bold tracking-tight leading-[1.15] mb-5 ${t.textMain}`}>
+                    Schedule a site visit in{' '}
+                    <span className="font-calligraphy font-normal text-[1.25em] text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                      Moraiya
+                    </span>
+                    <span className="text-brand-red">.</span>
                   </h2>
 
                   <p className={`text-sm sm:text-base leading-relaxed max-w-lg ${t.textBody}`}>

@@ -81,7 +81,7 @@ const ReviewPrompt = () => {
                   <p className={`text-[11px] font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                     Liked Metro Industrial Park?
                   </p>
-                  <p className={`text-sm font-black font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  <p className={`text-sm font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
                     Leave us a quick review.
                   </p>
                 </div>

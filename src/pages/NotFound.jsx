@@ -56,7 +56,7 @@ export default function NotFound() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mb-6 select-none"
           >
-            <span className="text-[96px] font-extrabold leading-none bg-gradient-to-br from-brand-red to-red-900 bg-clip-text text-transparent">
+            <span className="text-[96px] font-bold leading-none bg-gradient-to-br from-brand-red to-red-900 bg-clip-text text-transparent">
               404
             </span>
           </motion.div>
@@ -66,9 +66,12 @@ export default function NotFound() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className={`text-2xl font-extrabold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}
+            className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}
           >
-            Page Not Found
+            Page{' '}
+            <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+              Not Found
+            </span>
           </motion.h1>
 
           {/* Subtext with attempted path */}

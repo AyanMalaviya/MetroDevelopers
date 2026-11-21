@@ -13,13 +13,13 @@ import { createBreadcrumbSchema, propertySchema, directorSchemas } from '../util
 const EASE = [0.16, 1, 0.3, 1];
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 const EditorialHeading = ({ index, kicker, title, description, isDark }) => {
@@ -32,7 +32,7 @@ const EditorialHeading = ({ index, kicker, title, description, isDark }) => {
           <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
           <span className={t.textMuted}>{kicker}</span>
         </div>
-        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] leading-[1.06] ${t.textMain}`}>
+        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15] ${t.textMain}`}>
           {title}
         </h2>
       </div>
@@ -144,7 +144,6 @@ const ContactPage = () => {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ══════════════════════════════════
             HERO — DIRECT DESK BRIEF
@@ -178,8 +177,12 @@ const ContactPage = () => {
                 </div>
 
                 {/* Decorative h2 — SEO h1 is sr-only above */}
-                <h2 className={`text-4xl sm:text-5xl lg:text-[4rem] font-extrabold tracking-[-0.035em] leading-[1.03] mb-4 ${t.textMain}`}>
-                  Get In Touch<span className="text-brand-red">.</span>
+                <h2 className={`text-4xl sm:text-5xl lg:text-[4rem] font-bold tracking-tight leading-[1.12] mb-4 ${t.textMain}`}>
+                  Get In{' '}
+                  <span className="font-calligraphy font-normal text-[1.25em] tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                    Touch
+                  </span>
+                  <span className="text-brand-red">.</span>
                 </h2>
 
                 <p className={`text-sm sm:text-base max-w-2xl leading-relaxed ${t.textBody}`}>
@@ -227,7 +230,7 @@ const ContactPage = () => {
               ].map((m) => (
                 <div key={m.code} className={`p-5 border-r border-b ${t.border} ${t.bgPage}`}>
                   <div className={`font-mono text-[10px] mb-2.5 ${t.textMuted}`}>{m.code}</div>
-                  <div className={`text-xl sm:text-2xl font-extrabold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
+                  <div className={`text-xl sm:text-2xl font-bold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
                     {m.value}
                   </div>
                   <div className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
@@ -253,7 +256,7 @@ const ContactPage = () => {
               kicker="Leadership Desk"
               title={
                 <>
-                  Meet Our <span className="text-brand-red">Directors</span>
+                  Meet Our <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">Directors</span>
                 </>
               }
               description="Direct decision-maker access — no middlemen, no brokerage layers."
@@ -303,7 +306,7 @@ const ContactPage = () => {
                         <div>
                           <h3
                             itemProp="name"
-                            className={`text-xl font-extrabold tracking-tight ${t.textMain}`}
+                            className={`text-xl font-bold tracking-tight ${t.textMain}`}
                           >
                             {partner.name}
                           </h3>
@@ -394,7 +397,7 @@ const ContactPage = () => {
               kicker="Moraiya · Changodar · NH 47"
               title={
                 <>
-                  Visit Our <span className="text-brand-red">Site Office</span>
+                  Visit Our <span className="font-serif-editorial italic text-brand-red inline-block">Site Office</span>
                 </>
               }
               description="Inspect ready sheds, internal 60 ft RCC roads, and live plot boundaries in person."
@@ -414,18 +417,18 @@ const ContactPage = () => {
                 itemType="https://schema.org/LocalBusiness"
               >
                 <div className="flex items-start gap-4 sm:gap-5">
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 border ${t.border} ${t.bgPage} flex items-center justify-center flex-shrink-0 p-2.5`}>
+                  <div className={`w-16 h-16 sm:w-20 sm:h-20 border ${isDark ? 'border-white/20' : t.border} ${t.bgPage} flex items-center justify-center flex-shrink-0 p-2.5`}>
                     <img
                       src="/MDLogo.png"
                       alt="Metro Industrial Park Logo"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain brand-logo-dark-outline"
                       width={80}
                       height={80}
                       loading="lazy"
                     />
                   </div>
                   <div>
-                    <p className={`text-lg sm:text-xl font-extrabold tracking-tight mb-1 ${t.textMain}`} itemProp="name">
+                    <p className={`text-lg sm:text-xl font-bold tracking-tight mb-1 ${t.textMain}`} itemProp="name">
                       METRO INDUSTRIAL PARK
                     </p>
                     <p className={`text-sm leading-relaxed ${t.textBody}`} itemProp="address">
@@ -460,7 +463,7 @@ const ContactPage = () => {
               {/* Map Frame */}
               <div className="w-full h-72 sm:h-96">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.9819206766047!2d72.41809017647694!3d22.914037679249986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20Industrial%20Park!5e0!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.9819206766047!2d72.41809017647694!3d22.914037679249986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20Industrial%20Park!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin"
                   className="w-full h-full border-0"
                   allowFullScreen
                   loading="lazy"
@@ -541,8 +544,12 @@ const ContactPage = () => {
                   <span className={t.textMuted}>Client Feedback</span>
                 </div>
 
-                <h2 className={`text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] mb-4 ${t.textMain}`}>
-                  Share Your Experience<span className="text-brand-red">.</span>
+                <h2 className={`text-3xl sm:text-4xl font-bold tracking-tight mb-4 ${t.textMain}`}>
+                  Share Your{' '}
+                  <span className="font-calligraphy font-normal text-[1.2em] tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400 inline-block">
+                    Experience
+                  </span>
+                  <span className="text-brand-red">.</span>
                 </h2>
 
                 <p className={`text-sm sm:text-base max-w-xl leading-relaxed ${t.textBody}`}>
@@ -557,7 +564,7 @@ const ContactPage = () => {
                       <Star key={i} size={16} className="text-amber-500 fill-amber-500" />
                     ))}
                   </div>
-                  <div className={`text-3xl font-extrabold tracking-tight tabular-nums ${t.textMain}`}>
+                  <div className={`text-3xl font-bold tracking-tight tabular-nums ${t.textMain}`}>
                     5.0 <span className={`text-sm font-mono font-normal ${t.textMuted}`}>/ 5.0</span>
                   </div>
                   <p className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
@@ -612,7 +619,7 @@ const ContactPage = () => {
                       <Star key={i} size={12} className="text-amber-500 fill-amber-500" />
                     ))}
                   </div>
-                  <p className={`font-extrabold text-sm ${t.textMain}`}>Enjoying our service?</p>
+                  <p className={`font-bold text-sm ${t.textMain}`}>Enjoying our service?</p>
                   <p className={`text-xs mt-1 mb-4 ${t.textBody}`}>
                     A quick Google review helps other businesses find us.
                   </p>

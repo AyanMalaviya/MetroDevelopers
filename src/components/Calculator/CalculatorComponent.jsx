@@ -12,14 +12,14 @@ import { calculateMultiplePlotArea } from '../../services/dataService';
 const EASE = [0.16, 1, 0.3, 1];
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#EFECE6]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  bgSubtle:  isDark ? 'bg-[#18181C]' : 'bg-[#F1F3F5]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 /* ══════════════════════════════════════════════
@@ -445,8 +445,11 @@ export default function CalculatorComponent() {
               <span className={t.textMuted}>/</span>
               <span className={t.textMuted}>ROI &amp; Valuation Engine</span>
             </div>
-            <h2 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
-              Property Calculator
+            <h2 className={`text-xl font-bold tracking-tight ${t.textMain}`}>
+              Property{' '}
+              <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                Calculator
+              </span>
             </h2>
             <p className={`text-xs mt-1 ${t.textBody}`}>
               Lock any financial field to hold it constant · Enter plot numbers like{' '}
@@ -537,7 +540,7 @@ export default function CalculatorComponent() {
                       <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>
                         Combined Sq. Yard
                       </span>
-                      <span className={`font-mono text-lg font-extrabold tabular-nums ${t.textMain}`}>
+                      <span className={`font-mono text-lg font-bold tabular-nums ${t.textMain}`}>
                         {plotResult.totalSqYd} <span className={`text-xs font-normal ${t.textMuted}`}>sq.yd</span>
                       </span>
                     </div>
@@ -545,7 +548,7 @@ export default function CalculatorComponent() {
                       <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>
                         Combined Sq. Ft
                       </span>
-                      <span className={`font-mono text-lg font-extrabold tabular-nums ${t.textMain}`}>
+                      <span className={`font-mono text-lg font-bold tabular-nums ${t.textMain}`}>
                         {plotResult.totalSqFt} <span className={`text-xs font-normal ${t.textMuted}`}>sq.ft</span>
                       </span>
                     </div>

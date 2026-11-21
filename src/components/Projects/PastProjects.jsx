@@ -1,7 +1,10 @@
 // src/components/Projects/PastProjects.jsx
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { MapPin, Calendar, ArrowRight, Check } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+
+const EASE = [0.16, 1, 0.3, 1];
 
 const PAST_PROJECTS = [
   {
@@ -43,18 +46,17 @@ const PastProjects = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
   const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
-  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const divide    = isDark ? 'divide-white/[0.12]' : 'divide-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   return (
     <section
       className={`min-h-screen py-16 sm:py-24 ${bgPage} ${textMain}`}
-      style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Asymmetric Editorial Header */}
@@ -65,8 +67,11 @@ const PastProjects = () => {
               <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
               <span className={textMuted}>Delivered Developments · 2018–2021</span>
             </div>
-            <h2 className={`text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] leading-[1.06] ${textMain}`}>
-              Our Legacy <span className="text-brand-red">Projects</span>
+            <h2 className={`text-3xl sm:text-5xl font-bold tracking-tight leading-[1.18] ${textMain}`}>
+              Our Legacy{' '}
+              <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                Projects
+              </span>
             </h2>
           </div>
           <div className="lg:col-span-5 flex items-end lg:justify-end lg:text-right">
@@ -77,90 +82,99 @@ const PastProjects = () => {
         </div>
 
         {/* Project Dossiers */}
-        <div className="space-y-8">
-          {PAST_PROJECTS.map((project) => (
-            <article
-              key={project.code}
-              className={`border ${border} ${bgSurface} grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${divide}`}
-            >
-              {/* Left 8 Cols: Description & Highlights */}
-              <div className="lg:col-span-8 p-6 sm:p-9 flex flex-col justify-between gap-6">
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-3 mb-4 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em]">
-                    <span className="text-brand-red font-bold">PROJECT {project.code}</span>
-                    <span className={`inline-flex items-center gap-2 ${textMuted}`}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                      {project.status}
-                    </span>
+        <div className="flex flex-col gap-8 sm:gap-12 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {PAST_PROJECTS.map((project, i) => {
+            const isEven = i % 2 === 0;
+            return (
+              <motion.article
+                key={project.code}
+                initial={{ opacity: 0, x: isEven ? -55 : 55 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.65, ease: EASE }}
+                className={`border ${border} ${bgSurface} grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x ${divide} w-[84%] sm:w-[75%] lg:w-[65%] max-w-4xl ${
+                  isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                }`}
+              >
+                {/* Left 8 Cols: Description & Highlights */}
+                <div className="lg:col-span-8 p-6 sm:p-9 flex flex-col justify-between gap-6">
+                  <div>
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-4 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em]">
+                      <span className="text-brand-red font-bold">PROJECT {project.code}</span>
+                      <span className={`inline-flex items-center gap-2 ${textMuted}`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                        {project.status}
+                      </span>
+                    </div>
+
+                    <h3 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-3 ${textMain}`}>
+                      {project.name}
+                    </h3>
+
+                    <div className={`flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-xs mb-5 ${textMuted}`}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin size={13} className="text-brand-red" aria-hidden="true" />
+                        {project.location}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar size={13} className="text-brand-red" aria-hidden="true" />
+                        {project.year}
+                      </span>
+                    </div>
+
+                    <p className={`text-sm sm:text-base leading-relaxed ${textBody}`}>
+                      {project.description}
+                    </p>
                   </div>
 
-                  <h3 className={`text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 ${textMain}`}>
-                    {project.name}
-                  </h3>
-
-                  <div className={`flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-xs mb-5 ${textMuted}`}>
-                    <span className="inline-flex items-center gap-1.5">
-                      <MapPin size={13} className="text-brand-red" aria-hidden="true" />
-                      {project.location}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <Calendar size={13} className="text-brand-red" aria-hidden="true" />
-                      {project.year}
-                    </span>
-                  </div>
-
-                  <p className={`text-sm sm:text-base leading-relaxed ${textBody}`}>
-                    {project.description}
-                  </p>
-                </div>
-
-                <div className={`pt-5 border-t ${border}`}>
-                  <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-3 ${textMuted}`}>
-                    Key Highlights
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {project.highlights.map((highlight) => (
-                      <div key={highlight} className="flex items-center gap-2.5 text-sm">
-                        <Check size={14} className="text-brand-red shrink-0" aria-hidden="true" />
-                        <span className={textMain}>{highlight}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right 4 Cols: Border-Collapsed Metric Column */}
-              <div className={`lg:col-span-4 divide-y ${divide} flex flex-col justify-between ${bgPage}`}>
-                <div className="p-6">
-                  <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 ${textMuted}`}>
-                    Total Built Area
-                  </div>
-                  <div className={`text-2xl font-extrabold tracking-tight tabular-nums ${textMain}`}>
-                    {project.area}
+                  <div className={`pt-5 border-t ${border}`}>
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-3 ${textMuted}`}>
+                      Key Highlights
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {project.highlights.map((highlight) => (
+                        <div key={highlight} className="flex items-center gap-2.5 text-sm">
+                          <Check size={14} className="text-brand-red shrink-0" aria-hidden="true" />
+                          <span className={textMain}>{highlight}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 ${textMuted}`}>
-                    Units Delivered
+                {/* Right 4 Cols: Border-Collapsed Metric Column */}
+                <div className={`lg:col-span-4 divide-y ${divide} flex flex-col justify-between ${bgPage}`}>
+                  <div className="p-6">
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 ${textMuted}`}>
+                      Total Built Area
+                    </div>
+                    <div className={`text-2xl font-bold tracking-tight tabular-nums ${textMain}`}>
+                      {project.area}
+                    </div>
                   </div>
-                  <div className={`text-2xl font-extrabold tracking-tight tabular-nums ${textMain}`}>
-                    {project.units}
-                  </div>
-                </div>
 
-                <div className="p-6 relative flex-1 flex flex-col justify-center">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
-                  <div className="text-3xl font-extrabold tracking-tight tabular-nums text-brand-red">
-                    100%
+                  <div className="p-6">
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 ${textMuted}`}>
+                      Units Delivered
+                    </div>
+                    <div className={`text-2xl font-bold tracking-tight tabular-nums ${textMain}`}>
+                      {project.units}
+                    </div>
                   </div>
-                  <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mt-1 ${textMuted}`}>
-                    Client Satisfaction
+
+                  <div className="p-6 relative flex-1 flex flex-col justify-center">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
+                    <div className="text-3xl font-bold tracking-tight tabular-nums text-brand-red">
+                      100%
+                    </div>
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mt-1 ${textMuted}`}>
+                      Client Satisfaction
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </motion.article>
+            );
+          })}
         </div>
 
         {/* Bottom CTA Strip */}
@@ -169,7 +183,7 @@ const PastProjects = () => {
             <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-red font-semibold mb-2">
               Next Development
             </div>
-            <h3 className={`text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 ${textMain}`}>
+            <h3 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-2 ${textMain}`}>
               Partner with Metro Enterprise on your next facility
             </h3>
             <p className={`text-sm sm:text-base ${textBody}`}>

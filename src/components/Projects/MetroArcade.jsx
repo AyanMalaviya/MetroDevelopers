@@ -1,5 +1,6 @@
 // MetroArcade.jsx
 import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import {
   ChevronLeft, ChevronRight, X, Phone, Maximize2,
   Building2, Home, MapPin, TrendingUp, Users, Car, Check, ArrowRight, ArrowUpRight,
@@ -8,14 +9,16 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { useTheme } from '../../context/ThemeContext';
 import SEO from '../SEO/SEO';
 
+const EASE = [0.16, 1, 0.3, 1];
+
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 const SectionHeading = ({ index, kicker, title, isDark }) => {
@@ -27,7 +30,7 @@ const SectionHeading = ({ index, kicker, title, isDark }) => {
         <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
         <span className={t.textMuted}>{kicker}</span>
       </div>
-      <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] ${t.textMain}`}>
+      <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight ${t.textMain}`}>
         {title}
       </h2>
     </div>
@@ -72,12 +75,12 @@ const MetroArcade = () => {
   ];
 
   const features = [
-    { code: '01', icon: <Building2 size={18} aria-hidden="true" />, title: 'RCC Construction', description: 'Solid reinforced concrete structure built for long-term commercial durability' },
-    { code: '02', icon: <Home size={18} aria-hidden="true" />,      title: 'G+1 Building',     description: 'Ground + First Floor commercial shop and office configuration' },
-    { code: '03', icon: <MapPin size={18} aria-hidden="true" />,    title: 'Prime Location',   description: 'Direct main road frontage with uninterrupted business visibility' },
-    { code: '04', icon: <Car size={18} aria-hidden="true" />,       title: 'Personal Parking', description: 'Dedicated individual parking spaces allotted for each commercial unit' },
-    { code: '05', icon: <TrendingUp size={18} aria-hidden="true" />,title: 'Investment Ready', description: 'High rental yield potential driven by surrounding industrial activity' },
-    { code: '06', icon: <Users size={18} aria-hidden="true" />,     title: 'Commercial Hub',   description: 'Ideal layout for retail outlets, showrooms, clinics, and offices' },
+    { code: '01', icon: <Building2 size={18} aria-hidden="true" />, title: 'RCC Construction', description: 'Durable reinforced concrete structure for retail and commercial use' },
+    { code: '02', icon: <Home size={18} aria-hidden="true" />,      title: 'G+1 Building',     description: 'Ground + 1st floor commercial shop and office layout' },
+    { code: '03', icon: <MapPin size={18} aria-hidden="true" />,    title: 'Prime Location',   description: 'Direct main road frontage with high business visibility' },
+    { code: '04', icon: <Car size={18} aria-hidden="true" />,       title: 'Personal Parking', description: 'Dedicated personal parking spaces allotted per unit' },
+    { code: '05', icon: <TrendingUp size={18} aria-hidden="true" />,title: 'Investment Ready', description: 'High rental yield driven by surrounding industrial activity' },
+    { code: '06', icon: <Users size={18} aria-hidden="true" />,     title: 'Commercial Hub',   description: 'Ideal layout for retail shops, showrooms, and offices' },
   ];
 
   const benefits = [
@@ -145,7 +148,6 @@ const MetroArcade = () => {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ════════ ARCHITECTURAL HERO SLIDESHOW ════════ */}
         <section className="relative pt-16">
@@ -207,8 +209,12 @@ const MetroArcade = () => {
                     <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-white/75 mb-2">
                       Main Road · Moraiya, Changodar
                     </p>
-                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-[-0.035em] leading-[1.03] mb-3">
-                      Metro Arcade<span className="text-brand-red">.</span>
+                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.12] mb-3">
+                      Metro{' '}
+                      <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-rose-500 to-brand-red inline-block">
+                        Arcade
+                      </span>
+                      <span className="text-brand-red">.</span>
                     </h1>
                     <p className="text-sm sm:text-base text-white/85 max-w-xl">
                       {images[currentSlide].description}
@@ -257,7 +263,7 @@ const MetroArcade = () => {
                     { value: '15×45',  label: 'Unit Size (ft)',   accent: true  },
                   ].map((s) => (
                     <div key={s.label} className="px-5 py-5">
-                      <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums ${s.accent ? 'text-brand-red' : t.textMain}`}>
+                      <div className={`text-2xl sm:text-3xl font-bold tracking-tight tabular-nums ${s.accent ? 'text-brand-red' : t.textMain}`}>
                         {s.value}
                       </div>
                       <div className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
@@ -305,7 +311,7 @@ const MetroArcade = () => {
                     <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-500 mb-2">
                       Pre-Launch Investor Phase
                     </div>
-                    <h2 className={`text-lg sm:text-xl font-extrabold tracking-tight mb-2 ${t.textMain}`}>
+                    <h2 className={`text-lg sm:text-xl font-bold tracking-tight mb-2 ${t.textMain}`}>
                       Now Taking Investor Bookings
                     </h2>
                     <p className={`text-sm leading-relaxed mb-2 ${t.textBody}`}>
@@ -319,7 +325,19 @@ const MetroArcade = () => {
 
                 {/* 01. Project Overview */}
                 <div>
-                  <SectionHeading index="01" kicker="Commercial Brief" title="Project Overview" isDark={isDark} />
+                  <SectionHeading
+                    index="01"
+                    kicker="Commercial Brief"
+                    title={
+                      <>
+                        Project{' '}
+                        <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                          Overview
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
                   <div className={`border ${t.border} ${t.bgSurface} p-6 sm:p-8 space-y-4 text-sm sm:text-base leading-relaxed ${t.textBody}`}>
                     <p>
                       Metro Arcade is a modern commercial development strategically located on the main road in Moraiya.
@@ -336,37 +354,70 @@ const MetroArcade = () => {
 
                 {/* 02. Key Features */}
                 <div>
-                  <SectionHeading index="02" kicker="Core Specifications" title="Key Features" isDark={isDark} />
-                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
-                    {features.map((feature) => (
-                      <article
-                        key={feature.code}
-                        className={`p-6 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
-                          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
-                            FEAT {feature.code}
-                          </span>
-                          <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
-                            {feature.icon}
-                          </span>
-                        </div>
-                        <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
-                          {feature.title}
-                        </h3>
-                        <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
-                          {feature.description}
-                        </p>
-                      </article>
-                    ))}
+                  <SectionHeading
+                    index="02"
+                    kicker="Core Specifications"
+                    title={
+                      <>
+                        Key{' '}
+                        <span className="font-serif-editorial italic text-brand-red inline-block">
+                          Features
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
+                  <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {features.map((feature, i) => {
+                      const isEven = i % 2 === 0;
+                      return (
+                        <motion.article
+                          key={feature.code}
+                          initial={{ opacity: 0, x: isEven ? -45 : 45 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, margin: '-50px' }}
+                          transition={{ duration: 0.65, ease: EASE }}
+                          className={`w-[82%] sm:w-[70%] lg:w-[58%] max-w-lg p-5 sm:p-6 border ${t.border} ${t.bgSurface} ${
+                            isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                          } transition-colors ${
+                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3.5">
+                            <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
+                              FEAT {feature.code}
+                            </span>
+                            <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
+                              {feature.icon}
+                            </span>
+                          </div>
+                          <h3 className={`text-base font-bold tracking-tight mb-1.5 ${t.textMain}`}>
+                            {feature.title}
+                          </h3>
+                          <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
+                            {feature.description}
+                          </p>
+                        </motion.article>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* 03. Amenities & Facilities */}
                 <div>
-                  <SectionHeading index="03" kicker="Included Utilities" title="Amenities & Facilities" isDark={isDark} />
+                  <SectionHeading
+                    index="03"
+                    kicker="Included Utilities"
+                    title={
+                      <>
+                        Amenities &amp;{' '}
+                        <span className="font-calligraphy font-normal text-[1.18em] tracking-normal text-emerald-500 inline-block">
+                          Facilities
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
                   <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
                     {amenities.map((amenity) => (
                       <div
@@ -382,14 +433,26 @@ const MetroArcade = () => {
 
                 {/* 04. Investment Benefits */}
                 <div>
-                  <SectionHeading index="04" kicker="Commercial Thesis" title="Investment Benefits" isDark={isDark} />
+                  <SectionHeading
+                    index="04"
+                    kicker="Commercial Thesis"
+                    title={
+                      <>
+                        Investment{' '}
+                        <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-amber-500 inline-block">
+                          Benefits
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
                   <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
                     {benefits.map((b, i) => (
                       <div key={b.title} className={`p-6 border-r border-b ${t.border} ${t.bgSurface}`}>
                         <span className="font-mono text-[10px] font-bold text-brand-red block mb-2">
                           0{i + 1}
                         </span>
-                        <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                        <h3 className={`text-base font-bold tracking-tight mb-1.5 ${t.textMain}`}>
                           {b.title}
                         </h3>
                         <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>{b.desc}</p>
@@ -432,7 +495,7 @@ const MetroArcade = () => {
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
                       Booking Status
                     </div>
-                    <div className={`text-xl font-extrabold tracking-tight mb-1 ${t.textMain}`}>
+                    <div className={`text-xl font-bold tracking-tight mb-1 ${t.textMain}`}>
                       Open for Investors
                     </div>
                     <p className={`text-xs leading-relaxed ${t.textBody}`}>
@@ -442,7 +505,7 @@ const MetroArcade = () => {
 
                   {/* Direct Contact */}
                   <div className={`border ${t.border} ${t.bgSurface} p-6`}>
-                    <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                    <h3 className={`text-base font-bold tracking-tight mb-1.5 ${t.textMain}`}>
                       Interested in Metro Arcade?
                     </h3>
                     <p className={`text-xs leading-relaxed mb-5 ${t.textBody}`}>

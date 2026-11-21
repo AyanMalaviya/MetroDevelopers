@@ -53,7 +53,7 @@ const FloatingActionMenu = () => {
 
             {/* Vertical NEW LAUNCH Tag replacing old industry icon */}
             <span
-              className="text-[9px] font-black tracking-widest uppercase"
+              className="text-[9px] font-bold tracking-widest uppercase"
               style={{
                 writingMode: 'vertical-rl',
                 textOrientation: 'mixed',
@@ -81,7 +81,7 @@ const FloatingActionMenu = () => {
           >
             {/* Top Bar with NEW LAUNCH tag & Dismiss Button */}
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] font-black tracking-wider uppercase bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white shadow-xs">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white shadow-xs">
                 <Sparkles size={9} />
                 NEW LAUNCH
               </span>
@@ -105,7 +105,7 @@ const FloatingActionMenu = () => {
               onClick={navigateToPark3}
               className="cursor-pointer group"
             >
-              <h4 className="text-xs sm:text-sm font-black font-display leading-tight mb-0.5 group-hover:text-amber-500 transition-colors">
+              <h4 className="text-xs sm:text-sm font-bold tracking-tight leading-tight mb-0.5 group-hover:text-amber-500 transition-colors">
                 Metro Industrial Park 3
               </h4>
 
@@ -123,7 +123,7 @@ const FloatingActionMenu = () => {
                   Bookings Open • Possession Soon
                 </span>
 
-                <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-500 group-hover:translate-x-0.5 transition-transform">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-500 group-hover:translate-x-0.5 transition-transform">
                   Explore <ArrowRight size={10} />
                 </span>
               </div>

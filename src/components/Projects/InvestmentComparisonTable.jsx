@@ -105,8 +105,11 @@ export default function InvestmentComparisonTable({ className = '' }) {
               <span className={textMuted}>/</span>
               <span className={textMuted}>Ahmedabad Real Estate</span>
             </div>
-            <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] leading-tight ${textMain}`}>
-              Industrial Real Estate vs. Residential Property
+            <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight leading-snug ${textMain}`}>
+              Industrial Real Estate vs.{' '}
+              <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                Residential Property
+              </span>
             </h2>
             <p className={`text-xs sm:text-sm mt-2 leading-relaxed max-w-2xl ${textBody}`}>
               A direct financial and operational comparison showing why investors and business owners achieve higher risk-adjusted returns with industrial sheds and NA plots over apartments.
@@ -120,7 +123,7 @@ export default function InvestmentComparisonTable({ className = '' }) {
               <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-red font-semibold">
                 Industrial ROI
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums text-brand-red mt-1">
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight tabular-nums text-brand-red mt-1">
                 16–23%
               </div>
               <div className={`text-[11px] mt-0.5 ${textMuted}`}>Yield + Appreciation</div>
@@ -129,7 +132,7 @@ export default function InvestmentComparisonTable({ className = '' }) {
               <div className={`font-mono text-[10px] uppercase tracking-[0.14em] ${textMuted}`}>
                 Residential ROI
               </div>
-              <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums mt-1 ${textBody}`}>
+              <div className={`text-2xl sm:text-3xl font-bold tracking-tight tabular-nums mt-1 ${textBody}`}>
                 7–10%
               </div>
               <div className={`text-[11px] mt-0.5 ${textMuted}`}>Before Repairs &amp; Vacancy</div>
@@ -194,7 +197,7 @@ export default function InvestmentComparisonTable({ className = '' }) {
                     <div className="flex items-start gap-2.5">
                       <Check size={15} className="text-brand-red shrink-0 mt-0.5" aria-hidden="true" />
                       <div>
-                        <div className={`font-extrabold text-sm sm:text-base tracking-tight ${textMain}`}>
+                        <div className={`font-bold text-sm sm:text-base tracking-tight ${textMain}`}>
                           {row.industrial}
                         </div>
                         <div className="font-mono text-[10px] uppercase tracking-wider text-brand-red mt-1">
@@ -228,7 +231,7 @@ export default function InvestmentComparisonTable({ className = '' }) {
       {/* Footer Action Bar */}
       <div className={`p-5 sm:p-6 border-t ${border} ${bgPage} flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
         <div>
-          <h4 className={`text-sm font-extrabold tracking-tight ${textMain}`}>
+          <h4 className={`text-sm font-bold tracking-tight ${textMain}`}>
             Deploy capital for higher rental yield &amp; land appreciation
           </h4>
           <p className={`text-xs mt-0.5 ${textBody}`}>

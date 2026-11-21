@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, CheckCircle, Phone, ExternalLink } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, CheckCircle, Phone, ExternalLink, Globe } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { park3PlotCoordinates, getPark3PlotCenter } from '../../data/park3PlotCoordinates';
 import { getPark3PlotData } from '../../services/park3DataService';
@@ -345,17 +345,17 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
           }`}
         >
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <span className={`font-black text-xs sm:text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <span className={`font-bold text-xs sm:text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Industrial Park 3 — Master Site Map
             </span>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                 {stats.available} Available
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400 border border-gray-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400 border border-gray-500/30">
                 {stats.sold} Sold
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
                 100% NA Industrial
               </span>
             </div>
@@ -462,9 +462,9 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
                 }}
               >
                 <div className="flex items-center justify-between gap-1.5 mb-1">
-                  <span className="font-black text-xs">Plot #{hoveredPlot}</span>
+                  <span className="font-bold text-xs">Plot #{hoveredPlot}</span>
                   <span
-                    className="px-1.5 py-0.5 rounded text-[9px] font-extrabold text-white"
+                    className="px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
                     style={{ background: statusColor }}
                   >
                     {getStatusLabel(status)}
@@ -562,13 +562,13 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
                   style={{ background: statusColor }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   {getStatusLabel(status)}
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
                   100% NA Industrial
                 </span>
               </div>
@@ -590,13 +590,13 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
             {/* Plot Title & Campus */}
             <div className="flex items-center gap-3">
               <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md shrink-0"
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0"
                 style={{ background: statusColor }}
               >
                 #{selectedPlot}
               </div>
               <div>
-                <h3 className={`text-lg font-black leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-lg font-bold leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   Industrial Plot #{selectedPlot}
                 </h3>
                 <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
@@ -617,13 +617,13 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
                 <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-0.5">
                   Total Plot Area
                 </span>
-                <span className={`text-xl sm:text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                <span className={`text-xl sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {areaSqYd} <span className="text-sm font-bold text-brand-red">SQ.YD</span>
                 </span>
               </div>
               <div className="text-right">
                 <span className="text-[10px] uppercase font-bold text-gray-400 block mb-0.5">Metric Dimension</span>
-                <span className="text-sm font-black text-brand-red">
+                <span className="text-sm font-bold text-brand-red">
                   {totalSqMt} SQ.MT
                 </span>
                 <span className="block text-[10px] text-gray-400">
@@ -664,11 +664,11 @@ const PlotDetailModal = React.memo(function PlotDetailModal({
             <div className={`p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-1 text-[10px] font-bold ${
               isDark ? 'bg-gray-950/40 border-gray-800 text-gray-400' : 'bg-gray-100/70 border-gray-200 text-gray-600'
             }`}>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Heavy RCC Road</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Street Light</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Soil Filling (Puran)</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Compound Wall</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 24/7 Security</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> Heavy RCC Road</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> Street Light</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> Soil Filling (Puran)</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> Compound Wall</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> 24/7 Security</span>
             </div>
 
             {/* Action Buttons */}
@@ -708,6 +708,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
   loading,
   loadData,
   onOpenFullscreen,
+  onSwitchToSatellite,
   isDark,
 }) {
   return (
@@ -720,7 +721,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
       <div className="flex items-center justify-between gap-2.5 sm:gap-3 mb-3">
         {/* Left: Project Badge */}
         <div
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-black tracking-tight border ${
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold tracking-tight border ${
             isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xs'
           }`}
         >
@@ -764,6 +765,23 @@ const DashboardHeader = React.memo(function DashboardHeader({
             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-brand-red' : ''}`} />
             <span className="hidden sm:inline">Sync</span>
           </button>
+
+          {/* Satellite Map Switcher Button */}
+          {onSwitchToSatellite && (
+            <button
+              type="button"
+              onClick={onSwitchToSatellite}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
+                isDark
+                  ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700'
+                  : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-300'
+              }`}
+              title="Switch to Google Maps Satellite Embedded View"
+            >
+              <Globe size={13} className="text-brand-red" />
+              <span>Satellite</span>
+            </button>
+          )}
 
           {/* Pan & Zoom Button */}
           <button
@@ -826,7 +844,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
             key={key}
             className={`flex flex-col items-center justify-center py-1.5 sm:py-2 px-1 sm:px-2 rounded-xl border text-center transition-all ${box}`}
           >
-            <span className={`text-sm sm:text-lg font-black tabular-nums leading-none ${num}`}>
+            <span className={`text-sm sm:text-lg font-bold tabular-nums leading-none ${num}`}>
               {val}
             </span>
             <span className={`text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider mt-1 whitespace-nowrap leading-tight ${lbl}`}>
@@ -842,7 +860,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
 ════════════════════════════════════════════════════════ */
-export default function Park3InteractiveMap() {
+export default function Park3InteractiveMap({ onSwitchToSatellite }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -941,6 +959,7 @@ export default function Park3InteractiveMap() {
           loading={loading}
           loadData={loadData}
           onOpenFullscreen={handleOpenFullscreen}
+          onSwitchToSatellite={onSwitchToSatellite}
           isDark={isDark}
         />
 

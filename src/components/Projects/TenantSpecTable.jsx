@@ -53,13 +53,13 @@ export default function TenantSpecTable({ className = '' }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
   const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
-  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const divide    = isDark ? 'divide-white/[0.12]' : 'divide-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   return (
     <div className={`border ${border} ${bgSurface} ${className}`}>
@@ -72,8 +72,11 @@ export default function TenantSpecTable({ className = '' }) {
               <span className={textMuted}>/</span>
               <span className={textMuted}>MIP 01 · Moraiya</span>
             </div>
-            <h3 className={`text-xl sm:text-3xl font-extrabold tracking-[-0.025em] leading-tight ${textMain}`}>
-              Tenant Technical Specifications &amp; Utility Matrix
+            <h3 className={`text-xl sm:text-3xl font-bold tracking-tight leading-tight ${textMain}`}>
+              Tenant Technical Specifications &amp;{' '}
+              <span className="font-serif-editorial italic text-brand-red inline-block">
+                Utility Matrix
+              </span>
             </h3>
             <p className={`text-xs sm:text-sm mt-2 leading-relaxed ${textBody}`}>
               Structural and utility specifications for corporate tenants, 3PL logistics operators, and manufacturing units at Metro Industrial Park 1.
@@ -96,7 +99,7 @@ export default function TenantSpecTable({ className = '' }) {
               <div className="flex items-center justify-between gap-3 mb-4">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-xs font-bold text-brand-red">{cat.code}</span>
-                  <h4 className={`text-sm sm:text-base font-extrabold tracking-tight ${textMain}`}>
+                  <h4 className={`text-sm sm:text-base font-bold tracking-tight ${textMain}`}>
                     {cat.category}
                   </h4>
                 </div>

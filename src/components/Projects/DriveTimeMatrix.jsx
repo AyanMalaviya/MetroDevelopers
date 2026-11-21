@@ -25,12 +25,12 @@ export default function DriveTimeMatrix({ className = '', locationName = 'Moraiy
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
   const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
-  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   return (
     <div className={`border ${border} ${bgSurface} ${className}`}>
@@ -44,8 +44,11 @@ export default function DriveTimeMatrix({ className = '', locationName = 'Moraiy
               <span className={textMuted}>/</span>
               <span className={textMuted}>NH-47 Corridor</span>
             </div>
-            <h3 className={`text-xl sm:text-3xl font-extrabold tracking-[-0.025em] leading-tight ${textMain}`}>
-              Drive-Time Matrix &amp; Corridor Landmarks
+            <h3 className={`text-xl sm:text-3xl font-bold tracking-tight leading-snug ${textMain}`}>
+              Drive-Time Matrix &amp;{' '}
+              <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-amber-500 inline-block">
+                Corridor Landmarks
+              </span>
             </h3>
             <p className={`text-xs sm:text-sm mt-2 leading-relaxed ${textBody}`}>
               Strategically positioned in {locationName} on NH-47 — connecting western Ahmedabad residential and corporate hubs directly to the Changodar manufacturing belt.

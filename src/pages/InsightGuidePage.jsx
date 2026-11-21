@@ -1,9 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowRight, Calculator, FileText, Factory } from 'lucide-react';
 import SEO from '../components/SEO/SEO';
 import { useTheme } from '../context/ThemeContext';
 import { GUIDE_PAGES, LOCAL_MARKET_PAGES } from '../data/seoRoutes';
 import { createArticleSchema, createBreadcrumbSchema, propertySchema } from '../utils/schemas';
+
+const EASE = [0.16, 1, 0.3, 1];
 
 const InsightGuidePage = () => {
   const { pathname } = useLocation();
@@ -63,7 +66,7 @@ const InsightGuidePage = () => {
               Industrial investment guide
             </div>
 
-            <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold leading-tight theme-text-primary">
+            <h1 className="mt-4 text-3xl sm:text-5xl font-bold leading-tight theme-text-primary">
               {page.heading}
             </h1>
 
@@ -72,34 +75,43 @@ const InsightGuidePage = () => {
             </p>
           </section>
 
-          <section className="mt-8 space-y-5">
-            {page.sections.map((section) => (
-              <article
-                key={section.title}
-                className={`rounded-2xl border p-6 ${
-                  isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
-                }`}
-              >
-                <h2 className="text-2xl font-extrabold theme-text-primary">{section.title}</h2>
+          <section className="mt-8 flex flex-col gap-6 sm:gap-8 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {page.sections.map((section, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <motion.article
+                  key={section.title}
+                  initial={{ opacity: 0, x: isEven ? -45 : 45 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.65, ease: EASE }}
+                  className={`rounded-2xl border p-6 w-[84%] sm:w-[75%] lg:w-[65%] max-w-3xl ${
+                    isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                  } ${
+                    isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
+                  }`}
+                >
+                  <h2 className="text-2xl font-bold theme-text-primary">{section.title}</h2>
 
-                <div className={`mt-4 space-y-3 text-sm sm:text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {section.body.map((paragraph) => (
-                    <p key={paragraph} className="leading-relaxed">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                  <div className={`mt-4 space-y-3 text-sm sm:text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {section.body.map((paragraph) => (
+                      <p key={paragraph} className="leading-relaxed">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
 
-                <ul className="mt-5 space-y-2.5">
-                  {section.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2.5">
-                      <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-red" />
-                      <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
+                  <ul className="mt-5 space-y-2.5">
+                    {section.points.map((point) => (
+                      <li key={point} className="flex items-start gap-2.5">
+                        <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-red" />
+                        <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.article>
+              );
+            })}
           </section>
 
           <section className="mt-8 grid gap-6 lg:grid-cols-2">
@@ -108,7 +120,12 @@ const InsightGuidePage = () => {
                 isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
               }`}
             >
-              <h2 className="text-xl font-extrabold theme-text-primary">Move from research to action</h2>
+              <h2 className="text-xl font-bold theme-text-primary">
+                Move from research to{' '}
+                <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                  action
+                </span>
+              </h2>
               <p className={`mt-2 text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 Validate numbers using the ROI calculator and then shortlist units based on your ideal micro-market.
               </p>
@@ -140,7 +157,12 @@ const InsightGuidePage = () => {
                 isDark ? 'border-gray-800 bg-black' : 'border-gray-200 bg-white shadow-sm'
               }`}
             >
-              <h2 className="text-xl font-extrabold theme-text-primary">Location-specific pages</h2>
+              <h2 className="text-xl font-bold theme-text-primary">
+                Location-specific{' '}
+                <span className="font-serif-editorial italic text-brand-red inline-block">
+                  pages
+                </span>
+              </h2>
               <p className={`mt-2 text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 Compare demand pockets in Moraiya, Changodar, and the NH 47 (Sarkhej Bavla Highway) corridor.
               </p>

@@ -1,6 +1,6 @@
 // src/components/Home/FeaturesSection.jsx
-import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { useRef, useState, useEffect, memo } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Factory, Truck, LucideCctv, Droplets } from 'lucide-react';
 import { FaRoad, FaTrash } from 'react-icons/fa';
 
@@ -25,13 +25,17 @@ const featuresData = [
     parallaxRange: [-20, 20],
     bgTexture: '/images/bg-factory-interior.jpg',
     icon: <Factory size={17} aria-hidden="true" />,
-    title: 'Modern Infrastructure',
+    title: (
+      <>
+        Modern <span className="font-serif-editorial italic text-brand-red font-normal">Infrastructure</span>
+      </>
+    ),
     description:
-      'World-class facilities engineered for heavy manufacturing and warehousing with clear-span structural standards.',
+      'Built for heavy manufacturing and warehousing with 30–35 ft height.',
     details: [
-      '30–35 ft high ceiling clearance',
-      'Reinforced flooring for heavy industrial loads',
-      'RCC construction available on request',
+      '30–35 ft ceiling clearance',
+      'Heavy industrial load flooring',
+      'PEB & RCC options',
     ],
     image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
     alt: 'Modern industrial shed infrastructure at Metro Industrial Park Moraiya Ahmedabad',
@@ -45,13 +49,17 @@ const featuresData = [
     parallaxRange: [30, -30],
     bgTexture: '/images/bg-industrial-park-aerial.jpg',
     icon: <Truck size={17} aria-hidden="true" />,
-    title: 'Strategic Location',
+    title: (
+      <>
+        Strategic <span className="font-calligraphy font-normal text-[1.18em] text-amber-500 inline-block">Location</span>
+      </>
+    ),
     description:
-      'Direct connectivity to national highways, logistics hubs, and Gujarat industrial corridors for uninterrupted freight.',
+      'On Sarkhej–Bavla Highway (NH 47) near Changodar GIDC.',
     details: [
-      'Near Sarkhej–Bavla National Highway',
-      'Direct access to GIDC industrial zones',
-      'Close to Ahmedabad city & airport',
+      'Direct NH 47 highway access',
+      'Near Changodar GIDC',
+      'Quick link to Ahmedabad city',
     ],
     image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
     alt: 'Strategic location map of Metro Industrial Park near Sarkhej Bavla Highway Moraiya',
@@ -65,13 +73,17 @@ const featuresData = [
     parallaxRange: [-26, 26],
     bgTexture: '/images/bg-manufacturing-floor.jpg',
     icon: <LucideCctv size={17} aria-hidden="true" />,
-    title: '24/7 Security',
+    title: (
+      <>
+        24/7 <span className="font-serif-display italic font-semibold text-emerald-500">Security</span>
+      </>
+    ),
     description:
-      'Full-perimeter CCTV coverage paired with manned gate control ensuring round-the-clock operational safety.',
+      '24/7 CCTV surveillance with trained security guards at main gate.',
     details: [
-      'HD CCTV cameras throughout the park',
-      'Trained security guards at main gate',
-      'Controlled commercial vehicle entry',
+      '24/7 HD CCTV monitoring',
+      'Manned gate security',
+      'Controlled vehicle entry',
     ],
     image: '/images/metro-industrial-park-entrance-security-moraiya.jpg',
     alt: 'CCTV security surveillance at Metro Industrial Park entrance Moraiya Ahmedabad',
@@ -85,13 +97,17 @@ const featuresData = [
     parallaxRange: [24, -24],
     bgTexture: '/images/bg-factory-interior.jpg',
     icon: <FaRoad size={16} aria-hidden="true" />,
-    title: 'Wide Heavy RCC Roads',
+    title: (
+      <>
+        Wide Heavy <span className="font-serif-editorial italic text-brand-red font-normal">RCC Roads</span>
+      </>
+    ),
     description:
-      '60 ft concrete internal road network built specifically for multi-axle trailers and heavy commercial movement.',
+      '60 ft concrete internal roads for multi-axle trailers.',
     details: [
-      '60 ft wide internal arterial network',
-      'Heavy-duty RCC road construction',
-      'Easy turning radius for trailers & containers',
+      '60 ft wide heavy RCC roads',
+      'Easy trailer turning radius',
+      'Heavy load capacity',
     ],
     image: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
     alt: '60 ft wide RCC road inside Metro Industrial Park designed for heavy vehicles Ahmedabad',
@@ -105,13 +121,17 @@ const featuresData = [
     parallaxRange: [-22, 22],
     bgTexture: '/images/bg-manufacturing-floor.jpg',
     icon: <Droplets size={17} aria-hidden="true" />,
-    title: '24/7 Water Supply',
+    title: (
+      <>
+        24/7 Water <span className="font-calligraphy font-normal text-[1.18em] text-cyan-500 inline-block">Supply</span>
+      </>
+    ),
     description:
-      'Continuous water availability across every industrial unit to support uninterrupted production shifts.',
+      'Continuous water availability dedicated to each unit.',
     details: [
-      'Round-the-clock water availability',
-      'Dedicated supply line per unit',
-      'Emergency water reserve capacity',
+      '24/7 continuous supply',
+      'Dedicated unit connection',
+      'On-site water storage',
     ],
     image: '/images/feature-water-supply.jpg',
     alt: '24x7 water supply facility at Metro Industrial Park Moraiya Changodar Ahmedabad',
@@ -125,13 +145,17 @@ const featuresData = [
     parallaxRange: [28, -28],
     bgTexture: '/images/bg-industrial-park-aerial.jpg',
     icon: <FaTrash size={15} aria-hidden="true" />,
-    title: 'Hygienic Drainage',
+    title: (
+      <>
+        Hygienic <span className="font-serif-display italic font-semibold text-emerald-500">Drainage</span>
+      </>
+    ),
     description:
-      'Planned underground drainage and waste management keeping internal yards clean through monsoon and peak cycles.',
+      'Underground storm drainage and planned waste management.',
     details: [
-      'Underground storm & utility drainage',
-      'Structured industrial waste management',
-      'Compliant, low-maintenance disposal network',
+      'Underground drainage system',
+      'Monsoon flood protection',
+      'Clean internal yards',
     ],
     image: '/images/feature-drainage-system.jpg',
     alt: 'Hygienic drainage and waste management system at Metro Industrial Park Ahmedabad',
@@ -156,38 +180,35 @@ const useIsDesktop = () => {
 /* ════════════════════════════════════════════════
    ASYMMETRIC ARCHITECTURAL PARALLAX CARD
    ════════════════════════════════════════════════ */
-const ArchitecturalFeatureCard = ({ feat, index, isDark, isDesktop }) => {
+const ArchitecturalFeatureCard = memo(({ feat, index, isDark, isDesktop }) => {
   const cardRef = useRef(null);
-  const inView = useInView(cardRef, { once: true, margin: '-70px' });
+  const inView = useInView(cardRef, { once: true, margin: '-60px' });
+  const isEven = index % 2 === 0;
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'end start'],
   });
 
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 110,
-    damping: 26,
-    mass: 0.25,
-  });
+  // Direct GPU-accelerated transforms without heavy spring physics simulation loops
+  const cardY  = useTransform(scrollYProgress, [0, 1], feat.parallaxRange);
+  const imageY = useTransform(scrollYProgress, [0, 1], [-16, 16]);
 
-  const cardY  = useTransform(smooth, [0, 1], feat.parallaxRange);
-  const imageY = useTransform(smooth, [0, 1], [-16, 16]);
-
-  const isWide    = feat.layout === 'wide';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
-  const borderCol = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
+  const borderCol = isDark ? 'border-white/[0.12]' : 'border-gray-200';
 
   return (
     <motion.article
       ref={cardRef}
       style={isDesktop ? { y: cardY } : undefined}
-      initial={{ opacity: 0, y: 28 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: (index % 2) * 0.1, ease: EASE }}
-      className={`${feat.span} ${feat.offsetClass} group relative`}
+      initial={{ opacity: 0, x: isEven ? -55 : 55 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.65, ease: EASE }}
+      className={`w-[82%] sm:w-[70%] lg:w-[58%] max-w-2xl ${
+        isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+      } group relative`}
     >
       {/* Technical Corner Registration Brackets (Monochrome -> Signal Red on hover) */}
       <span
@@ -260,19 +281,13 @@ const ArchitecturalFeatureCard = ({ feat, index, isDark, isDesktop }) => {
             </span>
           </div>
 
-          {/* Card Body — Wide cards split on md+, Tall cards stack */}
+          {/* Card Body */}
           <div
-            className={`relative z-10 p-5 sm:p-6 flex flex-col gap-6 ${
-              isWide ? 'md:flex-row md:items-stretch' : ''
-            }`}
+            className="relative z-10 p-5 sm:p-6 flex flex-col md:flex-row md:items-stretch gap-6"
           >
             {/* Clipped Parallax Media Frame */}
             <div
-              className={`relative overflow-hidden flex-shrink-0 border ${borderCol} bg-neutral-950 ${
-                isWide
-                  ? 'w-full md:w-[46%] aspect-[4/3] md:aspect-auto md:min-h-[260px]'
-                  : 'w-full aspect-[16/10]'
-              }`}
+              className={`relative overflow-hidden flex-shrink-0 border ${borderCol} bg-neutral-950 w-full md:w-[42%] aspect-[4/3] md:aspect-auto md:min-h-[220px]`}
               style={{ clipPath: MEDIA_CLIP }}
             >
               {/* Fallback surface if image is missing */}
@@ -288,7 +303,7 @@ const ArchitecturalFeatureCard = ({ feat, index, isDark, isDesktop }) => {
                 height={600}
                 loading="lazy"
                 decoding="async"
-                style={{ y: imageY, scale: 1.12 }}
+                style={isDesktop ? { y: imageY, scale: 1.12 } : { scale: 1.04 }}
                 onError={(e) => {
                   e.currentTarget.style.opacity = '0';
                 }}
@@ -319,7 +334,7 @@ const ArchitecturalFeatureCard = ({ feat, index, isDark, isDesktop }) => {
                   <div className={`h-px flex-1 ${isDark ? 'bg-white/[0.09]' : 'bg-black/[0.09]'}`} />
                 </div>
 
-                <h3 className={`text-xl sm:text-2xl font-medium sm:font-semibold tracking-tight leading-snug mb-2.5 font-sans ${textMain}`}>
+                <h3 className={`text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-2.5 ${textMain}`}>
                   {feat.title}
                 </h3>
 
@@ -348,7 +363,8 @@ const ArchitecturalFeatureCard = ({ feat, index, isDark, isDesktop }) => {
       </div>
     </motion.article>
   );
-};
+});
+ArchitecturalFeatureCard.displayName = 'ArchitecturalFeatureCard';
 
 /* ════════════════════════════════════════════════
    MAIN FEATURES SECTION
@@ -367,11 +383,11 @@ const FeaturesSection = ({ isDark }) => {
   const bgTopY    = useTransform(scrollYProgress, [0, 1], ['-8%', '10%']);
   const bgBottomY = useTransform(scrollYProgress, [0, 1], ['10%', '-10%']);
 
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
-  const borderCol = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
+  const borderCol = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   return (
     <section
@@ -382,7 +398,7 @@ const FeaturesSection = ({ isDark }) => {
       {/* ── PARALLAX BACKGROUND LAYER 1: Factory Interior ── */}
       <motion.div
         aria-hidden="true"
-        style={{ y: bgTopY, backgroundImage: "url('/images/bg-factory-interior.jpg')" }}
+        style={{ y: isDesktop ? bgTopY : undefined, backgroundImage: "url('/images/bg-factory-interior.jpg')" }}
         className={`absolute -top-24 inset-x-0 h-[62%] bg-cover bg-center pointer-events-none ${
           isDark
             ? 'opacity-[0.14] mix-blend-lighten'
@@ -393,7 +409,7 @@ const FeaturesSection = ({ isDark }) => {
       {/* ── PARALLAX BACKGROUND LAYER 2: Industrial Park Aerial ── */}
       <motion.div
         aria-hidden="true"
-        style={{ y: bgBottomY, backgroundImage: "url('/images/bg-industrial-park-aerial.jpg')" }}
+        style={{ y: isDesktop ? bgBottomY : undefined, backgroundImage: "url('/images/bg-industrial-park-aerial.jpg')" }}
         className={`absolute -bottom-24 inset-x-0 h-[58%] bg-cover bg-center pointer-events-none ${
           isDark
             ? 'opacity-[0.12] mix-blend-lighten'
@@ -439,8 +455,11 @@ const FeaturesSection = ({ isDark }) => {
               <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
               <span className={textMuted}>Park Infrastructure · Moraiya</span>
             </div>
-            <h2 className={`text-3xl sm:text-5xl lg:text-[3.25rem] font-medium sm:font-semibold lg:font-bold tracking-[-0.025em] leading-[1.08] font-sans ${textMain}`}>
-              Engineered for Heavy <span className="text-brand-red">Operations</span>
+            <h2 className={`text-3xl sm:text-5xl lg:text-[3.25rem] font-bold tracking-tight leading-[1.15] ${textMain}`}>
+              Engineered for Heavy{' '}
+              <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                Operations
+              </span>
             </h2>
           </div>
 
@@ -451,8 +470,8 @@ const FeaturesSection = ({ isDark }) => {
           </div>
         </motion.div>
 
-        {/* Asymmetric 12-Column Staggered Parallax Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-9 lg:gap-10 items-start">
+        {/* Alternating Sliding Feature Cards — No inner scrollbar, generous alternate space */}
+        <div className="flex flex-col gap-8 sm:gap-12 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {featuresData.map((feat, i) => (
             <ArchitecturalFeatureCard
               key={feat.code}

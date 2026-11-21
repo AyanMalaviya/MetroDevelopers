@@ -144,13 +144,13 @@ const Footer = () => {
   const mapsUrl   = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
   const mapsQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(mapsUrl)}`;
 
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
   const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
-  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const divide    = isDark ? 'divide-white/[0.12]' : 'divide-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -159,7 +159,6 @@ const Footer = () => {
   return (
     <footer
       className={`border-t ${border} ${bgPage} ${textMain}`}
-      style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
     >
       {/* ── Collapsible FAQ Index Bar ── */}
       <div className={`border-b ${border} ${bgSurface}`}>
@@ -176,7 +175,7 @@ const Footer = () => {
                 FAQ
               </span>
               <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
-              <span className={`text-sm sm:text-base font-extrabold tracking-tight group-hover:text-brand-red transition-colors ${textMain}`}>
+              <span className={`text-sm sm:text-base font-bold tracking-tight group-hover:text-brand-red transition-colors ${textMain}`}>
                 Frequently Asked Questions
               </span>
               <span className={`font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 border ${border} ${bgPage} ${textMuted}`}>
@@ -223,18 +222,18 @@ const Footer = () => {
           <div className="lg:col-span-3 py-10 lg:pr-8 flex flex-col justify-between gap-6">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 border ${border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0`}>
+                <div className={`w-10 h-10 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0`}>
                   <img
                     src="/MDLogo.png"
                     alt="Metro Developers logo"
                     width={36}
                     height={36}
                     loading="lazy"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain brand-logo-dark-outline"
                   />
                 </div>
                 <div className="leading-tight">
-                  <span className={`block text-base font-extrabold tracking-tight ${textMain}`}>
+                  <span className={`block text-base font-bold tracking-tight ${textMain}`}>
                     Metro Developers
                   </span>
                   <span className={`block font-mono text-[10px] uppercase tracking-[0.12em] ${textMuted}`}>
@@ -282,7 +281,7 @@ const Footer = () => {
                 <ArrowUpRight size={13} className={`${textMuted} group-hover:text-brand-red transition-colors`} aria-hidden="true" />
               </div>
               <div className="flex items-baseline justify-between gap-2">
-                <span className={`text-xs font-extrabold ${textMain}`}>5.0 on Google</span>
+                <span className={`text-xs font-bold ${textMain}`}>5.0 on Google</span>
                 <span className={`font-mono text-[10px] uppercase tracking-wider ${textMuted}`}>Write Review</span>
               </div>
             </a>

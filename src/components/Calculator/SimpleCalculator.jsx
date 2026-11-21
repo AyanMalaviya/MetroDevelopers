@@ -138,8 +138,11 @@ export default function SimpleCalculator() {
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red block">
             TOOL 02
           </span>
-          <h3 className={`text-sm font-extrabold tracking-tight ${textMain}`}>
-            Quick Calculator
+          <h3 className={`text-sm font-bold tracking-tight ${textMain}`}>
+            Quick{' '}
+            <span className="font-serif-editorial italic text-brand-red inline-block">
+              Calculator
+            </span>
           </h3>
         </div>
         <Hash size={15} className={textMuted} aria-hidden="true" />

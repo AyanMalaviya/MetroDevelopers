@@ -5,6 +5,7 @@ import {
   ChevronLeft, ChevronRight, Ruler, Shield, Truck, Phone,
   Maximize2, Factory, Droplets, TrendingUp, MapPin,
   CctvIcon, FactoryIcon, Trash, WeightIcon, Check, ArrowRight, ArrowUpRight,
+  Globe, ExternalLink,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
@@ -36,14 +37,14 @@ import {
 const EASE = [0.16, 1, 0.3, 1];
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  bgTint:    isDark ? 'bg-[#171213]' : 'bg-[#FBF6F5]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  bgTint:    isDark ? 'bg-[#18181C]' : 'bg-[#F1F3F5]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 /* ── Editorial Section Heading ── */
@@ -56,7 +57,7 @@ const SectionHeader = ({ index, kicker, title, isDark }) => {
         <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
         <span className={t.textMuted}>{kicker}</span>
       </div>
-      <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] ${t.textMain}`}>
+      <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight ${t.textMain}`}>
         {title}
       </h2>
     </div>
@@ -179,14 +180,14 @@ const MetroIndustrialPark = () => {
   };
 
   const features = [
-    { code: '01', icon: <Ruler size={18} aria-hidden="true" />,       title: 'Flexible Sizes', description: '4,000–50,000 sq.ft units available across modular bays' },
-    { code: '02', icon: <Shield size={18} aria-hidden="true" />,      title: 'Gate Security',  description: 'CCTV surveillance & trained security guards at main gate' },
-    { code: '03', icon: <Truck size={18} aria-hidden="true" />,       title: 'Logistics',      description: 'Direct NH 47 highway access and port freight connectivity' },
-    { code: '04', icon: <CctvIcon size={18} aria-hidden="true" />,    title: 'CCTV Coverage',  description: 'Complete 24×7 HD surveillance network across internal roads' },
-    { code: '05', icon: <Droplets size={18} aria-hidden="true" />,    title: '24×7 Water',     description: 'Continuous pressurized water supply across every unit' },
-    { code: '06', icon: <WeightIcon size={18} aria-hidden="true" />,  title: 'Weigh Bridge',   description: 'Dedicated on-site heavy commercial weighbridge facility' },
-    { code: '07', icon: <Trash size={18} aria-hidden="true" />,       title: 'Waste Mgmt.',    description: 'Planned underground drainage and industrial waste disposal' },
-    { code: '08', icon: <FactoryIcon size={18} aria-hidden="true" />, title: 'Infrastructure', description: 'Heavy PEB sheds — custom RCC construction available on request' },
+    { code: '01', icon: <Ruler size={18} aria-hidden="true" />,       title: 'Flexible Sizes', description: '4,000–50,000 sq.ft modular units' },
+    { code: '02', icon: <Shield size={18} aria-hidden="true" />,      title: 'Gate Security',  description: '24/7 guards & CCTV at main gate' },
+    { code: '03', icon: <Truck size={18} aria-hidden="true" />,       title: 'Logistics',      description: 'Direct NH 47 highway access' },
+    { code: '04', icon: <CctvIcon size={18} aria-hidden="true" />,    title: 'CCTV Coverage',  description: '24×7 HD internal cameras' },
+    { code: '05', icon: <Droplets size={18} aria-hidden="true" />,    title: '24×7 Water',     description: 'Continuous water supply per unit' },
+    { code: '06', icon: <WeightIcon size={18} aria-hidden="true" />,  title: 'Weigh Bridge',   description: 'On-site commercial weighbridge' },
+    { code: '07', icon: <Trash size={18} aria-hidden="true" />,       title: 'Waste Mgmt.',    description: 'Underground drainage system' },
+    { code: '08', icon: <FactoryIcon size={18} aria-hidden="true" />, title: 'Infrastructure', description: 'Heavy PEB sheds with RCC options' },
   ];
 
   const specifications = [
@@ -278,7 +279,6 @@ const MetroIndustrialPark = () => {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ════════ ARCHITECTURAL HERO SLIDESHOW ════════ */}
         <section className="flex flex-col pt-16">
@@ -377,8 +377,12 @@ const MetroIndustrialPark = () => {
                     <span className={t.textMuted}>For Lease &amp; Outright Sale · NH 47</span>
                   </div>
 
-                  <h1 className={`text-3xl sm:text-5xl font-extrabold tracking-[-0.035em] leading-[1.04] mb-3 ${t.textMain}`}>
-                    Metro Industrial Park 1<span className="text-brand-red">.</span>
+                  <h1 className={`text-3xl sm:text-5xl font-bold tracking-tight leading-[1.15] mb-3 ${t.textMain}`}>
+                    Metro{' '}
+                    <span className="font-calligraphy font-normal text-[1.25em] text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-red-500 to-amber-400 inline-block">
+                      Industrial
+                    </span>{' '}
+                    Park 1<span className="text-brand-red">.</span>
                   </h1>
 
                   <AnimatePresence mode="wait">
@@ -436,7 +440,7 @@ const MetroIndustrialPark = () => {
                 {quickStats.map((stat) => (
                   <div key={stat.code} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgSurface}`}>
                     <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{stat.code}</div>
-                    <div className={`text-2xl sm:text-4xl font-extrabold tracking-tight tabular-nums ${stat.accent ? 'text-brand-red' : t.textMain}`}>
+                    <div className={`text-2xl sm:text-4xl font-bold tracking-tight tabular-nums ${stat.accent ? 'text-brand-red' : t.textMain}`}>
                       <CountUp
                         end={stat.end}
                         suffix={stat.suffix}
@@ -471,7 +475,19 @@ const MetroIndustrialPark = () => {
                   animate={overviewInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.65, ease: EASE }}
                 >
-                  <SectionHeader index="01" kicker="Park Dossier" title="Project Overview" isDark={isDark} />
+                  <SectionHeader
+                    index="01"
+                    kicker="Park Dossier"
+                    title={
+                      <>
+                        Project{' '}
+                        <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                          Overview
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
                   <div className={`border ${t.border} ${t.bgSurface} p-6 sm:p-8 space-y-4 text-sm sm:text-base leading-relaxed ${t.textBody}`}>
                     <p>
                       Metro Industrial Park is an industrial development strategically located in Moraiya, Changodar. Spread across <strong className={t.textMain}>54,000 sq.yards</strong>, the park offers 63 industrial units ranging from 4,000 to 50,000 sq.ft.
@@ -493,7 +509,14 @@ const MetroIndustrialPark = () => {
                   <SectionHeader
                     index="02"
                     kicker="Transaction Modes"
-                    title="Flexible Options: For Lease & For Sale"
+                    title={
+                      <>
+                        Flexible Options: For Lease &amp;{' '}
+                        <span className="font-serif-editorial italic text-brand-red inline-block">
+                          For Sale
+                        </span>
+                      </>
+                    }
                     isDark={isDark}
                   />
                   <div className={`border ${t.border} grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x ${t.divide}`}>
@@ -504,7 +527,7 @@ const MetroIndustrialPark = () => {
                         <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red mb-2">
                           For Tenants &amp; 3PL
                         </div>
-                        <h3 className={`text-xl font-extrabold tracking-tight mb-2 flex items-center gap-2 ${t.textMain}`}>
+                        <h3 className={`text-xl font-bold tracking-tight mb-2 flex items-center gap-2 ${t.textMain}`}>
                           <Factory className="text-brand-red" size={18} aria-hidden="true" />
                           <span>Corporate Lease / Rent</span>
                         </h3>
@@ -545,7 +568,7 @@ const MetroIndustrialPark = () => {
                         <div className={`font-mono text-[10px] font-bold uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
                           For Buyers &amp; Investors
                         </div>
-                        <h3 className={`text-xl font-extrabold tracking-tight mb-2 flex items-center gap-2 ${t.textMain}`}>
+                        <h3 className={`text-xl font-bold tracking-tight mb-2 flex items-center gap-2 ${t.textMain}`}>
                           <TrendingUp className="text-brand-red" size={18} aria-hidden="true" />
                           <span>Outright Freehold Sale</span>
                         </h3>
@@ -587,37 +610,70 @@ const MetroIndustrialPark = () => {
 
                 {/* 03. Key Features */}
                 <div>
-                  <SectionHeader index="03" kicker="Park Capabilities" title="Key Features" isDark={isDark} />
-                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
-                    {features.map((feat) => (
-                      <article
-                        key={feat.code}
-                        className={`p-6 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
-                          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
-                            FEAT {feat.code}
-                          </span>
-                          <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
-                            {feat.icon}
-                          </span>
-                        </div>
-                        <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
-                          {feat.title}
-                        </h3>
-                        <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
-                          {feat.description}
-                        </p>
-                      </article>
-                    ))}
+                  <SectionHeader
+                    index="03"
+                    kicker="Park Capabilities"
+                    title={
+                      <>
+                        Key{' '}
+                        <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-amber-500 inline-block">
+                          Features
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
+                  <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {features.map((feat, i) => {
+                      const isEven = i % 2 === 0;
+                      return (
+                        <motion.article
+                          key={feat.code}
+                          initial={{ opacity: 0, x: isEven ? -45 : 45 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, margin: '-50px' }}
+                          transition={{ duration: 0.65, ease: EASE }}
+                          className={`w-[82%] sm:w-[70%] lg:w-[58%] max-w-lg p-5 sm:p-6 border ${t.border} ${t.bgSurface} ${
+                            isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                          } transition-colors ${
+                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3.5">
+                            <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
+                              FEAT {feat.code}
+                            </span>
+                            <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
+                              {feat.icon}
+                            </span>
+                          </div>
+                          <h3 className={`text-base font-bold tracking-tight mb-1.5 ${t.textMain}`}>
+                            {feat.title}
+                          </h3>
+                          <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
+                            {feat.description}
+                          </p>
+                        </motion.article>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* 04. Amenities & Facilities */}
                 <div>
-                  <SectionHeader index="04" kicker="Campus Utilities" title="Amenities & Facilities" isDark={isDark} />
+                  <SectionHeader
+                    index="04"
+                    kicker="Campus Utilities"
+                    title={
+                      <>
+                        Amenities &amp;{' '}
+                        <span className="font-calligraphy font-normal text-[1.18em] tracking-normal text-emerald-500 inline-block">
+                          Facilities
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
                   <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
                     {amenities.map((item) => (
                       <div
@@ -633,7 +689,19 @@ const MetroIndustrialPark = () => {
 
                 {/* 05. Layout & Site Plan */}
                 <div>
-                  <SectionHeader index="05" kicker="Technical Drawings" title="Layout & Site Plan" isDark={isDark} />
+                  <SectionHeader
+                    index="05"
+                    kicker="Technical Drawings"
+                    title={
+                      <>
+                        Layout &amp;{' '}
+                        <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                          Site Plan
+                        </span>
+                      </>
+                    }
+                    isDark={isDark}
+                  />
 
                   <div className={`inline-grid grid-cols-2 border ${t.border} divide-x ${t.divide} mb-6`}>
                     {[
@@ -682,14 +750,43 @@ const MetroIndustrialPark = () => {
                           />
                         </>
                       ) : (
-                        <ImageCard
-                          src={layoutImages.siteMap.src}
-                          alt={layoutImages.siteMap.alt}
-                          title="Master Site Plan — High Resolution"
-                          onOpen={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.alt)}
-                          isDark={isDark}
-                          tall
-                        />
+                        <div className={`border ${t.border} ${t.bgSurface}`}>
+                          <div className={`flex flex-wrap items-center justify-between px-4 sm:px-5 py-3 border-b ${t.border} font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] gap-2`}>
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                              <span className={t.textMain}>Google Maps Satellite · Metro Industrial Park</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.alt)}
+                                className="inline-flex items-center gap-1.5 text-brand-red font-semibold hover:underline"
+                              >
+                                <Maximize2 size={12} aria-hidden="true" />
+                                <span>Inspect Blueprint</span>
+                              </button>
+                              <a
+                                href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs text-brand-red font-semibold hover:underline"
+                              >
+                                <ExternalLink size={12} aria-hidden="true" />
+                                <span>Google Maps</span>
+                              </a>
+                            </div>
+                          </div>
+                          <div className="w-full h-[450px] sm:h-[540px] relative bg-black">
+                            <iframe
+                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4206651!3d22.9140377!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20Industrial%20Park!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin"
+                              title="Metro Industrial Park Google Maps Satellite"
+                              className="w-full h-full border-0 absolute inset-0"
+                              allowFullScreen
+                              loading="lazy"
+                              referrerPolicy="no-referrer-when-downgrade"
+                            />
+                          </div>
+                        </div>
                       )}
                       <p className={`font-mono text-[11px] uppercase tracking-wider text-center ${t.textMuted}`}>
                         Click drawing to inspect full resolution · Pinch to zoom on mobile
@@ -736,7 +833,7 @@ const MetroIndustrialPark = () => {
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
                       Total Return Potential
                     </div>
-                    <div className="text-4xl font-extrabold tracking-tight tabular-nums text-brand-red mb-1">
+                    <div className="text-4xl font-bold tracking-tight tabular-nums text-brand-red mb-1">
                       16–20%
                     </div>
                     <div className={`text-xs font-bold uppercase tracking-wider mb-1.5 ${t.textMain}`}>
@@ -749,7 +846,7 @@ const MetroIndustrialPark = () => {
 
                   {/* Direct Contact */}
                   <div className={`border ${t.border} ${t.bgSurface} p-6`}>
-                    <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                    <h3 className={`text-base font-bold tracking-tight mb-1.5 ${t.textMain}`}>
                       Interested in MIP 1?
                     </h3>
                     <p className={`text-xs leading-relaxed mb-5 ${t.textBody}`}>
@@ -786,7 +883,7 @@ const MetroIndustrialPark = () => {
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
                       Quick Possession
                     </div>
-                    <div className={`text-2xl font-extrabold tracking-tight tabular-nums mb-1 ${t.textMain}`}>
+                    <div className={`text-2xl font-bold tracking-tight tabular-nums mb-1 ${t.textMain}`}>
                       90 Days
                     </div>
                     <p className={`text-xs ${t.textBody}`}>

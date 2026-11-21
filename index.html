@@ -186,12 +186,11 @@
   </script>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-    FONTS
+    FONTS — Inter for crystal-clear readability; IBM Plex Mono for technical data; Alex Brush for calligraphy; Instrument Serif for architectural editorial; Playfair Display for luxury display titles
   ════════════════════════════════════════════════════════════════════ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Preload the primary display font (Anton) to avoid FOUT on hero heading -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bungee+Outline&family=Instrument+Serif&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" />
 
   <!-- Preload hero image -->
   <link rel="preload" as="image" href="/images/metro-industrial-park-entrance-dawn.jpg" fetchpriority="high" />
@@ -255,11 +254,15 @@
       border-radius: 14px;
       padding: 6px;
       background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
       animation: splashPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
       position: relative;
       z-index: 2;
+    }
+    html:not([data-theme='light']) #splash img,
+    html[data-theme='dark'] #splash img {
+      filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.85));
     }
     #splash-ring {
       position: absolute;
@@ -274,10 +277,11 @@
       border-top-color: rgba(15, 23, 42, 0.45);
     }
     #splash-title {
-      font-family: 'Anton', system-ui, sans-serif;
-      font-size: 24px;
-      letter-spacing: 0.06em;
-      line-height: 1;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
       color: #e2e8f0;
       text-transform: uppercase;
       text-align: center;

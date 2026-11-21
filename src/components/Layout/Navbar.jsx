@@ -7,7 +7,7 @@ import {
   Settings2, ArrowUp, Type, Map, ArrowUpRight,
   LucideLandPlot, Star,
 } from 'lucide-react';
-import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
 const EASE = [0.16, 1, 0.3, 1];
@@ -42,19 +42,19 @@ const Navbar = () => {
   const settingsRef    = useRef(null);
 
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  const scaleX = scrollYProgress;
 
   /* ── Shared theme tokens ── */
   const bgHeader  = isDark
     ? scrolled ? 'bg-[#0B0B0D]/95 backdrop-blur-md' : 'bg-[#0B0B0D]'
-    : scrolled ? 'bg-[#F5F3EE]/95 backdrop-blur-md' : 'bg-[#F5F3EE]';
+    : scrolled ? 'bg-[#FFFFFF]/95 backdrop-blur-md' : 'bg-[#FFFFFF]';
   const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
-  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const divide    = isDark ? 'divide-white/[0.12]' : 'divide-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   // Restore saved font size on mount
   useEffect(() => {
@@ -171,24 +171,23 @@ const Navbar = () => {
         className={`fixed top-0 left-0 right-0 z-50 border-b ${border} ${bgHeader} transition-transform duration-300 ease-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
 
           {/* ── Brand Mark ── */}
           <Link to="/" onClick={closeMenu} className="flex items-center gap-3 flex-shrink-0 group">
-            <div className={`w-9 h-9 border ${border} ${bgSurface} flex items-center justify-center p-1.5 transition-colors group-hover:border-brand-red`}>
+            <div className={`w-9 h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 transition-colors group-hover:border-brand-red`}>
               <img
                 src="/MDLogo.png"
                 alt="Metro Developers Logo"
                 width={32}
                 height={32}
                 onError={(e) => { e.currentTarget.src = '/icons/icon-192x192.png'; }}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain brand-logo-dark-outline"
               />
             </div>
             <div className="leading-tight">
-              <span className={`block text-sm font-extrabold tracking-tight ${textMain}`}>
+              <span className={`block text-sm font-bold tracking-tight ${textMain}`}>
                 Metro Developers
               </span>
               <span className={`block font-mono text-[9px] uppercase tracking-[0.14em] ${textMuted}`}>
@@ -485,7 +484,6 @@ const Navbar = () => {
               exit={{ x: '100%' }}
               transition={{ duration: 0.32, ease: EASE }}
               className={`fixed top-[66px] right-0 bottom-0 w-[290px] sm:w-[320px] z-40 lg:hidden overflow-y-auto border-l ${border} ${bgPage}`}
-              style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
             >
               {/* Navigation Index */}
               <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>

@@ -91,7 +91,7 @@ const PWAInstallPrompt = () => {
                 <Download size={20} className="text-brand-red" />
               </div>
               <div className="text-left flex-1">
-                <h4 className={`font-black text-sm font-display ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`font-bold text-sm tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   Install Metro App
                 </h4>
                 <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>

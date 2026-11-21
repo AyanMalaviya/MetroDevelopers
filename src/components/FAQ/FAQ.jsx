@@ -118,13 +118,13 @@ const FAQ = () => {
   const isDark = theme === 'dark';
   const [openIndex, setOpenIndex] = useState(0);
 
-  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]';
+  const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
   const bgSurface = isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]';
-  const border    = isDark ? 'border-white/[0.1]' : 'border-black/[0.11]';
-  const divide    = isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]';
-  const textMain  = isDark ? 'text-[#F5F4F0]' : 'text-[#121214]';
-  const textBody  = isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]';
-  const textMuted = isDark ? 'text-[#6E6E77]' : 'text-[#73726C]';
+  const border    = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const divide    = isDark ? 'divide-white/[0.12]' : 'divide-gray-200';
+  const textMain  = isDark ? 'text-white' : 'text-gray-900';
+  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
@@ -132,7 +132,6 @@ const FAQ = () => {
     <section
       aria-label="Frequently Asked Questions"
       className={`py-16 sm:py-24 border-t ${border} ${bgPage}`}
-      style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Asymmetric Editorial Header */}
@@ -143,7 +142,7 @@ const FAQ = () => {
               <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
               <span className={textMuted}>Investor &amp; Tenant Clarifications</span>
             </div>
-            <h2 className={`text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] leading-[1.06] ${textMain}`}>
+            <h2 className={`text-3xl sm:text-5xl font-bold tracking-tight leading-[1.18] ${textMain}`}>
               Frequently Asked <span className="text-brand-red">Questions</span>
             </h2>
           </div>

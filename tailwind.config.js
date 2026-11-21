@@ -7,6 +7,16 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        body: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        calligraphy: ['"Alex Brush"', 'cursive'],
+        accent: ['"Instrument Serif"', 'Georgia', 'serif'],
+        serifEditorial: ['"Instrument Serif"', 'Georgia', 'serif'],
+        serifDisplay: ['"Playfair Display"', 'Georgia', 'serif'],
+      },
       colors: {
         'brand-red': '#dc2626',
         'black' : '#000000',

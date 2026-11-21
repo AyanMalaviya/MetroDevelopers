@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import {
   ArrowLeft, Map, Table, Search, Maximize2,
   ExternalLink, Factory, Box, ArrowRight,
+  Globe, Layers, MapPin,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
@@ -43,6 +44,34 @@ const TABS = [
   { id: 'estate', code: 'MIP 02', label: 'Park 2 (MIP 2)', short: 'Park 2', subtitle: '23 Plotted Parcels'  },
   { id: 'park3',  code: 'MIP 03', label: 'Park 3 (MIP 3)', short: 'Park 3', subtitle: '77 Plotted Parcels'  },
 ];
+
+// Live Google Maps Satellite Embeds for all 3 Industrial Parks
+const SATELLITE_EMBEDS = {
+  park: {
+    embedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4206651!3d22.9140377!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20Industrial%20Park!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin',
+    directUrl: 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6',
+    title: 'Metro Industrial Park 1 — Google Maps Satellite',
+    location: 'Behind Siya Industrial Park, Moraiya, Changodar, Ahmedabad',
+    coords: '22.914038° N, 72.420665° E',
+  },
+  estate: {
+    embedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4212934!3d22.9138011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e97d6b2a77af7%3A0xf3e97b4a8cb09c62!2sMetro%20Industrial%20Park%202!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin',
+    directUrl: 'https://maps.app.goo.gl/oBMDfb38sNuo4pjD9',
+    title: 'Metro Industrial Park 2 — Google Maps Satellite',
+    location: 'Opposite Metro Industrial Park, Moraiya, Changodar, Ahmedabad',
+    coords: '22.913801° N, 72.421293° E',
+  },
+  park3: {
+    embedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1839.2!2d72.3762037!3d22.8443566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e957aa2ecae27%3A0xd48c58cbda2742b!2sMetro%20Industrial%20Park%203!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin',
+    directUrl: 'https://maps.app.goo.gl/5SaRAjuzrQzLjoZh9',
+    title: 'Metro Industrial Park 3 — Google Maps Satellite',
+    location: 'Bavla – Rajoda Road, Bavla Industrial Corridor, Ahmedabad',
+    coords: '22.844357° N, 72.376204° E',
+  },
+};
 
 // Hoisted dataset schema (aligned to canonical domain www.metrodevelopers.co.in)
 const TABLE_DATASET_SCHEMA = {
@@ -98,14 +127,14 @@ const TABLE_DATASET_SCHEMA = {
 };
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#EFECE6]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  bgSubtle:  isDark ? 'bg-[#18181C]' : 'bg-[#F1F3F5]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 /* ─── Technical Drawing Card ─── */
@@ -146,7 +175,7 @@ const SiteMapPage = () => {
 
   const [activeTab, setActiveTab]       = useState(location.state?.activeTab || 'park');
   const [viewMode, setViewMode]         = useState(location.state?.viewMode || 'map');
-  const [mapDimension, setMapDimension] = useState(location.state?.mapDimension || '2d');
+  const [mapDimension, setMapDimension] = useState(location.state?.mapDimension || 'satellite');
 
   const [park2Filter, setPark2Filter] = useState('ALL');
   const [park3Filter, setPark3Filter] = useState('ALL');
@@ -208,7 +237,6 @@ const SiteMapPage = () => {
 
       <div
         className={`min-h-screen pt-16 pb-16 ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ════════ TOP ARCHITECTURAL CONTROL BAR ════════ */}
         <div className={`border-b ${t.border} ${t.bgSurface}`}>
@@ -223,9 +251,35 @@ const SiteMapPage = () => {
             </button>
 
             <div className="flex flex-wrap items-center gap-2">
-              {/* Park 1 2D / 3D Switcher */}
-              {viewMode === 'map' && activeTab === 'park' && (
-                <div className={`inline-grid grid-cols-2 border ${t.border} divide-x ${t.divide}`}>
+              {/* Satellite / 3D / 2D Switcher */}
+              {viewMode === 'map' && (
+                <div className={`inline-flex border ${t.border} divide-x ${t.divide}`}>
+                  <button
+                    type="button"
+                    onClick={() => setMapDimension('satellite')}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
+                      mapDimension === 'satellite'
+                        ? 'bg-brand-red text-white'
+                        : `${t.bgPage} ${t.textBody} hover:text-brand-red`
+                    }`}
+                  >
+                    <Globe size={12} aria-hidden="true" />
+                    <span>Satellite Map</span>
+                  </button>
+                  {activeTab === 'park' && (
+                    <button
+                      type="button"
+                      onClick={() => setMapDimension('3d')}
+                      className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
+                        mapDimension === '3d'
+                          ? 'bg-brand-red text-white'
+                          : `${t.bgPage} ${t.textBody} hover:text-brand-red`
+                      }`}
+                    >
+                      <Box size={12} aria-hidden="true" />
+                      <span>3D View</span>
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => setMapDimension('2d')}
@@ -235,19 +289,8 @@ const SiteMapPage = () => {
                         : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                     }`}
                   >
-                    <span>2D Map</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMapDimension('3d')}
-                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
-                      mapDimension === '3d'
-                        ? 'bg-brand-red text-white'
-                        : `${t.bgPage} ${t.textBody} hover:text-brand-red`
-                    }`}
-                  >
-                    <Box size={12} aria-hidden="true" />
-                    <span>3D View</span>
+                    <Map size={12} aria-hidden="true" />
+                    <span>2D Layout</span>
                   </button>
                 </div>
               )}
@@ -291,11 +334,29 @@ const SiteMapPage = () => {
                 <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
                 <span className={t.textMuted}>{activeTabMeta?.subtitle}</span>
               </div>
-              <h2 className={`text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.06] ${t.textMain}`}>
-                {viewMode === 'table' ? 'Area Details ' : 'Shed & Plot '}
-                <span className="text-brand-red">
-                  {viewMode === 'table' ? 'Schedule' : 'Availability'}
-                </span>
+              <h2 className={`text-2xl sm:text-4xl font-bold tracking-tight leading-[1.15] ${t.textMain}`}>
+                {viewMode === 'table' ? (
+                  <>
+                    Area Details{' '}
+                    <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                      Schedule
+                    </span>
+                  </>
+                ) : activeTab === 'park' ? (
+                  <>
+                    Shed{' '}
+                    <span className="font-calligraphy font-normal text-[1.22em] tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                      Availability
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    Plot{' '}
+                    <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                      Availability
+                    </span>
+                  </>
+                )}
               </h2>
               <p className={`text-xs sm:text-sm mt-2 ${t.textBody}`}>
                 Industrial Park 1, 2 &amp; 3 · Moraiya, Changodar &amp; Bavla, Ahmedabad
@@ -321,7 +382,7 @@ const SiteMapPage = () => {
                       <span className={`block font-mono text-[9px] uppercase tracking-[0.16em] ${isActive ? 'text-white/80' : 'text-brand-red'}`}>
                         {tab.code}
                       </span>
-                      <span className="block text-xs sm:text-sm font-extrabold tracking-tight mt-0.5 truncate">
+                      <span className="block text-xs sm:text-sm font-bold tracking-tight mt-0.5 truncate">
                         <span className="hidden sm:inline">{tab.label}</span>
                         <span className="sm:hidden">{tab.short}</span>
                       </span>
@@ -335,18 +396,74 @@ const SiteMapPage = () => {
           {/* ════════ MAIN VIEW CONTAINER (MAP OR AREA TABLE) ════════ */}
           {viewMode === 'map' ? (
             <>
-              {/* Interactive Map / 3D Canvas Container */}
+              {/* Interactive Map / 3D Canvas / Satellite Embed Container */}
               <div className={`relative border ${t.border} ${t.bgSurface} min-h-[600px] overflow-hidden`}>
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={`${activeTab}-${activeTab === 'park' ? mapDimension : '2d'}`}
+                    key={`${activeTab}-${mapDimension}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25, ease: EASE }}
                     className="h-full w-full"
                   >
-                    {activeTab === 'park' ? (
+                    {mapDimension === 'satellite' ? (
+                      <div className="relative w-full h-[620px] sm:h-[700px] lg:h-[760px] flex flex-col bg-black">
+                        {/* Satellite Status Header Bar */}
+                        <div
+                          className={`px-4 py-3 border-b ${t.border} ${t.bgSurface} flex flex-wrap items-center justify-between gap-3 z-10`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-500">
+                              Google Maps Satellite (Live Embed)
+                            </span>
+                            <span className={`text-xs ${t.textMuted} hidden md:inline`}>•</span>
+                            <span className={`text-xs font-semibold ${t.textMain} hidden md:inline`}>
+                              {SATELLITE_EMBEDS[activeTab]?.location}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={SATELLITE_EMBEDS[activeTab]?.directUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="py-1.5 px-3 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center gap-1.5 rounded-md transition-colors shadow-sm"
+                            >
+                              <MapPin size={13} aria-hidden="true" />
+                              <span>Open in Google Maps</span>
+                              <ExternalLink size={12} aria-hidden="true" />
+                            </a>
+                          </div>
+                        </div>
+
+                        {/* Embedded Google Maps Satellite iframe */}
+                        <div className="flex-1 w-full h-full relative">
+                          <iframe
+                            src={SATELLITE_EMBEDS[activeTab]?.embedUrl}
+                            title={SATELLITE_EMBEDS[activeTab]?.title}
+                            className="w-full h-full border-0 absolute inset-0"
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          />
+                        </div>
+
+                        {/* Bottom Info Bar */}
+                        <div
+                          className={`px-4 py-2.5 border-t ${t.border} ${t.bgSurface} flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] ${t.textMuted}`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Globe size={12} className="text-brand-red" />
+                            <span>Coordinates: {SATELLITE_EMBEDS[activeTab]?.coords}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span>High-resolution aerial satellite imagery with hybrid road &amp; highway labels</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : activeTab === 'park' ? (
                       mapDimension === '3d' ? (
                         <Suspense
                           fallback={
@@ -358,15 +475,25 @@ const SiteMapPage = () => {
                             </div>
                           }
                         >
-                          <Park1Model3D onSwitchTo2D={() => setMapDimension('2d')} />
+                          <Park1Model3D
+                            onSwitchTo2D={() => setMapDimension('2d')}
+                            onSwitchToSatellite={() => setMapDimension('satellite')}
+                          />
                         </Suspense>
                       ) : (
-                        <InteractiveSiteMap onSwitchTo3D={() => setMapDimension('3d')} />
+                        <InteractiveSiteMap
+                          onSwitchTo3D={() => setMapDimension('3d')}
+                          onSwitchToSatellite={() => setMapDimension('satellite')}
+                        />
                       )
                     ) : activeTab === 'estate' ? (
-                      <MetroEstateInteractiveMap />
+                      <MetroEstateInteractiveMap
+                        onSwitchToSatellite={() => setMapDimension('satellite')}
+                      />
                     ) : (
-                      <Park3InteractiveMap />
+                      <Park3InteractiveMap
+                        onSwitchToSatellite={() => setMapDimension('satellite')}
+                      />
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -376,7 +503,7 @@ const SiteMapPage = () => {
               <div className={`relative mt-5 border ${t.border} ${t.bgSurface} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-red" aria-hidden="true" />
                 <div className="pl-2">
-                  <p className={`text-sm font-extrabold tracking-tight ${t.textMain}`}>
+                  <p className={`text-sm font-bold tracking-tight ${t.textMain}`}>
                     Need exact SQ.YD, SQ.MT measurements, or official engineering schedules?
                   </p>
                   <p className={`text-xs mt-0.5 ${t.textBody}`}>
@@ -413,7 +540,7 @@ const SiteMapPage = () => {
                         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red block mb-1.5">
                           Ready-to-Move Shed Inventory · MIP 01
                         </span>
-                        <h3 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
+                        <h3 className={`text-xl font-bold tracking-tight ${t.textMain}`}>
                           Industrial Park 1 — Unit Area Schedule
                         </h3>
                         <p className={`text-xs sm:text-sm mt-1 ${t.textBody}`}>
@@ -442,7 +569,7 @@ const SiteMapPage = () => {
                           <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>
                             {item.label}
                           </span>
-                          <span className={`text-sm sm:text-base font-extrabold tabular-nums block mt-1 ${t.textMain}`}>
+                          <span className={`text-sm sm:text-base font-bold tabular-nums block mt-1 ${t.textMain}`}>
                             {item.value}
                           </span>
                           <span className={`text-[11px] block mt-0.5 ${t.textMuted}`}>{item.sub}</span>
@@ -482,7 +609,7 @@ const SiteMapPage = () => {
                           <span className={t.textMuted}>/</span>
                           <span className={t.textMuted}>23 Clear-Title Plots</span>
                         </div>
-                        <h3 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
+                        <h3 className={`text-xl font-bold tracking-tight ${t.textMain}`}>
                           Industrial Park 2 — Engineering Area Schedule
                         </h3>
                         <p className={`text-xs mt-1 ${t.textBody}`}>
@@ -720,7 +847,7 @@ const SiteMapPage = () => {
                       ].map((s) => (
                         <div key={s.label} className="p-4 sm:p-5">
                           <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>{s.label}</span>
-                          <span className={`text-sm sm:text-base font-extrabold tabular-nums block mt-1 ${s.accent ? 'text-brand-red' : t.textMain}`}>
+                          <span className={`text-sm sm:text-base font-bold tabular-nums block mt-1 ${s.accent ? 'text-brand-red' : t.textMain}`}>
                             {s.value}
                           </span>
                           <span className={`text-[11px] block mt-0.5 ${t.textMuted}`}>{s.sub}</span>
@@ -754,7 +881,7 @@ const SiteMapPage = () => {
                             77 Parcels · Bookings Open
                           </span>
                         </div>
-                        <h3 className={`text-xl font-extrabold tracking-tight ${t.textMain}`}>
+                        <h3 className={`text-xl font-bold tracking-tight ${t.textMain}`}>
                           Industrial Park 3 — Official 77 Plot Area Schedule
                         </h3>
                         <p className={`text-xs mt-1 ${t.textBody}`}>
@@ -917,7 +1044,7 @@ const SiteMapPage = () => {
                       ].map((s) => (
                         <div key={s.label} className="p-4 sm:p-5">
                           <span className={`font-mono text-[10px] uppercase tracking-wider block ${t.textMuted}`}>{s.label}</span>
-                          <span className={`text-sm sm:text-base font-extrabold tabular-nums block mt-1 ${s.accent ? 'text-brand-red' : t.textMain}`}>
+                          <span className={`text-sm sm:text-base font-bold tabular-nums block mt-1 ${s.accent ? 'text-brand-red' : t.textMain}`}>
                             {s.value}
                           </span>
                           <span className={`text-[11px] block mt-0.5 ${t.textMuted}`}>{s.sub}</span>

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink, Box } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink, Box, Globe } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { phaseCoordinates, getShedPhase } from '../../data/phaseCoordinates';
@@ -425,20 +425,20 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
           }`}
         >
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <span className={`font-black text-xs sm:text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <span className={`font-bold text-xs sm:text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Industrial Park 1 — Master Site Map
             </span>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                 {stats.available} Available
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
                 {stats.preLeased} Pre-Leased
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
                 {stats.forLease} For Lease
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400 border border-gray-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400 border border-gray-500/30">
                 {stats.sold + stats.forLease} Sold
               </span>
             </div>
@@ -560,9 +560,9 @@ const FullscreenViewer = React.memo(function FullscreenViewer({
                 }}
               >
                 <div className="flex items-center justify-between gap-1.5 mb-1">
-                  <span className="font-black text-xs">Shed #{hoveredPlot}</span>
+                  <span className="font-bold text-xs">Shed #{hoveredPlot}</span>
                   <span
-                    className="px-1.5 py-0.5 rounded text-[9px] font-extrabold text-white"
+                    className="px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
                     style={{ background: statusColor }}
                   >
                     {getStatusLabel(status)}
@@ -650,7 +650,7 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
                   style={{ background: statusColor }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
@@ -658,7 +658,7 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
                 </span>
                 {phase && (
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white border border-white/20 ${
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white border border-white/20 ${
                       phase.theme?.tagClass || 'bg-slate-700'
                     }`}
                   >
@@ -684,13 +684,13 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
             {/* Shed Title & Campus */}
             <div className="flex items-center gap-3">
               <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md shrink-0"
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0"
                 style={{ background: statusColor }}
               >
                 #{selectedPlot}
               </div>
               <div>
-                <h3 className={`text-lg font-black leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-lg font-bold leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   Industrial Shed #{selectedPlot}
                 </h3>
                 <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
@@ -711,14 +711,14 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
                 <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-0.5">
                   Total Shed Area
                 </span>
-                <span className={`text-xl sm:text-2xl font-black ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                <span className={`text-xl sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   <AreaDisplay value={areaValue} />
                 </span>
               </div>
               {areaNum > 0 && (
                 <div className="text-right">
                   <span className="text-[10px] uppercase font-bold text-gray-400 block mb-0.5">Built-up Footprint</span>
-                  <span className="text-sm font-black text-brand-red">
+                  <span className="text-sm font-bold text-brand-red">
                     ≈ {(areaNum * 9).toLocaleString('en-IN')} SQ.FT
                   </span>
                 </div>
@@ -757,12 +757,12 @@ const ShedDetailModal = React.memo(function ShedDetailModal({
             <div className={`p-2.5 rounded-xl border grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[10px] font-bold ${
               isDark ? 'bg-gray-950/40 border-gray-800 text-gray-400' : 'bg-gray-100/70 border-gray-200 text-gray-600'
             }`}>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 60 Ft Heavy RCC</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 30–35 Ft Height</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Heavy Trimix Floor</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 24/7 CCTV &amp; Security</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> 24/7 Water &amp; Drainage</span>
-              <span className="flex items-center gap-1"><span className="text-emerald-500 font-black">✓</span> Weigh Bridge Facility</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> 60 Ft Heavy RCC</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> 30–35 Ft Height</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> Heavy Trimix Floor</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> 24/7 CCTV &amp; Security</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> 24/7 Water &amp; Drainage</span>
+              <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> Weigh Bridge Facility</span>
             </div>
 
             {/* Action Buttons */}
@@ -805,6 +805,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
   loadData,
   onOpenFullscreen,
   onSwitchTo3D,
+  onSwitchToSatellite,
   isDark,
 }) {
   return (
@@ -817,7 +818,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
       <div className="flex items-center justify-between gap-2 sm:gap-3 mb-3">
         {/* Left: Project Badge */}
         <div
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-black tracking-tight border ${
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold tracking-tight border ${
             isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xs'
           }`}
         >
@@ -899,12 +900,29 @@ const DashboardHeader = React.memo(function DashboardHeader({
             <span>Pan &amp; Zoom</span>
           </button>
 
+          {/* Satellite Map Switcher Button */}
+          {onSwitchToSatellite && (
+            <button
+              type="button"
+              onClick={onSwitchToSatellite}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
+                isDark
+                  ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700'
+                  : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-300'
+              }`}
+              title="Switch to Google Maps Satellite Embedded View"
+            >
+              <Globe size={13} className="text-brand-red" />
+              <span>Satellite</span>
+            </button>
+          )}
+
           {/* 3D Model Switcher Button */}
           {onSwitchTo3D && (
             <button
               type="button"
               onClick={onSwitchTo3D}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-black transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
                 isDark
                   ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700'
                   : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-300'
@@ -913,7 +931,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
             >
               <Box size={13} className="text-brand-red" />
               <span>3D View</span>
-              <span className="hidden sm:inline-block px-1.5 py-0.2 text-[9px] font-black uppercase rounded-full bg-brand-red text-white">3D</span>
+              <span className="hidden sm:inline-block px-1.5 py-0.2 text-[9px] font-bold uppercase rounded-full bg-brand-red text-white">3D</span>
             </button>
           )}
         </div>
@@ -977,7 +995,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
             key={key}
             className={`flex flex-col items-center justify-center py-1.5 sm:py-2 px-1 sm:px-2 rounded-xl border text-center transition-all ${box}`}
           >
-            <span className={`text-sm sm:text-lg font-black tabular-nums leading-none ${num}`}>
+            <span className={`text-sm sm:text-lg font-bold tabular-nums leading-none ${num}`}>
               {val}
             </span>
             <span className={`text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider mt-1 whitespace-nowrap leading-tight ${lbl}`}>
@@ -993,7 +1011,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
 ════════════════════════════════════════════════════════ */
-export default function InteractiveSiteMap({ onSwitchTo3D }) {
+export default function InteractiveSiteMap({ onSwitchTo3D, onSwitchToSatellite }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -1103,6 +1121,7 @@ export default function InteractiveSiteMap({ onSwitchTo3D }) {
           loadData={loadData}
           onOpenFullscreen={handleOpenFullscreen}
           onSwitchTo3D={onSwitchTo3D}
+          onSwitchToSatellite={onSwitchToSatellite}
           isDark={isDark}
         />
 

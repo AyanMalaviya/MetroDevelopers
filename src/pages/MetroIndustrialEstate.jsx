@@ -24,14 +24,14 @@ import {
 const EASE = [0.16, 1, 0.3, 1];
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#ECEAE3]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  bgSubtle:  isDark ? 'bg-[#18181C]' : 'bg-[#F1F3F5]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 /* ── Editorial Section Heading ── */
@@ -44,7 +44,7 @@ const SectionHeader = ({ index, kicker, title, isDark }) => {
         <span className={`w-5 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
         <span className={t.textMuted}>{kicker}</span>
       </div>
-      <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] ${t.textMain}`}>
+      <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight ${t.textMain}`}>
         {title}
       </h2>
     </div>
@@ -143,31 +143,31 @@ const MetroIndustrialEstate = () => {
       code: 'INFRA 01',
       icon: <FaRoad size={18} aria-hidden="true" />,
       title: 'Wide Heavy RCC Road',
-      description: 'Reinforced cement concrete internal roads built for multi-axle freight trailers and container movement.',
+      description: 'Heavy RCC roads built for freight trailers.',
     },
     {
       code: 'INFRA 02',
       icon: <Lightbulb size={18} aria-hidden="true" />,
       title: 'Street Lights',
-      description: 'Systematically installed street lighting along all internal roads for round-the-clock visibility and security.',
+      description: 'Systematic lighting across all internal roads.',
     },
     {
       code: 'INFRA 03',
       icon: <Layers size={18} aria-hidden="true" />,
       title: 'Puran (Soil Filling & Leveling)',
-      description: 'Completed high-grade soil filling (puran) and precision mechanical leveling for immediate foundation casting.',
+      description: 'Soil filling and leveling done. Ready to build.',
     },
     {
       code: 'INFRA 04',
       icon: <Building2 size={18} aria-hidden="true" />,
       title: 'Compound Wall',
-      description: 'Robust perimeter boundary compound wall securing the entire 17,545 sq.yard industrial campus.',
+      description: 'Secure boundary wall around the campus.',
     },
     {
       code: 'INFRA 05',
       icon: <ShieldCheck size={18} aria-hidden="true" />,
       title: '24/7 Gated Security',
-      description: 'Dedicated security entrance cabin and round-the-clock trained security personnel on duty (no CCTV).',
+      description: '24/7 gated security cabin and guards.',
     },
   ];
 
@@ -230,7 +230,6 @@ const MetroIndustrialEstate = () => {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ════════ HERO — ARCHITECTURAL DOSSIER HEADER ════════ */}
         <section className={`pt-20 sm:pt-24 border-b ${t.border} ${t.bgSurface}`}>
@@ -269,8 +268,12 @@ const MetroIndustrialEstate = () => {
                   <ExternalLink size={11} aria-hidden="true" />
                 </a>
 
-                <h1 className={`text-3xl sm:text-5xl lg:text-[3.75rem] font-extrabold tracking-[-0.035em] leading-[1.04] mb-5 ${t.textMain}`}>
-                  Metro Industrial Park 2<span className="text-brand-red">.</span>
+                <h1 className={`text-3xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight leading-[1.15] mb-5 ${t.textMain}`}>
+                  Metro{' '}
+                  <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                    Industrial
+                  </span>{' '}
+                  Park 2<span className="text-brand-red">.</span>
                 </h1>
 
                 <p className={`text-sm sm:text-base max-w-3xl leading-relaxed ${t.textBody}`}>
@@ -328,7 +331,7 @@ const MetroIndustrialEstate = () => {
                 <div key={m.code} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgPage}`}>
                   <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{m.code}</div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
+                    <span className={`text-2xl sm:text-3xl font-bold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
                       {m.value}
                     </span>
                     <span className={`font-mono text-[10px] font-semibold ${t.textMuted}`}>{m.unit}</span>
@@ -353,33 +356,49 @@ const MetroIndustrialEstate = () => {
                   <SectionHeader
                     index="01"
                     kicker="Delivered on Site"
-                    title="Developer Infrastructure"
+                    title={
+                      <>
+                        Developer{' '}
+                        <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                          Infrastructure
+                        </span>
+                      </>
+                    }
                     isDark={isDark}
                   />
-                  <div className={`grid grid-cols-1 sm:grid-cols-2 border-t border-l ${t.border}`}>
-                    {features.map((feat, i) => (
-                      <article
-                        key={feat.code}
-                        className={`p-6 border-r border-b ${t.border} ${t.bgSurface} transition-colors ${
-                          i === features.length - 1 ? 'sm:col-span-2' : ''
-                        } ${isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'}`}
-                      >
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
-                            {feat.code}
-                          </span>
-                          <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
-                            {feat.icon}
-                          </span>
-                        </div>
-                        <h3 className={`text-base sm:text-lg font-extrabold tracking-tight mb-2 ${t.textMain}`}>
-                          {feat.title}
-                        </h3>
-                        <p className={`text-sm leading-relaxed ${t.textBody}`}>
-                          {feat.description}
-                        </p>
-                      </article>
-                    ))}
+                  <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {features.map((feat, i) => {
+                      const isEven = i % 2 === 0;
+                      return (
+                        <motion.article
+                          key={feat.code}
+                          initial={{ opacity: 0, x: isEven ? -45 : 45 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, margin: '-50px' }}
+                          transition={{ duration: 0.65, ease: EASE }}
+                          className={`w-[82%] sm:w-[70%] lg:w-[58%] max-w-lg p-5 sm:p-6 border ${t.border} ${t.bgSurface} ${
+                            isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                          } transition-colors ${
+                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3.5">
+                            <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-brand-red">
+                              {feat.code}
+                            </span>
+                            <span className={`w-8 h-8 border ${t.border} ${t.bgPage} flex items-center justify-center ${t.textMain}`}>
+                              {feat.icon}
+                            </span>
+                          </div>
+                          <h3 className={`text-base sm:text-lg font-bold tracking-tight mb-1.5 ${t.textMain}`}>
+                            {feat.title}
+                          </h3>
+                          <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
+                            {feat.description}
+                          </p>
+                        </motion.article>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -388,7 +407,14 @@ const MetroIndustrialEstate = () => {
                   <SectionHeader
                     index="02"
                     kicker="Technical Drawings"
-                    title="Layout & Area Details"
+                    title={
+                      <>
+                        Layout &amp;{' '}
+                        <span className="font-serif-editorial italic text-brand-red inline-block">
+                          Area Details
+                        </span>
+                      </>
+                    }
                     isDark={isDark}
                   />
 
@@ -431,14 +457,43 @@ const MetroIndustrialEstate = () => {
                           isDark={isDark}
                         />
                       ) : (
-                        <ImageCard
-                          src={layoutImages.siteMap.src}
-                          alt={layoutImages.siteMap.alt}
-                          title={layoutImages.siteMap.title}
-                          onOpen={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.title)}
-                          isDark={isDark}
-                          tall
-                        />
+                        <div className={`border ${t.border} ${t.bgSurface}`}>
+                          <div className={`flex flex-wrap items-center justify-between px-4 sm:px-5 py-3 border-b ${t.border} font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] gap-2`}>
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                              <span className={t.textMain}>Google Maps Satellite · Metro Industrial Park 2</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.title)}
+                                className="inline-flex items-center gap-1.5 text-brand-red font-semibold hover:underline"
+                              >
+                                <Maximize2 size={12} aria-hidden="true" />
+                                <span>Inspect Blueprint</span>
+                              </button>
+                              <a
+                                href="https://maps.app.goo.gl/oBMDfb38sNuo4pjD9"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs text-brand-red font-semibold hover:underline"
+                              >
+                                <ExternalLink size={12} aria-hidden="true" />
+                                <span>Google Maps</span>
+                              </a>
+                            </div>
+                          </div>
+                          <div className="w-full h-[450px] sm:h-[540px] relative bg-black">
+                            <iframe
+                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4212934!3d22.9138011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e97d6b2a77af7%3A0xf3e97b4a8cb09c62!2sMetro%20Industrial%20Park%202!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin"
+                              title="Metro Industrial Park 2 Google Maps Satellite"
+                              className="w-full h-full border-0 absolute inset-0"
+                              allowFullScreen
+                              loading="lazy"
+                              referrerPolicy="no-referrer-when-downgrade"
+                            />
+                          </div>
+                        </div>
                       )}
                       <p className={`font-mono text-[11px] uppercase tracking-wider text-center ${t.textMuted}`}>
                         Click drawing to inspect full resolution · Pinch to zoom on mobile
@@ -455,7 +510,7 @@ const MetroIndustrialEstate = () => {
                       <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red block mb-2">
                         Live Plot Selector · Moraiya Campus
                       </span>
-                      <h3 className={`text-xl font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                      <h3 className={`text-xl font-bold tracking-tight mb-1.5 ${t.textMain}`}>
                         Check Live Plot Availability for Industrial Park 2
                       </h3>
                       <p className={`text-sm leading-relaxed ${t.textBody}`}>
@@ -480,7 +535,14 @@ const MetroIndustrialEstate = () => {
                   <SectionHeader
                     index="03"
                     kicker="Buyer Clarifications"
-                    title="Frequently Asked Questions"
+                    title={
+                      <>
+                        Frequently Asked{' '}
+                        <span className="font-calligraphy font-normal text-[1.18em] tracking-normal text-amber-500 inline-block">
+                          Questions
+                        </span>
+                      </>
+                    }
                     isDark={isDark}
                   />
                   <div className={`border ${t.border} divide-y ${t.divide}`}>
@@ -570,7 +632,7 @@ const MetroIndustrialEstate = () => {
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
                       Capital Trajectory
                     </div>
-                    <div className="text-4xl font-extrabold tracking-tight tabular-nums text-brand-red mb-1">
+                    <div className="text-4xl font-bold tracking-tight tabular-nums text-brand-red mb-1">
                       12–15%
                     </div>
                     <div className={`text-xs font-bold uppercase tracking-wider mb-2 ${t.textMain}`}>
@@ -583,7 +645,7 @@ const MetroIndustrialEstate = () => {
 
                   {/* 3. Direct Directors Desk */}
                   <div className={`border ${t.border} ${t.bgSurface} p-6`}>
-                    <h3 className={`text-base font-extrabold tracking-tight mb-1.5 ${t.textMain}`}>
+                    <h3 className={`text-base font-bold tracking-tight mb-1.5 ${t.textMain}`}>
                       Interested in Plots?
                     </h3>
                     <p className={`text-xs leading-relaxed mb-5 ${t.textBody}`}>
@@ -620,7 +682,7 @@ const MetroIndustrialEstate = () => {
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-2 ${t.textMuted}`}>
                       Possession Status
                     </div>
-                    <div className={`text-xl font-extrabold tracking-tight mb-1 ${t.textMain}`}>
+                    <div className={`text-xl font-bold tracking-tight mb-1 ${t.textMain}`}>
                       Immediate Handover
                     </div>
                     <p className={`text-xs ${t.textBody}`}>

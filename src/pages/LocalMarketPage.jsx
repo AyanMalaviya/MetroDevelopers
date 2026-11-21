@@ -28,7 +28,7 @@ import InvestmentComparisonTable from '../components/Projects/InvestmentComparis
 const EASE = [0.16, 1, 0.3, 1];
 
 const MAP_EMBED_SRC =
-  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e0!3m2!1sen!2sin!4v1767639082192!5m2!1sen!2sin';
+  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e1!3m2!1sen!2sin!4v1767639082192!5m2!1sen!2sin';
 const MAP_DIRECTIONS_URL = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
 
 const QUICK_STATS = [
@@ -50,7 +50,7 @@ const FEATURES = [
     code: 'SPEC 01',
     icon: Ruler,
     title: 'Flexible Unit Sizes',
-    desc: '4,000–50,000 sq.ft to match any scale of operation — from boutique manufacturing to large-format warehousing.',
+    desc: '4,000–50,000 sq.ft units for manufacturing and warehousing.',
     img: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
     imgAlt: 'Industrial shed units of various sizes at Metro Industrial Park Moraiya',
   },
@@ -58,7 +58,7 @@ const FEATURES = [
     code: 'SPEC 02',
     icon: FaRoad,
     title: '60 ft RCC Roads',
-    desc: 'Wide internal roads engineered for heavy trucks and trailers — smooth logistics from gate to unit.',
+    desc: '60 ft heavy RCC roads for multi-axle container trailers.',
     img: '/images/60ft-road-metro-industrial-park-ahmedabad.jpg',
     imgAlt: '60 ft wide RCC road inside Metro Industrial Park Ahmedabad',
   },
@@ -66,7 +66,7 @@ const FEATURES = [
     code: 'SPEC 03',
     icon: Shield,
     title: '24/7 CCTV Security',
-    desc: 'HD cameras throughout the park with trained security guards at the main gate and controlled entry.',
+    desc: 'Round-the-clock HD CCTV surveillance and gated security guards.',
     img: '/images/metro-industrial-park-entrance-security-moraiya.jpg',
     imgAlt: 'CCTV security at Metro Industrial Park entrance Moraiya Ahmedabad',
   },
@@ -74,7 +74,7 @@ const FEATURES = [
     code: 'SPEC 04',
     icon: Truck,
     title: 'Highway Connectivity',
-    desc: 'Direct access to NH 47 (Sarkhej–Bavla Highway), major logistics corridors, GIDC zones, and Ahmedabad airport.',
+    desc: 'Direct access to NH 47 and Changodar-Moraiya industrial belt.',
     img: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
     imgAlt: 'Location map showing highway connectivity of Metro Industrial Park Moraiya',
   },
@@ -82,7 +82,7 @@ const FEATURES = [
     code: 'SPEC 05',
     icon: Droplets,
     title: '24/7 Water Supply',
-    desc: 'Dedicated continuous water availability to every unit with emergency reserve system on-site.',
+    desc: 'Dedicated pressurized water supply for every unit.',
     img: null,
     imgAlt: null,
   },
@@ -90,21 +90,21 @@ const FEATURES = [
     code: 'SPEC 06',
     icon: Award,
     title: 'Quick 90-Day Possession',
-    desc: "One of Ahmedabad's fastest industrial possession timelines — from agreement to key handover.",
+    desc: 'Fast possession timeline from agreement to key handover.',
     img: null,
     imgAlt: null,
   },
 ];
 
 const getTokens = (isDark) => ({
-  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F5F3EE]',
+  bgPage:    isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]',
   bgSurface: isDark ? 'bg-[#121215]' : 'bg-[#FFFFFF]',
-  bgSubtle:  isDark ? 'bg-[#17171B]' : 'bg-[#ECEAE3]',
-  border:    isDark ? 'border-white/[0.1]' : 'border-black/[0.11]',
-  divide:    isDark ? 'divide-white/[0.1]' : 'divide-black/[0.11]',
-  textMain:  isDark ? 'text-[#F5F4F0]' : 'text-[#121214]',
-  textBody:  isDark ? 'text-[#A0A0A8]' : 'text-[#4E4E55]',
-  textMuted: isDark ? 'text-[#6E6E77]' : 'text-[#73726C]',
+  bgSubtle:  isDark ? 'bg-[#18181C]' : 'bg-[#F1F3F5]',
+  border:    isDark ? 'border-white/[0.12]' : 'border-gray-200',
+  divide:    isDark ? 'divide-white/[0.12]' : 'divide-gray-200',
+  textMain:  isDark ? 'text-white' : 'text-gray-900',
+  textBody:  isDark ? 'text-gray-200' : 'text-gray-700',
+  textMuted: isDark ? 'text-gray-400' : 'text-gray-500',
 });
 
 // ─── Editorial Section Header ────────────────────────────────────────────────
@@ -119,7 +119,7 @@ function SectionHeader({ index, kicker, title, description, isDark }) {
           <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
           <span className={t.textMuted}>{kicker}</span>
         </div>
-        <h2 className={`text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.08] ${t.textMain}`}>
+        <h2 className={`text-2xl sm:text-4xl font-bold tracking-tight leading-[1.18] ${t.textMain}`}>
           {title}
         </h2>
       </div>
@@ -289,7 +289,6 @@ export default function LocalMarketPage() {
 
       <div
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
-        style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
       >
         {/* ═══════════════════════════════════════════════════════════════
             HERO — ARCHITECTURAL BRIEF
@@ -333,7 +332,7 @@ export default function LocalMarketPage() {
                   <span className={t.textMuted}>Market Brief</span>
                 </div>
 
-                <h1 className={`text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-[-0.035em] leading-[1.05] mb-5 ${t.textMain}`}>
+                <h1 className={`text-3xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.15] mb-5 ${t.textMain}`}>
                   {page.heading}
                 </h1>
 
@@ -381,7 +380,7 @@ export default function LocalMarketPage() {
               {activeQuickStats.map(({ code, value, label, accent }) => (
                 <div key={label} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgPage}`}>
                   <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{code}</div>
-                  <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums ${accent ? 'text-brand-red' : t.textMain}`}>
+                  <div className={`text-2xl sm:text-3xl font-bold tracking-tight tabular-nums ${accent ? 'text-brand-red' : t.textMain}`}>
                     {value}
                   </div>
                   <div className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
@@ -433,8 +432,8 @@ export default function LocalMarketPage() {
                   <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand-red font-semibold mb-3">
                     Metro Industrial Park · Near NH 47
                   </div>
-                  <h2 className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.025em] leading-tight mb-4 ${t.textMain}`}>
-                    Premier Industrial Space on the Sarkhej–Bavla Corridor
+                  <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight leading-snug mb-4 ${t.textMain}`}>
+                    Premier Industrial Space on the <span className="font-serif-editorial italic text-brand-red inline-block">Sarkhej–Bavla Corridor</span>
                   </h2>
                   <p className={`text-sm sm:text-base leading-relaxed mb-4 ${t.textBody}`}>
                     Metro Industrial Park is a fully-serviced industrial development spread across{' '}
@@ -490,7 +489,10 @@ export default function LocalMarketPage() {
               kicker="Regional Fundamentals"
               title={
                 <>
-                  Why Businesses Choose <span className="text-brand-red">{page.locationName}</span>
+                  Why Businesses Choose{' '}
+                  <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                    {page.locationName}
+                  </span>
                 </>
               }
               description="Key commercial demand catalysts and operational sectors best suited to this micro-market."
@@ -506,7 +508,7 @@ export default function LocalMarketPage() {
               {/* Demand Drivers */}
               <article className={`p-6 sm:p-9 ${t.bgPage}`}>
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-current/10">
-                  <h3 className={`text-lg sm:text-xl font-extrabold tracking-tight ${t.textMain}`}>
+                  <h3 className={`text-lg sm:text-xl font-bold tracking-tight ${t.textMain}`}>
                     Demand Drivers in This Market
                   </h3>
                   <span className="font-mono text-xs text-brand-red font-semibold">01</span>
@@ -524,7 +526,7 @@ export default function LocalMarketPage() {
               {/* Best Fit */}
               <article className={`p-6 sm:p-9 ${t.bgPage}`}>
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-current/10">
-                  <h3 className={`text-lg sm:text-xl font-extrabold tracking-tight ${t.textMain}`}>
+                  <h3 className={`text-lg sm:text-xl font-bold tracking-tight ${t.textMain}`}>
                     Best Fit Sectors
                   </h3>
                   <span className="font-mono text-xs text-brand-red font-semibold">02</span>
@@ -552,25 +554,30 @@ export default function LocalMarketPage() {
               kicker="Master-Planned Infrastructure"
               title={
                 <>
-                  Everything Your Business <span className="text-brand-red">Needs</span>
+                  Everything Your Business{' '}
+                  <span className="font-serif-display italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-amber-500 inline-block">
+                    Needs
+                  </span>
                 </>
               }
               description="Heavy-load civil infrastructure built into the park from day one so your team can focus on production."
               isDark={isDark}
             />
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.65, ease: EASE }}
-              className={`mt-10 grid grid-cols-1 md:grid-cols-2 border-t border-l ${t.border}`}
-            >
-              {FEATURES.map((feat) => {
+            <div className="mt-10 flex flex-col gap-6 sm:gap-8 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {FEATURES.map((feat, i) => {
                 const Icon = feat.icon;
+                const isEven = i % 2 === 0;
                 return (
-                  <article
+                  <motion.article
                     key={feat.title}
-                    className={`group border-r border-b ${t.border} ${t.bgSurface} flex flex-col`}
+                    initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{ duration: 0.65, ease: EASE }}
+                    className={`group border ${t.border} ${t.bgSurface} flex flex-col w-[82%] sm:w-[70%] lg:w-[58%] max-w-xl ${
+                      isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
+                    }`}
                   >
                     <div className={`flex items-center justify-between px-5 py-3 border-b ${t.border} font-mono text-[10px] tracking-[0.16em] uppercase`}>
                       <span className="text-brand-red font-semibold">{feat.code}</span>
@@ -592,16 +599,16 @@ export default function LocalMarketPage() {
                       </div>
                     )}
 
-                    <div className="p-6">
-                      <h3 className={`text-lg font-extrabold tracking-tight mb-2 ${t.textMain}`}>
+                    <div className="p-5 sm:p-6">
+                      <h3 className={`text-lg font-bold tracking-tight mb-2 ${t.textMain}`}>
                         {feat.title}
                       </h3>
                       <p className={`text-sm leading-relaxed ${t.textBody}`}>{feat.desc}</p>
                     </div>
-                  </article>
+                  </motion.article>
                 );
               })}
-            </motion.div>
+            </div>
 
             <div className="mt-8 flex justify-end">
               <Link
@@ -652,7 +659,7 @@ export default function LocalMarketPage() {
               {snapshotStats.map(({ code, label, value, sub, accent }) => (
                 <div key={label} className={`p-6 sm:p-8 border-r border-b ${t.border} ${t.bgPage}`}>
                   <div className={`font-mono text-[10px] mb-4 ${t.textMuted}`}>{code}</div>
-                  <div className={`text-3xl sm:text-4xl font-extrabold tracking-tight tabular-nums mb-1 ${accent ? 'text-brand-red' : t.textMain}`}>
+                  <div className={`text-3xl sm:text-4xl font-bold tracking-tight tabular-nums mb-1 ${accent ? 'text-brand-red' : t.textMain}`}>
                     {value}
                   </div>
                   <div className={`text-xs font-bold uppercase tracking-wider ${t.textMain}`}>{label}</div>
@@ -672,7 +679,14 @@ export default function LocalMarketPage() {
               <SectionHeader
                 index="04"
                 kicker="Investor & Tenant Desk"
-                title="Frequently Asked Questions"
+                title={
+                  <>
+                    Frequently Asked{' '}
+                    <span className="font-calligraphy font-normal text-[1.18em] tracking-normal text-amber-500 inline-block">
+                      Questions
+                    </span>
+                  </>
+                }
                 description="Direct answers on titles, lease structures, sizing, and possession timelines."
                 isDark={isDark}
               />
@@ -709,7 +723,7 @@ export default function LocalMarketPage() {
                     <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-brand-red font-semibold mb-1">
                       05 / Location &amp; Directions
                     </div>
-                    <h2 className={`text-lg font-extrabold tracking-tight ${t.textMain}`}>
+                    <h2 className={`text-lg font-bold tracking-tight ${t.textMain}`}>
                       Moraiya, Changodar · Near NH 47 · Ahmedabad
                     </h2>
                   </div>
@@ -753,7 +767,7 @@ export default function LocalMarketPage() {
                     <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-red font-semibold mb-2">
                       Featured Development
                     </div>
-                    <h3 className={`text-xl font-extrabold tracking-tight mb-2 ${t.textMain}`}>
+                    <h3 className={`text-xl font-bold tracking-tight mb-2 ${t.textMain}`}>
                       {targetProjectName}
                     </h3>
                     <p className={`text-sm leading-relaxed mb-5 ${t.textBody}`}>
@@ -843,8 +857,12 @@ export default function LocalMarketPage() {
                 <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand-red font-semibold mb-4">
                   Direct Site Inspection
                 </div>
-                <h2 className={`text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.08] mb-4 ${t.textMain}`}>
-                  Find your industrial space on the NH 47 corridor<span className="text-brand-red">.</span>
+                <h2 className={`text-3xl sm:text-4xl font-bold tracking-tight leading-[1.18] mb-4 ${t.textMain}`}>
+                  Find your industrial space on the{' '}
+                  <span className="font-serif-editorial italic text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
+                    NH 47 corridor
+                  </span>
+                  <span className="text-brand-red">.</span>
                 </h2>
                 <p className={`text-sm sm:text-base leading-relaxed max-w-xl ${t.textBody}`}>
                   Browse available units, inspect the interactive plot layout, and schedule a guided site visit at {targetProjectName}.

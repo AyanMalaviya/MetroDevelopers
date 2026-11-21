@@ -25,7 +25,6 @@ const MobileTabBar = () => {
     <nav
       aria-label="Mobile quick navigation"
       className={`fixed bottom-0 inset-x-0 z-40 md:hidden border-t ${border} ${bgBar} backdrop-blur-md pb-[env(safe-area-inset-bottom)]`}
-      style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}
     >
       <div className={`grid grid-cols-[1fr_1fr_1.35fr_1fr_1fr] divide-x ${divide}`}>
         {/* 1. Industrial Park 1 */}
@@ -81,7 +80,7 @@ const MobileTabBar = () => {
                 <span aria-hidden="true" className="absolute top-0 inset-x-0 h-[2px] bg-white" />
               )}
               <MapPin size={16} className="text-white" aria-hidden="true" />
-              <span className="font-mono text-[9px] font-extrabold uppercase tracking-[0.1em] leading-none whitespace-nowrap">
+              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] leading-none whitespace-nowrap">
                 Availability
               </span>
             </>
