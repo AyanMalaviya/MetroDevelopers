@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import {
   ArrowLeft, Map, Table, Search, Maximize2,
   ExternalLink, Factory, Box, ArrowRight,
-  Globe, Layers, MapPin,
+  Layers, MapPin,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
@@ -45,33 +45,6 @@ const TABS = [
   { id: 'park3',  code: 'MIP 03', label: 'Park 3 (MIP 3)', short: 'Park 3', subtitle: '77 Plotted Parcels'  },
 ];
 
-// Live Google Maps Satellite Embeds for all 3 Industrial Parks
-const SATELLITE_EMBEDS = {
-  park: {
-    embedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4206651!3d22.9140377!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20Industrial%20Park!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin',
-    directUrl: 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6',
-    title: 'Metro Industrial Park 1 — Google Maps Satellite',
-    location: 'Behind Siya Industrial Park, Moraiya, Changodar, Ahmedabad',
-    coords: '22.914038° N, 72.420665° E',
-  },
-  estate: {
-    embedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4212934!3d22.9138011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e97d6b2a77af7%3A0xf3e97b4a8cb09c62!2sMetro%20Industrial%20Park%202!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin',
-    directUrl: 'https://maps.app.goo.gl/oBMDfb38sNuo4pjD9',
-    title: 'Metro Industrial Park 2 — Google Maps Satellite',
-    location: 'Opposite Metro Industrial Park, Moraiya, Changodar, Ahmedabad',
-    coords: '22.913801° N, 72.421293° E',
-  },
-  park3: {
-    embedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1839.2!2d72.3762037!3d22.8443566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e957aa2ecae27%3A0xd48c58cbda2742b!2sMetro%20Industrial%20Park%203!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin',
-    directUrl: 'https://maps.app.goo.gl/5SaRAjuzrQzLjoZh9',
-    title: 'Metro Industrial Park 3 — Google Maps Satellite',
-    location: 'Bavla – Rajoda Road, Bavla Industrial Corridor, Ahmedabad',
-    coords: '22.844357° N, 72.376204° E',
-  },
-};
 
 // Hoisted dataset schema (aligned to canonical domain www.metrodevelopers.co.in)
 const TABLE_DATASET_SCHEMA = {
@@ -175,7 +148,7 @@ const SiteMapPage = () => {
 
   const [activeTab, setActiveTab]       = useState(location.state?.activeTab || 'park');
   const [viewMode, setViewMode]         = useState(location.state?.viewMode || 'map');
-  const [mapDimension, setMapDimension] = useState(location.state?.mapDimension || 'satellite');
+  const [mapDimension, setMapDimension] = useState(location.state?.mapDimension || '3d');
 
   const [park2Filter, setPark2Filter] = useState('ALL');
   const [park3Filter, setPark3Filter] = useState('ALL');
@@ -251,35 +224,21 @@ const SiteMapPage = () => {
             </button>
 
             <div className="flex flex-wrap items-center gap-2">
-              {/* Satellite / 3D / 2D Switcher */}
-              {viewMode === 'map' && (
+              {/* 3D / 2D Switcher (Park 1) */}
+              {viewMode === 'map' && activeTab === 'park' && (
                 <div className={`inline-flex border ${t.border} divide-x ${t.divide}`}>
                   <button
                     type="button"
-                    onClick={() => setMapDimension('satellite')}
+                    onClick={() => setMapDimension('3d')}
                     className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
-                      mapDimension === 'satellite'
+                      mapDimension === '3d'
                         ? 'bg-brand-red text-white'
                         : `${t.bgPage} ${t.textBody} hover:text-brand-red`
                     }`}
                   >
-                    <Globe size={12} aria-hidden="true" />
-                    <span>Satellite Map</span>
+                    <Box size={12} aria-hidden="true" />
+                    <span>3D View</span>
                   </button>
-                  {activeTab === 'park' && (
-                    <button
-                      type="button"
-                      onClick={() => setMapDimension('3d')}
-                      className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors whitespace-nowrap ${
-                        mapDimension === '3d'
-                          ? 'bg-brand-red text-white'
-                          : `${t.bgPage} ${t.textBody} hover:text-brand-red`
-                      }`}
-                    >
-                      <Box size={12} aria-hidden="true" />
-                      <span>3D View</span>
-                    </button>
-                  )}
                   <button
                     type="button"
                     onClick={() => setMapDimension('2d')}
@@ -396,7 +355,7 @@ const SiteMapPage = () => {
           {/* ════════ MAIN VIEW CONTAINER (MAP OR AREA TABLE) ════════ */}
           {viewMode === 'map' ? (
             <>
-              {/* Interactive Map / 3D Canvas / Satellite Embed Container */}
+              {/* Interactive 3D Canvas / 2D Layout Map Container */}
               <div className={`relative border ${t.border} ${t.bgSurface} min-h-[600px] overflow-hidden`}>
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -407,63 +366,7 @@ const SiteMapPage = () => {
                     transition={{ duration: 0.25, ease: EASE }}
                     className="h-full w-full"
                   >
-                    {mapDimension === 'satellite' ? (
-                      <div className="relative w-full h-[620px] sm:h-[700px] lg:h-[760px] flex flex-col bg-black">
-                        {/* Satellite Status Header Bar */}
-                        <div
-                          className={`px-4 py-3 border-b ${t.border} ${t.bgSurface} flex flex-wrap items-center justify-between gap-3 z-10`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-500">
-                              Google Maps Satellite (Live Embed)
-                            </span>
-                            <span className={`text-xs ${t.textMuted} hidden md:inline`}>•</span>
-                            <span className={`text-xs font-semibold ${t.textMain} hidden md:inline`}>
-                              {SATELLITE_EMBEDS[activeTab]?.location}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <a
-                              href={SATELLITE_EMBEDS[activeTab]?.directUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="py-1.5 px-3 bg-brand-red hover:bg-red-700 text-white text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center gap-1.5 rounded-md transition-colors shadow-sm"
-                            >
-                              <MapPin size={13} aria-hidden="true" />
-                              <span>Open in Google Maps</span>
-                              <ExternalLink size={12} aria-hidden="true" />
-                            </a>
-                          </div>
-                        </div>
-
-                        {/* Embedded Google Maps Satellite iframe */}
-                        <div className="flex-1 w-full h-full relative">
-                          <iframe
-                            src={SATELLITE_EMBEDS[activeTab]?.embedUrl}
-                            title={SATELLITE_EMBEDS[activeTab]?.title}
-                            className="w-full h-full border-0 absolute inset-0"
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          />
-                        </div>
-
-                        {/* Bottom Info Bar */}
-                        <div
-                          className={`px-4 py-2.5 border-t ${t.border} ${t.bgSurface} flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] ${t.textMuted}`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Globe size={12} className="text-brand-red" />
-                            <span>Coordinates: {SATELLITE_EMBEDS[activeTab]?.coords}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span>High-resolution aerial satellite imagery with hybrid road &amp; highway labels</span>
-                          </div>
-                        </div>
-                      </div>
-                    ) : activeTab === 'park' ? (
+                    {activeTab === 'park' ? (
                       mapDimension === '3d' ? (
                         <Suspense
                           fallback={
@@ -477,23 +380,17 @@ const SiteMapPage = () => {
                         >
                           <Park1Model3D
                             onSwitchTo2D={() => setMapDimension('2d')}
-                            onSwitchToSatellite={() => setMapDimension('satellite')}
                           />
                         </Suspense>
                       ) : (
                         <InteractiveSiteMap
                           onSwitchTo3D={() => setMapDimension('3d')}
-                          onSwitchToSatellite={() => setMapDimension('satellite')}
                         />
                       )
                     ) : activeTab === 'estate' ? (
-                      <MetroEstateInteractiveMap
-                        onSwitchToSatellite={() => setMapDimension('satellite')}
-                      />
+                      <MetroEstateInteractiveMap />
                     ) : (
-                      <Park3InteractiveMap
-                        onSwitchToSatellite={() => setMapDimension('satellite')}
-                      />
+                      <Park3InteractiveMap />
                     )}
                   </motion.div>
                 </AnimatePresence>

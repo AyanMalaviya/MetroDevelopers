@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, CheckCircle, Phone, ExternalLink, Globe } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, CheckCircle, Phone, ExternalLink } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { park3PlotCoordinates, getPark3PlotCenter } from '../../data/park3PlotCoordinates';
 import { getPark3PlotData } from '../../services/park3DataService';
@@ -708,7 +708,6 @@ const DashboardHeader = React.memo(function DashboardHeader({
   loading,
   loadData,
   onOpenFullscreen,
-  onSwitchToSatellite,
   isDark,
 }) {
   return (
@@ -766,22 +765,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
             <span className="hidden sm:inline">Sync</span>
           </button>
 
-          {/* Satellite Map Switcher Button */}
-          {onSwitchToSatellite && (
-            <button
-              type="button"
-              onClick={onSwitchToSatellite}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
-                isDark
-                  ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700'
-                  : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-300'
-              }`}
-              title="Switch to Google Maps Satellite Embedded View"
-            >
-              <Globe size={13} className="text-brand-red" />
-              <span>Satellite</span>
-            </button>
-          )}
+
 
           {/* Pan & Zoom Button */}
           <button
@@ -860,7 +844,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
 ════════════════════════════════════════════════════════ */
-export default function Park3InteractiveMap({ onSwitchToSatellite }) {
+export default function Park3InteractiveMap() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -959,7 +943,6 @@ export default function Park3InteractiveMap({ onSwitchToSatellite }) {
           loading={loading}
           loadData={loadData}
           onOpenFullscreen={handleOpenFullscreen}
-          onSwitchToSatellite={onSwitchToSatellite}
           isDark={isDark}
         />
 

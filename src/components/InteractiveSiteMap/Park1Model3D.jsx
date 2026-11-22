@@ -17,40 +17,12 @@ import {
   Phone,
   Layers,
   Map,
-  Globe,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { getPlotData } from '../../services/dataService';
 
 const ADMIN_SHEET_URL =
   'https://docs.google.com/spreadsheets/d/100fiyz86pBVkMlU_Em8Veedqdhr-hV9yb1GrwD95n5w/edit';
-
-/* ══════════════════════════════════════════════════════════════════════════
-   WHOLE 3D MODEL POSITION & ROTATION CONTROLS (TWEAK HERE)
-   - position: Change coordinates [X, Y, Z] to shift the entire 3D model
-     * x: East (+) / West (-)
-     * y: Elevation / Height
-     * z: South (+) / North (-)
-   - rotationAngleDeg: Rotation angle in DEGREES around vertical Y-axis
-     * Positive (+) = Anticlockwise (e.g. 30 = 30° anticlockwise)
-     * Negative (-) = Clockwise (e.g. -30 = 30° clockwise)
-   - rotateSatelliteWithModel: Set true if the underlying Google Satellite
-     ground map should also rotate together with the 3D model.
-   ══════════════════════════════════════════════════════════════════════════ */
-export const MODEL_CONFIG = {
-  // Coordinates [X, Y, Z] of the whole 3D model
-  position: {
-    x: -8,
-    y: 0,
-    z: 10,
-  },
-  // Rotation angle in DEGREES around vertical Y-axis
-  // (+30 = 30 degrees anticlockwise)
-  rotationAngleDeg: 30,
-
-  // Rotate satellite ground texture together with the 3D model?
-  rotateSatelliteWithModel: false,
-};
 
 /* ── Status Colors & Labels (Exact Alignment with InteractiveSiteMap) ── */
 const STATUS_COLORS = {
@@ -89,131 +61,63 @@ const getStatusBadgeClass = (status) => {
   }
 };
 
-/* ── 1. Brand Canvas Textures with Official Metro Developers Logo ── */
-function createMetroBrandAtlas(onRequestRender) {
+/* ── 1. Ultra-Light Procedural Canvas Textures ── */
+function createMetroBrandAtlas() {
   const c = document.createElement('canvas');
-  c.width = 1024;
-  c.height = 512;
+  c.width = 256;
+  c.height = 128;
   const ctx = c.getContext('2d');
+
+  // Left Half (0..128): Dark Charcoal Louver Backing + METRO Twin-Peak Logo
+  ctx.fillStyle = '#3a3837';
+  ctx.fillRect(0, 0, 128, 128);
+  ctx.fillStyle = '#2d2b2a';
+  for (let x = 4; x < 128; x += 6) ctx.fillRect(x, 0, 2, 128);
+
+  // Silver-white twin peaks M
+  ctx.fillStyle = '#f1f5f9';
+  ctx.beginPath();
+  ctx.moveTo(18, 84);
+  ctx.lineTo(48, 28);
+  ctx.lineTo(66, 62);
+  ctx.lineTo(82, 36);
+  ctx.lineTo(110, 84);
+  ctx.lineTo(90, 84);
+  ctx.lineTo(81, 66);
+  ctx.lineTo(66, 84);
+  ctx.lineTo(48, 52);
+  ctx.lineTo(36, 84);
+  ctx.closePath();
+  ctx.fill();
+
+  // Crimson-red triangular accents inside twin peaks
+  ctx.fillStyle = '#d93036';
+  ctx.beginPath();
+  ctx.moveTo(48, 28); ctx.lineTo(59, 49); ctx.lineTo(43, 49); ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(82, 36); ctx.lineTo(93, 55); ctx.lineTo(75, 55); ctx.closePath(); ctx.fill();
+
+  // METRO Wordmark
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '800 22px Inter, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('METRO', 64, 106);
+
+  // Right Half (128..256): Concrete Sign "METRO INDUSTRIAL PARK"
+  ctx.fillStyle = '#dcd8d0';
+  ctx.fillRect(128, 0, 128, 128);
+  ctx.fillStyle = '#cc2936';
+  ctx.font = '800 18px Inter, system-ui, sans-serif';
+  ctx.fillText('METRO', 192, 34);
+  ctx.font = '800 16px Inter, system-ui, sans-serif';
+  ctx.fillText('INDUSTRIAL', 192, 64);
+  ctx.font = '800 18px Inter, system-ui, sans-serif';
+  ctx.fillText('PARK', 192, 94);
 
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.minFilter = THREE.LinearMipmapLinearFilter;
-  tex.generateMipmaps = true;
-
-  // Attached clone textures to notify when official image completes loading
-  const linkedTextures = [tex];
-
-  function drawAtlas(img) {
-    ctx.clearRect(0, 0, 1024, 512);
-
-    // ── LEFT HALF (0..512, 0..512): Building & Gate Sign Plaque ──
-    // Clean architectural plaque (crisp off-white panel with subtle bevel)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, 512, 512);
-
-    // Subtle brushed outer border
-    ctx.strokeStyle = '#e2e8f0';
-    ctx.lineWidth = 14;
-    ctx.strokeRect(7, 7, 498, 498);
-
-    // Inner brand red hairline
-    ctx.strokeStyle = '#BA2C24';
-    ctx.lineWidth = 5;
-    ctx.strokeRect(20, 20, 472, 472);
-
-    if (img && img.complete && img.naturalWidth) {
-      // Draw official MDLogo.png centered inside the plaque
-      const pad = 40;
-      const targetW = 512 - pad * 2;
-      const targetH = 512 - pad * 2;
-      const aspect = img.naturalWidth / img.naturalHeight;
-      let drawW, drawH;
-      if (aspect >= 1) {
-        drawW = targetW;
-        drawH = targetW / aspect;
-      } else {
-        drawH = targetH;
-        drawW = targetH * aspect;
-      }
-      const drawX = pad + (targetW - drawW) / 2;
-      const drawY = pad + (targetH - drawH) / 2;
-      ctx.drawImage(img, drawX, drawY, drawW, drawH);
-    } else {
-      // Immediate clean typography placeholder while image loads
-      ctx.fillStyle = '#BA2C24';
-      ctx.font = '900 64px "Plus Jakarta Sans", Inter, system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('METRO', 256, 215);
-
-      ctx.fillStyle = '#1e293b';
-      ctx.font = '700 28px "Plus Jakarta Sans", Inter, system-ui, sans-serif';
-      ctx.fillText('DEVELOPERS', 256, 290);
-    }
-
-    // ── RIGHT HALF (512..1024, 0..512): Roadside Entrance Monument Sign ──
-    // Sandstone / concrete signage monument
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(512, 0, 512, 512);
-
-    // Top Brand Accent Stripe
-    ctx.fillStyle = '#BA2C24';
-    ctx.fillRect(512, 0, 512, 18);
-
-    // Draw official logo emblem at top of monument sign if loaded
-    if (img && img.complete && img.naturalWidth) {
-      const emblemW = 240;
-      const emblemH = emblemW * (img.naturalHeight / img.naturalWidth);
-      const emblemX = 512 + (512 - emblemW) / 2;
-      const emblemY = 32;
-      ctx.drawImage(img, emblemX, emblemY, emblemW, emblemH);
-    }
-
-    // Monument Title Typography
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#BA2C24';
-    ctx.font = '900 44px "Plus Jakarta Sans", Inter, system-ui, sans-serif';
-    ctx.fillText('METRO', 768, 320);
-
-    ctx.fillStyle = '#0f172a';
-    ctx.font = '800 32px "Plus Jakarta Sans", Inter, system-ui, sans-serif';
-    ctx.fillText('INDUSTRIAL PARK', 768, 370);
-
-    ctx.fillStyle = '#64748b';
-    ctx.font = '600 18px "Plus Jakarta Sans", Inter, system-ui, sans-serif';
-    ctx.fillText('MORAIYA · CHANGODAR', 768, 415);
-
-    // Bottom red indicator line
-    ctx.fillStyle = '#BA2C24';
-    ctx.fillRect(512 + 156, 442, 200, 5);
-
-    // Mark textures for GPU update
-    linkedTextures.forEach((t) => {
-      t.needsUpdate = true;
-    });
-
-    if (onRequestRender) {
-      onRequestRender();
-    }
-  }
-
-  // Draw initial state immediately
-  drawAtlas(null);
-
-  // Asynchronously load the official logo from /MDLogo.png
-  const logoImg = new Image();
-  logoImg.crossOrigin = 'anonymous';
-  logoImg.src = '/MDLogo.png';
-  logoImg.onload = () => {
-    drawAtlas(logoImg);
-  };
-
-  tex.addLinkedTexture = (cloneTex) => {
-    linkedTextures.push(cloneTex);
-  };
-
+  tex.minFilter = THREE.LinearFilter;
   return tex;
 }
 
@@ -249,14 +153,14 @@ function createGableRoofGeo() {
   return geo;
 }
 
-/* ── 2. Master 63-Shed Master Geometry Registry ── */
+/* ── 2. Master 63-Plot Master Geometry Registry ── */
 const MASTER_PLOTS = [];
 function definePlot(id, block, x, z, w, d, facing, roadLabel, dimText) {
   const approxSqFt = Math.round((w * 10) * (d * 10) / 50) * 50;
   MASTER_PLOTS.push({
-    kind: 'shed',
+    kind: 'plot',
     id: String(id),
-    title: `Shed #${String(id).padStart(2, '0')}`,
+    title: `Plot #${String(id).padStart(2, '0')}`,
     block: `Block ${block}`,
     x, z, w, d,
     facing,
@@ -394,7 +298,7 @@ function buildBoxBatch(items, material, parent, castShadow = false, receiveShado
   return im;
 }
 
-export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
+export default function Park1Model3D({ onSwitchTo2D }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -405,7 +309,6 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [hoveredEntity, setHoveredEntity] = useState(null);
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const [showSatelliteGround, setShowSatelliteGround] = useState(true);
 
   // Shared 3D Scene Refs
   const sceneRef = useRef(null);
@@ -416,8 +319,6 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
   const statusBadgeIMRef = useRef(null);
   const selectBoxRef = useRef(null);
   const hoverBoxRef = useRef(null);
-  const satelliteMeshRef = useRef(null);
-  const modelGroupRef = useRef(null);
   const requestRenderRef = useRef(null);
 
   /* ── Fetch Real-time Plot Availability (Same Logic as InteractiveSiteMap) ── */
@@ -493,15 +394,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
       0.5,
       650
     );
-    // Calculate initial target and camera based on MODEL_CONFIG
-    const initRad = ((MODEL_CONFIG.rotationAngleDeg || 0) * Math.PI) / 180;
-    const cosA = Math.cos(initRad), sinA = Math.sin(initRad);
-    const baseX = -2, baseZ = 2;
-    const rotCenterX = baseX * cosA + baseZ * sinA + (MODEL_CONFIG.position.x || 0);
-    const rotCenterZ = -baseX * sinA + baseZ * cosA + (MODEL_CONFIG.position.z || 0);
-    const rotCenterY = MODEL_CONFIG.position.y || 0;
-
-    camera.position.set(rotCenterX + 60, 52, rotCenterZ + 80);
+    camera.position.set(58, 52, 82);
     cameraRef.current = camera;
 
     // Controls
@@ -511,7 +404,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     controls.maxPolarAngle = Math.PI / 2 - 0.03;
     controls.minDistance = 8;
     controls.maxDistance = 210;
-    controls.target.set(rotCenterX, rotCenterY, rotCenterZ);
+    controls.target.set(-2, 0, 2);
     controlsRef.current = controls;
 
     // Lighting (Hemisphere + Sun)
@@ -537,20 +430,16 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     scene.add(sunLight);
 
     // Textures
-    const brandAtlas = createMetroBrandAtlas(() => {
-      if (requestRenderRef.current) requestRenderRef.current();
-    });
+    const brandAtlas = createMetroBrandAtlas();
     const logoTex = brandAtlas.clone();
     logoTex.needsUpdate = true;
     logoTex.repeat.set(0.5, 1);
     logoTex.offset.set(0, 0);
-    brandAtlas.addLinkedTexture(logoTex);
 
     const wallSignTex = brandAtlas.clone();
     wallSignTex.needsUpdate = true;
     wallSignTex.repeat.set(0.5, 1);
     wallSignTex.offset.set(0.5, 0);
-    brandAtlas.addLinkedTexture(wallSignTex);
 
     const shutterTex = createShutterTexture();
     const gableRoofGeo = createGableRoofGeo();
@@ -588,47 +477,9 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     // Ground Plane
     const groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), MAT.ground);
     groundMesh.rotation.x = -Math.PI / 2;
-    groundMesh.position.y = -0.16;
+    groundMesh.position.y = -0.14;
     groundMesh.receiveShadow = true;
     scene.add(groundMesh);
-
-    // Satellite Earth Ground Plane (Real High-Resolution Orthophoto under 3D Model)
-    const satTex = new THREE.TextureLoader().load('/images/satellite-ground-mip1.jpg', (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.minFilter = THREE.LinearMipmapLinearFilter;
-      tex.generateMipmaps = true;
-      if (requestRenderRef.current) requestRenderRef.current();
-    });
-
-    const satPlaneSize = 189.1;
-    const satelliteMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(satPlaneSize, satPlaneSize),
-      new THREE.MeshLambertMaterial({ map: satTex })
-    );
-    satelliteMesh.rotation.x = -Math.PI / 2;
-    satelliteMesh.position.set(0, -0.14, 0);
-    satelliteMesh.receiveShadow = true;
-    satelliteMesh.visible = true;
-    satelliteMeshRef.current = satelliteMesh;
-
-    // ── Root Group for the Entire 3D Model ──
-    // Easily adjust position & rotation from MODEL_CONFIG at the top of this file
-    const modelGroup = new THREE.Group();
-    modelGroup.position.set(
-      MODEL_CONFIG.position.x || 0,
-      MODEL_CONFIG.position.y || 0,
-      MODEL_CONFIG.position.z || 0
-    );
-    // Positive angle in degrees = Anticlockwise around vertical Y-axis
-    modelGroup.rotation.y = ((MODEL_CONFIG.rotationAngleDeg || 0) * Math.PI) / 180;
-    scene.add(modelGroup);
-    modelGroupRef.current = modelGroup;
-
-    if (MODEL_CONFIG.rotateSatelliteWithModel) {
-      modelGroup.add(satelliteMesh);
-    } else {
-      scene.add(satelliteMesh);
-    }
 
     // Site Footprint Polygon
     const siteShape = new THREE.Shape();
@@ -652,7 +503,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     const sitePad = new THREE.Mesh(sitePadGeo, MAT.siteBase);
     sitePad.position.y = -0.02;
     sitePad.receiveShadow = true;
-    modelGroup.add(sitePad);
+    scene.add(sitePad);
 
     // Asphalt Roads
     const southRoadAngle = Math.atan2(10.8, 104);
@@ -667,7 +518,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
       { x: 26.5, y: 0.05, z: -32.2, sx: 23.0, sy: 0.12, sz: 3.2 },
       { x: 38.5, y: 0.04, z: -38.0, sx: 4.4, sy: 0.12, sz: 20.0 },
     ];
-    buildBoxBatch(roadBoxes, MAT.asphalt, modelGroup, false, true, unitBoxGeo);
+    buildBoxBatch(roadBoxes, MAT.asphalt, scene, false, true, unitBoxGeo);
 
     // Road White Dashes
     const dashBoxes = [];
@@ -682,7 +533,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     for (let x = -28; x <= 11; x += 4.8) {
       dashBoxes.push({ x, y: 0.12, z: -5.0, sx: 2.0, sy: 0.02, sz: 0.22 });
     }
-    buildBoxBatch(dashBoxes, MAT.roadDash, modelGroup, false, false, unitBoxGeo);
+    buildBoxBatch(dashBoxes, MAT.roadDash, scene, false, false, unitBoxGeo);
 
     // Curbs & Perimeter Boundary Wall
     const curbWallBoxes = [
@@ -700,14 +551,14 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
       { x: -43.8, y: 0.42, z: 2.6, sx: 0.35, sy: 0.85, sz: 10.0 },
       { x: -40.2, y: 0.42, z: 19.8, sx: 0.35, sy: 0.85, sz: 23.0 },
     ];
-    buildBoxBatch(curbWallBoxes, MAT.boundaryWall, modelGroup, true, true, unitBoxGeo);
+    buildBoxBatch(curbWallBoxes, MAT.boundaryWall, scene, true, true, unitBoxGeo);
 
     // ── Build 63 Sheds & Plot Foundations ──
     const N = MASTER_PLOTS.length;
     const plotPadIM = new THREE.InstancedMesh(unitBoxGeo, MAT.plotPad, N);
     plotPadIM.receiveShadow = true;
     plotPadIMRef.current = plotPadIM;
-    modelGroup.add(plotPadIM);
+    scene.add(plotPadIM);
 
     // Border lines around plots
     const borderPositions = [];
@@ -843,6 +694,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     });
 
     [
+      plotPadIM,
       shedBodyIM,
       shedRoofIM,
       unitOfficeIM,
@@ -856,7 +708,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
       statusBadgeIM,
     ].forEach((im) => {
       im.instanceMatrix.needsUpdate = true;
-      modelGroup.add(im);
+      scene.add(im);
     });
 
     // Plot Border Lines
@@ -870,7 +722,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
         opacity: 0.7,
       })
     );
-    modelGroup.add(borderLines);
+    scene.add(borderLines);
 
     // ── Build Metro Site Office Model ──
     const officeGroup = new THREE.Group();
@@ -880,7 +732,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     const officePad = new THREE.Mesh(new THREE.BoxGeometry(6.6, 0.14, 9.0), MAT.curb);
     officePad.position.set(7.2, 0.07, 32.5);
     officePad.receiveShadow = true;
-    modelGroup.add(officePad);
+    scene.add(officePad);
 
     const offRear = new THREE.Mesh(new THREE.BoxGeometry(6.8, 2.7, 3.6), MAT.officeRear);
     offRear.position.set(0, 1.35, -0.8);
@@ -899,7 +751,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     buildBoxBatch(offSideWalls, MAT.officeRear, officeGroup, true, true, unitBoxGeo);
 
     // Highway-facing exterior sign plaque on the south wall (local -x, facing world +z towards highway)
-    const highwaySign = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 1.4), MAT.metroLogo);
+    const highwaySign = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.9), MAT.metroLogo);
     highwaySign.rotation.y = -Math.PI / 2;
     highwaySign.position.set(-3.56, 1.8, -0.8);
     officeGroup.add(highwaySign);
@@ -948,7 +800,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     ];
     buildBoxBatch(planterBoxes, MAT.planterGreen, officeGroup, false, true, unitBoxGeo);
 
-    modelGroup.add(officeGroup);
+    scene.add(officeGroup);
 
     // Site office hit box
     const siteOfficeHit = new THREE.Mesh(
@@ -957,7 +809,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     );
     siteOfficeHit.position.set(7.2, 1.9, 32.5);
     siteOfficeHit.userData.entity = SITE_OFFICE_DATA;
-    modelGroup.add(siteOfficeHit);
+    scene.add(siteOfficeHit);
 
     // ── Build Main Dual-Portal Security Gate Model ──
     const gateGroup = new THREE.Group();
@@ -965,7 +817,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
 
     const gateIsland = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.14, 2.8), MAT.curb);
     gateIsland.position.set(14.0, 0.07, 35.1);
-    modelGroup.add(gateIsland);
+    scene.add(gateIsland);
 
     const gateShellBoxes = [
       { x: -3.25, y: 1.45, z: 0, sx: 0.42, sy: 2.9, sz: 1.7 },
@@ -992,7 +844,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     ];
     buildBoxBatch(gateRedBoxes, MAT.brightRed, gateGroup, false, true, unitBoxGeo);
 
-    const gateLogoF = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1), MAT.metroLogo);
+    const gateLogoF = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.98), MAT.metroLogo);
     gateLogoF.position.set(0, 2.48, 0.59);
     const gateLogoB = gateLogoF.clone();
     gateLogoB.rotation.y = Math.PI;
@@ -1005,7 +857,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     signFace.position.set(-4.35, 0.74, 0.90);
     gateGroup.add(signWall, signFace);
 
-    modelGroup.add(gateGroup);
+    scene.add(gateGroup);
 
     // Gate Hit Box
     const mainGateHit = new THREE.Mesh(
@@ -1014,7 +866,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     );
     mainGateHit.position.set(14.0, 1.8, 35.1);
     mainGateHit.userData.entity = MAIN_GATE_DATA;
-    modelGroup.add(mainGateHit);
+    scene.add(mainGateHit);
 
     // Wireframe Highlighters
     const highlightGeo = new THREE.EdgesGeometry(unitBoxGeo);
@@ -1023,7 +875,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
       new THREE.LineBasicMaterial({ color: '#38bdf8', transparent: true, opacity: 0.85 })
     );
     hoverBox.visible = false;
-    modelGroup.add(hoverBox);
+    scene.add(hoverBox);
     hoverBoxRef.current = hoverBox;
 
     const selectBox = new THREE.LineSegments(
@@ -1031,11 +883,8 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
       new THREE.LineBasicMaterial({ color: '#cc2936' })
     );
     selectBox.visible = false;
-    modelGroup.add(selectBox);
+    scene.add(selectBox);
     selectBoxRef.current = selectBox;
-
-    // Synchronize world matrices
-    modelGroup.updateMatrixWorld(true);
 
     // ── Render on demand Loop ──
     let isRafRunning = false;
@@ -1121,8 +970,6 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
         renderer.domElement.style.cursor = 'pointer';
         hoverBox.position.set(entity.x, 2.0, entity.z);
         hoverBox.scale.set(entity.w + 0.3, 3.8, entity.d + 0.3);
-        const rotY = FACING_ROT[entity.facing] || 0;
-        hoverBox.rotation.y = rotY;
         hoverBox.visible = true;
       } else {
         renderer.domElement.style.cursor = 'grab';
@@ -1142,8 +989,6 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
         setSelectedEntity(entity);
         selectBox.position.set(entity.x, 2.0, entity.z);
         selectBox.scale.set(entity.w + 0.35, 3.85, entity.d + 0.35);
-        const rotY = FACING_ROT[entity.facing] || 0;
-        selectBox.rotation.y = rotY;
         selectBox.visible = true;
         requestRender();
       }
@@ -1202,12 +1047,8 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
   /* ── Camera Reset Helper ── */
   const resetCamera = useCallback(() => {
     if (!cameraRef.current || !controlsRef.current || !requestRenderRef.current) return;
-    const center = new THREE.Vector3(-2, 0, 2);
-    if (modelGroupRef.current) {
-      center.applyMatrix4(modelGroupRef.current.matrixWorld);
-    }
-    cameraRef.current.position.set(center.x + 60, 52, center.z + 80);
-    controlsRef.current.target.copy(center);
+    cameraRef.current.position.set(58, 52, 82);
+    controlsRef.current.target.set(-2, 0, 2);
     controlsRef.current.update();
     requestRenderRef.current();
   }, []);
@@ -1216,11 +1057,8 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
   const focusOnEntity = useCallback((entity) => {
     if (!cameraRef.current || !controlsRef.current || !requestRenderRef.current || !entity) return;
     const target = new THREE.Vector3(entity.x, 1.5, entity.z);
-    if (modelGroupRef.current) {
-      target.applyMatrix4(modelGroupRef.current.matrixWorld);
-    }
     controlsRef.current.target.copy(target);
-    cameraRef.current.position.set(target.x + 16, 14, target.z + 16);
+    cameraRef.current.position.set(entity.x + 16, 14, entity.z + 16);
     controlsRef.current.update();
     requestRenderRef.current();
   }, []);
@@ -1236,10 +1074,10 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
     }
   }, []);
 
-  // Sync selected shed info
+  // Sync selected plot info
   const selectedPlotInfo = useMemo(() => {
     if (!selectedEntity) return null;
-    if (selectedEntity.kind === 'shed' || selectedEntity.kind === 'plot') {
+    if (selectedEntity.kind === 'plot') {
       const live = plotData[selectedEntity.id] || {};
       const status = (live.status || 'available').toLowerCase();
       const area = live.area || selectedEntity.dimText;
@@ -1258,9 +1096,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
   const whatsappMessage = selectedPlotInfo
     ? encodeURIComponent(
         `Hello, I would like to inquire about ${
-          selectedPlotInfo.kind === 'shed' || selectedPlotInfo.kind === 'plot'
-            ? `Shed #${selectedPlotInfo.id}`
-            : selectedPlotInfo.title
+          selectedPlotInfo.kind === 'plot' ? `Plot #${selectedPlotInfo.id}` : selectedPlotInfo.title
         } at Metro Industrial Park (MIP 1). Please share availability and pricing details.`
       )
     : '';
@@ -1285,23 +1121,6 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
             <span className="text-[10px] text-gray-400 font-semibold">• 63 Sheds</span>
           </div>
 
-          {/* Quick Toggle to Switch to Live Satellite Map */}
-          {onSwitchToSatellite && (
-            <button
-              type="button"
-              onClick={onSwitchToSatellite}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
-                isDark
-                  ? 'bg-gray-800 text-gray-200 border-gray-700 hover:text-white hover:bg-gray-700'
-                  : 'bg-white text-gray-700 border-gray-200 hover:text-gray-900 hover:bg-gray-50 shadow-xs'
-              }`}
-              title="Switch to Google Maps Satellite Embedded View"
-            >
-              <Globe size={13} className="text-brand-red" />
-              <span>Satellite Map</span>
-            </button>
-          )}
-
           {/* Quick Toggle to Switch back to 2D Map */}
           {onSwitchTo2D && (
             <button
@@ -1317,31 +1136,6 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
               <span>Switch to 2D Map</span>
             </button>
           )}
-
-          {/* Toggle Satellite Imagery Ground */}
-          <button
-            type="button"
-            onClick={() => {
-              setShowSatelliteGround((prev) => {
-                const next = !prev;
-                if (satelliteMeshRef.current) satelliteMeshRef.current.visible = next;
-                if (requestRenderRef.current) requestRenderRef.current();
-                return next;
-              });
-            }}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
-              showSatelliteGround
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow-xs'
-                : isDark
-                ? 'bg-gray-800 text-gray-300 border-gray-700 hover:text-white'
-                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-            }`}
-            title="Toggle Real Satellite Earth Map Under 3D Model"
-          >
-            <Globe size={13} className={showSatelliteGround ? 'text-white' : 'text-brand-red'} />
-            <span className="hidden sm:inline">Satellite Map:</span>
-            <span>{showSatelliteGround ? 'ON' : 'OFF'}</span>
-          </button>
         </div>
 
         {/* Right: Actions (Sync, Reset View, Fullscreen, Edit) */}
@@ -1424,8 +1218,8 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-bold theme-text-primary">{stats.total}</div>
-          <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Total Sheds</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold theme-text-primary">{stats.total}</div>
+          <div className="text-[10px] text-gray-400 font-medium uppercase">Total Sheds</div>
         </div>
 
         <div
@@ -1438,8 +1232,8 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-bold text-emerald-500">{stats.available}</div>
-          <div className="text-[10px] text-emerald-500 font-semibold uppercase tracking-wider">Available</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-emerald-500">{stats.available}</div>
+          <div className="text-[10px] text-emerald-500 font-medium uppercase">Available</div>
         </div>
 
         <div
@@ -1452,8 +1246,8 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-bold text-gray-400">{stats.sold}</div>
-          <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Sold</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-gray-400">{stats.sold}</div>
+          <div className="text-[10px] text-gray-400 font-medium uppercase">Sold</div>
         </div>
 
         <div
@@ -1466,13 +1260,13 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                 : 'bg-white border-gray-200'
           }`}
         >
-          <div className="text-xs sm:text-sm font-bold text-brand-red">{stats.forLease}</div>
-          <div className="text-[10px] text-brand-red font-semibold uppercase tracking-wider">For Lease</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-brand-red">{stats.forLease}</div>
+          <div className="text-[10px] text-brand-red font-medium uppercase">For Lease</div>
         </div>
 
         <div className="hidden sm:block p-1.5 sm:p-2 rounded-xl border bg-gray-900/20 border-gray-800">
-          <div className="text-xs sm:text-sm font-bold text-blue-500">{stats.preLeased}</div>
-          <div className="text-[10px] text-blue-500 font-semibold uppercase tracking-wider">Pre-Leased</div>
+          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-blue-500">{stats.preLeased}</div>
+          <div className="text-[10px] text-blue-500 font-medium uppercase">Pre-Leased</div>
         </div>
       </div>
 
@@ -1493,14 +1287,14 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
               className="w-2.5 h-2.5 rounded-full"
               style={{
                 backgroundColor:
-                  hoveredEntity.kind === 'shed' || hoveredEntity.kind === 'plot'
+                  hoveredEntity.kind === 'plot'
                     ? getStatusColorHex(plotData[hoveredEntity.id]?.status)
                     : '#cc2936',
               }}
             />
             <span>{hoveredEntity.title}</span>
             <span className="text-slate-400 font-normal">
-              {hoveredEntity.kind === 'shed' || hoveredEntity.kind === 'plot'
+              {hoveredEntity.kind === 'plot'
                 ? `${hoveredEntity.dimText} · ${getStatusLabel(plotData[hoveredEntity.id]?.status)}`
                 : hoveredEntity.block}
             </span>
@@ -1530,7 +1324,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                     {selectedPlotInfo.block}
                   </span>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold tracking-tight">
+                <h3 className="text-lg sm:text-xl font-medium sm:font-semibold tracking-tight">
                   {selectedPlotInfo.title}
                 </h3>
                 <p className="text-xs text-gray-400 mt-0.5">
@@ -1557,14 +1351,14 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                 <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Dimensions
                 </span>
-                <span className="font-semibold text-sm mt-0.5 block">{selectedPlotInfo.dimText}</span>
+                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.dimText}</span>
               </div>
 
               <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
                 <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Approx. Area
                 </span>
-                <span className="font-bold text-sm text-brand-red mt-0.5 block">
+                <span className="font-medium sm:font-semibold text-brand-red mt-0.5 block">
                   {selectedPlotInfo.area || `${selectedPlotInfo.approxSqFt?.toLocaleString()} SQ.FT`}
                 </span>
               </div>
@@ -1573,14 +1367,14 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                 <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Road Facing
                 </span>
-                <span className="font-semibold mt-0.5 block">{selectedPlotInfo.roadLabel}</span>
+                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.roadLabel}</span>
               </div>
 
               <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
                 <span className="text-[10px] font-medium text-gray-400 uppercase block">
                   Unit Type
                 </span>
-                <span className="font-semibold mt-0.5 block">{selectedPlotInfo.unitType}</span>
+                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.unitType}</span>
               </div>
             </div>
 
@@ -1632,7 +1426,7 @@ export default function Park1Model3D({ onSwitchTo2D, onSwitchToSatellite }) {
                     ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
                     : 'border-gray-200 text-gray-700 hover:bg-gray-100'
                 }`}
-                title="Focus Camera on Shed"
+                title="Focus Camera on Plot"
               >
                 <Compass size={14} />
               </button>

@@ -457,43 +457,13 @@ const MetroIndustrialEstate = () => {
                           isDark={isDark}
                         />
                       ) : (
-                        <div className={`border ${t.border} ${t.bgSurface}`}>
-                          <div className={`flex flex-wrap items-center justify-between px-4 sm:px-5 py-3 border-b ${t.border} font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] gap-2`}>
-                            <div className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                              <span className={t.textMain}>Google Maps Satellite · Metro Industrial Park 2</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <button
-                                type="button"
-                                onClick={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.title)}
-                                className="inline-flex items-center gap-1.5 text-brand-red font-semibold hover:underline"
-                              >
-                                <Maximize2 size={12} aria-hidden="true" />
-                                <span>Inspect Blueprint</span>
-                              </button>
-                              <a
-                                href="https://maps.app.goo.gl/oBMDfb38sNuo4pjD9"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 text-xs text-brand-red font-semibold hover:underline"
-                              >
-                                <ExternalLink size={12} aria-hidden="true" />
-                                <span>Google Maps</span>
-                              </a>
-                            </div>
-                          </div>
-                          <div className="w-full h-[450px] sm:h-[540px] relative bg-black">
-                            <iframe
-                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1837.49!2d72.4212934!3d22.9138011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e97d6b2a77af7%3A0xf3e97b4a8cb09c62!2sMetro%20Industrial%20Park%202!5e1!3m2!1sen!2sin!4v1782834808336!5m2!1sen!2sin"
-                              title="Metro Industrial Park 2 Google Maps Satellite"
-                              className="w-full h-full border-0 absolute inset-0"
-                              allowFullScreen
-                              loading="lazy"
-                              referrerPolicy="no-referrer-when-downgrade"
-                            />
-                          </div>
-                        </div>
+                        <DrawingCard
+                          src={layoutImages.siteMap.src}
+                          alt={layoutImages.siteMap.title}
+                          title={layoutImages.siteMap.title}
+                          onOpen={() => openViewer(layoutImages.siteMap.src, layoutImages.siteMap.title)}
+                          isDark={isDark}
+                        />
                       )}
                       <p className={`font-mono text-[11px] uppercase tracking-wider text-center ${t.textMuted}`}>
                         Click drawing to inspect full resolution · Pinch to zoom on mobile

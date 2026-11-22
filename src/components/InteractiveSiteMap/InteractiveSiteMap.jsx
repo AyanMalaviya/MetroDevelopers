@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink, Box, Globe } from 'lucide-react';
+import { X, RefreshCw, RotateCcw, Maximize2, MapPin, Factory, ExternalLink, Box } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { plotCoordinates, getPlotCenter } from '../../data/plotcoordinates';
 import { phaseCoordinates, getShedPhase } from '../../data/phaseCoordinates';
@@ -805,7 +805,6 @@ const DashboardHeader = React.memo(function DashboardHeader({
   loadData,
   onOpenFullscreen,
   onSwitchTo3D,
-  onSwitchToSatellite,
   isDark,
 }) {
   return (
@@ -900,22 +899,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
             <span>Pan &amp; Zoom</span>
           </button>
 
-          {/* Satellite Map Switcher Button */}
-          {onSwitchToSatellite && (
-            <button
-              type="button"
-              onClick={onSwitchToSatellite}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all border shadow-xs active:scale-95 whitespace-nowrap ${
-                isDark
-                  ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-700'
-                  : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-300'
-              }`}
-              title="Switch to Google Maps Satellite Embedded View"
-            >
-              <Globe size={13} className="text-brand-red" />
-              <span>Satellite</span>
-            </button>
-          )}
+
 
           {/* 3D Model Switcher Button */}
           {onSwitchTo3D && (
@@ -1011,7 +995,7 @@ const DashboardHeader = React.memo(function DashboardHeader({
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
 ════════════════════════════════════════════════════════ */
-export default function InteractiveSiteMap({ onSwitchTo3D, onSwitchToSatellite }) {
+export default function InteractiveSiteMap({ onSwitchTo3D }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -1121,7 +1105,6 @@ export default function InteractiveSiteMap({ onSwitchTo3D, onSwitchToSatellite }
           loadData={loadData}
           onOpenFullscreen={handleOpenFullscreen}
           onSwitchTo3D={onSwitchTo3D}
-          onSwitchToSatellite={onSwitchToSatellite}
           isDark={isDark}
         />
 
