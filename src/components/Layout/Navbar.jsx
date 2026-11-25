@@ -175,22 +175,22 @@ const Navbar = () => {
         <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
 
           {/* ── Brand Mark ── */}
-          <Link to="/" onClick={closeMenu} className="flex items-center gap-3 flex-shrink-0 group">
-            <div className={`w-9 h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 transition-colors group-hover:border-brand-red`}>
+          <Link to="/" onClick={closeMenu} className="flex items-center gap-3 min-w-0 flex-shrink-0 group">
+            <div className={`w-9 h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0 transition-colors group-hover:border-brand-red`}>
               <img
-                src="/MDLogo.png"
+                src={isDark ? '/MDLogo-dark.png' : '/MDLogo.png'}
                 alt="Metro Developers Logo"
                 width={32}
                 height={32}
-                onError={(e) => { e.currentTarget.src = '/icons/icon-192x192.png'; }}
-                className="w-full h-full object-contain brand-logo-dark-outline"
+                onError={(e) => { e.currentTarget.src = isDark ? '/MDLogo.png' : '/icons/icon-192x192.png'; }}
+                className="w-full h-full object-contain"
               />
             </div>
-            <div className="leading-tight">
-              <span className={`block text-sm font-bold tracking-tight ${textMain}`}>
+            <div className="leading-tight min-w-0">
+              <span className={`block text-sm font-bold tracking-tight truncate ${textMain}`}>
                 Metro Developers
               </span>
-              <span className={`block font-mono text-[9px] uppercase tracking-[0.14em] ${textMuted}`}>
+              <span className={`block font-mono text-[9px] uppercase tracking-[0.14em] truncate ${textMuted}`}>
                 Industrial Sheds · Lease &amp; Sale
               </span>
             </div>

@@ -301,7 +301,14 @@ const MetroIndustrialPark = () => {
                   decoding={i === 0 ? 'sync' : 'async'}
                   fetchPriority={i === 0 ? 'high' : undefined}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/30" aria-hidden="true" />
+                <div
+                  className={`absolute inset-0 ${
+                    isDark
+                      ? 'bg-gradient-to-t from-black/75 via-black/15 to-black/30'
+                      : 'bg-gradient-to-t from-black/50 via-transparent to-black/15'
+                  }`}
+                  aria-hidden="true"
+                />
               </div>
             ))}
 
@@ -623,7 +630,7 @@ const MetroIndustrialPark = () => {
                     }
                     isDark={isDark}
                   />
-                  <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="flex flex-col gap-5 sm:gap-6 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     {features.map((feat, i) => {
                       const isEven = i % 2 === 0;
                       return (
@@ -750,7 +757,7 @@ const MetroIndustrialPark = () => {
                           />
                         </>
                       ) : (
-                        <DrawingCard
+                        <ImageCard
                           src={layoutImages.siteMap.src}
                           alt={layoutImages.siteMap.alt}
                           title={layoutImages.siteMap.title}

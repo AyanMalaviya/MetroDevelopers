@@ -166,7 +166,14 @@ const MetroArcade = () => {
                   className="w-full h-full object-cover"
                   loading={index === 0 ? 'eager' : 'lazy'}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/25" aria-hidden="true" />
+                <div
+                  className={`absolute inset-0 ${
+                    isDark
+                      ? 'bg-gradient-to-t from-black/90 via-black/40 to-black/25'
+                      : 'bg-gradient-to-t from-black/55 via-black/10 to-black/10'
+                  }`}
+                  aria-hidden="true"
+                />
               </div>
             ))}
 
@@ -367,7 +374,7 @@ const MetroArcade = () => {
                     }
                     isDark={isDark}
                   />
-                  <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="flex flex-col gap-5 sm:gap-6 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     {features.map((feature, i) => {
                       const isEven = i % 2 === 0;
                       return (

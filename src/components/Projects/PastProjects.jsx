@@ -82,7 +82,7 @@ const PastProjects = () => {
         </div>
 
         {/* Project Dossiers */}
-        <div className="flex flex-col gap-8 sm:gap-12 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-col gap-8 sm:gap-12 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {PAST_PROJECTS.map((project, i) => {
             const isEven = i % 2 === 0;
             return (

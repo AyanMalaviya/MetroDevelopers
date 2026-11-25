@@ -281,7 +281,7 @@ const ChatBot = () => {
         onClick={() => setIsOpen((o) => !o)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.93 }}
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-red-600 text-white shadow-2xl flex items-center justify-center border border-white/20"
+        className="fixed bottom-[4.5rem] lg:bottom-6 right-4 sm:right-6 z-40 w-12 h-12 rounded-full bg-red-600 text-white shadow-2xl flex items-center justify-center border border-white/20"
         aria-label={isOpen ? 'Close chat' : 'Open Metro AI chat'}
       >
         <AnimatePresence mode="wait">

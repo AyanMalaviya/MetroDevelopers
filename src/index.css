@@ -81,6 +81,7 @@
   body,
   #root {
     min-height: 100%;
+    overflow-x: clip;
   }
 
   body {
@@ -278,20 +279,7 @@
     }
   }
 
-  /* ===== THIN HAIRLINE LOGO OUTLINE FOR DARK MODE ===== */
-  [data-theme="dark"] .brand-logo-dark-outline,
-  [data-theme="dark"] img.brand-logo-dark-outline,
-  [data-theme="dark"] img[src*="MDLogo"],
-  [data-theme="dark"] img[src*="icon-192x192"] {
-    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 1));
-    transition: filter 0.3s ease;
-  }
-
-  [data-theme="light"] .brand-logo-dark-outline,
-  [data-theme="light"] img.brand-logo-dark-outline,
-  [data-theme="light"] img[src*="MDLogo"] {
-    filter: none;
-  }
+  /* Dark-mode logo uses the pre-rendered white-outlined /MDLogo-dark.png asset directly */
 }
 
 ::-webkit-scrollbar { width: 10px; }

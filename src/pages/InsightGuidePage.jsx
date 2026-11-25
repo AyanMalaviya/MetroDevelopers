@@ -75,7 +75,7 @@ const InsightGuidePage = () => {
             </p>
           </section>
 
-          <section className="mt-8 flex flex-col gap-6 sm:gap-8 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <section className="mt-8 flex flex-col gap-6 sm:gap-8 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {page.sections.map((section, i) => {
               const isEven = i % 2 === 0;
               return (

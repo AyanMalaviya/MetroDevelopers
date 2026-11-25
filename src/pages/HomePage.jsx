@@ -742,7 +742,7 @@ const InvestmentSection = ({ isDark }) => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-5 sm:gap-6 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {investReasons.map((r, i) => {
               const isEven = i % 2 === 0;
               return (
@@ -945,11 +945,19 @@ const HomePage = () => {
 
             {/* Clean Directional Photographic Scrim */}
             <div
-              className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/25 pointer-events-none"
+              className={`absolute inset-0 pointer-events-none ${
+                isDark
+                  ? 'bg-gradient-to-t from-black/90 via-black/35 to-black/25'
+                  : 'bg-gradient-to-t from-black/55 via-black/10 to-black/10'
+              }`}
               aria-hidden="true"
             />
             <div
-              className="absolute inset-y-0 left-0 w-full sm:w-3/5 bg-gradient-to-r from-black/75 via-black/35 to-transparent pointer-events-none"
+              className={`absolute inset-y-0 left-0 w-full sm:w-3/5 pointer-events-none ${
+                isDark
+                  ? 'bg-gradient-to-r from-black/75 via-black/35 to-transparent'
+                  : 'bg-gradient-to-r from-black/35 via-black/10 to-transparent'
+              }`}
               aria-hidden="true"
             />
 

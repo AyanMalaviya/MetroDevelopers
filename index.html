@@ -260,9 +260,12 @@
       position: relative;
       z-index: 2;
     }
-    html:not([data-theme='light']) #splash img,
-    html[data-theme='dark'] #splash img {
-      filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.85));
+    html[data-theme='light'] #splash-logo-dark {
+      display: none;
+    }
+    html:not([data-theme='light']) #splash-logo-light,
+    html[data-theme='dark'] #splash-logo-light {
+      display: none;
     }
     #splash-ring {
       position: absolute;
@@ -363,7 +366,8 @@
     <div id="splash-shell">
       <div id="splash-logo-wrap" aria-hidden="true">
         <div id="splash-logo-glow"></div>
-        <img src="/MDLogo.png" alt="Metro Developers" />
+        <img id="splash-logo-light" src="/MDLogo.png" alt="Metro Developers" />
+        <img id="splash-logo-dark" src="/MDLogo-dark.png" alt="Metro Developers" />
         <div id="splash-ring"></div>
       </div>
       <div id="splash-title">Metro Developers</div>

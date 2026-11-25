@@ -224,12 +224,12 @@ const Footer = () => {
               <div className="flex items-center gap-3 mb-4">
                 <div className={`w-10 h-10 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0`}>
                   <img
-                    src="/MDLogo.png"
+                    src={isDark ? '/MDLogo-dark.png' : '/MDLogo.png'}
                     alt="Metro Developers logo"
                     width={36}
                     height={36}
                     loading="lazy"
-                    className="w-full h-full object-contain brand-logo-dark-outline"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 <div className="leading-tight">
@@ -398,7 +398,7 @@ const Footer = () => {
 
       {/* ── Bottom Copyright Bar ── */}
       <div className={`border-t ${border} ${bgSurface}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-20 lg:pb-4 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px]">
           <p className={textMuted}>
             © {currentYear} Metro Developers. All rights reserved.
           </p>

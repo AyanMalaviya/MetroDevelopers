@@ -24,7 +24,7 @@ const MobileTabBar = () => {
   return (
     <nav
       aria-label="Mobile quick navigation"
-      className={`fixed bottom-0 inset-x-0 z-40 md:hidden border-t ${border} ${bgBar} backdrop-blur-md pb-[env(safe-area-inset-bottom)]`}
+      className={`fixed bottom-0 left-0 right-0 w-full z-40 lg:hidden border-t ${border} ${bgBar} backdrop-blur-md pb-[env(safe-area-inset-bottom)]`}
     >
       <div className={`grid grid-cols-[1fr_1fr_1.35fr_1fr_1fr] divide-x ${divide}`}>
         {/* 1. Industrial Park 1 */}

@@ -419,9 +419,9 @@ const ContactPage = () => {
                 <div className="flex items-start gap-4 sm:gap-5">
                   <div className={`w-16 h-16 sm:w-20 sm:h-20 border ${isDark ? 'border-white/20' : t.border} ${t.bgPage} flex items-center justify-center flex-shrink-0 p-2.5`}>
                     <img
-                      src="/MDLogo.png"
+                      src={isDark ? '/MDLogo-dark.png' : '/MDLogo.png'}
                       alt="Metro Industrial Park Logo"
-                      className="w-full h-full object-contain brand-logo-dark-outline"
+                      className="w-full h-full object-contain"
                       width={80}
                       height={80}
                       loading="lazy"
@@ -598,7 +598,7 @@ const ContactPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.25, ease: EASE }}
-              className="fixed bottom-5 right-4 sm:right-6 z-50 w-72 sm:w-80"
+              className="fixed bottom-[4.5rem] lg:bottom-5 right-4 sm:right-6 z-40 w-[calc(100vw-2rem)] max-w-80"
               role="dialog"
               aria-label="Leave a review"
             >

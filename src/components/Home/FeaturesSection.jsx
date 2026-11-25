@@ -1,7 +1,7 @@
 // src/components/Home/FeaturesSection.jsx
 import { useRef, useState, useEffect, memo } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Factory, Truck, LucideCctv, Droplets } from 'lucide-react';
+import { Factory, Truck, LucideCctv, Droplets, Scale } from 'lucide-react';
 import { FaRoad, FaTrash } from 'react-icons/fa';
 
 const EASE = [0.16, 1, 0.3, 1];
@@ -160,6 +160,30 @@ const featuresData = [
     image: '/images/feature-drainage-system.jpg',
     alt: 'Hygienic drainage and waste management system at Metro Industrial Park Ahmedabad',
   },
+  {
+    code: 'SPEC 07',
+    category: 'Weighment',
+    span: 'lg:col-span-7',
+    offsetClass: 'lg:-mt-4',
+    layout: 'wide',
+    parallaxRange: [-22, 22],
+    bgTexture: '/images/bg-manufacturing-floor.jpg',
+    icon: <Scale size={17} aria-hidden="true" />,
+    title: (
+      <>
+        In-House <span className="font-serif-editorial italic text-brand-red font-normal">Weigh Bridge</span>
+      </>
+    ),
+    description:
+      'Dedicated on-site heavy-vehicle weighbridge for fast, accurate dispatch and receiving.',
+    details: [
+      'Heavy-duty multi-axle truck capacity',
+      'Instant certified weight slips',
+      'Zero off-site detour delays',
+    ],
+    image: '/images/feature-weighbridge.jpg',
+    alt: 'In-house heavy vehicle commercial weighbridge facility at Metro Industrial Park Ahmedabad',
+  },
 ];
 
 /* ─── Desktop breakpoint check so touch scrolling stays clean on mobile ─── */
@@ -277,7 +301,7 @@ const ArchitecturalFeatureCard = memo(({ feat, index, isDark, isDesktop }) => {
               <span className={textMuted}>{feat.category}</span>
             </span>
             <span className={`tabular-nums ${textMuted}`}>
-              0{index + 1} — 06
+              {String(index + 1).padStart(2, '0')} — {String(featuresData.length).padStart(2, '0')}
             </span>
           </div>
 
@@ -465,13 +489,13 @@ const FeaturesSection = ({ isDark }) => {
 
           <div className="lg:col-span-5 flex flex-col justify-end lg:items-end lg:text-right">
             <p className={`text-sm sm:text-base leading-relaxed max-w-md ${textBody}`}>
-              Every utility—from 60 ft concrete haul roads to dedicated water lines and 24/7 gated security—is built into the park master plan from day one.
+              Every utility—from 60 ft concrete haul roads and our in-house weighbridge to dedicated water lines and 24/7 gated security—is built into the park master plan from day one.
             </p>
           </div>
         </motion.div>
 
         {/* Alternating Sliding Feature Cards — No inner scrollbar, generous alternate space */}
-        <div className="flex flex-col gap-8 sm:gap-12 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-col gap-8 sm:gap-12 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {featuresData.map((feat, i) => (
             <ArchitecturalFeatureCard
               key={feat.code}

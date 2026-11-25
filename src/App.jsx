@@ -31,7 +31,7 @@ function App() {
     <ThemeProvider>
       <Router>
         <ScrollToTop />
-        <div className="flex flex-col min-h-screen theme-bg-primary">
+        <div className="flex flex-col min-h-screen theme-bg-primary overflow-x-clip">
           <Suspense fallback={null}>
             <PWAInstallPrompt />
           </Suspense>

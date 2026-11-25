@@ -384,7 +384,7 @@ const MetroIndustrialPark3 = () => {
                     }
                     isDark={isDark}
                   />
-                  <div className="flex flex-col gap-5 sm:gap-6 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="flex flex-col gap-5 sm:gap-6 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     {features.map((feat, i) => {
                       const isEven = i % 2 === 0;
                       return (
@@ -484,7 +484,7 @@ const MetroIndustrialPark3 = () => {
                           />
                         </>
                       ) : (
-                        <DrawingCard
+                        <ImageCard
                           src={layoutImages.siteMap.src}
                           alt={layoutImages.siteMap.title}
                           title={layoutImages.siteMap.title}

@@ -53,7 +53,7 @@ const PWAInstallPrompt = () => {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-6 z-[999] flex justify-center px-4 pointer-events-none">
+    <div className="fixed inset-x-0 bottom-[4.5rem] lg:bottom-6 z-[999] flex justify-center px-4 pointer-events-none">
       <AnimatePresence>
         {showPrompt && (
           <motion.div

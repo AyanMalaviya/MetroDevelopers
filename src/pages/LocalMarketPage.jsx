@@ -564,7 +564,7 @@ export default function LocalMarketPage() {
               isDark={isDark}
             />
 
-            <div className="mt-10 flex flex-col gap-6 sm:gap-8 w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mt-10 flex flex-col gap-6 sm:gap-8 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               {FEATURES.map((feat, i) => {
                 const Icon = feat.icon;
                 const isEven = i % 2 === 0;
