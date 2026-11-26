@@ -219,26 +219,6 @@ const ContactPage = () => {
                 </a>
               </div>
             </motion.div>
-
-            {/* 4-Cell Trust Strip */}
-            <div className={`mt-10 grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
-              {[
-                { code: '01', value: '100+',    label: 'Industrial Sheds & Plots', accent: false },
-                { code: '02', value: '2020',    label: 'Operating Since',          accent: false },
-                { code: '03', value: '12–16%',  label: 'Yield + Appreciation',     accent: true  },
-                { code: '04', value: '90 Days', label: 'Possession Guarantee',     accent: false },
-              ].map((m) => (
-                <div key={m.code} className={`p-5 border-r border-b ${t.border} ${t.bgPage}`}>
-                  <div className={`font-mono text-[10px] mb-2.5 ${t.textMuted}`}>{m.code}</div>
-                  <div className={`text-xl sm:text-2xl font-bold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
-                    {m.value}
-                  </div>
-                  <div className={`font-mono text-[10px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
-                    {m.label}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 

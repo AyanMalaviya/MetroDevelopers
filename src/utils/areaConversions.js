@@ -4,14 +4,14 @@ export const SQ_FT_PER_SQ_YD = 9;
 export const SQ_MT_PER_SQ_YD = 0.83612736;
 export const SQ_YD_PER_SQ_MT = 1.19599005;
 export const SQ_FT_PER_SQ_MT = 10.7639104;
-export const SQ_YD_PER_GUNTA = 121;
+export const SQ_YD_PER_VIGHA = 1936;
 export const DEFAULT_SHED_LOADING = 0.25;
 
 export const sqYdToSqFt = (yd) => yd * SQ_FT_PER_SQ_YD;
 export const sqYdToSqMt = (yd) => yd * SQ_MT_PER_SQ_YD;
 export const sqMtToSqYd = (mt) => mt * SQ_YD_PER_SQ_MT;
 export const sqMtToSqFt = (mt) => mt * SQ_FT_PER_SQ_MT;
-export const sqYdToGunta = (yd) => yd / SQ_YD_PER_GUNTA;
+export const sqYdToVigha = (yd) => yd / SQ_YD_PER_VIGHA;
 
 export const fmtNum = (n, decimals = 2) => {
   if (typeof n !== 'number' || !Number.isFinite(n) || n <= 0) return '—';

@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, ArrowUpRight, Building2, Check, ExternalLink, MapPin, Phone,
-  Factory, LandPlot, Truck, Shield, Droplets, Clock, TrendingUp,
+  Factory, Truck, Shield, Droplets,
   Award, Ruler, Plus, Minus,
 } from 'lucide-react';
 import { FaWhatsapp, FaRoad } from 'react-icons/fa';
@@ -30,20 +30,6 @@ const EASE = [0.16, 1, 0.3, 1];
 const MAP_EMBED_SRC =
   'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.97909554353!2d72.41748307531053!3d22.914141879249897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9729d95d01c7%3A0xf5a131a39485c5f6!2sMetro%20industrial%20park%20moraiya!5e1!3m2!1sen!2sin!4v1767639082192!5m2!1sen!2sin';
 const MAP_DIRECTIONS_URL = 'https://maps.app.goo.gl/6fBawQdYxcmUw3WE6';
-
-const QUICK_STATS = [
-  { code: '01', value: '54K',  label: 'Sq. Yards Area',   icon: LandPlot   },
-  { code: '02', value: '63',   label: 'Industrial Units', icon: Factory    },
-  { code: '03', value: '6–8%', label: 'Rental Yield',     icon: TrendingUp, accent: true },
-  { code: '04', value: '90D',  label: 'Possession',       icon: Clock      },
-];
-
-const LEASE_STATS = [
-  { code: '01', value: '30–35 Ft', label: 'Clear Height',       icon: Ruler  },
-  { code: '02', value: '60 Ft',    label: 'RCC Internal Roads', icon: FaRoad },
-  { code: '03', value: '30–90D',   label: 'Fast Possession',    icon: Clock  },
-  { code: '04', value: '100%',     label: 'GST Tax Credit',     icon: Award, accent: true },
-];
 
 const FEATURES = [
   {
@@ -260,21 +246,6 @@ export default function LocalMarketPage() {
   }
   if (faqSchema) structuredData.push(faqSchema);
 
-  const activeQuickStats = page.isLeaseFocused ? LEASE_STATS : QUICK_STATS;
-  const snapshotStats = page.isLeaseFocused
-    ? [
-        { code: '01', label: 'Floor Load',   value: '5–8 T/m²', sub: 'Heavy laser screed VDF',     accent: false },
-        { code: '02', label: 'Clear Height', value: '30–35 Ft', sub: 'High-density pallet racking', accent: false },
-        { code: '03', label: 'Road Width',   value: '60 Ft',    sub: '40ft trailer turnaround',    accent: true  },
-        { code: '04', label: 'Lease Tenure', value: '5–10 Yrs', sub: '100% GST ITC eligible',      accent: false },
-      ]
-    : [
-        { code: '01', label: 'Rental Yield',     value: '6–8%',   sub: 'Stable annual income',     accent: false },
-        { code: '02', label: 'Appreciation',     value: '10–12%', sub: 'Yearly capital growth',    accent: false },
-        { code: '03', label: 'Combined Returns', value: '16–20%', sub: 'Total return potential',   accent: true  },
-        { code: '04', label: 'Lease Term',       value: '5–10Y',  sub: 'Stable long-term tenants', accent: false },
-      ];
-
   return (
     <>
       <SEO
@@ -374,21 +345,6 @@ export default function LocalMarketPage() {
                 </div>
               </div>
             </motion.div>
-
-            {/* Border-Collapsed Quick Metrics Strip */}
-            <div className={`mt-10 grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
-              {activeQuickStats.map(({ code, value, label, accent }) => (
-                <div key={label} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgPage}`}>
-                  <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{code}</div>
-                  <div className={`text-2xl sm:text-3xl font-bold tracking-tight tabular-nums ${accent ? 'text-brand-red' : t.textMain}`}>
-                    {value}
-                  </div>
-                  <div className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
-                    {label}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -649,26 +605,6 @@ export default function LocalMarketPage() {
             </div>
           </section>
         )}
-
-        {/* ═══════════════════════════════════════════════════════════════
-            OPERATIONAL / INVESTMENT SNAPSHOT BAND
-        ════════════════════════════════════════════════════════════════ */}
-        <section className={`py-12 sm:py-16 border-b ${t.border} ${t.bgSurface}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className={`grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
-              {snapshotStats.map(({ code, label, value, sub, accent }) => (
-                <div key={label} className={`p-6 sm:p-8 border-r border-b ${t.border} ${t.bgPage}`}>
-                  <div className={`font-mono text-[10px] mb-4 ${t.textMuted}`}>{code}</div>
-                  <div className={`text-3xl sm:text-4xl font-bold tracking-tight tabular-nums mb-1 ${accent ? 'text-brand-red' : t.textMain}`}>
-                    {value}
-                  </div>
-                  <div className={`text-xs font-bold uppercase tracking-wider ${t.textMain}`}>{label}</div>
-                  <div className={`text-xs mt-1 ${t.textMuted}`}>{sub}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ═══════════════════════════════════════════════════════════════
             04. FAQ ACCORDION

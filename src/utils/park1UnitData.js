@@ -5,7 +5,7 @@ import {
   parseAreaStringToSqYd,
   sqYdToSqFt,
   sqYdToSqMt,
-  sqYdToGunta,
+  sqYdToVigha,
   DEFAULT_SHED_LOADING,
   fmtNum,
   buildCalculatorPrefill,
@@ -126,7 +126,7 @@ export const buildPark1ModalProps = ({ shedId, plotData = {}, isDark = false }) 
   const sqYd = parseAreaStringToSqYd(rawArea);
   const sqMt = sqYd ? sqYdToSqMt(sqYd) : null;
   const sqFt = sqYd ? sqYdToSqFt(sqYd) : null;
-  const gunta = sqYd ? sqYdToGunta(sqYd) : null;
+  const vigha = sqYd ? sqYdToVigha(sqYd) : null;
 
   const carpetYd = sqYd ? sqYd * (1 - DEFAULT_SHED_LOADING) : null;
   const carpetMt = carpetYd ? sqYdToSqMt(carpetYd) : null;
@@ -141,7 +141,7 @@ export const buildPark1ModalProps = ({ shedId, plotData = {}, isDark = false }) 
 
   const extraMetadata = [
     coord.section ? { label: 'Section / Phase', value: phase ? `Sec ${coord.section} · Phase ${phase.label}` : `Section ${coord.section}` } : null,
-    coord.area && /FT/i.test(coord.area) ? { label: 'Front / Depth', value: coord.area } : { label: 'Conversion Base', value: '1 SQ.YD = 9 SQ.FT' },
+    coord.area && /FT/i.test(coord.area) ? { label: 'Front / Depth', value: coord.area } : { label: 'Conversion Base', value: '1 Vaar = 1 SQ.YD = 9 SQ.FT' },
     live.monthlyRent ? { label: 'Monthly Rent', value: live.monthlyRent, accent: 'text-emerald-500' } : null,
     live.lessee ? { label: 'Lessee', value: live.lessee } : null,
     live.owner ? { label: 'Owner', value: live.owner } : null,
@@ -176,7 +176,7 @@ export const buildPark1ModalProps = ({ shedId, plotData = {}, isDark = false }) 
       sqYd: fmtNum(sqYd),
       sqMt: fmtNum(sqMt),
       sqFt: fmtNum(sqFt),
-      gunta: gunta ? fmtNum(gunta) : null,
+      vigha: vigha ? fmtNum(vigha) : null,
     },
     conversionRows,
     extraMetadata,

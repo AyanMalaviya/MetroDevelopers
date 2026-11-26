@@ -8,7 +8,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 /**
  * Shared mobile-first bottom-sheet / desktop modal showing complete unit dimensions,
- * full SQ.YD / SQ.MT / SQ.FT / Gunta conversions, and a 1-click button to send measurements into /calculator.
+ * full SQ.YD (Vaar) / SQ.MT / SQ.FT / Vigha conversions, and a 1-click button to send measurements into /calculator.
  */
 const UnitDetailModal = React.memo(function UnitDetailModal({
   isOpen,
@@ -130,13 +130,13 @@ const UnitDetailModal = React.memo(function UnitDetailModal({
             <div className={`border ${border} ${bgSub}`}>
               <div className={`px-3 py-1.5 border-b ${border} flex items-center justify-between font-mono text-[9.5px] uppercase tracking-wider ${textMuted}`}>
                 <span>{primaryTotal?.heading || 'Total Area & Conversions'}</span>
-                {primaryTotal?.gunta && (
-                  <span className="text-brand-red font-bold tabular-nums">{primaryTotal.gunta} Gunta</span>
+                {primaryTotal?.vigha && (
+                  <span className="text-brand-red font-bold tabular-nums">{primaryTotal.vigha} Vigha</span>
                 )}
               </div>
               <div className={`grid grid-cols-3 divide-x ${isDark ? 'divide-white/[0.12]' : 'divide-gray-200'}`}>
                 {[
-                  { val: primaryTotal?.sqYd || '—', unit: 'SQ.YD (Gaj)', highlight: true },
+                  { val: primaryTotal?.sqYd || '—', unit: 'SQ.YD (Vaar)', highlight: true },
                   { val: primaryTotal?.sqMt || '—', unit: 'SQ.MT' },
                   { val: primaryTotal?.sqFt || '—', unit: 'SQ.FT' },
                 ].map((col) => (

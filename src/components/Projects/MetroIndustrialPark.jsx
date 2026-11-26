@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import CountUp from 'react-countup';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
@@ -210,13 +209,6 @@ const MetroIndustrialPark = () => {
     'Separate Weigh Bridge', 'Wide 60 feet RCC Roads', 'Waste Management System',
     'High Ceiling (30–35 ft)', 'Modern Infrastructure — RCC on request',
     'Easy NH 47 Highway Access', 'Ample Commercial Parking',
-  ];
-
-  const quickStats = [
-    { code: '01', end: 54000, suffix: '',   separator: ',', label: 'Sq. Yards Total', accent: false },
-    { code: '02', end: 63,    suffix: '',   separator: '',  label: 'Ready Units',     accent: false },
-    { code: '03', end: 60,    suffix: 'ft', separator: '',  label: 'RCC Road Width',  accent: false },
-    { code: '04', end: 90,    suffix: 'D',  separator: '',  label: 'Possession',      accent: true  },
   ];
 
   const nextSlide = useCallback(() => {
@@ -436,32 +428,6 @@ const MetroIndustrialPark = () => {
                     <ArrowUpRight size={14} aria-hidden="true" />
                   </Link>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── 4-Column CountUp Metrics Band ── */}
-          <div className={`border-b ${t.border} ${t.bgPage}`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-              <div className={`grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
-                {quickStats.map((stat) => (
-                  <div key={stat.code} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgSurface}`}>
-                    <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{stat.code}</div>
-                    <div className={`text-2xl sm:text-4xl font-bold tracking-tight tabular-nums ${stat.accent ? 'text-brand-red' : t.textMain}`}>
-                      <CountUp
-                        end={stat.end}
-                        suffix={stat.suffix}
-                        separator={stat.separator}
-                        duration={2.0}
-                        enableScrollSpy
-                        scrollSpyOnce
-                      />
-                    </div>
-                    <div className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] mt-1 ${t.textMuted}`}>
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>

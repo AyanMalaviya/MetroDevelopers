@@ -337,27 +337,6 @@ const MetroIndustrialPark3 = () => {
                 </div>
               </div>
             </motion.div>
-
-            {/* 4-Column Architectural Metrics Band */}
-            <div className={`mt-10 grid grid-cols-2 lg:grid-cols-4 border-t border-l ${t.border}`}>
-              {[
-                { code: '01', value: '59,508', unit: 'SQ.YD',    label: 'Total Campus (~12.3 Acres)', accent: false },
-                { code: '02', value: '77',     unit: 'PLOTS',    label: '300 – 2,876 sq.yd Parcels',  accent: false },
-                { code: '03', value: '18m',    unit: '/ 60 FT',  label: 'Heavy RCC Road Network',     accent: false },
-                { code: '04', value: 'Open',   unit: 'BOOKINGS', label: 'Leveling Ongoing',           accent: true  },
-              ].map((m) => (
-                <div key={m.code} className={`p-5 sm:p-6 border-r border-b ${t.border} ${t.bgPage}`}>
-                  <div className={`font-mono text-[10px] mb-3 ${t.textMuted}`}>{m.code}</div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className={`text-2xl sm:text-3xl font-bold tracking-tight tabular-nums ${m.accent ? 'text-brand-red' : t.textMain}`}>
-                      {m.value}
-                    </span>
-                    <span className={`font-mono text-[10px] font-semibold ${t.textMuted}`}>{m.unit}</span>
-                  </div>
-                  <div className={`text-xs mt-1 ${t.textBody}`}>{m.label}</div>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 

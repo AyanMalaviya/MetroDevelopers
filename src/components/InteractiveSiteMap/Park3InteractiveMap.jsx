@@ -9,7 +9,7 @@ import {
   sqYdToSqMt,
   sqMtToSqYd,
   sqMtToSqFt,
-  sqYdToGunta,
+  sqYdToVigha,
   fmtNum,
   buildCalculatorPrefill,
 } from '../../utils/areaConversions';
@@ -145,7 +145,7 @@ export default function Park3InteractiveMap() {
     const sqYd = parseAreaStringToSqYd(live.area || info.area) || (totalMt ? sqMtToSqYd(totalMt) : null);
     const resolvedMt = totalMt || (sqYd ? sqYdToSqMt(sqYd) : null);
     const totalFt = sqYd ? sqYdToSqFt(sqYd) : null;
-    const gunta = sqYd ? sqYdToGunta(sqYd) : null;
+    const vigha = sqYd ? sqYdToVigha(sqYd) : null;
 
     const carpetYd = carpetMt ? sqMtToSqYd(carpetMt) : null;
     const carpetFt = carpetMt ? sqMtToSqFt(carpetMt) : null;
@@ -200,7 +200,7 @@ export default function Park3InteractiveMap() {
         sqYd: fmtNum(sqYd),
         sqMt: fmtNum(resolvedMt),
         sqFt: fmtNum(totalFt),
-        gunta: gunta ? fmtNum(gunta) : null,
+        vigha: vigha ? fmtNum(vigha) : null,
       },
       conversionRows,
       extraMetadata,

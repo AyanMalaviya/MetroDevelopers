@@ -7,7 +7,7 @@ import {
   sqYdToSqFt,
   sqMtToSqYd,
   sqMtToSqFt,
-  sqYdToGunta,
+  sqYdToVigha,
   fmtNum,
   buildCalculatorPrefill,
 } from '../../utils/areaConversions';
@@ -143,7 +143,7 @@ export default function MetroEstateInteractiveMap() {
     const totalYd = coord.totalPlotAreaSqYd;
     const totalMt = coord.totalPlotAreaSqMt;
     const totalFt = sqYdToSqFt(totalYd);
-    const gunta = sqYdToGunta(totalYd);
+    const vigha = sqYdToVigha(totalYd);
 
     const netYd = coord.netPlotAreaSqYd;
     const netMt = coord.netPlotAreaSqMt;
@@ -207,7 +207,7 @@ export default function MetroEstateInteractiveMap() {
         sqYd: fmtNum(totalYd),
         sqMt: fmtNum(totalMt),
         sqFt: fmtNum(totalFt),
-        gunta: fmtNum(gunta),
+        vigha: fmtNum(vigha),
       },
       conversionRows,
       extraMetadata,

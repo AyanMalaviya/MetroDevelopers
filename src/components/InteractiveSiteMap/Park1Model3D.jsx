@@ -28,64 +28,132 @@ import {
   buildPark1ModalProps,
 } from '../../utils/park1UnitData';
 
-/* ── 1. Ultra-Light Procedural Canvas Textures ── */
-function createMetroBrandAtlas() {
+/* ── 1. Brand Logo, Entrance Sign, & Plot Number Badge Textures ── */
+function drawLouverBackdrop(ctx, w, h) {
+  ctx.fillStyle = '#3a3837';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#2b2928';
+  for (let x = 8; x < w; x += 14) {
+    ctx.fillRect(x, 0, 5, h);
+  }
+}
+
+function createMetroLogoTexture(onLoadReady) {
   const c = document.createElement('canvas');
   c.width = 256;
-  c.height = 128;
+  c.height = 256;
   const ctx = c.getContext('2d');
+  drawLouverBackdrop(ctx, 256, 256);
 
-  // Left Half (0..128): Dark Charcoal Louver Backing + METRO Twin-Peak Logo
-  ctx.fillStyle = '#3a3837';
-  ctx.fillRect(0, 0, 128, 128);
-  ctx.fillStyle = '#2d2b2a';
-  for (let x = 4; x < 128; x += 6) ctx.fillRect(x, 0, 2, 128);
-
-  // Silver-white twin peaks M
-  ctx.fillStyle = '#f1f5f9';
-  ctx.beginPath();
-  ctx.moveTo(18, 84);
-  ctx.lineTo(48, 28);
-  ctx.lineTo(66, 62);
-  ctx.lineTo(82, 36);
-  ctx.lineTo(110, 84);
-  ctx.lineTo(90, 84);
-  ctx.lineTo(81, 66);
-  ctx.lineTo(66, 84);
-  ctx.lineTo(48, 52);
-  ctx.lineTo(36, 84);
-  ctx.closePath();
-  ctx.fill();
-
-  // Crimson-red triangular accents inside twin peaks
-  ctx.fillStyle = '#d93036';
-  ctx.beginPath();
-  ctx.moveTo(48, 28); ctx.lineTo(59, 49); ctx.lineTo(43, 49); ctx.closePath(); ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(82, 36); ctx.lineTo(93, 55); ctx.lineTo(75, 55); ctx.closePath(); ctx.fill();
-
-  // METRO Wordmark
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '800 22px Inter, system-ui, sans-serif';
+  // Subtle METRO wordmark immediately while real /MDLogo-dark.png loads
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = '800 32px Inter, system-ui, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('METRO', 64, 106);
+  ctx.fillText('METRO', 128, 214);
 
-  // Right Half (128..256): Concrete Sign "METRO INDUSTRIAL PARK"
-  ctx.fillStyle = '#dcd8d0';
-  ctx.fillRect(128, 0, 128, 128);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.minFilter = THREE.LinearFilter;
+
+  if (typeof Image !== 'undefined') {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      drawLouverBackdrop(ctx, 256, 256);
+      const maxW = 196;
+      const maxH = 148;
+      const scale = Math.min(maxW / (img.naturalWidth || 196), maxH / (img.naturalHeight || 148));
+      const dw = (img.naturalWidth || maxW) * scale;
+      const dh = (img.naturalHeight || maxH) * scale;
+      ctx.drawImage(img, (256 - dw) / 2, (176 - dh) / 2, dw, dh);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '800 30px Inter, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('METRO', 128, 214);
+
+      tex.needsUpdate = true;
+      onLoadReady?.();
+    };
+    img.onerror = () => {
+      if (!img.dataset.fallback) {
+        img.dataset.fallback = '1';
+        img.src = '/MDLogo.png';
+      }
+    };
+    img.src = '/MDLogo-dark.png';
+  }
+
+  return tex;
+}
+
+function createGateSignTexture() {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 320;
+  const ctx = c.getContext('2d');
+
+  // Warm concrete stone monolith matching boundary wall
+  ctx.fillStyle = '#dad4ca';
+  ctx.fillRect(0, 0, 512, 320);
+
+  // Architectural recessed seam lines
+  ctx.fillStyle = '#b9b2a7';
+  ctx.fillRect(0, 14, 512, 5);
+  ctx.fillRect(0, 301, 512, 5);
+
   ctx.fillStyle = '#cc2936';
-  ctx.font = '800 18px Inter, system-ui, sans-serif';
-  ctx.fillText('METRO', 192, 34);
-  ctx.font = '800 16px Inter, system-ui, sans-serif';
-  ctx.fillText('INDUSTRIAL', 192, 64);
-  ctx.font = '800 18px Inter, system-ui, sans-serif';
-  ctx.fillText('PARK', 192, 94);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '900 66px Inter, system-ui, sans-serif';
+  ctx.fillText('METRO', 256, 86);
+  ctx.font = '800 54px Inter, system-ui, sans-serif';
+  ctx.fillText('INDUSTRIAL', 256, 162);
+  ctx.font = '900 64px Inter, system-ui, sans-serif';
+  ctx.fillText('PARK', 256, 238);
 
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.minFilter = THREE.LinearFilter;
   return tex;
+}
+
+function drawPlotNumberBadge(canvas, label, statusHex, dimmed) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const pad = 6;
+  const r = 18;
+  const rw = w - pad * 2;
+  const rh = h - pad * 2;
+
+  ctx.beginPath();
+  ctx.moveTo(pad + r, pad);
+  ctx.lineTo(pad + rw - r, pad);
+  ctx.quadraticCurveTo(pad + rw, pad, pad + rw, pad + r);
+  ctx.lineTo(pad + rw, pad + rh - r);
+  ctx.quadraticCurveTo(pad + rw, pad + rh, pad + rw - r, pad + rh);
+  ctx.lineTo(pad + r, pad + rh);
+  ctx.quadraticCurveTo(pad, pad + rh, pad, pad + rh - r);
+  ctx.lineTo(pad, pad + r);
+  ctx.quadraticCurveTo(pad, pad, pad + r, pad);
+  ctx.closePath();
+  ctx.fillStyle = dimmed ? '#1e293b' : statusHex;
+  ctx.fill();
+
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = dimmed ? 'rgba(148,163,184,0.45)' : '#ffffff';
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '800 46px Inter, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(label), w / 2, h / 2 + 2);
 }
 
 function createShutterTexture() {
@@ -286,6 +354,7 @@ export default function Park1Model3D() {
   const controlsRef = useRef(null);
   const plotPadIMRef = useRef(null);
   const statusBadgeIMRef = useRef(null);
+  const plotSpritesRef = useRef([]);
   const selectBoxRef = useRef(null);
   const hoverBoxRef = useRef(null);
   const requestRenderRef = useRef(null);
@@ -396,16 +465,9 @@ export default function Park1Model3D() {
     scene.add(sunLight);
 
     // Textures
-    const brandAtlas = createMetroBrandAtlas();
-    const logoTex = brandAtlas.clone();
-    logoTex.needsUpdate = true;
-    logoTex.repeat.set(0.5, 1);
-    logoTex.offset.set(0, 0);
-
-    const wallSignTex = brandAtlas.clone();
-    wallSignTex.needsUpdate = true;
-    wallSignTex.repeat.set(0.5, 1);
-    wallSignTex.offset.set(0.5, 0);
+    let requestRenderFn = () => {};
+    const logoTex = createMetroLogoTexture(() => requestRenderFn());
+    const wallSignTex = createGateSignTexture();
 
     const shutterTex = createShutterTexture();
     const gableRoofGeo = createGableRoofGeo();
@@ -501,17 +563,20 @@ export default function Park1Model3D() {
     }
     buildBoxBatch(dashBoxes, MAT.roadDash, scene, false, false, unitBoxGeo);
 
-    // Curbs & Perimeter Boundary Wall
+    // Curbs & Perimeter Boundary Wall (seamlessly connecting Gate <-> SE/SW Outer Walls)
+    const eastWallAngle = Math.atan2(1.17, 11.35);
     const curbWallBoxes = [
       { x: 10.9, y: 0.11, z: 16.0, sx: 0.28, sy: 0.16, sz: 36.2 },
       { x: 17.1, y: 0.11, z: 16.0, sx: 0.28, sy: 0.16, sz: 36.2 },
       { x: -10.0, y: 0.11, z: -2.0, sx: 42.0, sy: 0.16, sz: 0.28 },
       { x: -10.0, y: 0.11, z: -8.0, sx: 42.0, sy: 0.16, sz: 0.28 },
-      { x: 23.0, y: 0.42, z: 35.2, sx: 11.4, sy: 0.85, sz: 0.35, ry: southRoadAngle },
-      { x: 5.5, y: 0.42, z: 37.0, sx: 8.4, sy: 0.85, sz: 0.35, ry: southRoadAngle },
+      // East wing wall flush from Right Gate Pillar (17.25, 35.10) to East Boundary corner (28.60, 33.93)
+      { x: 22.92, y: 0.42, z: 34.52, sx: 11.45, sy: 0.85, sz: 0.35, ry: eastWallAngle },
+      // West wing wall flush up to (8.60, 36.68) where Metro Industrial Park wall connects it to Left Gate Pillar
+      { x: 4.90, y: 0.42, z: 37.06, sx: 7.50, sy: 0.85, sz: 0.35, ry: southRoadAngle },
       { x: -3.8, y: 0.42, z: 38.0, sx: 10.2, sy: 0.85, sz: 0.35, ry: southRoadAngle },
       { x: -20.5, y: 0.42, z: 34.5, sx: 16.5, sy: 0.85, sz: 0.35, ry: southRoadAngle },
-      { x: 28.6, y: 0.42, z: 8.5, sx: 0.35, sy: 0.85, sz: 51.0 },
+      { x: 28.6, y: 0.42, z: 8.55, sx: 0.35, sy: 0.85, sz: 51.1 },
       { x: 2.5, y: 0.42, z: -36.8, sx: 22.8, sy: 0.85, sz: 0.35 },
       { x: -18.5, y: 0.42, z: -35.6, sx: 13.0, sy: 0.85, sz: 0.35 },
       { x: -43.8, y: 0.42, z: 2.6, sx: 0.35, sy: 0.85, sz: 10.0 },
@@ -690,6 +755,42 @@ export default function Park1Model3D() {
     );
     scene.add(borderLines);
 
+    // ── Floating Plot Numbers Above All 63 3D Sheds ──
+    const plotLabelGroup = new THREE.Group();
+    const plotSprites = MASTER_PLOTS.map((plot) => {
+      const badgeCanvas = document.createElement('canvas');
+      badgeCanvas.width = 96;
+      badgeCanvas.height = 72;
+      drawPlotNumberBadge(badgeCanvas, plot.id, getPark1StatusHex('available'), false);
+
+      const badgeTex = new THREE.CanvasTexture(badgeCanvas);
+      badgeTex.colorSpace = THREE.SRGBColorSpace;
+      badgeTex.minFilter = THREE.LinearFilter;
+
+      const badgeMat = new THREE.SpriteMaterial({
+        map: badgeTex,
+        transparent: true,
+        depthWrite: false,
+      });
+
+      const sprite = new THREE.Sprite(badgeMat);
+      sprite.position.set(plot.x, 4.75, plot.z);
+      sprite.scale.set(2.6, 1.9, 1);
+      sprite.userData.entity = plot;
+      plotLabelGroup.add(sprite);
+
+      return {
+        id: plot.id,
+        canvas: badgeCanvas,
+        tex: badgeTex,
+        mat: badgeMat,
+        sprite,
+        lastKey: '',
+      };
+    });
+    scene.add(plotLabelGroup);
+    plotSpritesRef.current = plotSprites;
+
     // ── Build Metro Site Office Model ──
     const officeGroup = new THREE.Group();
     officeGroup.position.set(7.2, 0.14, 32.5);
@@ -717,7 +818,7 @@ export default function Park1Model3D() {
     buildBoxBatch(offSideWalls, MAT.officeRear, officeGroup, true, true, unitBoxGeo);
 
     // Highway-facing exterior sign plaque on the south wall (local -x, facing world +z towards highway)
-    const highwaySign = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.9), MAT.metroLogo);
+    const highwaySign = new THREE.Mesh(new THREE.PlaneGeometry(1.35, 1.15), MAT.metroLogo);
     highwaySign.rotation.y = -Math.PI / 2;
     highwaySign.position.set(-3.56, 1.8, -0.8);
     officeGroup.add(highwaySign);
@@ -761,7 +862,7 @@ export default function Park1Model3D() {
     buildBoxBatch(redFinBoxes, MAT.brightRed, officeGroup, false, true, unitBoxGeo);
 
     const planterBoxes = [
-      { x: -2.85, y: 0.14, z: 1.72, sx: 2.5, sy: 0.28, sz: 0.62 },
+      { x: -2.25, y: 0.14, z: 1.72, sx: 1.4, sy: 0.28, sz: 0.62 },
       { x:  2.85, y: 0.14, z: 1.72, sx: 2.5, sy: 0.28, sz: 0.62 },
     ];
     buildBoxBatch(planterBoxes, MAT.planterGreen, officeGroup, false, true, unitBoxGeo);
@@ -817,11 +918,29 @@ export default function Park1Model3D() {
     gateLogoB.position.z = -0.59;
     gateGroup.add(gateLogoF, gateLogoB);
 
-    const signWall = new THREE.Mesh(new THREE.BoxGeometry(1.65, 1.45, 0.34), MAT.boundaryWall);
-    signWall.position.set(-4.35, 0.72, 0.72);
-    const signFace = new THREE.Mesh(new THREE.PlaneGeometry(1.48, 1.25), MAT.gateWallSign);
-    signFace.position.set(-4.35, 0.74, 0.90);
-    gateGroup.add(signWall, signFace);
+    // Sign Wall connecting Outer Boundary Wall (world 8.65, 36.68 -> local -5.35, 1.58)
+    // seamlessly to Left Gate Pillar front face (world 10.68, 35.68 -> local -3.32, 0.58)
+    // with "METRO INDUSTRIAL PARK" front face unobstructed and oriented toward South-East (+X, +Z).
+    const signWallGroup = new THREE.Group();
+    signWallGroup.position.set(-4.335, 0, 1.08);
+    signWallGroup.rotation.y = Math.atan2(1.00, 2.03);
+
+    const signWallBody = new THREE.Mesh(new THREE.BoxGeometry(2.40, 1.65, 0.38), MAT.boundaryWall);
+    signWallBody.position.set(0, 0.825, 0);
+    signWallBody.castShadow = signWallBody.receiveShadow = true;
+
+    const signWallCap = new THREE.Mesh(new THREE.BoxGeometry(2.46, 0.10, 0.44), MAT.portalGrey);
+    signWallCap.position.set(0, 1.68, 0);
+
+    const signWallPier = new THREE.Mesh(new THREE.BoxGeometry(0.40, 1.74, 0.44), MAT.boundaryWall);
+    signWallPier.position.set(-1.12, 0.87, 0);
+    signWallPier.castShadow = signWallPier.receiveShadow = true;
+
+    const signFace = new THREE.Mesh(new THREE.PlaneGeometry(1.94, 1.24), MAT.gateWallSign);
+    signFace.position.set(0.06, 0.88, 0.20);
+
+    signWallGroup.add(signWallBody, signWallCap, signWallPier, signFace);
+    gateGroup.add(signWallGroup);
 
     scene.add(gateGroup);
 
@@ -865,6 +984,7 @@ export default function Park1Model3D() {
         requestAnimationFrame(tick);
       }
     };
+    requestRenderFn = requestRender;
     requestRenderRef.current = requestRender;
 
     function tick() {
@@ -917,7 +1037,14 @@ export default function Park1Model3D() {
       pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
       raycaster.setFromCamera(pointer, camera);
 
-      const targets = [siteOfficeHit, mainGateHit, shedBodyIM, shedRoofIM, plotPadIM];
+      const targets = [
+        siteOfficeHit,
+        mainGateHit,
+        shedBodyIM,
+        shedRoofIM,
+        plotPadIM,
+        ...plotSprites.map((s) => s.sprite),
+      ];
       const hits = raycaster.intersectObjects(targets, false);
       if (!hits.length) return null;
 
@@ -971,6 +1098,14 @@ export default function Park1Model3D() {
       canvas.removeEventListener('pointermove', handlePointerMove);
       canvas.removeEventListener('pointerdown', handlePointerDown);
       canvas.removeEventListener('pointerup', handlePointerUp);
+      plotSprites.forEach((s) => {
+        s.tex.dispose();
+        s.mat.dispose();
+      });
+      plotSpritesRef.current = [];
+      logoTex.dispose();
+      wallSignTex.dispose();
+      shutterTex.dispose();
       controls.dispose();
       renderer.dispose();
       if (container && renderer.domElement) {
@@ -987,6 +1122,8 @@ export default function Park1Model3D() {
     if (!plotPadIM || !statusBadgeIM) return;
 
     const tmpColor = new THREE.Color();
+    const plotSprites = plotSpritesRef.current;
+
     MASTER_PLOTS.forEach((plot, i) => {
       const item = plotData[plot.id];
       const status = normalizePark1Status(item?.status);
@@ -996,6 +1133,17 @@ export default function Park1Model3D() {
       tmpColor.set(hex);
       plotPadIM.setColorAt(i, tmpColor);
       statusBadgeIM.setColorAt(i, tmpColor);
+
+      const badge = plotSprites[i];
+      if (badge) {
+        const badgeKey = `${hex}-${isVisible ? 1 : 0}`;
+        if (badge.lastKey !== badgeKey) {
+          drawPlotNumberBadge(badge.canvas, badge.id, hex, !isVisible);
+          badge.tex.needsUpdate = true;
+          badge.mat.opacity = isVisible ? 1 : 0.25;
+          badge.lastKey = badgeKey;
+        }
+      }
     });
 
     if (plotPadIM.instanceColor) plotPadIM.instanceColor.needsUpdate = true;
