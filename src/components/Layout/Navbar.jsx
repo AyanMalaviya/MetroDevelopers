@@ -1,6 +1,6 @@
 // src/components/Layout/Navbar.jsx
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
   Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
+import { useNavbar } from '../../context/useNavbar';
 
 const EASE = [0.16, 1, 0.3, 1];
 const FONT_SIZE_STORAGE_KEY = 'metro-font-size';
@@ -27,17 +28,25 @@ const NAV_ITEMS = [
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { isNavbarVisible: isVisible, setIsNavbarVisible: setIsVisible } = useNavbar();
   const isDark = theme === 'dark';
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const [isMenuOpen,   setIsMenuOpen]   = useState(false);
-  const [isVisible,    setIsVisible]    = useState(true);
   const [scrolled,     setScrolled]     = useState(false);
   const [contactOpen,  setContactOpen]  = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [fontSize,     setFontSize]     = useState('normal');
+  const [fontSize,     setFontSize]     = useState(() => {
+    try {
+      const saved = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
+      if (saved && FONT_SIZE_VALUES[saved]) return saved;
+    } catch { /* ignore */ }
+    return 'normal';
+  });
 
   const lastScrollYRef = useRef(0);
+  const headerRef      = useRef(null);
   const contactRef     = useRef(null);
   const settingsRef    = useRef(null);
 
@@ -56,16 +65,44 @@ const Navbar = () => {
   const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
   const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
-  // Restore saved font size on mount
+  // Sync root document font size
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
-      if (saved && FONT_SIZE_VALUES[saved]) {
-        document.documentElement.style.fontSize = FONT_SIZE_VALUES[saved];
-        setFontSize(saved);
+    if (FONT_SIZE_VALUES[fontSize]) {
+      document.documentElement.style.fontSize = FONT_SIZE_VALUES[fontSize];
+    }
+  }, [fontSize]);
+
+  // Measure exact rendered header height so sticky toolbars stay flush with zero gap
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof document === 'undefined') return undefined;
+
+    const updateHeight = () => {
+      const h = el.getBoundingClientRect().height;
+      if (h > 0) {
+        document.documentElement.style.setProperty('--navbar-height', `${h}px`);
       }
-    } catch { /* ignore */ }
+    };
+
+    updateHeight();
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(updateHeight);
+      ro.observe(el);
+      return () => ro.disconnect();
+    }
+    window.addEventListener('resize', updateHeight, { passive: true });
+    return () => window.removeEventListener('resize', updateHeight);
   }, []);
+
+  // Ensure navbar resets visible whenever route changes
+  useEffect(() => {
+    const raf = window.requestAnimationFrame(() => {
+      lastScrollYRef.current = window.scrollY;
+      setIsVisible(true);
+      setScrolled(window.scrollY > 40);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [pathname, setIsVisible]);
 
   // Scroll hide/reveal with rAF throttling
   useEffect(() => {
@@ -78,7 +115,8 @@ const Navbar = () => {
           setScrolled((prev) => (prev !== isPastTop ? isPastTop : prev));
 
           const lastY = lastScrollYRef.current;
-          if (y < 10) {
+          const headerH = headerRef.current?.getBoundingClientRect().height || 67;
+          if (y <= headerH) {
             setIsVisible(true);
           } else if (y > lastY && y > 100) {
             setIsVisible((prev) => (prev ? false : prev));
@@ -98,7 +136,7 @@ const Navbar = () => {
 
     window.addEventListener('scroll', control, { passive: true });
     return () => window.removeEventListener('scroll', control);
-  }, []);
+  }, [setIsVisible]);
 
   // Close dropdowns on outside click or Escape
   useEffect(() => {
@@ -168,6 +206,7 @@ const Navbar = () => {
   return (
     <>
       <header
+        ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-50 border-b ${border} ${bgHeader} transition-transform duration-300 ease-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
@@ -483,7 +522,8 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.32, ease: EASE }}
-              className={`fixed top-[66px] right-0 bottom-0 w-[290px] sm:w-[320px] z-40 lg:hidden overflow-y-auto border-l ${border} ${bgPage}`}
+              style={{ top: 'var(--navbar-height, 67px)' }}
+              className={`fixed right-0 bottom-0 w-[290px] sm:w-[320px] z-40 lg:hidden overflow-y-auto border-l ${border} ${bgPage}`}
             >
               {/* Navigation Index */}
               <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>

@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
+import { NavbarProvider } from './context/NavbarContext';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
@@ -29,6 +30,7 @@ const PageLoader = () => (
 function App() {
   return (
     <ThemeProvider>
+      <NavbarProvider>
       <Router>
         <ScrollToTop />
         <div className="flex flex-col min-h-screen theme-bg-primary overflow-x-clip">
@@ -118,6 +120,7 @@ function App() {
           </Suspense>
         </div>
       </Router>
+      </NavbarProvider>
     </ThemeProvider>
   );
 }

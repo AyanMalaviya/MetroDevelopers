@@ -12,49 +12,21 @@ import {
   X,
   Compass,
   Phone,
+  Search,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { getPlotData } from '../../services/dataService';
-
-const ADMIN_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/100fiyz86pBVkMlU_Em8Veedqdhr-hV9yb1GrwD95n5w/edit';
-
-/* ── Status Colors & Labels (Exact Alignment with InteractiveSiteMap) ── */
-const STATUS_COLORS = {
-  available:    '#10B981', // Emerald green
-  sold:         '#808080', // Slate grey
-  'for-lease':  '#DC2626', // Brand red
-  'pre-leased': '#3B82F6', // Corporate blue
-};
-
-const getStatusColorHex = (status) => {
-  const s = String(status || 'available').toLowerCase();
-  return STATUS_COLORS[s] || STATUS_COLORS.available;
-};
-
-const getStatusLabel = (status) => {
-  const s = String(status || 'available').toLowerCase();
-  switch (s) {
-    case 'sold':       return 'Sold';
-    case 'for-lease':  return 'Available for Lease';
-    case 'pre-leased': return 'Pre-Leased';
-    default:           return 'Available';
-  }
-};
-
-const getStatusBadgeClass = (status) => {
-  const s = String(status || 'available').toLowerCase();
-  switch (s) {
-    case 'sold':
-      return 'bg-slate-200 text-slate-800 dark:bg-gray-800 dark:text-gray-300';
-    case 'for-lease':
-      return 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300';
-    case 'pre-leased':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300';
-    default:
-      return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300';
-  }
-};
+import UnitDetailModal from './UnitDetailModal';
+import {
+  PARK1_ADMIN_SHEET_URL,
+  PARK1_PLOT_ENTRIES,
+  normalizePark1Status,
+  getPark1StatusHex,
+  computePark1Stats,
+  getPark1StatItems,
+  getPark1HoverSummary,
+  buildPark1ModalProps,
+} from '../../utils/park1UnitData';
 
 /* ── 1. Ultra-Light Procedural Canvas Textures ── */
 function createMetroBrandAtlas() {
@@ -297,8 +269,10 @@ export default function Park1Model3D() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  const wrapperRef = useRef(null);
   const containerRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [plotData, setPlotData] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedEntity, setSelectedEntity] = useState(null);
@@ -316,47 +290,44 @@ export default function Park1Model3D() {
   const hoverBoxRef = useRef(null);
   const requestRenderRef = useRef(null);
 
-  /* ── Fetch Real-time Plot Availability (Same Logic as InteractiveSiteMap) ── */
-  const loadData = useCallback(async () => {
-    setLoading(true);
+  /* ── Fetch Real-time Plot Availability (Exact Sync Logic as 2D) ── */
+  const loadData = useCallback(async (silent = false, forceRefresh = false) => {
+    if (!silent) setLoading(true);
     try {
-      const data = await getPlotData();
-      setPlotData(data || {});
+      const data = await getPlotData(forceRefresh);
+      if (!data || Object.keys(data).length === 0) {
+        const init = {};
+        PARK1_PLOT_ENTRIES.forEach(([id, p]) => {
+          init[id] = { status: 'available', area: p.area || 'N/A' };
+        });
+        setPlotData(init);
+      } else {
+        setPlotData(data);
+      }
     } catch (err) {
       console.error('Error fetching live plot data:', err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadData();
+    loadData(false, false);
+    const id = setInterval(() => loadData(true, true), 30000);
+    return () => clearInterval(id);
   }, [loadData]);
 
-  /* ── Compute Availability Stats ── */
-  const stats = useMemo(() => {
-    let available = 0;
-    let sold = 0;
-    let forLease = 0;
-    let preLeased = 0;
-
-    MASTER_PLOTS.forEach((p) => {
-      const item = plotData[p.id];
-      const status = (item?.status || 'available').toLowerCase();
-      if (status === 'sold') sold++;
-      else if (status === 'for-lease') forLease++;
-      else if (status === 'pre-leased') preLeased++;
-      else available++;
-    });
-
-    return {
-      total: MASTER_PLOTS.length,
-      available,
-      sold,
-      forLease,
-      preLeased,
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
     };
-  }, [plotData]);
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
+  /* ── Compute Availability Stats (Canonical Order Matching 2D) ── */
+  const stats = useMemo(() => computePark1Stats(plotData), [plotData]);
+  const statItems = useMemo(() => getPark1StatItems(stats, isDark), [stats, isDark]);
 
   /* ── 3D Scene Initialization (Pure Architectural Models Only) ── */
   useEffect(() => {
@@ -1018,17 +989,10 @@ export default function Park1Model3D() {
     const tmpColor = new THREE.Color();
     MASTER_PLOTS.forEach((plot, i) => {
       const item = plotData[plot.id];
-      const status = (item?.status || 'available').toLowerCase();
+      const status = normalizePark1Status(item?.status);
+      const isVisible = statusFilter === 'ALL' || status === statusFilter;
 
-      // Check if filter is applied
-      let isVisible = true;
-      if (statusFilter !== 'ALL') {
-        if (statusFilter === 'AVAILABLE' && status !== 'available') isVisible = false;
-        if (statusFilter === 'SOLD' && status !== 'sold') isVisible = false;
-        if (statusFilter === 'LEASE' && status !== 'for-lease') isVisible = false;
-      }
-
-      const hex = isVisible ? getStatusColorHex(status) : '#334155';
+      const hex = isVisible ? getPark1StatusHex(status) : '#334155';
       tmpColor.set(hex);
       plotPadIM.setColorAt(i, tmpColor);
       statusBadgeIM.setColorAt(i, tmpColor);
@@ -1037,7 +1001,7 @@ export default function Park1Model3D() {
     if (plotPadIM.instanceColor) plotPadIM.instanceColor.needsUpdate = true;
     if (statusBadgeIM.instanceColor) statusBadgeIM.instanceColor.needsUpdate = true;
     if (requestRender) requestRender();
-  }, [plotData, statusFilter]);
+  }, [plotData, statusFilter, isDark]);
 
   /* ── Camera Reset Helper ── */
   const resetCamera = useCallback(() => {
@@ -1058,60 +1022,124 @@ export default function Park1Model3D() {
     requestRenderRef.current();
   }, []);
 
-  /* ── Toggle Fullscreen ── */
+  /* ── Toggle Fullscreen on Whole 3D Workspace (Bar + Canvas) ── */
   const toggleFullscreen = useCallback(() => {
-    const el = containerRef.current?.parentElement;
+    const el = wrapperRef.current || containerRef.current?.parentElement;
     if (!el) return;
     if (!document.fullscreenElement) {
-      el.requestFullscreen?.().then(() => setIsFullscreen(true)).catch(() => {});
+      el.requestFullscreen?.().catch(() => {});
     } else {
-      document.exitFullscreen?.().then(() => setIsFullscreen(false)).catch(() => {});
+      document.exitFullscreen?.().catch(() => {});
     }
   }, []);
 
-  // Sync selected plot info
-  const selectedPlotInfo = useMemo(() => {
-    if (!selectedEntity) return null;
-    if (selectedEntity.kind === 'plot') {
-      const live = plotData[selectedEntity.id] || {};
-      const status = (live.status || 'available').toLowerCase();
-      const area = live.area || selectedEntity.dimText;
+  const clearSelection = useCallback(() => {
+    setSelectedEntity(null);
+    if (selectBoxRef.current) selectBoxRef.current.visible = false;
+    if (requestRenderRef.current) requestRenderRef.current();
+  }, []);
+
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      const q = searchTerm.trim().replace(/^#/, '');
+      if (!q) return;
+      const found = MASTER_PLOTS.find((p) => p.id === q);
+      if (found) {
+        setSelectedEntity(found);
+        if (selectBoxRef.current) {
+          selectBoxRef.current.position.set(found.x, 2.0, found.z);
+          selectBoxRef.current.scale.set(found.w + 0.35, 3.85, found.d + 0.35);
+          selectBoxRef.current.visible = true;
+        }
+        focusOnEntity(found);
+        setSearchTerm('');
+      }
+    },
+    [searchTerm, focusOnEntity]
+  );
+
+  // Canonical shed modal props (shared 1:1 with 2D site map)
+  const shedModalProps = useMemo(
+    () =>
+      selectedEntity?.kind === 'plot'
+        ? buildPark1ModalProps({ shedId: selectedEntity.id, plotData, isDark })
+        : { isOpen: false },
+    [selectedEntity, plotData, isDark]
+  );
+
+  const selectedLandmark =
+    selectedEntity && selectedEntity.kind !== 'plot' ? selectedEntity : null;
+
+  const hoverSummary = useMemo(() => {
+    if (!hoveredEntity || selectedEntity) return null;
+    if (hoveredEntity.kind === 'plot') {
       return {
-        ...selectedEntity,
-        status,
-        area,
-        owner: live.owner || '',
-        lessee: live.lessee || '',
-        monthlyRent: live.monthlyRent || '',
+        kind: 'plot',
+        ...getPark1HoverSummary({ shedId: hoveredEntity.id, plotData, isDark: true }),
       };
     }
-    return selectedEntity;
-  }, [selectedEntity, plotData]);
+    return {
+      kind: hoveredEntity.kind,
+      title: hoveredEntity.title,
+      subtitle: hoveredEntity.block,
+      statusColor: '#CC2936',
+    };
+  }, [hoveredEntity, selectedEntity, plotData]);
 
-  const whatsappMessage = selectedPlotInfo
+  const landmarkWhatsappMessage = selectedLandmark
     ? encodeURIComponent(
-        `Hello, I would like to inquire about ${
-          selectedPlotInfo.kind === 'plot' ? `Plot #${selectedPlotInfo.id}` : selectedPlotInfo.title
-        } at Metro Industrial Park (MIP 1). Please share availability and pricing details.`
+        `Hello, I would like to inquire about ${selectedLandmark.title} at Metro Industrial Park (MIP 1). Please share visit details.`
       )
     : '';
 
   return (
-    <div className="relative w-full flex flex-col h-[62svh] min-h-[420px] sm:h-[68svh] sm:min-h-[580px] select-none">
-      {/* ── Single-Line 3D Controls Bar ── */}
+    <div
+      ref={wrapperRef}
+      className={`relative w-full flex flex-col select-none ${
+        isFullscreen
+          ? `h-screen ${isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]'}`
+          : 'h-[62svh] min-h-[420px] sm:h-[68svh] sm:min-h-[580px]'
+      }`}
+    >
+      {/* ── Single-Line 3D Utility Bar (Matching 2D sequence: Search on Left, Edit/Sync/Reset/Expand on Right) ── */}
       <div
-        className={`px-2.5 sm:px-3.5 py-2 border-b transition-colors z-10 flex items-center justify-between gap-2 ${
+        className={`px-2.5 sm:px-3.5 py-2 border-b transition-colors z-10 flex items-center justify-between gap-2 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${
           isDark ? 'border-white/[0.12] bg-[#121215]/95 backdrop-blur-md' : 'border-gray-200 bg-white/95 backdrop-blur-md'
         }`}
       >
-        <span className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-wider truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-          Interactive 3D · 63 Sheds
-        </span>
+        <div className="flex items-center gap-2 min-w-0 shrink-0">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <Search
+              size={11}
+              className={`absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${
+                isDark ? 'text-gray-400' : 'text-gray-500'
+              }`}
+              aria-hidden="true"
+            />
+            <input
+              type="text"
+              inputMode="numeric"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Go #..."
+              aria-label="Jump to shed or plot number"
+              className={`h-7 w-20 sm:w-28 pl-7 pr-2 border font-mono text-[11px] focus:outline-none focus:border-brand-red ${
+                isDark
+                  ? 'border-white/[0.12] bg-[#0B0B0D] text-white'
+                  : 'border-gray-200 bg-[#F8F9FA] text-gray-900'
+              }`}
+            />
+          </form>
+          <span className={`hidden sm:inline font-mono text-[10.5px] uppercase tracking-wider truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+            3D · 63 Sheds
+          </span>
+        </div>
 
         {/* Right: Actions (Edit, Sync, Reset View, Fullscreen) */}
         <div className="flex items-center gap-1.5 shrink-0">
           <a
-            href={ADMIN_SHEET_URL}
+            href={PARK1_ADMIN_SHEET_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={`h-7 px-2 border inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
@@ -1127,7 +1155,7 @@ export default function Park1Model3D() {
 
           <button
             type="button"
-            onClick={loadData}
+            onClick={() => loadData(false, true)}
             disabled={loading}
             className={`h-7 px-2 border inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
@@ -1163,40 +1191,39 @@ export default function Park1Model3D() {
             title="Toggle Fullscreen 3D View"
           >
             {isFullscreen ? <Minimize2 size={11} /> : <Maximize2 size={11} />}
-            <span className="hidden sm:inline">{isFullscreen ? 'Exit' : 'Expand'}</span>
+            <span>{isFullscreen ? 'Exit' : 'Expand'}</span>
           </button>
         </div>
       </div>
 
-      {/* ── Single-Row Compact Filterable Availability Ledger ── */}
+      {/* ── Single-Row Filterable Live Availability Data Strip (Exact Order as 2D) ── */}
       <div
         className={`border-b grid grid-cols-5 divide-x text-center ${
           isDark ? 'border-white/[0.12] divide-white/[0.12] bg-[#0B0B0D]' : 'border-gray-200 divide-gray-200 bg-[#F8F9FA]'
         }`}
       >
-        {[
-          { key: 'ALL', val: stats.total, label: 'All Units', accent: 'text-white', accentLight: 'text-gray-900', bar: '#E11D48' },
-          { key: 'AVAILABLE', val: stats.available, label: 'Available', accent: 'text-emerald-400', accentLight: 'text-emerald-600', bar: '#10B981' },
-          { key: 'SOLD', val: stats.sold, label: 'Sold', accent: 'text-gray-300', accentLight: 'text-gray-700', bar: '#6B7280' },
-          { key: 'LEASE', val: stats.forLease, label: 'For Lease', accent: 'text-red-400', accentLight: 'text-brand-red', bar: '#EF4444' },
-          { key: 'PRELEASE', val: stats.preLeased, label: 'Pre-Leased', accent: 'text-blue-400', accentLight: 'text-blue-600', bar: '#3B82F6', readOnly: true },
-        ].map((item) => {
-          const active = !item.readOnly && statusFilter === item.key;
+        {statItems.map((item) => {
+          const isSelected = statusFilter === item.filterKey;
           return (
             <button
               key={item.key}
               type="button"
-              disabled={item.readOnly}
-              onClick={() => !item.readOnly && setStatusFilter(item.key)}
-              className={`py-1.5 px-1 transition-colors flex flex-col items-center justify-center min-w-0 ${
-                item.readOnly ? 'cursor-default' : 'cursor-pointer'
-              } ${active ? (isDark ? 'bg-white/[0.08]' : 'bg-white') : ''}`}
-              style={active ? { boxShadow: `inset 0 -2px 0 0 ${item.bar}` } : undefined}
+              onClick={() => setStatusFilter(item.filterKey)}
+              className={`py-1.5 px-1 transition-colors flex flex-col items-center justify-center min-w-0 cursor-pointer ${
+                isSelected
+                  ? isDark
+                    ? 'bg-white/[0.08]'
+                    : 'bg-white shadow-inner'
+                  : isDark
+                    ? 'hover:bg-white/[0.03]'
+                    : 'hover:bg-white/70'
+              }`}
+              style={isSelected ? { boxShadow: `inset 0 -2px 0 0 ${item.accentHex}` } : undefined}
             >
-              <span className={`text-xs sm:text-sm font-bold tabular-nums leading-none ${isDark ? item.accent : item.accentLight}`}>
-                {item.val}
+              <span className={`text-xs sm:text-sm font-bold tabular-nums leading-none ${item.numClass}`}>
+                {item.value}
               </span>
-              <span className={`font-mono text-[8.5px] sm:text-[9.5px] uppercase tracking-wider mt-0.5 truncate max-w-full ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <span className={`font-mono text-[8.5px] sm:text-[9.5px] uppercase tracking-wider mt-0.5 truncate max-w-full ${item.lblClass}`}>
                 {item.label}
               </span>
             </button>
@@ -1214,155 +1241,134 @@ export default function Park1Model3D() {
           <span>Drag to Orbit · Scroll / Pinch to Zoom · Click Shed to Inspect</span>
         </div>
 
-        {/* Floating Minimal Hover Tooltip */}
-        {hoveredEntity && !selectedEntity && (
-          <div className="absolute top-3 left-3 pointer-events-none z-20 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md text-white text-xs font-bold border border-white/15 shadow-xl">
-            <span
-              className="w-2.5 h-2.5 rounded-full"
-              style={{
-                backgroundColor:
-                  hoveredEntity.kind === 'plot'
-                    ? getStatusColorHex(plotData[hoveredEntity.id]?.status)
-                    : '#cc2936',
-              }}
-            />
-            <span>{hoveredEntity.title}</span>
-            <span className="text-slate-400 font-normal">
-              {hoveredEntity.kind === 'plot'
-                ? `${hoveredEntity.dimText} · ${getStatusLabel(plotData[hoveredEntity.id]?.status)}`
-                : hoveredEntity.block}
-            </span>
+        {/* Floating Minimal Hover Tooltip (Exact Data Sequence as 2D) */}
+        {hoverSummary && (
+          <div className="absolute top-3 left-3 pointer-events-none z-20 p-2.5 border border-white/15 bg-[#121215]/95 backdrop-blur-md text-white shadow-xl min-w-[154px]">
+            {hoverSummary.kind === 'plot' ? (
+              <>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="font-mono font-bold text-xs">{hoverSummary.title}</span>
+                  <span
+                    className="px-1.5 py-0.5 text-[9px] font-mono font-bold text-white uppercase"
+                    style={{ background: hoverSummary.statusColor }}
+                  >
+                    {hoverSummary.statusLabel}
+                  </span>
+                </div>
+                {hoverSummary.sqYdText ? (
+                  <p className="text-xs font-bold text-brand-red tabular-nums">
+                    {hoverSummary.sqYdText} SQ.YD
+                    <span className="font-normal text-gray-400 ml-1 text-[10px]">({hoverSummary.sqFtText} ft²)</span>
+                  </p>
+                ) : (
+                  <p className="text-xs font-bold text-brand-red">{hoverSummary.rawArea}</p>
+                )}
+                {hoverSummary.phaseLabel && (
+                  <p className="font-mono text-[10px] text-gray-400 mt-0.5">{hoverSummary.phaseLabel}</p>
+                )}
+              </>
+            ) : (
+              <div className="flex items-center gap-2 text-xs font-bold">
+                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: hoverSummary.statusColor }} />
+                <span>{hoverSummary.title}</span>
+                <span className="text-gray-400 font-normal">{hoverSummary.subtitle}</span>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Click Inspector Drawer Card */}
-        {selectedPlotInfo && (
-          <aside
-            className={`absolute bottom-3 right-3 sm:top-3 sm:bottom-auto z-30 w-[calc(100%-1.5rem)] sm:w-80 rounded-2xl p-4 sm:p-5 border shadow-2xl backdrop-blur-xl transition-all ${
-              isDark
-                ? 'bg-gray-900/95 border-gray-700 text-white shadow-black/80'
-                : 'bg-white/95 border-gray-200 text-gray-900 shadow-slate-300/80'
-            }`}
-          >
-            <div className="flex items-start justify-between gap-2 pb-3 border-b border-gray-200/50 dark:border-gray-800">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium sm:font-semibold uppercase tracking-wider ${getStatusBadgeClass(
-                      selectedPlotInfo.status
-                    )}`}
-                  >
-                    {getStatusLabel(selectedPlotInfo.status)}
-                  </span>
-                  <span className="text-[11px] font-medium text-gray-400">
-                    {selectedPlotInfo.block}
-                  </span>
+        {/* Shared Shed Modal (1:1 Same Sequence & Data as 2D) */}
+        <UnitDetailModal
+          {...shedModalProps}
+          isDark={isDark}
+          portalContainer={isFullscreen ? wrapperRef.current : undefined}
+          onClose={clearSelection}
+        />
+
+        {/* Compact Landmark Drawer (Only for Site Office & Main Gate 3D Landmarks) */}
+        {selectedLandmark && (() => {
+          const cardBorder = isDark ? 'border-white/15' : 'border-gray-200';
+          const subBg = isDark ? 'bg-[#0B0B0D]/80' : 'bg-[#F8F9FA]';
+
+          return (
+            <aside
+              className={`absolute bottom-2.5 right-2.5 sm:top-3 sm:bottom-auto z-30 w-[calc(100%-1.25rem)] sm:w-[340px] p-3.5 sm:p-4 border shadow-2xl backdrop-blur-xl transition-all ${
+                isDark
+                  ? 'bg-[#121215]/95 border-white/15 text-white shadow-black/80'
+                  : 'bg-white/95 border-gray-200 text-gray-900 shadow-slate-300/80'
+              }`}
+            >
+              <div className={`flex items-start justify-between gap-2 pb-2.5 border-b ${cardBorder}`}>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="px-2 py-0.5 text-[9.5px] font-mono font-bold uppercase tracking-wider bg-emerald-600 text-white">
+                      {selectedLandmark.status}
+                    </span>
+                    <span className="font-mono text-[10px] font-bold text-gray-400 truncate">
+                      {selectedLandmark.block}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-bold tracking-tight truncate">
+                    {selectedLandmark.title}
+                  </h3>
                 </div>
-                <h3 className="text-lg sm:text-xl font-medium sm:font-semibold tracking-tight">
-                  {selectedPlotInfo.title}
-                </h3>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Metro Industrial Park (MIP 1), Moraiya
-                </p>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedEntity(null);
-                  if (selectBoxRef.current) selectBoxRef.current.visible = false;
-                  if (requestRenderRef.current) requestRenderRef.current();
-                }}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-100 hover:bg-gray-800 transition"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Metrics */}
-            <div className="grid grid-cols-2 gap-2 my-3 text-xs">
-              <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-medium text-gray-400 uppercase block">
-                  Dimensions
-                </span>
-                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.dimText}</span>
-              </div>
-
-              <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-medium text-gray-400 uppercase block">
-                  Approx. Area
-                </span>
-                <span className="font-medium sm:font-semibold text-brand-red mt-0.5 block">
-                  {selectedPlotInfo.area || `${selectedPlotInfo.approxSqFt?.toLocaleString()} SQ.FT`}
-                </span>
-              </div>
-
-              <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-medium text-gray-400 uppercase block">
-                  Road Facing
-                </span>
-                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.roadLabel}</span>
-              </div>
-
-              <div className="p-2.5 rounded-xl border bg-slate-500/5 dark:bg-gray-800/40 border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-medium text-gray-400 uppercase block">
-                  Unit Type
-                </span>
-                <span className="font-medium sm:font-semibold mt-0.5 block">{selectedPlotInfo.unitType}</span>
-              </div>
-            </div>
-
-            {/* Compact Spec Tags */}
-            <div className={`flex flex-wrap gap-1.5 mb-3 text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-              {['60 Ft RCC', '30–35 Ft Clear', 'VDF Floor', 'CCTV · Weighbridge'].map((tag) => (
-                <span
-                  key={tag}
-                  className={`px-2 py-1 border ${isDark ? 'border-white/10 bg-white/[0.04]' : 'border-gray-200 bg-gray-50'}`}
+                <button
+                  type="button"
+                  onClick={clearSelection}
+                  className="p-1 text-gray-400 hover:text-brand-red transition"
+                  aria-label="Close landmark inspector"
                 >
-                  {tag}
-                </span>
-              ))}
-            </div>
+                  <X size={16} />
+                </button>
+              </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2 pt-1">
-              <a
-                href={`https://wa.me/919824235642?text=${whatsappMessage}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 py-2 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium sm:font-semibold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-green-600/25 active:scale-95 transition-all whitespace-nowrap"
-              >
-                <FaWhatsapp size={14} />
-                <span>WhatsApp</span>
-              </a>
+              <div className="grid grid-cols-2 gap-1.5 my-2.5 font-mono text-[10.5px]">
+                <div className={`p-2 border ${cardBorder} ${subBg}`}>
+                  <span className="text-[9px] uppercase text-gray-400 block">Dimensions</span>
+                  <span className="font-bold block mt-0.5 truncate">{selectedLandmark.dimText}</span>
+                </div>
+                <div className={`p-2 border ${cardBorder} ${subBg}`}>
+                  <span className="text-[9px] uppercase text-gray-400 block">Frontage</span>
+                  <span className="font-bold block mt-0.5 truncate">{selectedLandmark.roadLabel}</span>
+                </div>
+              </div>
 
-              <a
-                href="tel:919824235642"
-                className={`py-2 px-3 rounded-xl font-medium sm:font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all active:scale-95 whitespace-nowrap ${
-                  isDark
-                    ? 'border-gray-700 text-gray-200 hover:border-brand-red'
-                    : 'border-gray-200 text-gray-700 hover:border-brand-red'
-                }`}
-              >
-                <Phone size={13} />
-                <span>Call</span>
-              </a>
+              <div className="flex items-center gap-1.5">
+                <a
+                  href={`https://wa.me/919824235642?text=${landmarkWhatsappMessage}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-2 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-mono font-bold text-[11px] uppercase flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap"
+                >
+                  <FaWhatsapp size={13} />
+                  <span>WhatsApp</span>
+                </a>
 
-              <button
-                type="button"
-                onClick={() => focusOnEntity(selectedPlotInfo)}
-                className={`py-2 px-2.5 rounded-xl font-medium sm:font-semibold text-xs flex items-center justify-center border transition-all active:scale-95 ${
-                  isDark
-                    ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-                    : 'border-gray-200 text-gray-700 hover:bg-gray-100'
-                }`}
-                title="Focus Camera on Plot"
-              >
-                <Compass size={14} />
-              </button>
-            </div>
-          </aside>
-        )}
+                <a
+                  href="tel:919824235642"
+                  className={`py-2 px-2.5 font-mono font-bold text-[11px] uppercase flex items-center justify-center gap-1 border transition-colors whitespace-nowrap ${
+                    isDark ? 'border-white/15 text-gray-200 hover:border-brand-red' : 'border-gray-200 text-gray-700 hover:border-brand-red'
+                  }`}
+                >
+                  <Phone size={12} />
+                  <span>Call</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => focusOnEntity(selectedLandmark)}
+                  className={`py-2 px-2.5 flex items-center justify-center border transition-colors ${
+                    isDark ? 'border-white/15 text-gray-300 hover:bg-white/5' : 'border-gray-200 text-gray-700 hover:bg-gray-100'
+                  }`}
+                  title="Focus Camera"
+                >
+                  <Compass size={13} />
+                </button>
+              </div>
+            </aside>
+          );
+        })()}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 // src/components/Calculator/CalculatorComponent.jsx
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Lock, Unlock, Calculator as CalcIcon,
@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { calculateMultiplePlotArea } from '../../services/dataService';
+import { sqYdToSqMt, fmtNum } from '../../utils/areaConversions';
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -31,6 +32,7 @@ const InputField = memo(({
   lockable = false, isLocked = false, onToggleLock,
   helperText = null, isProcessing = false,
   allowSpecialChars = false,
+  inputRef = null,
   showButton = false, onButtonClick = null, buttonDisabled = false,
 }) => {
   const { theme } = useTheme();
@@ -88,6 +90,7 @@ const InputField = memo(({
       <div className="flex items-stretch gap-2">
         <div className="relative flex-1">
           <input
+            ref={inputRef}
             id={field}
             type="text"
             inputMode={allowSpecialChars ? 'text' : 'decimal'}
@@ -151,10 +154,11 @@ InputField.displayName = 'InputField';
 /* ══════════════════════════════════════════════
    MAIN COMPONENT
    ══════════════════════════════════════════════ */
-export default function CalculatorComponent() {
+export default function CalculatorComponent({ prefillUnit = null }) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const t = getTokens(isDark);
+  const rateInputRef = useRef(null);
 
   /* ── State ── */
   const [data, setData] = useState({
@@ -164,6 +168,7 @@ export default function CalculatorComponent() {
   const [locks, setLocks] = useState({
     value: false, roi: false, yearlyRent: false, monthlyRent: false,
   });
+  const [loadedUnit, setLoadedUnit]               = useState(null);
   const [plotResult, setPlotResult]               = useState(null);
   const [isCalculatingPlots, setIsCalculatingPlots] = useState(false);
   const [showFormulas, setShowFormulas]             = useState(false);
@@ -171,8 +176,35 @@ export default function CalculatorComponent() {
   const [historyIndex, setHistoryIndex]             = useState(-1);
   const LOADING_FACTOR = 0.25;
 
-  /* ── Persistence ── */
+  /* ── Persistence & Direct Prefill from Site Map Modal ── */
   useEffect(() => {
+    if (prefillUnit && prefillUnit.sqYard) {
+      const nextData = {
+        sqYard: prefillUnit.sqYard || '',
+        sqFt: prefillUnit.sqFt || '',
+        carpetArea: prefillUnit.carpetArea || '',
+        carpetAreaSqFt: prefillUnit.carpetAreaSqFt || '',
+        rate: '',
+        value: '',
+        roi: '',
+        yearlyRent: prefillUnit.yearlyRent || '',
+        monthlyRent: prefillUnit.monthlyRent || '',
+      };
+      setData(nextData);
+      setLocks({ value: false, roi: false, yearlyRent: false, monthlyRent: false });
+      setPlotResult(null);
+      setLoadedUnit(prefillUnit);
+      setHistory([nextData]);
+      setHistoryIndex(0);
+      const timer = setTimeout(() => {
+        if (rateInputRef.current) {
+          rateInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          rateInputRef.current.focus({ preventScroll: true });
+        }
+      }, 220);
+      return () => clearTimeout(timer);
+    }
+
     const savedData  = localStorage.getItem('calculatorData');
     const savedLocks = localStorage.getItem('calculatorLocks');
     if (savedData) {
@@ -192,7 +224,7 @@ export default function CalculatorComponent() {
         console.error('Failed to load locks');
       }
     }
-  }, []);
+  }, [prefillUnit]);
 
   useEffect(() => {
     if (Object.values(data).some((v) => v !== '')) {
@@ -418,6 +450,7 @@ export default function CalculatorComponent() {
     };
     setData(empty);
     setPlotResult(null);
+    setLoadedUnit(null);
     saveToHistory(empty);
   }, [saveToHistory]);
 
@@ -513,6 +546,30 @@ export default function CalculatorComponent() {
           </div>
         </div>
       </div>
+
+      {/* ── Loaded Unit Banner from Site Map ── */}
+      {loadedUnit && (
+        <div className={`px-5 py-3 border-b ${t.border} ${t.bgSubtle} flex items-center justify-between gap-3`}>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider">
+              <span className="text-brand-red font-bold">{loadedUnit.parkCode}</span>
+              <span className={`font-bold ${t.textMain}`}>{loadedUnit.unitTitle} Loaded</span>
+              {loadedUnit.loadingNote && <span className={`hidden sm:inline ${t.textMuted}`}>· {loadedUnit.loadingNote}</span>}
+            </div>
+            <p className={`font-mono text-[11px] mt-0.5 tabular-nums ${t.textBody}`}>
+              Area: {loadedUnit.sqYard} SQ.YD · {loadedUnit.sqMt} SQ.MT · {loadedUnit.sqFt} SQ.FT — enter your rate per sq.yd below
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLoadedUnit(null)}
+            aria-label="Dismiss loaded unit notice"
+            className={`p-1 ${t.textMuted} hover:text-brand-red shrink-0`}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       {/* ── Multi-Plot Result Drawer ── */}
       <AnimatePresence initial={false}>
@@ -652,6 +709,11 @@ export default function CalculatorComponent() {
               value={data.sqFt}
               onChange={handleInputChange('sqFt')}
               suffix="ft²"
+              helperText={
+                parseFloat(data.sqYard) > 0
+                  ? `= ${fmtNum(sqYdToSqMt(parseFloat(data.sqYard)))} SQ.MT`
+                  : null
+              }
             />
             <InputField
               label="Carpet Area (Sq. Yard)"
@@ -668,6 +730,11 @@ export default function CalculatorComponent() {
               onChange={handleInputChange('carpetAreaSqFt')}
               suffix="ft²"
               highlighted={true}
+              helperText={
+                parseFloat(data.carpetArea) > 0
+                  ? `= ${fmtNum(sqYdToSqMt(parseFloat(data.carpetArea)))} SQ.MT`
+                  : null
+              }
             />
           </div>
         </div>
@@ -682,11 +749,24 @@ export default function CalculatorComponent() {
           </div>
 
           <div className="p-5 sm:p-6">
+            {loadedUnit && (
+              <div className={`mb-4 p-2.5 border ${t.border} ${t.bgSubtle} font-mono text-[10.5px] tabular-nums flex items-center justify-between gap-2`}>
+                <span className={`font-bold truncate ${t.textMain}`}>
+                  <span className="text-brand-red">{loadedUnit.parkCode}</span> · {loadedUnit.unitTitle}
+                </span>
+                <span className={`shrink-0 ${t.textBody}`}>
+                  {loadedUnit.sqYard} yd² · {loadedUnit.sqMt} m²
+                </span>
+              </div>
+            )}
+
             <InputField
               label="Rate per Sq. Yard"
               field="rate"
               value={data.rate}
               onChange={handleInputChange('rate')}
+              inputRef={rateInputRef}
+              highlighted={!!loadedUnit && !data.rate}
               suffix="₹"
             />
             <InputField

@@ -7,7 +7,7 @@ import {
   ChevronLeft, ChevronRight, Calculator as CalcIcon,
   Layers,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CalculatorComponent from '../components/Calculator/CalculatorComponent';
 import SimpleCalculator from '../components/Calculator/SimpleCalculator';
 import SEO from '../components/SEO/SEO';
@@ -85,8 +85,11 @@ const Modal = memo(({ show, onClose, children, label }) => (
 const Calculator = () => {
   const { theme } = useTheme();
   const navigate  = useNavigate();
+  const location  = useLocation();
   const isDark    = theme === 'dark';
   const t         = getTokens(isDark);
+
+  const prefillUnit = location.state?.prefillUnit || null;
 
   const [showAreaSheet, setShowAreaSheet]   = useState(false);
   const [showSiteLayout, setShowSiteLayout] = useState(false);
@@ -99,8 +102,10 @@ const Calculator = () => {
   const prevTable = useCallback(() => setCurrentTable((p) => (p - 1 + TABLES.length) % TABLES.length), []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (!prefillUnit) {
+      window.scrollTo(0, 0);
+    }
+  }, [prefillUnit]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -332,7 +337,7 @@ const Calculator = () => {
             >
               {/* Main Calculator — 2 cols */}
               <div className="lg:col-span-2">
-                <CalculatorComponent />
+                <CalculatorComponent prefillUnit={prefillUnit} />
               </div>
 
               {/* Simple Calculator — 1 col */}

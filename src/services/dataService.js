@@ -3,8 +3,21 @@ const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSlkFBTES7Dt-
 
 import Papa from 'papaparse';
 
-export const getPlotData = () => {
-  return new Promise((resolve, reject) => {
+const CACHE_TTL_MS = 15000;
+let cachedPlotData = null;
+let cachedAt = 0;
+let inFlightPromise = null;
+
+export const getPlotData = (forceRefresh = false) => {
+  const now = Date.now();
+  if (!forceRefresh && cachedPlotData && now - cachedAt < CACHE_TTL_MS) {
+    return Promise.resolve(cachedPlotData);
+  }
+  if (!forceRefresh && inFlightPromise) {
+    return inFlightPromise;
+  }
+
+  inFlightPromise = new Promise((resolve, reject) => {
     Papa.parse(SHEET_URL, {
       download: true,
       header: true,
@@ -35,18 +48,27 @@ export const getPlotData = () => {
             };
           });
 
+          if (Object.keys(plotData).length > 0) {
+            cachedPlotData = plotData;
+            cachedAt = Date.now();
+          }
+          inFlightPromise = null;
           resolve(plotData);
         } catch (error) {
           console.error('Error parsing sheet data:', error);
+          inFlightPromise = null;
           resolve({});
         }
       },
       error: (error) => {
         console.error('Error fetching Google Sheet:', error);
+        inFlightPromise = null;
         reject(error);
       }
     });
   });
+
+  return inFlightPromise;
 };
 
 export const parseAreaToSqYd = (areaString) => {

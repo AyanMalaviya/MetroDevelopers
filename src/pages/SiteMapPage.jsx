@@ -2,6 +2,7 @@
 import { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import { useNavbar } from '../context/useNavbar';
 import {
   ArrowLeft, Map, Table, Search, Maximize2,
   ExternalLink, Factory, Box,
@@ -131,6 +132,7 @@ const DrawingCard = ({ src, alt, title, onOpen, isDark }) => {
 
 const SiteMapPage = () => {
   const { theme } = useTheme();
+  const { isNavbarVisible } = useNavbar();
   const navigate  = useNavigate();
   const location  = useLocation();
   const isDark    = theme === 'dark';
@@ -210,9 +212,23 @@ const SiteMapPage = () => {
         Metro Developers — Industrial Park 1, 2 &amp; 3 Interactive Site Maps &amp; Area Schedules
       </h1>
 
-      <div className={`min-h-screen pt-16 pb-24 lg:pb-10 ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}>
+      <div
+        style={{ paddingTop: 'var(--navbar-height, 67px)' }}
+        className={`min-h-screen pb-24 lg:pb-10 ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
+      >
         {/* ════════ COMPACT SINGLE-LINE WORKSPACE TAB & MODE BAR ════════ */}
-        <div className={`sticky top-16 z-30 border-b ${t.border} ${isDark ? 'bg-[#121215]/95' : 'bg-white/95'} backdrop-blur-md`}>
+        <div
+          id="sitemap-workspace-tabs"
+          style={{
+            top: 'var(--navbar-height, 67px)',
+            transform: isNavbarVisible
+              ? 'translate3d(0, 0, 0)'
+              : 'translate3d(0, calc(var(--navbar-height, 67px) * -1), 0)',
+          }}
+          className={`sticky z-30 border-b ${t.border} ${
+            isDark ? 'bg-[#121215]/95' : 'bg-white/95'
+          } backdrop-blur-md transition-transform duration-300 ease-out will-change-transform`}
+        >
           <div className="max-w-7xl mx-auto px-2.5 sm:px-6 py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-1.5 md:gap-4">
             {/* Row 1 (Single Line): Back + Compact Single-Line Park Selector */}
             <div className="flex items-center gap-1.5 min-w-0">
