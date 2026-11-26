@@ -9,14 +9,9 @@ import {
   Minimize2,
   RefreshCw,
   ExternalLink,
-  Factory,
-  CheckCircle2,
   X,
-  MapPin,
   Compass,
   Phone,
-  Layers,
-  Map,
 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { getPlotData } from '../../services/dataService';
@@ -298,7 +293,7 @@ function buildBoxBatch(items, material, parent, castShadow = false, receiveShado
   return im;
 }
 
-export default function Park1Model3D({ onSwitchTo2D }) {
+export default function Park1Model3D() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -1102,71 +1097,44 @@ export default function Park1Model3D({ onSwitchTo2D }) {
     : '';
 
   return (
-    <div className="relative w-full h-full flex flex-col min-h-[640px] sm:min-h-[720px] select-none">
-      {/* ── Top Toolbar (Seamless Integration with SiteMap Dashboard) ── */}
+    <div className="relative w-full flex flex-col h-[62svh] min-h-[420px] sm:h-[68svh] sm:min-h-[580px] select-none">
+      {/* ── Single-Line 3D Controls Bar ── */}
       <div
-        className={`p-3 sm:p-4 border-b transition-colors z-10 flex flex-wrap items-center justify-between gap-3 ${
-          isDark ? 'border-gray-800 bg-gray-950/80 backdrop-blur-md' : 'border-gray-200 bg-slate-50/90 backdrop-blur-md'
+        className={`px-2.5 sm:px-3.5 py-2 border-b transition-colors z-10 flex items-center justify-between gap-2 ${
+          isDark ? 'border-white/[0.12] bg-[#121215]/95 backdrop-blur-md' : 'border-gray-200 bg-white/95 backdrop-blur-md'
         }`}
       >
-        {/* Left: Badge + 2D/3D Selector */}
-        <div className="flex items-center gap-2">
-          <div
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium sm:font-semibold tracking-tight border ${
-              isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900 shadow-xs'
-            }`}
-          >
-            <Factory size={14} className="text-brand-red shrink-0" />
-            <span>Park 1 (3D Model)</span>
-            <span className="text-[10px] text-gray-400 font-semibold">• 63 Sheds</span>
-          </div>
+        <span className={`font-mono text-[10px] sm:text-[11px] uppercase tracking-wider truncate ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+          Interactive 3D · 63 Sheds
+        </span>
 
-          {/* Quick Toggle to Switch back to 2D Map */}
-          {onSwitchTo2D && (
-            <button
-              type="button"
-              onClick={onSwitchTo2D}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
-                isDark
-                  ? 'bg-gray-800 text-gray-200 border-gray-700 hover:text-white hover:bg-gray-700'
-                  : 'bg-white text-gray-700 border-gray-200 hover:text-gray-900 hover:bg-gray-50 shadow-xs'
-              }`}
-            >
-              <Map size={13} className="text-brand-red" />
-              <span>Switch to 2D Map</span>
-            </button>
-          )}
-        </div>
-
-        {/* Right: Actions (Sync, Reset View, Fullscreen, Edit) */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Edit Button */}
+        {/* Right: Actions (Edit, Sync, Reset View, Fullscreen) */}
+        <div className="flex items-center gap-1.5 shrink-0">
           <a
             href={ADMIN_SHEET_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
+            className={`h-7 px-2 border inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
               isDark
-                ? 'bg-emerald-950/40 text-emerald-400 hover:bg-emerald-900/60 border-emerald-800/60'
-                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200 shadow-xs'
+                ? 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400 hover:bg-emerald-900/50'
+                : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
             }`}
             title="Edit Inventory on Google Sheet"
           >
-            <ExternalLink size={12} />
+            <ExternalLink size={11} />
             <span>Edit</span>
           </a>
 
-          {/* Sync Button */}
           <button
             type="button"
             onClick={loadData}
             disabled={loading}
-            className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
+            className={`h-7 px-2 border inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             } ${
               isDark
-                ? 'bg-gray-900 text-gray-300 hover:text-white hover:bg-gray-800 border-gray-700/70'
-                : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-gray-200 shadow-xs'
+                ? 'bg-[#0B0B0D] text-gray-300 hover:text-white border-white/[0.12]'
+                : 'bg-[#F8F9FA] text-gray-700 hover:text-gray-900 border-gray-200'
             }`}
             title="Sync Live Data"
           >
@@ -1174,104 +1142,70 @@ export default function Park1Model3D({ onSwitchTo2D }) {
             <span className="hidden sm:inline">Sync</span>
           </button>
 
-          {/* Reset Camera View */}
           <button
             type="button"
             onClick={resetCamera}
-            className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
+            className={`h-7 px-2 border inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
               isDark
-                ? 'bg-gray-900 text-gray-300 hover:text-white hover:bg-gray-800 border-gray-700/70'
-                : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 border-gray-200 shadow-xs'
+                ? 'bg-[#0B0B0D] text-gray-300 hover:text-white border-white/[0.12]'
+                : 'bg-[#F8F9FA] text-gray-700 hover:text-gray-900 border-gray-200'
             }`}
-            title="Reset to Aerial View"
+            title="Reset Camera View"
           >
-            <RotateCcw size={12} />
-            <span className="hidden sm:inline">Reset View</span>
+            <RotateCcw size={11} />
+            <span className="hidden sm:inline">Reset</span>
           </button>
 
-          {/* Fullscreen Button */}
           <button
             type="button"
             onClick={toggleFullscreen}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs shadow-xs active:scale-95 transition-all whitespace-nowrap"
+            className="h-7 px-2.5 bg-brand-red hover:bg-red-700 text-white font-mono text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 whitespace-nowrap transition-colors"
             title="Toggle Fullscreen 3D View"
           >
-            {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
-            <span className="hidden sm:inline">{isFullscreen ? 'Exit Full' : 'Fullscreen'}</span>
+            {isFullscreen ? <Minimize2 size={11} /> : <Maximize2 size={11} />}
+            <span className="hidden sm:inline">{isFullscreen ? 'Exit' : 'Expand'}</span>
           </button>
         </div>
       </div>
 
-      {/* ── Row 2: Availability Summary Stats Strip ── */}
+      {/* ── Single-Row Compact Filterable Availability Ledger ── */}
       <div
-        className={`px-3 py-2 border-b grid grid-cols-4 sm:grid-cols-5 gap-1.5 sm:gap-2.5 text-center ${
-          isDark ? 'border-gray-800 bg-gray-900/60' : 'border-gray-100 bg-slate-50/60'
+        className={`border-b grid grid-cols-5 divide-x text-center ${
+          isDark ? 'border-white/[0.12] divide-white/[0.12] bg-[#0B0B0D]' : 'border-gray-200 divide-gray-200 bg-[#F8F9FA]'
         }`}
       >
-        <div
-          onClick={() => setStatusFilter('ALL')}
-          className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-all ${
-            statusFilter === 'ALL'
-              ? 'ring-2 ring-brand-red border-transparent bg-brand-red/10'
-              : isDark
-                ? 'bg-gray-900/40 border-gray-800'
-                : 'bg-white border-gray-200'
-          }`}
-        >
-          <div className="text-xs sm:text-sm font-medium sm:font-semibold theme-text-primary">{stats.total}</div>
-          <div className="text-[10px] text-gray-400 font-medium uppercase">Total Sheds</div>
-        </div>
-
-        <div
-          onClick={() => setStatusFilter('AVAILABLE')}
-          className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-all ${
-            statusFilter === 'AVAILABLE'
-              ? 'ring-2 ring-emerald-500 border-transparent bg-emerald-500/10'
-              : isDark
-                ? 'bg-gray-900/40 border-gray-800'
-                : 'bg-white border-gray-200'
-          }`}
-        >
-          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-emerald-500">{stats.available}</div>
-          <div className="text-[10px] text-emerald-500 font-medium uppercase">Available</div>
-        </div>
-
-        <div
-          onClick={() => setStatusFilter('SOLD')}
-          className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-all ${
-            statusFilter === 'SOLD'
-              ? 'ring-2 ring-gray-400 border-transparent bg-gray-400/10'
-              : isDark
-                ? 'bg-gray-900/40 border-gray-800'
-                : 'bg-white border-gray-200'
-          }`}
-        >
-          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-gray-400">{stats.sold}</div>
-          <div className="text-[10px] text-gray-400 font-medium uppercase">Sold</div>
-        </div>
-
-        <div
-          onClick={() => setStatusFilter('LEASE')}
-          className={`p-1.5 sm:p-2 rounded-xl border cursor-pointer transition-all ${
-            statusFilter === 'LEASE'
-              ? 'ring-2 ring-red-500 border-transparent bg-red-500/10'
-              : isDark
-                ? 'bg-gray-900/40 border-gray-800'
-                : 'bg-white border-gray-200'
-          }`}
-        >
-          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-brand-red">{stats.forLease}</div>
-          <div className="text-[10px] text-brand-red font-medium uppercase">For Lease</div>
-        </div>
-
-        <div className="hidden sm:block p-1.5 sm:p-2 rounded-xl border bg-gray-900/20 border-gray-800">
-          <div className="text-xs sm:text-sm font-medium sm:font-semibold text-blue-500">{stats.preLeased}</div>
-          <div className="text-[10px] text-blue-500 font-medium uppercase">Pre-Leased</div>
-        </div>
+        {[
+          { key: 'ALL', val: stats.total, label: 'All Units', accent: 'text-white', accentLight: 'text-gray-900', bar: '#E11D48' },
+          { key: 'AVAILABLE', val: stats.available, label: 'Available', accent: 'text-emerald-400', accentLight: 'text-emerald-600', bar: '#10B981' },
+          { key: 'SOLD', val: stats.sold, label: 'Sold', accent: 'text-gray-300', accentLight: 'text-gray-700', bar: '#6B7280' },
+          { key: 'LEASE', val: stats.forLease, label: 'For Lease', accent: 'text-red-400', accentLight: 'text-brand-red', bar: '#EF4444' },
+          { key: 'PRELEASE', val: stats.preLeased, label: 'Pre-Leased', accent: 'text-blue-400', accentLight: 'text-blue-600', bar: '#3B82F6', readOnly: true },
+        ].map((item) => {
+          const active = !item.readOnly && statusFilter === item.key;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              disabled={item.readOnly}
+              onClick={() => !item.readOnly && setStatusFilter(item.key)}
+              className={`py-1.5 px-1 transition-colors flex flex-col items-center justify-center min-w-0 ${
+                item.readOnly ? 'cursor-default' : 'cursor-pointer'
+              } ${active ? (isDark ? 'bg-white/[0.08]' : 'bg-white') : ''}`}
+              style={active ? { boxShadow: `inset 0 -2px 0 0 ${item.bar}` } : undefined}
+            >
+              <span className={`text-xs sm:text-sm font-bold tabular-nums leading-none ${isDark ? item.accent : item.accentLight}`}>
+                {item.val}
+              </span>
+              <span className={`font-mono text-[8.5px] sm:text-[9.5px] uppercase tracking-wider mt-0.5 truncate max-w-full ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* ── 3D Viewport Host (Canvas Only) ── */}
-      <div className="relative flex-1 w-full h-full min-h-[500px]">
+      <div className="relative flex-1 w-full h-full min-h-[300px]">
         <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden" />
 
         {/* Orbit Hint Watermark */}
@@ -1378,20 +1312,16 @@ export default function Park1Model3D({ onSwitchTo2D }) {
               </div>
             </div>
 
-            {/* Quick Specs */}
-            <div className="text-[11px] font-medium text-gray-400 dark:text-gray-400 space-y-1 mb-3 bg-slate-500/5 dark:bg-gray-800/30 p-2.5 rounded-xl border border-gray-200/60 dark:border-gray-800">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-emerald-500" />
-                <span>60 Ft Heavy RCC road for multi-axle freight trailers</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-emerald-500" />
-                <span>30–35 Ft clear ceiling height &amp; heavy VDF floor</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-emerald-500" />
-                <span>24/7 CCTV security &amp; on-site weighbridge</span>
-              </div>
+            {/* Compact Spec Tags */}
+            <div className={`flex flex-wrap gap-1.5 mb-3 text-[10px] font-mono uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              {['60 Ft RCC', '30–35 Ft Clear', 'VDF Floor', 'CCTV · Weighbridge'].map((tag) => (
+                <span
+                  key={tag}
+                  className={`px-2 py-1 border ${isDark ? 'border-white/10 bg-white/[0.04]' : 'border-gray-200 bg-gray-50'}`}
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
 
             {/* Action Buttons */}
