@@ -5,13 +5,16 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'fra
 import Lenis from 'lenis';
 import {
   Phone, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight,
-  MapPin, Play, Calculator, Check, Minus,
+  MapPin, Play, Calculator, Check, Minus, Factory,
 } from 'lucide-react';
 import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
 import CountUp from 'react-countup';
 import SEO from '../components/SEO/SEO';
 import { useTheme } from '../context/ThemeContext.jsx';
 import FeaturesSection from '../components/Home/FeaturesSection.jsx';
+import SlidingCardShell from '../components/Home/SlidingCardShell.jsx';
+import { useIsDesktop } from '../hooks/useIsDesktop.js';
+import { PARK_DIRECTIONS } from '../data/parkDirections.js';
 import {
   propertySchema,
   faqSchema,
@@ -39,58 +42,79 @@ const stats = [
   { index: '04', countEnd: 6,   suffix: '+',  label: 'Years in Industrial RE', note: 'Operating since 2020' },
 ];
 
-/* ─── Developments Portfolio ─── */
+/* ─── Developments Portfolio (Scannable KPI + Highlights) ─── */
 const developments = [
   {
-    code: 'MIP — 01',
+    id: 'park',
+    code: 'MIP 01',
+    typeLabel: 'Sheds & Warehouses',
     name: 'Industrial Park 1',
     tag: 'Ready Possession',
     statusDot: 'bg-emerald-500',
     location: 'Moraiya, Changodar · NH 47',
     image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    bgTexture: '/images/bg-factory-interior.jpg',
+    parallaxRange: [-20, 20],
     alt: 'Ready industrial sheds at Metro Industrial Park Moraiya Changodar',
-    summary:
-      '63 move-in ready industrial sheds & warehouses across 54,000+ sq. yards with 30–35 ft clear ceiling height and 60 ft heavy RCC internal roads.',
-    specs: [
-      { k: 'Unit Sizes', v: '4,000 – 50,000 sq.ft' },
-      { k: 'Inventory',  v: '63 Ready Sheds' },
-      { k: 'Est. Yield', v: '6 – 8% Rental' },
+    kpis: [
+      { v: '63',      k: 'Ready Units', accent: true },
+      { v: '54K+',    k: 'Sq.Yd Park',  accent: false },
+      { v: '4K–50K',  k: 'Sq.Ft Shed',  accent: false },
+    ],
+    highlights: [
+      'Move-in ready industrial sheds · 6–8% yield',
+      '30–35 ft clear ceiling · PEB & RCC options',
+      '60 ft heavy RCC roads & in-house weighbridge',
     ],
     primaryLink: { to: '/metro-industrial-park', label: 'Explore Sheds' },
     mapLink: { to: '/site-map', state: undefined },
   },
   {
-    code: 'MIP — 02',
+    id: 'estate',
+    code: 'MIP 02',
+    typeLabel: 'Industrial Plots',
     name: 'Industrial Park 2',
-    tag: 'New Launch · Build Your Own',
+    tag: 'New Launch',
     statusDot: 'bg-brand-red',
-    location: 'Opp. Metro Industrial Park, Moraiya',
+    location: 'Opp. MIP 1, Moraiya',
     image: '/images/metro-industrial-park-2-site-plan.jpg',
+    bgTexture: '/images/bg-industrial-park-aerial.jpg',
+    parallaxRange: [24, -24],
     alt: 'Industrial plots for sale to build your own shed at Industrial Park 2 Moraiya',
-    summary:
-      '23 clear-title industrial plots designed for custom-built sheds. Delivered with wide RCC roads, street lights, puran (soil filling), compound wall, and 24/7 security.',
-    specs: [
-      { k: 'Plot Sizes', v: '300 – 1,930+ sq.yd' },
-      { k: 'Inventory',  v: '23 Clear-Title Plots' },
-      { k: 'Infra',      v: 'RCC Roads & Gated' },
+    kpis: [
+      { v: '23',       k: 'Clear Plots', accent: true },
+      { v: '17.5K',    k: 'Sq.Yd Park',  accent: false },
+      { v: '300–1.9K', k: 'Sq.Yd Plot',  accent: false },
+    ],
+    highlights: [
+      'Build-your-own shed plots (300–1,930+ sq.yd)',
+      'Opposite Park 1 in Moraiya industrial belt',
+      'Wide RCC roads, soil puran & 24/7 security',
     ],
     primaryLink: { to: '/metro-industrial-estate', label: 'Explore Plots' },
     mapLink: { to: '/site-map', state: { activeTab: 'estate' } },
   },
   {
-    code: 'MIP — 03',
+    id: 'park3',
+    code: 'MIP 03',
+    typeLabel: 'Industrial Plots',
     name: 'Industrial Park 3',
-    tag: 'New Launch · Leveling Ongoing',
+    tag: 'Leveling Ongoing',
     statusDot: 'bg-amber-500',
-    location: 'Bavla – Rajoda Road, Ahmedabad',
+    location: 'Bavla – Rajoda Road',
     image: '/images/metro-industrial-park-3-site-plan.jpg',
+    bgTexture: '/images/bg-manufacturing-floor.jpg',
+    parallaxRange: [-22, 22],
     alt: 'Industrial plots for sale at Metro Industrial Park 3 Bavla Ahmedabad',
-    summary:
-      '77 industrial plots spread across ~60,000 sq. yards on the Bavla corridor. Complete developer infrastructure including heavy RCC roads, puran, lighting, and gated access.',
-    specs: [
-      { k: 'Plot Sizes', v: '334 – 1,643 sq.yd' },
-      { k: 'Inventory',  v: '77 Industrial Plots' },
-      { k: 'Status',     v: 'Leveling Ongoing' },
+    kpis: [
+      { v: '77',       k: 'Total Plots', accent: true },
+      { v: '59.5K',    k: 'Sq.Yd Park',  accent: false },
+      { v: '334–1.6K', k: 'Sq.Yd Plot',  accent: false },
+    ],
+    highlights: [
+      'Clear-title industrial plots (334–1,643 sq.yd)',
+      'Fast-growing Bavla – Rajoda NH corridor',
+      'Planned RCC roads, street lights & gated entry',
     ],
     primaryLink: { to: '/metro-industrial-park-3', label: 'Explore Plots' },
     mapLink: { to: '/site-map', state: { activeTab: 'park3' } },
@@ -458,20 +482,34 @@ const FieldLogSection = ({ isDark }) => {
 };
 
 /* ════════════════════════════════════════════════
-   02. DEVELOPMENTS PORTFOLIO (Swiss 3-Column Index)
+   02. DEVELOPMENTS PORTFOLIO (Alternating Sliding Scannable Cards)
 ════════════════════════════════════════════════ */
 const DevelopmentsSection = ({ isDark }) => {
   const t = getTokens(isDark);
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const isDesktop = useIsDesktop();
+  const directionsById = useMemo(
+    () => Object.fromEntries(PARK_DIRECTIONS.map((p) => [p.id, p.href])),
+    []
+  );
 
   return (
     <section
-      ref={ref}
       aria-label="Flagship Industrial Developments by Metro Developers"
-      className={`py-16 sm:py-28 border-b ${t.bgSurface} ${t.border}`}
+      className={`py-16 sm:py-28 relative overflow-hidden border-b ${t.bgSurface} ${t.border}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* Subtle Blueprint Grid Behind Staggered Cards */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: isDark
+            ? 'linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px)'
+            : 'linear-gradient(to right, rgba(18,18,20,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(18,18,20,0.035) 1px, transparent 1px)',
+          backgroundSize: '56px 56px',
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <EditorialHeader
           index="02"
           kicker="Active Portfolio · Ahmedabad Corridor"
@@ -483,90 +521,118 @@ const DevelopmentsSection = ({ isDark }) => {
               </span>
             </>
           }
-          description="Three planned industrial parks across Moraiya, Changodar, and Bavla—engineered with heavy RCC internal roads, clear titles, and 24/7 gated infrastructure."
+          description="Three planned industrial parks across Moraiya, Changodar, and Bavla—compare capacity, sizes, and live availability at a glance."
           isDark={isDark}
         />
 
-        {/* Border-Collapsed Architectural 3-Column Ledger */}
-        <div className={`mt-10 border ${t.border} grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x ${t.divide}`}>
-          {developments.map((dev, i) => (
-            <motion.article
-              key={dev.code}
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: i * 0.1, ease: EASE }}
-              className={`group flex flex-col justify-between ${t.bgSurface}`}
-            >
-              <div>
-                {/* Top Project Header */}
-                <div className={`flex items-center justify-between px-6 py-4 border-b ${t.border}`}>
-                  <span className={`font-mono text-xs font-medium sm:font-semibold tracking-[0.14em] ${t.textMain}`}>
-                    {dev.code}
+        {/* Alternating Sliding Portfolio Cards — Space on Left & Right, Zero Scrollbar */}
+        <div className="mt-10 sm:mt-14 px-1 sm:px-3 flex flex-col gap-8 sm:gap-12 w-full overflow-x-clip scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {developments.map((dev, i) => {
+            const directionsHref = directionsById[dev.id];
+            return (
+              <SlidingCardShell
+                key={dev.code}
+                index={i}
+                parallaxRange={dev.parallaxRange}
+                bgTexture={dev.bgTexture}
+                isDark={isDark}
+                isDesktop={isDesktop}
+                surfaceTone="page"
+                widthClass="w-[88%] sm:w-[74%] lg:w-[64%] max-w-[720px]"
+                headerLeft={
+                  <span className="flex items-center gap-2 min-w-0">
+                    <span className="text-brand-red font-semibold shrink-0">{dev.code}</span>
+                    <span className={`${t.textMuted} shrink-0`}>/</span>
+                    <span className={`inline-flex items-center gap-1.5 ${t.textMuted} truncate`}>
+                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dev.statusDot}`} aria-hidden="true" />
+                      <span className="truncate">{dev.tag}</span>
+                    </span>
                   </span>
-                  <span className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase ${t.textMuted}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${dev.statusDot}`} aria-hidden="true" />
-                    {dev.tag}
+                }
+                headerRight={
+                  <span className={`tabular-nums shrink-0 ${t.textMuted}`}>
+                    {String(i + 1).padStart(2, '0')} — {String(developments.length).padStart(2, '0')}
                   </span>
-                </div>
-
-                {/* Crisp Architectural Photo */}
-                <div className={`relative aspect-[16/10] overflow-hidden border-b ${t.border} bg-neutral-950`}>
-                  <img
-                    src={dev.image}
-                    alt={dev.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                  />
-                </div>
-
-                {/* Body */}
-                <div className="p-6 sm:p-7">
-                  <div className={`flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider mb-2.5 ${t.textMuted}`}>
-                    <MapPin size={12} className="text-brand-red shrink-0" aria-hidden="true" />
-                    <span>{dev.location}</span>
+                }
+                media={{
+                  src: dev.image,
+                  alt: dev.alt,
+                  fallbackIcon: <Factory size={18} aria-hidden="true" />,
+                  overlay: (
+                    <span className="absolute bottom-2.5 left-2.5 px-2 py-0.5 bg-black/75 border border-white/20 font-mono text-[9.5px] uppercase tracking-[0.14em] text-white">
+                      {dev.typeLabel}
+                    </span>
+                  ),
+                }}
+              >
+                <div>
+                  <div className={`flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-wider mb-1.5 ${t.textMuted}`}>
+                    <MapPin size={11} className="text-brand-red shrink-0" aria-hidden="true" />
+                    <span className="truncate">{dev.location}</span>
                   </div>
 
-                  <h3 className={`text-xl sm:text-2xl font-medium sm:font-semibold tracking-tight mb-3 font-sans ${t.textMain}`}>
+                  <h3 className={`text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-3 font-sans ${t.textMain}`}>
                     {dev.name}
                   </h3>
 
-                  <p className={`text-sm leading-relaxed mb-6 ${t.textBody}`}>
-                    {dev.summary}
-                  </p>
-
-                  {/* Key-Value Specification Rows */}
-                  <dl className={`border-t ${t.border} divide-y ${t.divide}`}>
-                    {dev.specs.map((row) => (
-                      <div key={row.k} className="flex items-center justify-between py-2.5 text-xs">
-                        <dt className={`font-mono uppercase tracking-wider ${t.textMuted}`}>{row.k}</dt>
-                        <dd className={`font-medium sm:font-semibold tabular-nums ${t.textMain}`}>{row.v}</dd>
+                  {/* Scannable 3-Metric Datum Strip */}
+                  <div className={`grid grid-cols-3 border ${t.border} divide-x ${t.divide} ${t.bgSurface} mb-4`}>
+                    {dev.kpis.map((kpi) => (
+                      <div key={kpi.k} className="px-2 sm:px-3 py-2 text-center">
+                        <div className={`text-sm sm:text-base font-bold tracking-tight tabular-nums whitespace-nowrap ${kpi.accent ? 'text-brand-red' : t.textMain}`}>
+                          {kpi.v}
+                        </div>
+                        <div className={`font-mono text-[8.5px] sm:text-[9.5px] uppercase tracking-wider mt-0.5 truncate ${t.textMuted}`}>
+                          {kpi.k}
+                        </div>
                       </div>
                     ))}
-                  </dl>
-                </div>
-              </div>
+                  </div>
 
-              {/* Action Footer */}
-              <div className={`grid grid-cols-5 border-t ${t.border} divide-x ${t.divide}`}>
-                <Link
-                  to={dev.primaryLink.to}
-                  className="col-span-3 py-4 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors"
-                >
-                  <span>{dev.primaryLink.label}</span>
-                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                </Link>
-                <Link
-                  to={dev.mapLink.to}
-                  state={dev.mapLink.state}
-                  className={`col-span-2 py-4 px-4 ${t.bgPage} ${t.textMain} hover:text-brand-red text-xs font-medium sm:font-semibold uppercase tracking-[0.1em] inline-flex items-center justify-center gap-1.5 transition-colors`}
-                >
-                  <MapPin size={13} aria-hidden="true" />
-                  <span>Map</span>
-                </Link>
-              </div>
-            </motion.article>
-          ))}
+                  {/* Quick-Scan Specification Bullets */}
+                  <ul className="space-y-1.5 mb-4">
+                    {dev.highlights.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-xs sm:text-[13px] leading-snug">
+                        <span aria-hidden="true" className="mt-1.5 w-1.5 h-1.5 bg-brand-red shrink-0" />
+                        <span className={t.textBody}>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Action Bar */}
+                <div className={`grid grid-cols-12 border ${t.border} divide-x ${t.divide}`}>
+                  <Link
+                    to={dev.primaryLink.to}
+                    className="col-span-6 py-2.5 sm:py-3 px-3 sm:px-4 bg-brand-red hover:bg-red-700 text-white text-[11px] font-semibold uppercase tracking-[0.1em] inline-flex items-center justify-between transition-colors whitespace-nowrap"
+                  >
+                    <span>{dev.primaryLink.label}</span>
+                    <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5 shrink-0" aria-hidden="true" />
+                  </Link>
+                  <Link
+                    to={dev.mapLink.to}
+                    state={dev.mapLink.state}
+                    className={`col-span-3 py-2.5 sm:py-3 px-2 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-1 transition-colors`}
+                  >
+                    <span>Map</span>
+                  </Link>
+                  {directionsHref && (
+                    <a
+                      href={directionsHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Google Maps directions to ${dev.name}`}
+                      className={`col-span-3 py-2.5 sm:py-3 px-2 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-1 transition-colors`}
+                    >
+                      <MapPin size={11} className="text-brand-red shrink-0" aria-hidden="true" />
+                      <span className="hidden sm:inline">Route</span>
+                      <ArrowUpRight size={11} className={`${t.textMuted} sm:hidden shrink-0`} aria-hidden="true" />
+                    </a>
+                  )}
+                </div>
+              </SlidingCardShell>
+            );
+          })}
         </div>
       </div>
     </section>

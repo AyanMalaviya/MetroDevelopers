@@ -1,15 +1,17 @@
 // src/components/Layout/Navbar.jsx
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import {
   Menu, X, Calculator, MapPin, Home, Factory,
   Store, Mail, Sun, Moon, Phone, MessageCircle, ChevronDown,
-  Settings2, ArrowUp, Type, Map, ArrowUpRight,
+  Settings2, Type, ArrowUpRight,
   LucideLandPlot, Star,
 } from 'lucide-react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavbar } from '../../context/useNavbar';
+import { PARK_DIRECTIONS } from '../../data/parkDirections';
+import ParkDirectionsDropdown from './ParkDirectionsDropdown';
 
 const EASE = [0.16, 1, 0.3, 1];
 const FONT_SIZE_STORAGE_KEY = 'metro-font-size';
@@ -26,18 +28,21 @@ const NAV_ITEMS = [
   { path: '/site-map',                label: 'Site Map',   icon: MapPin         },
 ];
 
+const DRAWER_NAV_PATHS = new Set(['/', '/contact', '/calculator']);
+const DRAWER_NAV_ITEMS = NAV_ITEMS.filter((item) => DRAWER_NAV_PATHS.has(item.path));
+
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const { isNavbarVisible: isVisible, setIsNavbarVisible: setIsVisible } = useNavbar();
   const isDark = theme === 'dark';
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [isMenuOpen,   setIsMenuOpen]   = useState(false);
-  const [scrolled,     setScrolled]     = useState(false);
-  const [contactOpen,  setContactOpen]  = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [fontSize,     setFontSize]     = useState(() => {
+  const [isMenuOpen,     setIsMenuOpen]     = useState(false);
+  const [scrolled,       setScrolled]       = useState(false);
+  const [directionsOpen, setDirectionsOpen] = useState(false);
+  const [contactOpen,    setContactOpen]    = useState(false);
+  const [settingsOpen,   setSettingsOpen]   = useState(false);
+  const [fontSize,       setFontSize]       = useState(() => {
     try {
       const saved = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
       if (saved && FONT_SIZE_VALUES[saved]) return saved;
@@ -47,6 +52,7 @@ const Navbar = () => {
 
   const lastScrollYRef = useRef(0);
   const headerRef      = useRef(null);
+  const directionsRef  = useRef(null);
   const contactRef     = useRef(null);
   const settingsRef    = useRef(null);
 
@@ -121,6 +127,7 @@ const Navbar = () => {
           } else if (y > lastY && y > 100) {
             setIsVisible((prev) => (prev ? false : prev));
             setIsMenuOpen(false);
+            setDirectionsOpen(false);
             setContactOpen(false);
             setSettingsOpen(false);
           } else if (y < lastY) {
@@ -141,11 +148,13 @@ const Navbar = () => {
   // Close dropdowns on outside click or Escape
   useEffect(() => {
     const onMouseDown = (e) => {
-      if (contactRef.current && !contactRef.current.contains(e.target))   setContactOpen(false);
-      if (settingsRef.current && !settingsRef.current.contains(e.target)) setSettingsOpen(false);
+      if (directionsRef.current && !directionsRef.current.contains(e.target)) setDirectionsOpen(false);
+      if (contactRef.current && !contactRef.current.contains(e.target))       setContactOpen(false);
+      if (settingsRef.current && !settingsRef.current.contains(e.target))     setSettingsOpen(false);
     };
     const onKeyDown = (e) => {
       if (e.key === 'Escape') {
+        setDirectionsOpen(false);
         setContactOpen(false);
         setSettingsOpen(false);
         setIsMenuOpen(false);
@@ -178,28 +187,10 @@ const Navbar = () => {
 
   const settingsItems = [
     {
-      icon: ArrowUp,
-      label: 'Back to Top',
-      meta: 'Scroll',
-      action: () => { window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
-    },
-    {
       icon: Type,
       label: 'Text Size',
       meta: fontSize === 'normal' ? '16px' : fontSize === 'large' ? '18px' : '20px',
       action: () => { toggleFontSize(); },
-    },
-    {
-      icon: Factory,
-      label: 'Explore Park 1',
-      meta: 'MIP 01',
-      action: () => { navigate('/metro-industrial-park'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
-    },
-    {
-      icon: Map,
-      label: 'Plan & Availability',
-      meta: 'Live Map',
-      action: () => { navigate('/site-map'); window.scrollTo({ top: 0, behavior: 'smooth' }); setSettingsOpen(false); },
     },
   ];
 
@@ -211,10 +202,10 @@ const Navbar = () => {
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-        <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
+        <nav className="max-w-7xl mx-auto flex items-center justify-between px-3 sm:px-4 xl:px-6 h-16">
 
           {/* ── Brand Mark ── */}
-          <Link to="/" onClick={closeMenu} className="flex items-center gap-3 min-w-0 flex-shrink-0 group">
+          <Link to="/" onClick={closeMenu} className="flex items-center gap-2 xl:gap-3 min-w-0 flex-shrink-0 group">
             <div className={`w-9 h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0 transition-colors group-hover:border-brand-red`}>
               <img
                 src={isDark ? '/MDLogo-dark.png' : '/MDLogo.png'}
@@ -229,7 +220,7 @@ const Navbar = () => {
               <span className={`block text-sm font-bold tracking-tight truncate ${textMain}`}>
                 Metro Developers
               </span>
-              <span className={`block font-mono text-[9px] uppercase tracking-[0.14em] truncate ${textMuted}`}>
+              <span className={`block lg:hidden xl:block font-mono text-[9px] uppercase tracking-[0.1em] xl:tracking-[0.14em] truncate ${textMuted}`}>
                 Industrial Sheds · Lease &amp; Sale
               </span>
             </div>
@@ -244,7 +235,7 @@ const Navbar = () => {
                   to={item.path}
                   end={item.path === '/'}
                   className={({ isActive }) =>
-                    `relative h-full px-3 flex items-center text-xs font-semibold tracking-wide transition-colors whitespace-nowrap ${
+                    `relative h-full px-2 xl:px-3 flex items-center text-[11px] xl:text-xs font-semibold tracking-wide transition-colors whitespace-nowrap ${
                       isActive
                         ? textMain
                         : `${textBody} hover:${isDark ? 'text-white' : 'text-black'}`
@@ -257,7 +248,7 @@ const Navbar = () => {
                       {isActive && (
                         <span
                           aria-hidden="true"
-                          className="absolute bottom-0 inset-x-2 h-[2px] bg-brand-red"
+                          className="absolute bottom-0 inset-x-1.5 xl:inset-x-2 h-[2px] bg-brand-red"
                         />
                       )}
                     </>
@@ -267,14 +258,29 @@ const Navbar = () => {
             </div>
 
             {/* ── Utility Controls Cluster ── */}
-            <div className={`ml-3 pl-3 border-l ${border} flex items-center gap-1.5`}>
+            <div className={`ml-1.5 xl:ml-3 pl-1.5 xl:pl-3 border-l ${border} flex items-center gap-1 xl:gap-1.5 shrink-0`}>
+              {/* Park Directions Dropdown */}
+              <div ref={directionsRef}>
+                <ParkDirectionsDropdown
+                  isDark={isDark}
+                  open={directionsOpen}
+                  onOpenChange={(next) => {
+                    setDirectionsOpen(next);
+                    if (next) {
+                      setContactOpen(false);
+                      setSettingsOpen(false);
+                    }
+                  }}
+                />
+              </div>
+
               {/* Reach Us Dropdown */}
               <div className="relative" ref={contactRef}>
                 <button
                   type="button"
-                  onClick={() => { setContactOpen((v) => !v); setSettingsOpen(false); }}
+                  onClick={() => { setContactOpen((v) => !v); setDirectionsOpen(false); setSettingsOpen(false); }}
                   aria-expanded={contactOpen}
-                  className={`h-9 px-3 border text-xs font-bold uppercase tracking-[0.1em] inline-flex items-center gap-2 transition-colors ${
+                  className={`h-9 px-2 xl:px-3 border text-[11px] xl:text-xs font-bold uppercase tracking-[0.04em] xl:tracking-[0.08em] inline-flex items-center gap-1 xl:gap-1.5 transition-colors whitespace-nowrap ${
                     contactOpen
                       ? 'bg-brand-red border-brand-red text-white'
                       : `${border} ${bgSurface} ${textMain} hover:border-brand-red hover:text-brand-red`
@@ -346,24 +352,31 @@ const Navbar = () => {
                           <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
                         </a>
 
-                        <a
-                          href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setContactOpen(false)}
-                          className={`flex items-center justify-between px-4 py-3 transition-colors ${
-                            isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <MapPin size={14} className="text-brand-red" aria-hidden="true" />
-                            <div>
-                              <p className={`text-xs font-bold ${textMain}`}>Get Directions</p>
-                              <p className={`text-[11px] ${textMuted}`}>Moraiya, Ahmedabad</p>
-                            </div>
+                        <div className="px-4 py-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <MapPin size={13} className="text-brand-red" aria-hidden="true" />
+                            <p className={`text-xs font-bold ${textMain}`}>Park Directions</p>
                           </div>
-                          <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
-                        </a>
+                          <div className="grid grid-cols-3 gap-1.5">
+                            {PARK_DIRECTIONS.map((park) => (
+                              <a
+                                key={park.id}
+                                href={park.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => setContactOpen(false)}
+                                className={`px-2 py-1.5 border ${border} ${bgPage} text-center transition-colors hover:border-brand-red group`}
+                              >
+                                <span className={`block text-[11px] font-bold ${textMain} group-hover:text-brand-red`}>
+                                  {park.name}
+                                </span>
+                                <span className={`block font-mono text-[9px] uppercase ${textMuted}`}>
+                                  {park.shortLocation}
+                                </span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
 
                         <a
                           href="https://g.page/r/CfbFhZSjMaH1EBI/review"
@@ -409,7 +422,7 @@ const Navbar = () => {
               <div className="relative" ref={settingsRef}>
                 <button
                   type="button"
-                  onClick={() => { setSettingsOpen((v) => !v); setContactOpen(false); }}
+                  onClick={() => { setSettingsOpen((v) => !v); setDirectionsOpen(false); setContactOpen(false); }}
                   title="Quick settings"
                   aria-label="Quick settings"
                   aria-expanded={settingsOpen}
@@ -527,11 +540,11 @@ const Navbar = () => {
             >
               {/* Navigation Index */}
               <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>
-                01 / Navigation
+                Navigation
               </div>
 
               <div className={`divide-y ${divide} border-b ${border}`}>
-                {NAV_ITEMS.map((item, i) => (
+                {DRAWER_NAV_ITEMS.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
@@ -547,12 +560,7 @@ const Navbar = () => {
                   >
                     {({ isActive }) => (
                       <>
-                        <span className="inline-flex items-center gap-3">
-                          <span className={`font-mono text-[10px] tabular-nums ${isActive ? 'text-white/80' : 'text-brand-red'}`}>
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          <span>{item.label}</span>
-                        </span>
+                        <span>{item.label}</span>
                         <item.icon size={15} className={isActive ? 'text-white' : textMuted} aria-hidden="true" />
                       </>
                     )}
@@ -562,7 +570,7 @@ const Navbar = () => {
 
               {/* Quick Actions */}
               <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>
-                02 / Quick Actions
+                Quick Actions
               </div>
 
               <div className={`divide-y ${divide} border-b ${border}`}>
@@ -589,7 +597,7 @@ const Navbar = () => {
 
               {/* Direct Site Office */}
               <div className={`px-5 py-3 border-b ${border} font-mono text-[10px] uppercase tracking-[0.18em] ${textMuted}`}>
-                03 / Reach Us
+                Reach Us
               </div>
 
               <div className="p-4 space-y-2.5">
@@ -619,19 +627,34 @@ const Navbar = () => {
                   <ArrowUpRight size={14} className={textMuted} aria-hidden="true" />
                 </a>
 
-                <a
-                  href="https://maps.app.goo.gl/6fBawQdYxcmUw3WE6"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={closeMenu}
-                  className={`w-full py-3 px-4 border ${border} ${bgSurface} ${textMain} text-xs font-bold uppercase tracking-[0.12em] inline-flex items-center justify-between transition-colors`}
-                >
-                  <span className="inline-flex items-center gap-2.5">
-                    <MapPin size={14} className="text-brand-red" aria-hidden="true" />
-                    <span>Directions · Moraiya</span>
-                  </span>
-                  <ArrowUpRight size={14} className={textMuted} aria-hidden="true" />
-                </a>
+                <div className={`border ${border} ${bgSurface}`}>
+                  <div className={`px-4 py-2 border-b ${border} ${bgPage} font-mono text-[10px] uppercase tracking-[0.14em] ${textMuted} flex items-center gap-2`}>
+                    <MapPin size={12} className="text-brand-red" aria-hidden="true" />
+                    <span>Park Directions</span>
+                  </div>
+                  <div className={`divide-y ${divide}`}>
+                    {PARK_DIRECTIONS.map((park) => (
+                      <a
+                        key={park.id}
+                        href={park.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={closeMenu}
+                        className={`flex items-center justify-between px-4 py-2.5 transition-colors ${
+                          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <span className={`text-xs font-bold ${textMain}`}>{park.name}</span>
+                          <span className={`ml-1.5 font-mono text-[10px] ${textMuted}`}>
+                            · {park.shortLocation}
+                          </span>
+                        </div>
+                        <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
 
                 <a
                   href="https://g.page/r/CfbFhZSjMaH1EBI/review"

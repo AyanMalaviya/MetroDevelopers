@@ -17,6 +17,7 @@ import InteractiveSiteMap from '../components/InteractiveSiteMap/InteractiveSite
 const Park1Model3D = lazy(() => import('../components/InteractiveSiteMap/Park1Model3D'));
 import MetroEstateInteractiveMap from '../components/InteractiveSiteMap/MetroEstateInteractiveMap';
 import Park3InteractiveMap from '../components/InteractiveSiteMap/Park3InteractiveMap';
+import ParkDirectionsDropdown from '../components/Layout/ParkDirectionsDropdown';
 import SEO from '../components/SEO/SEO';
 import { estatePlotsSchedule, estateTotalStats } from '../data/estatePlotCoordinates';
 import { park3Plots } from '../data/park3PlotsData';
@@ -147,8 +148,9 @@ const SiteMapPage = () => {
   const [unitMode, setUnitMode]       = useState('both');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [viewerOpen, setViewerOpen]     = useState(false);
-  const [viewerSlides, setViewerSlides] = useState([]);
+  const [viewerOpen, setViewerOpen]         = useState(false);
+  const [viewerSlides, setViewerSlides]     = useState([]);
+  const [directionsOpen, setDirectionsOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -157,6 +159,7 @@ const SiteMapPage = () => {
   const handleTabSwitch = (id) => {
     setActiveTab(id);
     setSearchQuery('');
+    setDirectionsOpen(false);
   };
 
   const openViewer = useCallback((src, title) => {
@@ -272,14 +275,24 @@ const SiteMapPage = () => {
               </div>
             </div>
 
-            {/* Row 2 on Mobile / Right Side on Desktop (Single Line): Datum + Mode Segmented Pills */}
-            <div className="flex items-center justify-between md:justify-end gap-2 min-w-0">
-              <div className="flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider min-w-0">
-                <span className="text-brand-red font-bold shrink-0">{activeTabMeta?.code}</span>
-                <span className={`${t.textMuted} whitespace-nowrap`}>
-                  · {activeTabMeta?.loc}
-                  <span className="hidden sm:inline"> · {activeTabMeta?.area}</span>
-                </span>
+            {/* Row 2 on Mobile / Right Side on Desktop (Single Line): Datum + Directions + Mode Segmented Pills */}
+            <div className="flex items-center justify-between md:justify-end gap-1.5 sm:gap-2 min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                <div className="flex items-center gap-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider min-w-0">
+                  <span className="text-brand-red font-bold shrink-0">{activeTabMeta?.code}</span>
+                  <span className={`hidden sm:inline ${t.textMuted} whitespace-nowrap`}>
+                    · {activeTabMeta?.loc} · {activeTabMeta?.area}
+                  </span>
+                </div>
+
+                <ParkDirectionsDropdown
+                  isDark={isDark}
+                  compact
+                  align="left-sm-right-md"
+                  activeParkId={activeTab}
+                  open={directionsOpen}
+                  onOpenChange={setDirectionsOpen}
+                />
               </div>
 
               <div className={`inline-flex border ${t.border} divide-x ${t.divide} ${t.bgPage} shrink-0`}>

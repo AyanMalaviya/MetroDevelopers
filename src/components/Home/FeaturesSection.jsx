@@ -1,18 +1,12 @@
 // src/components/Home/FeaturesSection.jsx
-import { useRef, useState, useEffect, memo } from 'react';
+import { useRef, memo } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Factory, Truck, LucideCctv, Droplets, Scale } from 'lucide-react';
 import { FaRoad, FaTrash } from 'react-icons/fa';
+import SlidingCardShell from './SlidingCardShell';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 
 const EASE = [0.16, 1, 0.3, 1];
-
-/* ─── Chamfered 1px Industrial Bevel Clip Paths ─── */
-const OUTER_CLIP =
-  'polygon(16px 0%, 100% 0%, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0% 100%, 0% 16px)';
-const INNER_CLIP =
-  'polygon(15px 0%, 100% 0%, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0% 100%, 0% 15px)';
-const MEDIA_CLIP =
-  'polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px)';
 
 /* ─── Feature Specifications & Asymmetric Grid Config ─── */
 const featuresData = [
@@ -186,206 +180,78 @@ const featuresData = [
   },
 ];
 
-/* ─── Desktop breakpoint check so touch scrolling stays clean on mobile ─── */
-const useIsDesktop = () => {
-  const [isDesktop, setIsDesktop] = useState(
-    typeof window !== 'undefined' ? window.innerWidth >= 1024 : true
-  );
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 1024px)');
-    const onChange = (e) => setIsDesktop(e.matches);
-    setIsDesktop(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return isDesktop;
-};
-
 /* ════════════════════════════════════════════════
    ASYMMETRIC ARCHITECTURAL PARALLAX CARD
    ════════════════════════════════════════════════ */
 const ArchitecturalFeatureCard = memo(({ feat, index, isDark, isDesktop }) => {
-  const cardRef = useRef(null);
-  const inView = useInView(cardRef, { once: true, margin: '-60px' });
-  const isEven = index % 2 === 0;
-
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Direct GPU-accelerated transforms without heavy spring physics simulation loops
-  const cardY  = useTransform(scrollYProgress, [0, 1], feat.parallaxRange);
-  const imageY = useTransform(scrollYProgress, [0, 1], [-16, 16]);
-
   const textMain  = isDark ? 'text-white' : 'text-gray-900';
   const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
   const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
   const borderCol = isDark ? 'border-white/[0.12]' : 'border-gray-200';
 
   return (
-    <motion.article
-      ref={cardRef}
-      style={isDesktop ? { y: cardY } : undefined}
-      initial={{ opacity: 0, x: isEven ? -55 : 55 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.65, ease: EASE }}
-      className={`w-[82%] sm:w-[70%] lg:w-[58%] max-w-2xl ${
-        isEven ? 'self-start mr-auto ml-0' : 'self-end ml-auto mr-0'
-      } group relative`}
+    <SlidingCardShell
+      index={index}
+      parallaxRange={feat.parallaxRange}
+      bgTexture={feat.bgTexture}
+      isDark={isDark}
+      isDesktop={isDesktop}
+      widthClass="w-[82%] sm:w-[70%] lg:w-[58%] max-w-2xl"
+      headerLeft={
+        <span className="flex items-center gap-2">
+          <span className="text-brand-red font-medium sm:font-semibold">{feat.code}</span>
+          <span className={textMuted}>/</span>
+          <span className={textMuted}>{feat.category}</span>
+        </span>
+      }
+      headerRight={
+        <span className={`tabular-nums ${textMuted}`}>
+          {String(index + 1).padStart(2, '0')} — {String(featuresData.length).padStart(2, '0')}
+        </span>
+      }
+      media={{
+        src: feat.image,
+        alt: feat.alt,
+        fallbackIcon: feat.icon,
+      }}
     >
-      {/* Technical Corner Registration Brackets (Monochrome -> Signal Red on hover) */}
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none absolute -top-1.5 -right-1.5 w-4 h-4 border-t border-r transition-all duration-300 group-hover:w-6 group-hover:h-6 group-hover:border-brand-red z-20 ${
-          isDark ? 'border-white/30' : 'border-black/30'
-        }`}
-      />
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b border-l transition-all duration-300 group-hover:w-6 group-hover:h-6 group-hover:border-brand-red z-20 ${
-          isDark ? 'border-white/30' : 'border-black/30'
-        }`}
-      />
-
-      {/* Custom 1px Chamfered Border Shell */}
-      <div
-        className={`relative p-[1px] transition-colors duration-300 ${
-          isDark
-            ? 'bg-white/[0.12] group-hover:bg-brand-red/70'
-            : 'bg-black/[0.14] group-hover:bg-brand-red/75'
-        }`}
-        style={{ clipPath: OUTER_CLIP }}
-      >
-        {/* Inner Frosted Surface */}
-        <div
-          className={`relative h-full overflow-hidden backdrop-blur-md transition-colors duration-300 ${
-            isDark ? 'bg-[#121215]/95' : 'bg-white/95'
-          }`}
-          style={{ clipPath: INNER_CLIP }}
-        >
-          {/* Low-Opacity Industrial Ambient Texture Inside Card */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
           <div
-            aria-hidden="true"
-            className={`absolute inset-0 bg-cover bg-center pointer-events-none transition-transform duration-700 group-hover:scale-[1.04] ${
+            className={`w-9 h-9 border ${borderCol} flex items-center justify-center transition-colors duration-300 ${
               isDark
-                ? 'opacity-[0.09] mix-blend-luminosity'
-                : 'opacity-[0.045] grayscale'
+                ? 'bg-[#0B0B0D] text-[#F5F4F0] group-hover:border-brand-red group-hover:text-brand-red'
+                : 'bg-[#F5F3EE] text-[#121214] group-hover:border-brand-red group-hover:text-brand-red'
             }`}
-            style={{ backgroundImage: `url(${feat.bgTexture})` }}
-          />
-
-          {/* Readability Wash */}
-          <div
-            aria-hidden="true"
-            className={`absolute inset-0 pointer-events-none ${
-              isDark
-                ? 'bg-gradient-to-br from-[#121215]/90 via-[#121215]/82 to-[#0B0B0D]/95'
-                : 'bg-gradient-to-br from-white/95 via-white/88 to-[#F5F3EE]/95'
-            }`}
-          />
-
-          {/* Top 2px Signal Red Reveal Line */}
-          <div
-            aria-hidden="true"
-            className="relative z-10 h-[2px] w-full bg-brand-red scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out"
-          />
-
-          {/* Technical Top Spec Strip */}
-          <div
-            className={`relative z-10 flex items-center justify-between px-5 sm:px-6 py-3 border-b ${borderCol} font-mono text-[10px] tracking-[0.16em] uppercase`}
           >
-            <span className="flex items-center gap-2">
-              <span className="text-brand-red font-medium sm:font-semibold">{feat.code}</span>
-              <span className={textMuted}>/</span>
-              <span className={textMuted}>{feat.category}</span>
-            </span>
-            <span className={`tabular-nums ${textMuted}`}>
-              {String(index + 1).padStart(2, '0')} — {String(featuresData.length).padStart(2, '0')}
-            </span>
+            {feat.icon}
           </div>
-
-          {/* Card Body */}
-          <div
-            className="relative z-10 p-5 sm:p-6 flex flex-col md:flex-row md:items-stretch gap-6"
-          >
-            {/* Clipped Parallax Media Frame */}
-            <div
-              className={`relative overflow-hidden flex-shrink-0 border ${borderCol} bg-neutral-950 w-full md:w-[42%] aspect-[4/3] md:aspect-auto md:min-h-[220px]`}
-              style={{ clipPath: MEDIA_CLIP }}
-            >
-              {/* Fallback surface if image is missing */}
-              <div className="absolute inset-0 bg-[#17171B] flex items-center justify-center text-white/15">
-                <div className="scale-[2.5]">{feat.icon}</div>
-              </div>
-
-              {/* Site Photograph with Scroll Glide */}
-              <motion.img
-                src={feat.image}
-                alt={feat.alt}
-                width={800}
-                height={600}
-                loading="lazy"
-                decoding="async"
-                style={isDesktop ? { y: imageY, scale: 1.12 } : { scale: 1.04 }}
-                onError={(e) => {
-                  e.currentTarget.style.opacity = '0';
-                }}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-
-              {/* Subtle Photographic Vignette */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"
-              />
-            </div>
-
-            {/* Content Column */}
-            <div className="flex-1 flex flex-col justify-between">
-              <div>
-                {/* Crisp Monochrome Icon Box */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className={`w-9 h-9 border ${borderCol} flex items-center justify-center transition-colors duration-300 ${
-                      isDark
-                        ? 'bg-[#0B0B0D] text-[#F5F4F0] group-hover:border-brand-red group-hover:text-brand-red'
-                        : 'bg-[#F5F3EE] text-[#121214] group-hover:border-brand-red group-hover:text-brand-red'
-                    }`}
-                  >
-                    {feat.icon}
-                  </div>
-                  <div className={`h-px flex-1 ${isDark ? 'bg-white/[0.09]' : 'bg-black/[0.09]'}`} />
-                </div>
-
-                <h3 className={`text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-2.5 ${textMain}`}>
-                  {feat.title}
-                </h3>
-
-                <p className={`text-sm leading-relaxed mb-5 ${textBody}`}>
-                  {feat.description}
-                </p>
-              </div>
-
-              {/* Specification Bullets */}
-              <div className={`pt-4 border-t ${borderCol}`}>
-                <ul className="space-y-2">
-                  {feat.details.map((detail, di) => (
-                    <li key={di} className="flex items-start gap-2.5 text-xs sm:text-[13px] leading-snug">
-                      <span
-                        aria-hidden="true"
-                        className="mt-1.5 w-1.5 h-1.5 bg-brand-red flex-shrink-0"
-                      />
-                      <span className={textMain}>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
+          <div className={`h-px flex-1 ${isDark ? 'bg-white/[0.09]' : 'bg-black/[0.09]'}`} />
         </div>
+
+        <h3 className={`text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-2.5 ${textMain}`}>
+          {feat.title}
+        </h3>
+
+        <p className={`text-sm leading-relaxed mb-5 ${textBody}`}>
+          {feat.description}
+        </p>
       </div>
-    </motion.article>
+
+      <div className={`pt-4 border-t ${borderCol}`}>
+        <ul className="space-y-2">
+          {feat.details.map((detail, di) => (
+            <li key={di} className="flex items-start gap-2.5 text-xs sm:text-[13px] leading-snug">
+              <span
+                aria-hidden="true"
+                className="mt-1.5 w-1.5 h-1.5 bg-brand-red flex-shrink-0"
+              />
+              <span className={textMain}>{detail}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </SlidingCardShell>
   );
 });
 ArchitecturalFeatureCard.displayName = 'ArchitecturalFeatureCard';
