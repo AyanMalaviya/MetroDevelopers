@@ -13,6 +13,7 @@ const ParkDirectionsDropdown = ({
   onOpenChange,
   activeParkId = null,
   compact = false,
+  compactHeight = 'h-7 sm:h-8',
   align = 'right',
 }) => {
   const [internalOpen, setInternalOpen] = useState(false);
@@ -57,7 +58,7 @@ const ParkDirectionsDropdown = ({
   const rowHover  = isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]';
 
   const triggerClasses = compact
-    ? 'h-7 sm:h-8 px-2 sm:px-2.5 font-mono text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider gap-1'
+    ? `${compactHeight} px-2 sm:px-2.5 font-mono text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider gap-1`
     : 'h-9 px-2 xl:px-3 text-[11px] xl:text-xs font-bold uppercase tracking-[0.04em] xl:tracking-[0.08em] gap-1 xl:gap-1.5';
 
   const inactiveTriggerBg = compact ? bgHeader : bgSurface;

@@ -273,7 +273,10 @@ const MetroIndustrialPark = () => {
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
       >
         {/* ════════ ARCHITECTURAL HERO SLIDESHOW ════════ */}
-        <section className="flex flex-col pt-16">
+        <section
+          className="flex flex-col"
+          style={{ paddingTop: 'var(--navbar-height, 79px)' }}
+        >
           <div className="relative flex-shrink-0 overflow-hidden h-[50svh] sm:h-[60svh] lg:h-[72svh] bg-black">
             {images.map((img, i) => (
               <div

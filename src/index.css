@@ -12,7 +12,7 @@
   --font-accent: 'Instrument Serif', Georgia, serif;
   --font-calligraphy: 'Alex Brush', cursive;
   --font-serif-display: 'Playfair Display', Georgia, serif;
-  --navbar-height: calc(4rem + 3px);
+  --navbar-height: calc(4rem + 15px);
 
   /* Light Theme */
   --bg-primary: #ffffff;

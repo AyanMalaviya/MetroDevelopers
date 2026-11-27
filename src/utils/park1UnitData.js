@@ -1,6 +1,7 @@
 // src/utils/park1UnitData.js
 import { plotCoordinates } from '../data/plotcoordinates';
 import { getShedPhase } from '../data/phaseCoordinates';
+import { PARK1_DIMENSIONS_BY_ID } from '../data/park1Dimensions';
 import {
   parseAreaStringToSqYd,
   sqYdToSqFt,
@@ -93,6 +94,7 @@ export const getPark1HoverSummary = ({ shedId, plotData = {}, isDark = false }) 
   const rawArea = live.area || coord.area || 'N/A';
   const sqYd = parseAreaStringToSqYd(rawArea);
   const phase = getShedPhase(id);
+  const dim = PARK1_DIMENSIONS_BY_ID[id];
 
   return {
     id,
@@ -101,6 +103,8 @@ export const getPark1HoverSummary = ({ shedId, plotData = {}, isDark = false }) 
     statusColor,
     statusLabel,
     rawArea,
+    dimsFt: dim?.dimsFt || null,
+    dimsMt: dim?.dimsMt || null,
     sqYd,
     sqYdText: sqYd ? fmtNum(sqYd) : null,
     sqFtText: sqYd ? fmtNum(sqYdToSqFt(sqYd)) : null,
@@ -139,9 +143,14 @@ export const buildPark1ModalProps = ({ shedId, plotData = {}, isDark = false }) 
       ]
     : [];
 
+  const dim = PARK1_DIMENSIONS_BY_ID[id];
   const extraMetadata = [
     coord.section ? { label: 'Section / Phase', value: phase ? `Sec ${coord.section} · Phase ${phase.label}` : `Section ${coord.section}` } : null,
-    coord.area && /FT/i.test(coord.area) ? { label: 'Front / Depth', value: coord.area } : { label: 'Conversion Base', value: '1 Vaar = 1 SQ.YD = 9 SQ.FT' },
+    dim
+      ? { label: 'Length × Width', value: `${dim.dimsFt} (${dim.dimsMt})` }
+      : coord.area && /FT/i.test(coord.area)
+        ? { label: 'Front / Depth', value: coord.area }
+        : { label: 'Conversion Base', value: '1 Vaar = 1 SQ.YD = 9 SQ.FT' },
     live.monthlyRent ? { label: 'Monthly Rent', value: live.monthlyRent, accent: 'text-emerald-500' } : null,
     live.lessee ? { label: 'Lessee', value: live.lessee } : null,
     live.owner ? { label: 'Owner', value: live.owner } : null,

@@ -15,7 +15,11 @@ import {
   getPark1HoverSummary,
   buildPark1ModalProps,
 } from '../../utils/park1UnitData';
+import {
+  PARK1_DIMENSIONS,
+} from '../../data/park1Dimensions';
 import SiteMap2DViewport from './SiteMap2DViewport';
+import DimensionOverlay from './DimensionOverlay';
 import UnitDetailModal from './UnitDetailModal';
 
 const PLOT_ENTRIES = PARK1_PLOT_ENTRIES;
@@ -127,6 +131,7 @@ export default function InteractiveSiteMap() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [loading, setLoading] = useState(true);
   const [showPhases, setShowPhases] = useState(true);
+  const [dimensionUnit, setDimensionUnit] = useState('ft');
 
   const loadData = useCallback(async (silent = false, forceRefresh = false) => {
     if (!silent) setLoading(true);
@@ -156,6 +161,17 @@ export default function InteractiveSiteMap() {
 
   const stats = useMemo(() => computePark1Stats(plotData), [plotData]);
 
+  const dimmedMap = useMemo(() => {
+    if (statusFilter === 'ALL') return null;
+    const map = {};
+    PLOT_ENTRIES.forEach(([id]) => {
+      if (normalizePark1Status(plotData[id]?.status) !== statusFilter) {
+        map[id] = true;
+      }
+    });
+    return map;
+  }, [statusFilter, plotData]);
+
   const statItems = useMemo(() => getPark1StatItems(stats, isDark), [stats, isDark]);
 
   // Build canonical modal view data with full unit conversions
@@ -178,6 +194,8 @@ export default function InteractiveSiteMap() {
         onStatusFilterChange={setStatusFilter}
         showPhases={showPhases}
         onTogglePhases={() => setShowPhases((v) => !v)}
+        dimensionUnit={dimensionUnit}
+        onDimensionUnitChange={setDimensionUnit}
         adminSheetUrl={PARK1_ADMIN_SHEET_URL}
         loading={loading}
         onSync={() => loadData(false, true)}
@@ -189,6 +207,13 @@ export default function InteractiveSiteMap() {
         renderSvg={({ movedRef }) => (
           <svg viewBox="20 150 860 930" className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'none' }}>
             <PhaseOverlays showPhases={showPhases} isDark={isDark} />
+            <DimensionOverlay
+              units={PARK1_DIMENSIONS}
+              unitMode={dimensionUnit}
+              hoveredId={hoveredPlot}
+              selectedId={selectedPlot}
+              dimmedMap={dimmedMap}
+            />
             <g className="plots-layer">
               {PLOT_ENTRIES.map(([plotNumber, plot]) => {
                 const center = plot.center || getPlotCenter(plotNumber);
@@ -238,6 +263,11 @@ export default function InteractiveSiteMap() {
                 </p>
               ) : (
                 <p className="text-xs font-bold text-brand-red">{hover.rawArea}</p>
+              )}
+              {hover.dimsFt && (
+                <p className={`font-mono text-[10px] mt-0.5 tabular-nums ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {hover.dimsFt} · {hover.dimsMt}
+                </p>
               )}
               {hover.phaseLabel && <p className="font-mono text-[10px] text-gray-400 mt-0.5">{hover.phaseLabel}</p>}
             </div>

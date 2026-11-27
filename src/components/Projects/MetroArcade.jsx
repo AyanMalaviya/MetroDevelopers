@@ -150,7 +150,10 @@ const MetroArcade = () => {
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
       >
         {/* ════════ ARCHITECTURAL HERO SLIDESHOW ════════ */}
-        <section className="relative pt-16">
+        <section
+          className="relative"
+          style={{ paddingTop: 'var(--navbar-height, 79px)' }}
+        >
           <div className="relative h-[52svh] sm:h-[64svh] lg:h-[72svh] overflow-hidden bg-black">
             {images.map((image, index) => (
               <div

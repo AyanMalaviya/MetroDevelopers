@@ -209,7 +209,10 @@ const Calculator = () => {
         {/* ══════════════════════════════════
             HERO — ARCHITECTURAL HEADER
             ══════════════════════════════════ */}
-        <section className={`pt-20 sm:pt-24 border-b ${t.border} ${t.bgSurface}`}>
+        <section
+          style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 0.75rem)' }}
+          className={`border-b ${t.border} ${t.bgSurface}`}
+        >
           {/* Top Utility Strip */}
           <div className={`border-y ${t.border} ${t.bgPage}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">

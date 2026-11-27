@@ -59,14 +59,14 @@ const developments = [
     parallaxRange: [-20, 20],
     alt: 'Aerial 3D view of ready industrial sheds at Metro Industrial Park 1 Moraiya Changodar',
     kpis: [
-      { v: '63',      k: 'Ready Units', accent: true },
-      { v: '54K+',    k: 'Sq.Yd Park',  accent: false },
-      { v: '4K–50K',  k: 'Sq.Ft Shed',  accent: false },
+      { v: '63',         k: 'Ready Sheds', accent: true },
+      { v: '5,739 ft²',  k: 'Min Shed',    accent: false },
+      { v: '24,287 ft²', k: 'Max Shed',    accent: false },
     ],
     highlights: [
-      'Move-in ready industrial sheds · 6–8% yield',
-      '30–35 ft clear ceiling · PEB & RCC options',
-      '60 ft heavy RCC roads & in-house weighbridge',
+      'SBU: 637.65 – 2,698.50 sq.yd (5,739 – 24,287 sq.ft)',
+      'Plot: 478.22 – 2,023.77 sq.yd · Park 54,090 sq.yd',
+      '60 ft heavy RCC roads, weighbridge & 30–35 ft sheds',
     ],
     primaryLink: { to: '/metro-industrial-park', label: 'Park Info' },
     mapLink: { to: '/site-map', state: { activeTab: 'park' }, label: 'Availability' },
@@ -86,14 +86,14 @@ const developments = [
     parallaxRange: [24, -24],
     alt: 'AI BYOS visualization showing build-your-own sheds on Metro Industrial Park 2 plot divisions',
     kpis: [
-      { v: '23',       k: 'Clear Plots', accent: true },
-      { v: '17.5K',    k: 'Sq.Yd Park',  accent: false },
-      { v: '300–1.9K', k: 'Sq.Yd Plot',  accent: false },
+      { v: '23',        k: 'Clear Plots', accent: true },
+      { v: '312 yd²',   k: 'Min Plot',    accent: false },
+      { v: '1,931 yd²', k: 'Max Plot',    accent: false },
     ],
     highlights: [
-      'Build-your-own shed plots (300–1,930+ sq.yd)',
-      'Opposite Park 1 in Moraiya industrial belt',
-      'Wide RCC roads, soil puran & 24/7 security',
+      'Total: 312.16 – 1,930.90 sq.yd (2,809 – 17,378 sq.ft)',
+      'Net Plot: 236.98 – 1,465.85 sq.yd · Park 17,545 sq.yd',
+      'Opp. Park 1, Moraiya · RCC roads & soil puran',
     ],
     primaryLink: { to: '/metro-industrial-estate', label: 'Park Info' },
     mapLink: { to: '/site-map', state: { activeTab: 'estate' }, label: 'Availability' },
@@ -113,14 +113,14 @@ const developments = [
     parallaxRange: [-22, 22],
     alt: 'AI BYOS visualization showing build-your-own sheds on Metro Industrial Park 3 plot divisions',
     kpis: [
-      { v: '77',       k: 'Total Plots', accent: true },
-      { v: '59.5K',    k: 'Sq.Yd Park',  accent: false },
-      { v: '334–1.6K', k: 'Sq.Yd Plot',  accent: false },
+      { v: '77',        k: 'Total Plots', accent: true },
+      { v: '300 yd²',   k: 'Min Plot',    accent: false },
+      { v: '2,876 yd²', k: 'Max Plot',    accent: false },
     ],
     highlights: [
-      'Clear-title industrial plots (334–1,643 sq.yd)',
-      'Fast-growing Bavla – Rajoda NH corridor',
-      'Planned RCC roads, street lights & gated entry',
+      'Total: 300 – 2,876 sq.yd (2,700 – 25,884 sq.ft)',
+      'Carpet: 230 – 2,203 sq.yd · Park 59,508 sq.yd',
+      'Bavla – Rajoda Rd · RCC roads & gated entry',
     ],
     primaryLink: { to: '/metro-industrial-park-3', label: 'Park Info' },
     mapLink: { to: '/site-map', state: { activeTab: 'park3' }, label: 'Availability' },
@@ -262,19 +262,19 @@ const bigQuotes = [
 const cloudUpdates = [
   {
     id: '1',
-    log: 'LOG 01',
+    log: 'REEL 01',
     type: 'video',
     url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560096/METRO_INDUSTRIAL_PARK_04.mp4',
     thumbnail: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
     title: 'Complete Guide to Metro Industrial Park',
     description:
-      'Full walkthrough of Metro Industrial Park showcasing internal RCC roads, shed architecture, and Moraiya highway access.',
+      'Walkthrough of Metro Industrial Park internal RCC roads, shed architecture, and Moraiya highway access.',
     altText: 'Full video walkthrough of Metro Industrial Park in Moraiya Ahmedabad',
     uploadDate: '2026-08-22',
   },
   {
     id: '2',
-    log: 'LOG 02',
+    log: 'REEL 02',
     type: 'video',
     url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560385/Metro_industrial_park_reel_1.mov',
     thumbnail: '/images/post2.png',
@@ -286,13 +286,13 @@ const cloudUpdates = [
   },
   {
     id: '3',
-    log: 'LOG 03',
+    log: 'REEL 03',
     type: 'video',
     url: 'https://res.cloudinary.com/iz6nhmsy/video/upload/q_auto,f_auto/v1787560339/metro_industrial_park_pixel_art_video.mp4',
     thumbnail: '/images/post1.png',
     title: 'Warehouses, Sheds & Plots Overview',
     description:
-      'Visual breakdown of plot configurations, warehouse bays, and arterial road layout.',
+      'Plot configurations, warehouse bays, and arterial road layout.',
     altText: 'Digital layout visualization of Industrial Park warehouses, sheds and plots',
     uploadDate: '2026-08-24',
   },
@@ -315,9 +315,10 @@ const getTokens = (isDark) => ({
 ════════════════════════════════════════════════ */
 const EditorialHeader = memo(({ index, kicker, title, description, rightSlot, isDark }) => {
   const t = getTokens(isDark);
+  const hasRight = Boolean(description || rightSlot);
   return (
     <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 pb-10 sm:pb-12 border-b ${t.border}`}>
-      <div className="lg:col-span-7">
+      <div className={hasRight ? 'lg:col-span-7' : 'lg:col-span-12'}>
         <div className="flex items-center gap-3 mb-4 font-mono text-[11px] tracking-[0.18em] uppercase">
           <span className="text-brand-red font-medium sm:font-semibold">{index}</span>
           <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
@@ -327,14 +328,16 @@ const EditorialHeader = memo(({ index, kicker, title, description, rightSlot, is
           {title}
         </h2>
       </div>
-      <div className="lg:col-span-5 flex flex-col justify-end lg:items-end lg:text-right gap-4">
-        {description && (
-          <p className={`text-sm sm:text-base leading-relaxed max-w-md ${t.textBody}`}>
-            {description}
-          </p>
-        )}
-        {rightSlot}
-      </div>
+      {hasRight && (
+        <div className="lg:col-span-5 flex flex-col justify-end lg:items-end lg:text-right gap-4">
+          {description && (
+            <p className={`text-sm sm:text-base leading-relaxed max-w-md ${t.textBody}`}>
+              {description}
+            </p>
+          )}
+          {rightSlot}
+        </div>
+      )}
     </div>
   );
 });
@@ -364,16 +367,15 @@ const FieldLogSection = ({ isDark }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <EditorialHeader
           index="01"
-          kicker="Site Progress · @metro.industrialpark"
+          kicker="@metro.industrialpark · Reels"
           title={
             <>
-              On-Ground{' '}
+              Follow us on{' '}
               <span className="font-serif-editorial italic font-normal text-[1.22em] text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-brand-red inline-block">
-                Updates
+                Instagram
               </span>
             </>
           }
-          description="Unfiltered walkthroughs, road work, and phase-wise construction reels directly from Moraiya and Bavla."
           isDark={isDark}
           rightSlot={
             <div className="flex items-center gap-2">
@@ -470,14 +472,11 @@ const FieldLogSection = ({ isDark }) => {
                 )}
               </div>
 
-              {/* Caption */}
-              <div className="pt-4 pr-2">
-                <h3 className={`text-base font-medium sm:font-semibold tracking-tight mb-1.5 font-sans ${t.textMain}`}>
+              {/* Reel Title */}
+              <div className="pt-3 pr-2">
+                <h3 className={`text-sm sm:text-base font-medium sm:font-semibold tracking-tight font-sans ${t.textMain}`}>
                   {post.title}
                 </h3>
-                <p className={`text-xs sm:text-sm leading-relaxed ${t.textBody}`}>
-                  {post.description}
-                </p>
               </div>
             </motion.article>
           ))}
@@ -518,7 +517,7 @@ const DevelopmentsSection = ({ isDark }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <EditorialHeader
           index="02"
-          kicker="Active Portfolio · Ahmedabad Corridor"
+          kicker="Active Portfolio"
           title={
             <>
               Ready Sheds or{' '}
@@ -527,7 +526,6 @@ const DevelopmentsSection = ({ isDark }) => {
               </span>
             </>
           }
-          description="Three planned industrial parks across Moraiya, Changodar, and Bavla—compare capacity, sizes, and live availability at a glance."
           isDark={isDark}
         />
 
@@ -674,7 +672,7 @@ const InvestmentSection = ({ isDark }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <EditorialHeader
           index="04"
-          kicker="Capital Performance · Investor Memorandum"
+          kicker="Capital Performance"
           title={
             <>
               Industrial Sheds{' '}
@@ -684,7 +682,6 @@ const InvestmentSection = ({ isDark }) => {
               Traditional Assets
             </>
           }
-          description="While fixed deposits lose real purchasing power to tax and inflation, industrial sheds in Ahmedabad combine 6–8% rental yields with 10–12% corridor land appreciation."
           isDark={isDark}
           rightSlot={
             <Link
@@ -1002,7 +999,8 @@ const HomePage = () => {
         <section
           ref={heroRef}
           aria-label="Hero — Metro Industrial Park, Moraiya, Ahmedabad"
-          className="relative pt-16"
+          style={{ paddingTop: 'var(--navbar-height, 79px)' }}
+          className="relative"
         >
           {/* Full-bleed Parallax Media Frame */}
           <div className="relative h-[52svh] sm:h-[66svh] lg:h-[76svh] overflow-hidden bg-black">
@@ -1057,7 +1055,7 @@ const HomePage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: EASE }}
-                    className="lg:col-span-8"
+                    className="lg:col-span-12"
                   >
                     <p className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase text-white/75 mb-3">
                       Metro Enterprise · Industrial Real Estate
@@ -1074,17 +1072,6 @@ const HomePage = () => {
                         <span className="font-serif-display italic font-semibold text-white">Scale</span>
                         <span className="text-brand-red">.</span>
                       </span>
-                    </p>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.75, delay: 0.12, ease: EASE }}
-                    className="hidden sm:block lg:col-span-4"
-                  >
-                    <p className="text-sm sm:text-base text-gray-200 leading-relaxed border-l-2 border-brand-red pl-4">
-                      High-clearance industrial sheds and clear-title plots engineered for heavy manufacturing, logistics, and long-term capital growth across Ahmedabad.
                     </p>
                   </motion.div>
                 </div>
@@ -1250,17 +1237,13 @@ const HomePage = () => {
                     <span className={t.textMuted}>Direct Site Office</span>
                   </div>
 
-                  <h2 className={`text-3xl sm:text-5xl font-bold tracking-tight leading-[1.15] mb-5 ${t.textMain}`}>
+                  <h2 className={`text-3xl sm:text-5xl font-bold tracking-tight leading-[1.15] ${t.textMain}`}>
                     Schedule a site visit in{' '}
                     <span className="font-calligraphy font-normal text-[1.25em] text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-rose-500 to-amber-400 inline-block">
                       Moraiya
                     </span>
                     <span className="text-brand-red">.</span>
                   </h2>
-
-                  <p className={`text-sm sm:text-base leading-relaxed max-w-lg ${t.textBody}`}>
-                    Speak directly with the developers for current unit availability, plot dimensions, and customised RCC or lease terms.
-                  </p>
                 </div>
 
                 <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t ${t.border} font-mono text-xs`}>

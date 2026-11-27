@@ -32,7 +32,9 @@ export default function NotFound() {
         noindex={true}
       />
 
-      <div className={`relative overflow-hidden min-h-screen flex items-center justify-center pt-24 pb-20 px-4 ${
+      <div
+        style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 1.5rem)' }}
+        className={`relative overflow-hidden min-h-screen flex items-center justify-center pb-20 px-4 ${
         isDark
           ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'

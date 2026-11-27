@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, RefreshCw, RotateCcw, Maximize2, ExternalLink,
-  Plus, Minus, Search, Layers,
+  Plus, Minus, Search, Layers, Ruler,
 } from 'lucide-react';
 
 /**
@@ -24,6 +24,8 @@ export default function SiteMap2DViewport({
   onStatusFilterChange,
   showPhases,
   onTogglePhases,
+  dimensionUnit,
+  onDimensionUnitChange,
   adminSheetUrl,
   loading,
   onSync,
@@ -121,6 +123,37 @@ export default function SiteMap2DViewport({
                 <Layers size={11} aria-hidden="true" />
                 <span>Phases</span>
               </button>
+            )}
+
+            {onDimensionUnitChange && (
+              <div
+                role="group"
+                aria-label="Dimension lines units"
+                className={`inline-flex items-center border ${border} divide-x ${divide} ${bgSub} shrink-0`}
+              >
+                <span className={`px-1.5 h-7 inline-flex items-center ${textMuted}`} title="Length & Width Lines">
+                  <Ruler size={11} className={dimensionUnit !== 'off' ? 'text-brand-red' : ''} aria-hidden="true" />
+                </span>
+                {[
+                  { id: 'ft', label: 'FT' },
+                  { id: 'm',  label: 'M'  },
+                  { id: 'off', label: 'OFF' },
+                ].map((opt) => {
+                  const active = dimensionUnit === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => onDimensionUnitChange(opt.id)}
+                      className={`h-7 px-1.5 font-mono text-[9.5px] font-bold uppercase transition-colors ${
+                        active ? 'bg-brand-red text-white' : `${textMuted} hover:text-brand-red`
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
             )}
           </div>
 
@@ -252,6 +285,30 @@ export default function SiteMap2DViewport({
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0">
+                  {onDimensionUnitChange && (
+                    <div
+                      role="group"
+                      aria-label="Fullscreen dimension lines units"
+                      className={`inline-flex items-center border ${border} divide-x ${divide} ${bgSub} shrink-0`}
+                    >
+                      {[
+                        { id: 'ft', label: 'FT' },
+                        { id: 'm',  label: 'M'  },
+                        { id: 'off', label: 'OFF' },
+                      ].map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => onDimensionUnitChange(opt.id)}
+                          className={`h-7 px-1.5 font-mono text-[9.5px] font-bold uppercase transition-colors ${
+                            dimensionUnit === opt.id ? 'bg-brand-red text-white' : `${textMuted} hover:text-brand-red`
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   {onTogglePhases && (
                     <button
                       type="button"

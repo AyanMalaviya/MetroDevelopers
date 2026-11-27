@@ -185,7 +185,6 @@ const featuresData = [
    ════════════════════════════════════════════════ */
 const ArchitecturalFeatureCard = memo(({ feat, index, isDark, isDesktop }) => {
   const textMain  = isDark ? 'text-white' : 'text-gray-900';
-  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
   const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
   const borderCol = isDark ? 'border-white/[0.12]' : 'border-gray-200';
 
@@ -229,13 +228,9 @@ const ArchitecturalFeatureCard = memo(({ feat, index, isDark, isDesktop }) => {
           <div className={`h-px flex-1 ${isDark ? 'bg-white/[0.09]' : 'bg-black/[0.09]'}`} />
         </div>
 
-        <h3 className={`text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-2.5 ${textMain}`}>
+        <h3 className={`text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-1 ${textMain}`}>
           {feat.title}
         </h3>
-
-        <p className={`text-sm leading-relaxed mb-5 ${textBody}`}>
-          {feat.description}
-        </p>
       </div>
 
       <div className={`pt-4 border-t ${borderCol}`}>
@@ -276,7 +271,6 @@ const FeaturesSection = ({ isDark }) => {
   const bgPage    = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
   const borderCol = isDark ? 'border-white/[0.12]' : 'border-gray-200';
   const textMain  = isDark ? 'text-white' : 'text-gray-900';
-  const textBody  = isDark ? 'text-gray-200' : 'text-gray-700';
   const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
 
   return (
@@ -339,7 +333,7 @@ const FeaturesSection = ({ isDark }) => {
           transition={{ duration: 0.7, ease: EASE }}
           className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 pb-10 sm:pb-12 mb-12 sm:mb-16 border-b ${borderCol}`}
         >
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-12">
             <div className="flex items-center gap-3 mb-4 font-mono text-[11px] tracking-[0.18em] uppercase">
               <span className="text-brand-red font-medium sm:font-semibold">SPECS</span>
               <span className={`w-6 h-px ${isDark ? 'bg-white/25' : 'bg-black/25'}`} aria-hidden="true" />
@@ -351,12 +345,6 @@ const FeaturesSection = ({ isDark }) => {
                 Operations
               </span>
             </h2>
-          </div>
-
-          <div className="lg:col-span-5 flex flex-col justify-end lg:items-end lg:text-right">
-            <p className={`text-sm sm:text-base leading-relaxed max-w-md ${textBody}`}>
-              Every utility—from 60 ft concrete haul roads and our in-house weighbridge to dedicated water lines and 24/7 gated security—is built into the park master plan from day one.
-            </p>
           </div>
         </motion.div>
 

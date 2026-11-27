@@ -232,7 +232,10 @@ const MetroIndustrialEstate = () => {
         className={`min-h-screen ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
       >
         {/* ════════ HERO — ARCHITECTURAL DOSSIER HEADER ════════ */}
-        <section className={`pt-20 sm:pt-24 border-b ${t.border} ${t.bgSurface}`}>
+        <section
+          style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 0.75rem)' }}
+          className={`border-b ${t.border} ${t.bgSurface}`}
+        >
           {/* Top Coordinate & Status Bar */}
           <div className={`border-y ${t.border} ${t.bgPage}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em]">

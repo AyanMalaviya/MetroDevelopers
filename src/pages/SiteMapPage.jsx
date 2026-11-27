@@ -216,17 +216,17 @@ const SiteMapPage = () => {
       </h1>
 
       <div
-        style={{ paddingTop: 'var(--navbar-height, 67px)' }}
+        style={{ paddingTop: 'var(--navbar-height, 79px)' }}
         className={`min-h-screen pb-24 lg:pb-10 ${t.bgPage} ${t.textMain} selection:bg-brand-red selection:text-white`}
       >
         {/* ════════ COMPACT SINGLE-LINE WORKSPACE TAB & MODE BAR ════════ */}
         <div
           id="sitemap-workspace-tabs"
           style={{
-            top: 'var(--navbar-height, 67px)',
+            top: 'var(--navbar-height, 79px)',
             transform: isNavbarVisible
               ? 'translate3d(0, 0, 0)'
-              : 'translate3d(0, calc(var(--navbar-height, 67px) * -1), 0)',
+              : 'translate3d(0, calc(var(--navbar-height, 79px) * -1), 0)',
           }}
           className={`sticky z-30 border-b ${t.border} ${
             isDark ? 'bg-[#121215]/95' : 'bg-white/95'

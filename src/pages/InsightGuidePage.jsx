@@ -48,7 +48,8 @@ const InsightGuidePage = () => {
       />
 
       <div
-        className={`relative overflow-hidden min-h-screen pt-24 pb-16 ${
+        style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 1.5rem)' }}
+        className={`relative overflow-hidden min-h-screen pb-16 ${
           isDark
             ? 'bg-gradient-to-b from-black via-gray-950 to-black'
             : 'bg-gradient-to-b from-white via-gray-50 to-white'

@@ -37,11 +37,12 @@ const Navbar = () => {
   const isDark = theme === 'dark';
   const { pathname } = useLocation();
 
-  const [isMenuOpen,     setIsMenuOpen]     = useState(false);
-  const [scrolled,       setScrolled]       = useState(false);
-  const [directionsOpen, setDirectionsOpen] = useState(false);
-  const [contactOpen,    setContactOpen]    = useState(false);
-  const [settingsOpen,   setSettingsOpen]   = useState(false);
+  const [isMenuOpen,           setIsMenuOpen]           = useState(false);
+  const [scrolled,             setScrolled]             = useState(false);
+  const [directionsOpen,       setDirectionsOpen]       = useState(false);
+  const [mobileDirectionsOpen, setMobileDirectionsOpen] = useState(false);
+  const [contactOpen,          setContactOpen]          = useState(false);
+  const [settingsOpen,         setSettingsOpen]         = useState(false);
   const [fontSize,       setFontSize]       = useState(() => {
     try {
       const saved = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
@@ -128,6 +129,7 @@ const Navbar = () => {
             setIsVisible((prev) => (prev ? false : prev));
             setIsMenuOpen(false);
             setDirectionsOpen(false);
+            setMobileDirectionsOpen(false);
             setContactOpen(false);
             setSettingsOpen(false);
           } else if (y < lastY) {
@@ -198,6 +200,7 @@ const Navbar = () => {
     <>
       <header
         ref={headerRef}
+        style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 12px)' }}
         className={`fixed top-0 left-0 right-0 z-50 border-b ${border} ${bgHeader} transition-transform duration-300 ease-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
@@ -206,7 +209,7 @@ const Navbar = () => {
 
           {/* ── Brand Mark ── */}
           <Link to="/" onClick={closeMenu} className="flex items-center gap-2 xl:gap-3 min-w-0 flex-shrink-0 group">
-            <div className={`w-9 h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1.5 flex-shrink-0 transition-colors group-hover:border-brand-red`}>
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1 sm:p-1.5 flex-shrink-0 transition-colors group-hover:border-brand-red`}>
               <img
                 src={isDark ? '/MDLogo-dark.png' : '/MDLogo.png'}
                 alt="Metro Developers Logo"
@@ -217,10 +220,10 @@ const Navbar = () => {
               />
             </div>
             <div className="leading-tight min-w-0">
-              <span className={`block text-sm font-bold tracking-tight truncate ${textMain}`}>
+              <span className={`block text-[13px] sm:text-sm font-bold tracking-tight truncate ${textMain}`}>
                 Metro Developers
               </span>
-              <span className={`block lg:hidden xl:block font-mono text-[9px] uppercase tracking-[0.1em] xl:tracking-[0.14em] truncate ${textMuted}`}>
+              <span className={`hidden sm:block lg:hidden xl:block font-mono text-[9px] uppercase tracking-[0.1em] xl:tracking-[0.14em] truncate ${textMuted}`}>
                 Industrial Sheds · Lease &amp; Sale
               </span>
             </div>
@@ -479,14 +482,28 @@ const Navbar = () => {
           </div>
 
           {/* ── Mobile / Tablet Right Controls ── */}
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-1.5 sm:gap-2">
+            <ParkDirectionsDropdown
+              isDark={isDark}
+              compact
+              compactHeight="h-8 sm:h-9"
+              open={mobileDirectionsOpen}
+              onOpenChange={(next) => {
+                setMobileDirectionsOpen(next);
+                if (next) setIsMenuOpen(false);
+              }}
+            />
+
             {toggleTheme && (
               <button
                 type="button"
-                onClick={toggleTheme}
+                onClick={() => {
+                  setMobileDirectionsOpen(false);
+                  toggleTheme();
+                }}
                 title="Toggle theme"
                 aria-label="Toggle color theme"
-                className={`w-9 h-9 border ${border} ${bgSurface} ${textMain} flex items-center justify-center transition-colors`}
+                className={`w-8 h-8 sm:w-9 sm:h-9 border ${border} ${bgSurface} ${textMain} flex items-center justify-center transition-colors`}
               >
                 {isDark ? <Sun size={15} /> : <Moon size={15} />}
               </button>
@@ -494,10 +511,13 @@ const Navbar = () => {
 
             <button
               type="button"
-              onClick={toggleMenu}
+              onClick={() => {
+                setMobileDirectionsOpen(false);
+                toggleMenu();
+              }}
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
-              className={`w-9 h-9 border flex items-center justify-center transition-colors ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 border flex items-center justify-center transition-colors ${
                 isMenuOpen
                   ? 'bg-brand-red border-brand-red text-white'
                   : `${border} ${bgSurface} ${textMain} hover:border-brand-red`
@@ -535,7 +555,7 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.32, ease: EASE }}
-              style={{ top: 'var(--navbar-height, 67px)' }}
+              style={{ top: 'var(--navbar-height, 79px)' }}
               className={`fixed right-0 bottom-0 w-[290px] sm:w-[320px] z-40 lg:hidden overflow-y-auto border-l ${border} ${bgPage}`}
             >
               {/* Navigation Index */}

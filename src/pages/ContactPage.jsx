@@ -148,7 +148,11 @@ const ContactPage = () => {
         {/* ══════════════════════════════════
             HERO — DIRECT DESK BRIEF
             ══════════════════════════════════ */}
-        <section aria-label="Contact hero" className={`pt-20 sm:pt-24 border-b ${t.border} ${t.bgSurface}`}>
+        <section
+          aria-label="Contact hero"
+          style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 0.75rem)' }}
+          className={`border-b ${t.border} ${t.bgSurface}`}
+        >
           {/* Top Coordinate & Response Strip */}
           <div className={`border-y ${t.border} ${t.bgPage}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.16em]">
