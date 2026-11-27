@@ -76,18 +76,23 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-primary);
   }
 
   html,
   body,
   #root {
     min-height: 100%;
+    min-height: 100dvh;
     overflow-x: clip;
   }
 
   body {
     @apply antialiased;
     margin: 0;
+    padding: 0;
     font-family: var(--font-body);
     font-weight: 400;
     line-height: 1.6;

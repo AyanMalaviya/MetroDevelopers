@@ -5,7 +5,7 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'fra
 import Lenis from 'lenis';
 import {
   Phone, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight,
-  MapPin, Play, Calculator, Check, Minus, Factory,
+  MapPin, Play, Calculator, Check, Minus,
 } from 'lucide-react';
 import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
 import CountUp from 'react-countup';
@@ -47,15 +47,17 @@ const developments = [
   {
     id: 'park',
     code: 'MIP 01',
-    typeLabel: 'Sheds & Warehouses',
+    typeLabel: 'Aerial View · 63 Sheds',
     name: 'Industrial Park 1',
     tag: 'Ready Possession',
     statusDot: 'bg-emerald-500',
     location: 'Moraiya, Changodar · NH 47',
-    image: '/images/industrial-shed-for-sale-moraiya-ahmedabad.jpg',
+    image: '/images/metro-industrial-park-site-map-moraiya-gujarat.jpg',
+    width: 1600,
+    height: 900,
     bgTexture: '/images/bg-factory-interior.jpg',
     parallaxRange: [-20, 20],
-    alt: 'Ready industrial sheds at Metro Industrial Park Moraiya Changodar',
+    alt: 'Aerial 3D view of ready industrial sheds at Metro Industrial Park 1 Moraiya Changodar',
     kpis: [
       { v: '63',      k: 'Ready Units', accent: true },
       { v: '54K+',    k: 'Sq.Yd Park',  accent: false },
@@ -66,21 +68,23 @@ const developments = [
       '30–35 ft clear ceiling · PEB & RCC options',
       '60 ft heavy RCC roads & in-house weighbridge',
     ],
-    primaryLink: { to: '/metro-industrial-park', label: 'Explore Sheds' },
-    mapLink: { to: '/site-map', state: undefined },
+    primaryLink: { to: '/metro-industrial-park', label: 'Park Info' },
+    mapLink: { to: '/site-map', state: { activeTab: 'park' }, label: 'Availability' },
   },
   {
     id: 'estate',
     code: 'MIP 02',
-    typeLabel: 'Industrial Plots',
+    typeLabel: 'BYOS Concept · 23 Plots',
     name: 'Industrial Park 2',
     tag: 'New Launch',
     statusDot: 'bg-brand-red',
     location: 'Opp. MIP 1, Moraiya',
-    image: '/images/metro-industrial-park-2-site-plan.jpg',
+    image: '/images/metro-industrial-park-2-byos-aerial.jpg',
+    width: 1200,
+    height: 896,
     bgTexture: '/images/bg-industrial-park-aerial.jpg',
     parallaxRange: [24, -24],
-    alt: 'Industrial plots for sale to build your own shed at Industrial Park 2 Moraiya',
+    alt: 'AI BYOS visualization showing build-your-own sheds on Metro Industrial Park 2 plot divisions',
     kpis: [
       { v: '23',       k: 'Clear Plots', accent: true },
       { v: '17.5K',    k: 'Sq.Yd Park',  accent: false },
@@ -91,21 +95,23 @@ const developments = [
       'Opposite Park 1 in Moraiya industrial belt',
       'Wide RCC roads, soil puran & 24/7 security',
     ],
-    primaryLink: { to: '/metro-industrial-estate', label: 'Explore Plots' },
-    mapLink: { to: '/site-map', state: { activeTab: 'estate' } },
+    primaryLink: { to: '/metro-industrial-estate', label: 'Park Info' },
+    mapLink: { to: '/site-map', state: { activeTab: 'estate' }, label: 'Availability' },
   },
   {
     id: 'park3',
     code: 'MIP 03',
-    typeLabel: 'Industrial Plots',
+    typeLabel: 'BYOS Concept · 77 Plots',
     name: 'Industrial Park 3',
     tag: 'Leveling Ongoing',
     statusDot: 'bg-amber-500',
     location: 'Bavla – Rajoda Road',
-    image: '/images/metro-industrial-park-3-site-plan.jpg',
+    image: '/images/metro-industrial-park-3-byos-aerial.jpg',
+    width: 1200,
+    height: 896,
     bgTexture: '/images/bg-manufacturing-floor.jpg',
     parallaxRange: [-22, 22],
-    alt: 'Industrial plots for sale at Metro Industrial Park 3 Bavla Ahmedabad',
+    alt: 'AI BYOS visualization showing build-your-own sheds on Metro Industrial Park 3 plot divisions',
     kpis: [
       { v: '77',       k: 'Total Plots', accent: true },
       { v: '59.5K',    k: 'Sq.Yd Park',  accent: false },
@@ -116,8 +122,8 @@ const developments = [
       'Fast-growing Bavla – Rajoda NH corridor',
       'Planned RCC roads, street lights & gated entry',
     ],
-    primaryLink: { to: '/metro-industrial-park-3', label: 'Explore Plots' },
-    mapLink: { to: '/site-map', state: { activeTab: 'park3' } },
+    primaryLink: { to: '/metro-industrial-park-3', label: 'Park Info' },
+    mapLink: { to: '/site-map', state: { activeTab: 'park3' }, label: 'Availability' },
   },
 ];
 
@@ -557,12 +563,11 @@ const DevelopmentsSection = ({ isDark }) => {
                 media={{
                   src: dev.image,
                   alt: dev.alt,
-                  fallbackIcon: <Factory size={18} aria-hidden="true" />,
-                  overlay: (
-                    <span className="absolute bottom-2.5 left-2.5 px-2 py-0.5 bg-black/75 border border-white/20 font-mono text-[9.5px] uppercase tracking-[0.14em] text-white">
-                      {dev.typeLabel}
-                    </span>
-                  ),
+                  width: dev.width,
+                  height: dev.height,
+                  fullWidth: true,
+                  caption: dev.typeLabel,
+                  captionRight: 'Full View',
                 }}
               >
                 <div>
@@ -600,21 +605,25 @@ const DevelopmentsSection = ({ isDark }) => {
                   </ul>
                 </div>
 
-                {/* Action Bar */}
+                {/* Action Bar — Highlighted Availability CTA + Park Details + Route */}
                 <div className={`grid grid-cols-12 border ${t.border} divide-x ${t.divide}`}>
-                  <Link
-                    to={dev.primaryLink.to}
-                    className="col-span-6 py-2.5 sm:py-3 px-3 sm:px-4 bg-brand-red hover:bg-red-700 text-white text-[11px] font-semibold uppercase tracking-[0.1em] inline-flex items-center justify-between transition-colors whitespace-nowrap"
-                  >
-                    <span>{dev.primaryLink.label}</span>
-                    <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5 shrink-0" aria-hidden="true" />
-                  </Link>
                   <Link
                     to={dev.mapLink.to}
                     state={dev.mapLink.state}
-                    className={`col-span-3 py-2.5 sm:py-3 px-2 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-1 transition-colors`}
+                    aria-label={`Check live unit availability at ${dev.name}`}
+                    className="col-span-6 py-2.5 sm:py-3 px-2.5 sm:px-4 bg-brand-red hover:bg-red-700 text-white text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.08em] sm:tracking-[0.1em] inline-flex items-center justify-between transition-colors whitespace-nowrap"
                   >
-                    <span>Map</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin size={12} aria-hidden="true" />
+                      <span>{dev.mapLink.label}</span>
+                    </span>
+                    <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5 shrink-0" aria-hidden="true" />
+                  </Link>
+                  <Link
+                    to={dev.primaryLink.to}
+                    className={`col-span-4 sm:col-span-3 py-2.5 sm:py-3 px-2 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.06em] inline-flex items-center justify-center gap-1 transition-colors whitespace-nowrap`}
+                  >
+                    <span>{dev.primaryLink.label}</span>
                   </Link>
                   {directionsHref && (
                     <a
@@ -622,7 +631,7 @@ const DevelopmentsSection = ({ isDark }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Google Maps directions to ${dev.name}`}
-                      className={`col-span-3 py-2.5 sm:py-3 px-2 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-1 transition-colors`}
+                      className={`col-span-2 sm:col-span-3 py-2.5 sm:py-3 px-2 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-1 transition-colors`}
                     >
                       <MapPin size={11} className="text-brand-red shrink-0" aria-hidden="true" />
                       <span className="hidden sm:inline">Route</span>
@@ -1112,21 +1121,21 @@ const HomePage = () => {
                 {/* Direct Actions */}
                 <div className={`lg:col-span-5 grid grid-cols-2 sm:grid-cols-3 divide-x ${t.divide}`}>
                   <Link
-                    to="/metro-industrial-park"
-                    aria-label="Explore industrial shed units at Metro Industrial Park"
+                    to="/site-map"
+                    aria-label="Check industrial shed availability at Metro Industrial Park"
                     className="col-span-2 sm:col-span-1 py-4 sm:py-0 px-5 bg-brand-red hover:bg-red-700 text-white text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-2 transition-colors"
                   >
-                    <span>Explore</span>
+                    <span>Availability</span>
                     <ArrowRight size={14} aria-hidden="true" />
                   </Link>
 
                   <Link
-                    to="/site-map"
-                    aria-label="Check industrial shed availability at Metro Industrial Park"
+                    to="/metro-industrial-park"
+                    aria-label="Explore industrial shed units at Metro Industrial Park"
                     className={`py-4 sm:py-0 px-4 ${t.bgSurface} ${t.textMain} hover:text-brand-red text-xs font-medium sm:font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-1.5 transition-colors border-t sm:border-t-0 ${t.border}`}
                   >
                     <MapPin size={13} className="text-brand-red shrink-0" aria-hidden="true" />
-                    <span>Availability</span>
+                    <span>Explore</span>
                   </Link>
 
                   <a

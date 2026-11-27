@@ -41,7 +41,7 @@ export default defineConfig({
         description: 'Metro Enterprise — Industrial Shed for Sale in Moraiya, Changodar, Ahmedabad',
         theme_color: '#0b0b0d',
         background_color: '#0b0b0d',
-        display: 'standalone',
+        display: 'fullscreen',
         display_override: ['fullscreen', 'standalone', 'minimal-ui'],
         scope: '/',
         start_url: '/',

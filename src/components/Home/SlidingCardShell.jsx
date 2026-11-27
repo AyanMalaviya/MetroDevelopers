@@ -41,6 +41,8 @@ const SlidingCardShell = memo(({
   const imageY = useTransform(scrollYProgress, [0, 1], [-16, 16]);
 
   const borderCol = isDark ? 'border-white/[0.12]' : 'border-gray-200';
+  const captionBg = isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]';
+  const textMuted = isDark ? 'text-gray-400' : 'text-gray-500';
   const surfaceBg = surfaceTone === 'page'
     ? (isDark ? 'bg-[#0B0B0D]/95' : 'bg-[#F8F9FA]/95')
     : (isDark ? 'bg-[#121215]/95' : 'bg-white/95');
@@ -119,38 +121,66 @@ const SlidingCardShell = memo(({
             {headerRight}
           </div>
 
-          {/* Card Body: Clipped Media Frame + Right Content */}
-          <div className="relative z-10 p-4 sm:p-6 flex flex-col md:flex-row md:items-stretch gap-5 sm:gap-6">
+          {/* Card Body: Full-Width Uncropped Media OR Side-by-Side Clipped Parallax Media */}
+          <div
+            className={`relative z-10 p-4 sm:p-6 flex flex-col gap-5 sm:gap-6 ${
+              media?.fullWidth ? '' : 'md:flex-row md:items-stretch'
+            }`}
+          >
             {media && (
-              <div
-                className={`relative overflow-hidden flex-shrink-0 border ${borderCol} bg-neutral-950 w-full md:w-[41%] aspect-[16/10] md:aspect-auto md:min-h-[220px]`}
-                style={{ clipPath: MEDIA_CLIP }}
-              >
-                {media.fallbackIcon && (
-                  <div className="absolute inset-0 bg-[#17171B] flex items-center justify-center text-white/15">
-                    <div className="scale-[2.5]">{media.fallbackIcon}</div>
-                  </div>
-                )}
-
-                <motion.img
-                  src={media.src}
-                  alt={media.alt}
-                  width={800}
-                  height={600}
-                  loading="lazy"
-                  decoding="async"
-                  style={isDesktop ? { y: imageY, scale: 1.12 } : { scale: 1.04 }}
-                  onError={(e) => { e.currentTarget.style.opacity = '0'; }}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-
+              media.fullWidth ? (
+                <div className={`relative w-full border ${borderCol} bg-neutral-950`}>
+                  <img
+                    src={media.src}
+                    alt={media.alt}
+                    width={media.width}
+                    height={media.height}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-auto block object-contain"
+                  />
+                  {media.caption && (
+                    <div className={`px-3 py-1.5 border-t ${borderCol} ${captionBg} flex items-center justify-between gap-2 font-mono text-[9.5px] uppercase tracking-[0.12em] ${textMuted}`}>
+                      <span className="truncate">{media.caption}</span>
+                      {media.captionRight && (
+                        <span className="text-brand-red font-semibold whitespace-nowrap shrink-0">
+                          {media.captionRight}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
                 <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none"
-                />
+                  className={`relative overflow-hidden flex-shrink-0 border ${borderCol} bg-neutral-950 w-full md:w-[41%] aspect-[16/10] md:aspect-auto md:min-h-[220px]`}
+                  style={{ clipPath: MEDIA_CLIP }}
+                >
+                  {media.fallbackIcon && (
+                    <div className="absolute inset-0 bg-[#17171B] flex items-center justify-center text-white/15">
+                      <div className="scale-[2.5]">{media.fallbackIcon}</div>
+                    </div>
+                  )}
 
-                {media.overlay}
-              </div>
+                  <motion.img
+                    src={media.src}
+                    alt={media.alt}
+                    width={800}
+                    height={600}
+                    loading="lazy"
+                    decoding="async"
+                    style={isDesktop ? { y: imageY, scale: 1.12 } : { scale: 1.04 }}
+                    onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none"
+                  />
+
+                  {media.overlay}
+                </div>
+              )
             )}
 
             <div className="flex-1 flex flex-col justify-between min-w-0">
