@@ -369,50 +369,38 @@ const FieldLogSection = ({ isDark }) => {
           index="01"
           kicker="@metro.industrialpark · Reels"
           title={
-            <>
-              Follow us on{' '}
-              <span className="font-serif-editorial italic font-normal text-[1.22em] text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-brand-red inline-block">
-                Instagram
+            <a
+              href="https://www.instagram.com/metro.industrialpark/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Instagram (@metro.industrialpark)"
+              className="inline-flex flex-wrap items-baseline gap-x-2.5 group"
+            >
+              <span>Follow us on</span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="font-serif-editorial italic font-normal text-[1.22em] text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-brand-red border-b border-brand-red/40 group-hover:border-brand-red transition-colors inline-block pr-1 leading-[1.05]">
+                  Instagram
+                </span>
+                <FaInstagram
+                  size={16}
+                  className="text-brand-red shrink-0 transition-transform duration-200 group-hover:scale-110"
+                  aria-hidden="true"
+                />
+                <ArrowUpRight
+                  size={16}
+                  className={`${t.textMuted} group-hover:text-brand-red shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5`}
+                  aria-hidden="true"
+                />
               </span>
-            </>
+            </a>
           }
           isDark={isDark}
-          rightSlot={
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => scrollRail(-1)}
-                aria-label="Scroll updates left"
-                className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollRail(1)}
-                aria-label="Scroll updates right"
-                className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
-              >
-                <ChevronRight size={16} />
-              </button>
-              <a
-                href="https://www.instagram.com/metro.industrialpark/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`h-10 px-4 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center gap-2 text-xs font-medium sm:font-semibold tracking-wide uppercase hover:border-brand-red hover:text-brand-red transition-colors`}
-              >
-                <FaInstagram size={13} aria-hidden="true" />
-                <span>Instagram</span>
-                <ArrowUpRight size={13} aria-hidden="true" />
-              </a>
-            </div>
-          }
         />
 
         {/* Horizontal Editorial Filmstrip */}
         <div
           ref={railRef}
-          className="mt-10 grid grid-flow-col auto-cols-[82%] sm:auto-cols-[46%] lg:auto-cols-[31.5%] gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth"
+          className="mt-10 grid grid-flow-col auto-cols-[82%] sm:auto-cols-[46%] lg:auto-cols-[31.5%] gap-6 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {cloudUpdates.map((post, idx) => (
@@ -480,6 +468,26 @@ const FieldLogSection = ({ isDark }) => {
               </div>
             </motion.article>
           ))}
+        </div>
+
+        {/* Left / Right Reel Navigation Controls Below Filmstrip */}
+        <div className="mt-4 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => scrollRail(-1)}
+            aria-label="Scroll reels left"
+            className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollRail(1)}
+            aria-label="Scroll reels right"
+            className={`w-10 h-10 border ${t.border} ${t.bgSurface} ${t.textMain} inline-flex items-center justify-center hover:border-brand-red hover:text-brand-red transition-colors`}
+          >
+            <ChevronRight size={16} />
+          </button>
         </div>
       </div>
     </section>
@@ -999,7 +1007,7 @@ const HomePage = () => {
         <section
           ref={heroRef}
           aria-label="Hero — Metro Industrial Park, Moraiya, Ahmedabad"
-          style={{ paddingTop: 'var(--navbar-height, 79px)' }}
+          style={{ paddingTop: 'var(--navbar-height, 67px)' }}
           className="relative"
         >
           {/* Full-bleed Parallax Media Frame */}

@@ -200,16 +200,20 @@ const Navbar = () => {
     <>
       <header
         ref={headerRef}
-        style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 12px)' }}
-        className={`fixed top-0 left-0 right-0 z-50 border-b ${border} ${bgHeader} transition-transform duration-300 ease-out ${
-          isVisible ? 'translate-y-0' : '-translate-y-full'
-        }`}
+        style={{
+          top: 'var(--app-top-padding, 6px)',
+          paddingTop: 0,
+          transform: isVisible
+            ? 'translate3d(0, 0, 0)'
+            : 'translate3d(0, calc(-100% - var(--app-top-padding, 6px) - 2px), 0)',
+        }}
+        className={`fixed left-0 right-0 z-50 border-b ${border} ${bgHeader} transition-transform duration-300 ease-out`}
       >
-        <nav className="max-w-7xl mx-auto flex items-center justify-between px-3 sm:px-4 xl:px-6 h-16">
+        <nav className="max-w-7xl mx-auto flex items-center justify-between px-2.5 sm:px-4 xl:px-6 h-16">
 
           {/* ── Brand Mark ── */}
-          <Link to="/" onClick={closeMenu} className="flex items-center gap-2 xl:gap-3 min-w-0 flex-shrink-0 group">
-            <div className={`w-8 h-8 sm:w-9 sm:h-9 border ${isDark ? 'border-white/20' : border} ${bgSurface} flex items-center justify-center p-1 sm:p-1.5 flex-shrink-0 transition-colors group-hover:border-brand-red`}>
+          <Link to="/" onClick={closeMenu} className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 min-w-0 flex-shrink-0 group">
+            <div className="w-10 h-10 flex items-center justify-center p-1 flex-shrink-0">
               <img
                 src={isDark ? '/MDLogo-dark.png' : '/MDLogo.png'}
                 alt="Metro Developers Logo"
@@ -555,7 +559,7 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.32, ease: EASE }}
-              style={{ top: 'var(--navbar-height, 79px)' }}
+              style={{ top: 'calc(var(--app-top-padding, 6px) + var(--navbar-height, 67px))' }}
               className={`fixed right-0 bottom-0 w-[290px] sm:w-[320px] z-40 lg:hidden overflow-y-auto border-l ${border} ${bgPage}`}
             >
               {/* Navigation Index */}
@@ -646,35 +650,6 @@ const Navbar = () => {
                   </span>
                   <ArrowUpRight size={14} className={textMuted} aria-hidden="true" />
                 </a>
-
-                <div className={`border ${border} ${bgSurface}`}>
-                  <div className={`px-4 py-2 border-b ${border} ${bgPage} font-mono text-[10px] uppercase tracking-[0.14em] ${textMuted} flex items-center gap-2`}>
-                    <MapPin size={12} className="text-brand-red" aria-hidden="true" />
-                    <span>Park Directions</span>
-                  </div>
-                  <div className={`divide-y ${divide}`}>
-                    {PARK_DIRECTIONS.map((park) => (
-                      <a
-                        key={park.id}
-                        href={park.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={closeMenu}
-                        className={`flex items-center justify-between px-4 py-2.5 transition-colors ${
-                          isDark ? 'hover:bg-[#17171B]' : 'hover:bg-[#FAF9F6]'
-                        }`}
-                      >
-                        <div className="min-w-0">
-                          <span className={`text-xs font-bold ${textMain}`}>{park.name}</span>
-                          <span className={`ml-1.5 font-mono text-[10px] ${textMuted}`}>
-                            · {park.shortLocation}
-                          </span>
-                        </div>
-                        <ArrowUpRight size={13} className={textMuted} aria-hidden="true" />
-                      </a>
-                    ))}
-                  </div>
-                </div>
 
                 <a
                   href="https://g.page/r/CfbFhZSjMaH1EBI/review"

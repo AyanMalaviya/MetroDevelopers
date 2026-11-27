@@ -152,7 +152,7 @@ const MetroArcade = () => {
         {/* ════════ ARCHITECTURAL HERO SLIDESHOW ════════ */}
         <section
           className="relative"
-          style={{ paddingTop: 'var(--navbar-height, 79px)' }}
+          style={{ paddingTop: 'var(--navbar-height, 67px)' }}
         >
           <div className="relative h-[52svh] sm:h-[64svh] lg:h-[72svh] overflow-hidden bg-black">
             {images.map((image, index) => (
@@ -574,11 +574,15 @@ const MetroArcade = () => {
 
         {/* ════════ FULL-SCREEN GALLERY MODAL ════════ */}
         {isGalleryOpen && (
-          <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
+          <div
+            style={{ paddingTop: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          >
             <button
               type="button"
               onClick={() => setIsGalleryOpen(false)}
-              className="absolute top-4 right-4 w-10 h-10 bg-black border border-white/25 hover:border-brand-red hover:text-brand-red text-white flex items-center justify-center transition-colors"
+              style={{ top: 'calc(var(--app-top-padding, 6px) + 1rem)' }}
+              className="absolute right-4 w-10 h-10 bg-black border border-white/25 hover:border-brand-red hover:text-brand-red text-white flex items-center justify-center transition-colors"
               aria-label="Close gallery"
             >
               <X size={18} />

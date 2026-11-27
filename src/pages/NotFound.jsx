@@ -33,7 +33,7 @@ export default function NotFound() {
       />
 
       <div
-        style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 1.5rem)' }}
+        style={{ paddingTop: 'calc(var(--navbar-height, 67px) + 1.5rem)' }}
         className={`relative overflow-hidden min-h-screen flex items-center justify-center pb-20 px-4 ${
         isDark
           ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900'

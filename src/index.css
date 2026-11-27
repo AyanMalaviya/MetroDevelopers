@@ -12,7 +12,8 @@
   --font-accent: 'Instrument Serif', Georgia, serif;
   --font-calligraphy: 'Alex Brush', cursive;
   --font-serif-display: 'Playfair Display', Georgia, serif;
-  --navbar-height: calc(4rem + 15px);
+  --app-top-padding: max(env(safe-area-inset-top, 0px), 6px);
+  --navbar-height: calc(4rem + 3px);
 
   /* Light Theme */
   --bg-primary: #ffffff;

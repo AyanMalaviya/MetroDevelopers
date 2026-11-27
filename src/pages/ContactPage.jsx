@@ -150,7 +150,7 @@ const ContactPage = () => {
             ══════════════════════════════════ */}
         <section
           aria-label="Contact hero"
-          style={{ paddingTop: 'calc(var(--navbar-height, 79px) + 0.75rem)' }}
+          style={{ paddingTop: 'calc(var(--navbar-height, 67px) + 0.75rem)' }}
           className={`border-b ${t.border} ${t.bgSurface}`}
         >
           {/* Top Coordinate & Response Strip */}

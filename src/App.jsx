@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { NavbarProvider } from './context/NavbarContext';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
@@ -27,18 +27,27 @@ const PageLoader = () => (
   </div>
 );
 
-function App() {
+function AppShell() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
-    <ThemeProvider>
-      <NavbarProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen theme-bg-primary overflow-x-clip">
-          <Suspense fallback={null}>
-            <PWAInstallPrompt />
-          </Suspense>
-          <Navbar />
-          <main className="flex-grow">
+    <div
+      style={{ paddingTop: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+      className="flex flex-col min-h-screen theme-bg-primary overflow-x-clip"
+    >
+      <div
+        aria-hidden="true"
+        style={{ height: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+        className={`fixed top-0 inset-x-0 z-50 pointer-events-none ${
+          isDark ? 'bg-[#0B0B0D]' : 'bg-[#FFFFFF]'
+        }`}
+      />
+      <Suspense fallback={null}>
+        <PWAInstallPrompt />
+      </Suspense>
+      <Navbar />
+      <main className="flex-grow">
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* ── Core pages ── */}
@@ -112,14 +121,24 @@ function App() {
               </Routes>
             </Suspense>
           </main>
-          <MobileTabBar />
-          <Footer />
-          
-          <Suspense fallback={null}>
-            <ChatBot />
-          </Suspense>
-        </div>
-      </Router>
+      <MobileTabBar />
+      <Footer />
+
+      <Suspense fallback={null}>
+        <ChatBot />
+      </Suspense>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <NavbarProvider>
+        <Router>
+          <ScrollToTop />
+          <AppShell />
+        </Router>
       </NavbarProvider>
     </ThemeProvider>
   );
