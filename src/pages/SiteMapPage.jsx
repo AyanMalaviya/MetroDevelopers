@@ -223,7 +223,7 @@ const SiteMapPage = () => {
         <div
           id="sitemap-workspace-tabs"
           style={{
-            top: 'calc(var(--app-top-padding, 6px) + var(--navbar-height, 67px))',
+            top: 'calc(var(--app-top-padding, 0px) + var(--navbar-height, 67px))',
             transform: isNavbarVisible
               ? 'translate3d(0, 0, 0)'
               : 'translate3d(0, calc(var(--navbar-height, 67px) * -1), 0)',

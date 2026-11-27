@@ -264,7 +264,7 @@ export default function SiteMap2DViewport({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.16 }}
               className={`fixed inset-0 flex flex-col ${isDark ? 'bg-[#0B0B0D]' : 'bg-[#F8F9FA]'}`}
-              style={{ zIndex: 99999, paddingTop: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+              style={{ zIndex: 99999, paddingTop: 'var(--app-top-padding, env(safe-area-inset-top, 0px))' }}
             >
               {/* Compact Fullscreen Single-Line Header */}
               <div className={`shrink-0 px-3 sm:px-4 py-2 border-b ${border} ${bgBar} flex items-center justify-between gap-2`}>

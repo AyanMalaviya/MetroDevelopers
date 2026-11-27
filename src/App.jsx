@@ -33,12 +33,12 @@ function AppShell() {
 
   return (
     <div
-      style={{ paddingTop: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+      style={{ paddingTop: 'var(--app-top-padding, env(safe-area-inset-top, 0px))' }}
       className="flex flex-col min-h-screen theme-bg-primary overflow-x-clip"
     >
       <div
         aria-hidden="true"
-        style={{ height: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+        style={{ height: 'var(--app-top-padding, env(safe-area-inset-top, 0px))' }}
         className={`fixed top-0 inset-x-0 z-50 pointer-events-none ${
           isDark ? 'bg-[#0B0B0D]' : 'bg-[#FFFFFF]'
         }`}

@@ -25,9 +25,11 @@ const applyThemeToDocument = (theme) => {
   root.setAttribute('data-theme', theme);
   root.classList.toggle('dark', theme === 'dark');
 
-  const browserThemeColor = theme === 'dark' ? '#0b0b0d' : '#f4f5f7';
+  const browserThemeColor = theme === 'dark' ? '#0b0b0d' : '#ffffff';
+  const appleStatusBarStyle = theme === 'dark' ? 'black-translucent' : 'default';
   const themeColorMeta = document.querySelector("meta[name='theme-color']");
   const tileColorMeta = document.querySelector("meta[name='msapplication-TileColor']");
+  const appleStatusBarMeta = document.querySelector("meta[name='apple-mobile-web-app-status-bar-style']");
 
   if (themeColorMeta) {
     themeColorMeta.setAttribute('content', browserThemeColor);
@@ -35,6 +37,10 @@ const applyThemeToDocument = (theme) => {
 
   if (tileColorMeta) {
     tileColorMeta.setAttribute('content', browserThemeColor);
+  }
+
+  if (appleStatusBarMeta) {
+    appleStatusBarMeta.setAttribute('content', appleStatusBarStyle);
   }
 };
 

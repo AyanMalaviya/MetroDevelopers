@@ -575,13 +575,13 @@ const MetroArcade = () => {
         {/* ════════ FULL-SCREEN GALLERY MODAL ════════ */}
         {isGalleryOpen && (
           <div
-            style={{ paddingTop: 'var(--app-top-padding, max(env(safe-area-inset-top, 0px), 6px))' }}
+            style={{ paddingTop: 'var(--app-top-padding, env(safe-area-inset-top, 0px))' }}
             className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
           >
             <button
               type="button"
               onClick={() => setIsGalleryOpen(false)}
-              style={{ top: 'calc(var(--app-top-padding, 6px) + 1rem)' }}
+              style={{ top: 'calc(var(--app-top-padding, 0px) + 1rem)' }}
               className="absolute right-4 w-10 h-10 bg-black border border-white/25 hover:border-brand-red hover:text-brand-red text-white flex items-center justify-center transition-colors"
               aria-label="Close gallery"
             >
